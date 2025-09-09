@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     // Prepare student data for local storage with updated schema mapping
     const studentData = {
       student_name: fullStudentName, // Combine first_name and last_name
-      roll_number: foundStudent.roll_number,
+      roll_number: foundStudent.roll_number || `UNKNOWN_${foundStudent.id.slice(-8)}`,
       email: getPrimaryEmail(foundStudent),
       mobile: getPrimaryMobile(foundStudent),
       password_hash: passwordHash,

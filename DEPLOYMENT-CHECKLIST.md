@@ -6,11 +6,12 @@
 - [ ] `NEXT_PUBLIC_PARENT_APP_URL` = `https://my.jkkn.ac.in`
 - [ ] `NEXT_PUBLIC_APP_ID` = `transport_management_system_menrm674`
 - [ ] `NEXT_PUBLIC_API_KEY` = `app_e20655605d48ebce_cfa1ffe34268949a`
-- [ ] `NEXT_PUBLIC_REDIRECT_URI` = `https://tms-passenger-new.vercel.app/auth/callback`
-- [ ] `NEXT_PUBLIC_DRIVER_REDIRECT_URI` = `https://tms-passenger-new.vercel.app/auth/driver-callback`
+- [ ] `NEXT_PUBLIC_REDIRECT_URI` = `https://tms-passenger-taupe.vercel.app/auth/callback`
+- [ ] `NEXT_PUBLIC_DRIVER_REDIRECT_URI` = `https://tms-passenger-taupe.vercel.app/auth/driver-callback`
 - [ ] `NEXT_PUBLIC_AUTH_DEBUG` = `true`
 - [ ] `NEXT_PUBLIC_SUPABASE_URL` = `https://gsvbrytleqdxpdfbykqh.supabase.co`
-- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdmJyeXRsZXFkeHBkZmJ5a3FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMTQwMjUsImV4cCI6MjA2NjU5MDAyNX0.jKjqmUM60YEVqOeKx6wxn3VEz63Lf8JTV57gDXg-qjg`
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzdmJyeXRsZXFkeHBkZmJ5a3FoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTAxNDAyNSwiZXhwIjoyMDY2NTkwMDI1fQ.X22VlUtSKR9zbRbDc3W0Z-xciviyvpcObVWLNMfxKfI`
 
 ### 2. Vercel Configuration
 - [ ] `vercel.json` file is present with correct configuration

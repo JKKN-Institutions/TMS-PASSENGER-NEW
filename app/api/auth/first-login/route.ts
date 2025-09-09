@@ -45,15 +45,22 @@ interface ExternalStudent {
 function getFullStudentName(student: ExternalStudent): string {
   const firstName = student.first_name || '';
   const lastName = student.last_name || '';
-  return `${firstName} ${lastName}`.trim() || 'Unknown Student';
+  const fullName = `${firstName} ${lastName}`.trim();
+  // Ensure we never return empty string for required NOT NULL field
+  return fullName || 'Unknown Student';
 }
 
 function getPrimaryMobile(student: ExternalStudent): string {
-  return student.student_mobile || student.father_mobile || student.mother_mobile || '';
+  const mobile = student.student_mobile || student.father_mobile || student.mother_mobile || '';
+  // Ensure we never return empty string for required NOT NULL field
+  return mobile || '0000000000';
 }
 
 function getPrimaryEmail(student: ExternalStudent): string {
-  return student.student_email || student.college_email || '';
+  const email = student.student_email || student.college_email || '';
+  // Ensure we never return empty string for required NOT NULL field
+  // Use external ID to create unique fallback email
+  return email || `unknown-${student.id}@student.jkkn.ac.in`;
 }
 
 export async function POST(request: NextRequest) {
@@ -185,7 +192,7 @@ export async function POST(request: NextRequest) {
       const fullStudentName = getFullStudentName(foundExternalStudent);
       const studentData = {
         student_name: fullStudentName,
-        roll_number: foundExternalStudent.roll_number,
+        roll_number: foundExternalStudent.roll_number || `UNKNOWN_${foundExternalStudent.id.slice(-8)}`,
         email: getPrimaryEmail(foundExternalStudent),
         mobile: getPrimaryMobile(foundExternalStudent),
         // Basic info that exists in local table

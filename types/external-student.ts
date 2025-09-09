@@ -106,13 +106,20 @@ export interface ExternalStudent {
 export function getFullStudentName(student: ExternalStudent): string {
   const firstName = student.first_name || '';
   const lastName = student.last_name || '';
-  return `${firstName} ${lastName}`.trim() || 'Unknown Student';
+  const fullName = `${firstName} ${lastName}`.trim();
+  // Ensure we never return empty string for required NOT NULL field
+  return fullName || 'Unknown Student';
 }
 
 export function getPrimaryMobile(student: ExternalStudent): string {
-  return student.student_mobile || student.father_mobile || student.mother_mobile || '';
+  const mobile = student.student_mobile || student.father_mobile || student.mother_mobile || '';
+  // Ensure we never return empty string for required NOT NULL field
+  return mobile || '0000000000';
 }
 
 export function getPrimaryEmail(student: ExternalStudent): string {
-  return student.student_email || student.college_email || '';
+  const email = student.student_email || student.college_email || '';
+  // Ensure we never return empty string for required NOT NULL field
+  // Use external ID to create unique fallback email
+  return email || `unknown-${student.id}@student.jkkn.ac.in`;
 } 
