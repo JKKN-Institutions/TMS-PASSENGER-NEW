@@ -96,7 +96,7 @@ export function AuthProvider({
                 const driverUserData: UnifiedUser = {
                   ...userData,
                   role: 'driver',
-                  driver_id: userData.id
+                  driver_id: userData.user_metadata?.driver_id || userData.id
                 };
                 
                 setUser(driverUserData);
@@ -471,7 +471,7 @@ export function AuthProvider({
             const driverUserData: UnifiedUser = {
               ...userData,
               role: 'driver',
-              driver_id: userData.id
+              driver_id: userData.user_metadata?.driver_id || userData.id
             };
             
             setUser(driverUserData);

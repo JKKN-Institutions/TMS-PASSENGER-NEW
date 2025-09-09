@@ -31,12 +31,19 @@ export default function DriverHomePage() {
         
         console.log('✅ Driver authenticated:', { user, userType });
         
-        // Get driver ID from user object
-        const driverId = user?.id;
+        // Get driver ID from user object - use database driver_id if available
+        const driverId = (user as any)?.driver_id || user?.id;
         if (!driverId) {
           setError('Driver ID not found');
           return;
         }
+        
+        console.log('🔍 Using driver ID for API calls:', { 
+          driverId, 
+          userDriverId: (user as any)?.driver_id, 
+          userId: user?.id,
+          email: user?.email 
+        });
         
         // Load assigned routes
         setRoutesLoading(true);

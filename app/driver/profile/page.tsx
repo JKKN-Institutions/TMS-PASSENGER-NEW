@@ -67,7 +67,8 @@ export default function DriverProfilePage() {
     try {
       if (!user || !user.id) throw new Error('Driver ID not found');
 
-      const response = await fetch(`/api/driver/profile?driverId=${user.id}`);
+      const driverId = (user as any)?.driver_id || user.id;
+      const response = await fetch(`/api/driver/profile?driverId=${driverId}`);
       if (!response.ok) throw new Error('Failed to load profile');
       
       const data = await response.json();
@@ -87,11 +88,12 @@ export default function DriverProfilePage() {
       setSaving(true);
       if (!user || !user.id) throw new Error('Driver ID not found');
 
+      const driverId = (user as any)?.driver_id || user.id;
       const response = await fetch('/api/driver/profile/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          driverId: user.id,
+          driverId: driverId,
           ...editForm
         })
       });
