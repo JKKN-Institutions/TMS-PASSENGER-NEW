@@ -36,11 +36,11 @@ Successfully modified the driver authentication system to use the same callback 
 **Changes**:
 ```env
 # Before
-NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger.vercel.app/auth/callback
-NEXT_PUBLIC_DRIVER_REDIRECT_URI=https://tms-passenger.vercel.app/auth/driver-callback
+NEXT_PUBLIC_REDIRECT_URI=https://el.app/auth/callback
+NEXT_PUBLIC_DRIVER_REDIRECT_URI=https://el.app/auth/driver-callback
 
 # After
-NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger.vercel.app/auth/callback
+NEXT_PUBLIC_REDIRECT_URI=https://el.app/auth/callback
 # NEXT_PUBLIC_DRIVER_REDIRECT_URI removed
 ```
 

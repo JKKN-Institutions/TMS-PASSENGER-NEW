@@ -28,7 +28,7 @@ Implemented a **unified callback URL** for both passenger and driver OAuth authe
 
 ```env
 # Unified OAuth Redirect URI
-NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger.vercel.app/auth/callback
+NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger-taupe.vercel.app/auth/callback
 ```
 
 ### **4. Backward Compatibility** ✅

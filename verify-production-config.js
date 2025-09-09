@@ -1,5 +1,5 @@
 // Production Configuration Verification Script
-// Run this in the browser console on https://tms-passenger.vercel.app/
+// Run this in the browser console on https://el.app/
 
 console.log('🔍 TMS Passenger Production Configuration Check');
 console.log('==============================================');
@@ -19,8 +19,8 @@ const config = {
 console.log('📋 Current Configuration:', config);
 
 // Verify redirect URIs are production URLs
-const isProductionRedirect = config.redirectUri?.includes('tms-passenger.vercel.app');
-const isProductionDriverRedirect = config.driverRedirectUri?.includes('tms-passenger.vercel.app');
+const isProductionRedirect = config.redirectUri?.includes('el.app');
+const isProductionDriverRedirect = config.driverRedirectUri?.includes('el.app');
 
 console.log('✅ Redirect URI Check:', {
   passenger: isProductionRedirect ? '✅ Production' : '❌ Development',
@@ -41,7 +41,7 @@ testOAuthUrl.searchParams.append('state', 'test_production_' + Date.now());
 console.log('🔗 Test OAuth URL:', testOAuthUrl.toString());
 
 // Check if we're on the correct domain
-const isCorrectDomain = window.location.hostname === 'tms-passenger.vercel.app';
+const isCorrectDomain = window.location.hostname === 'el.app';
 console.log('🌐 Domain Check:', isCorrectDomain ? '✅ Correct domain' : '❌ Wrong domain');
 
 // Summary

@@ -6,8 +6,8 @@
 - [ ] `NEXT_PUBLIC_PARENT_APP_URL` = `https://my.jkkn.ac.in`
 - [ ] `NEXT_PUBLIC_APP_ID` = `transport_management_system_menrm674`
 - [ ] `NEXT_PUBLIC_API_KEY` = `app_e20655605d48ebce_cfa1ffe34268949a`
-- [ ] `NEXT_PUBLIC_REDIRECT_URI` = `https://tms-passenger.vercel.app/auth/callback`
-- [ ] `NEXT_PUBLIC_DRIVER_REDIRECT_URI` = `https://tms-passenger.vercel.app/auth/driver-callback`
+- [ ] `NEXT_PUBLIC_REDIRECT_URI` = `https://tms-passenger-taupe.vercel.app/auth/callback`
+- [ ] `NEXT_PUBLIC_DRIVER_REDIRECT_URI` = `https://tms-passenger-taupe.vercel.app/auth/driver-callback`
 - [ ] `NEXT_PUBLIC_AUTH_DEBUG` = `true`
 - [ ] `NEXT_PUBLIC_SUPABASE_URL` = `https://gsvbrytleqdxpdfbykqh.supabase.co`
 - [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
