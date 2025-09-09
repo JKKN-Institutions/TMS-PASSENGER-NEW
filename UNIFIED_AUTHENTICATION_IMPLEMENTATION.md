@@ -142,7 +142,7 @@ sessionStorage.setItem('tms_oauth_role', 'driver');
 Only one callback URL needs to be configured:
 ```
 Allowed Redirect URIs:
-- https://tms-passenger.vercel.app/auth/callback
+- https://tms-passenger-new.vercel.app/auth/callback
 ```
 
 ### **Environment Variables**
