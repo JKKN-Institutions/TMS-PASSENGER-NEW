@@ -35,15 +35,25 @@ export default function DriverRouteGuard({ children }: DriverRouteGuardProps) {
     // Additional check: ensure user has driver-specific data
     if (user) {
       const hasDriverRole = 'role' in user && user.role === 'driver';
-      const hasDriverData = 'driver_id' in user || 
+      const hasDriverData = 'id' in user || 'driver_id' in user || 
                            ('user_metadata' in user && (user as any).user_metadata?.driver_id);
 
-      if (!hasDriverRole && !hasDriverData) {
-        console.log('❌ Driver access denied - insufficient permissions:', { 
+      console.log('🔍 Driver validation check:', { 
+        user, 
+        hasDriverRole, 
+        hasDriverData,
+        userRole: (user as any).role,
+        userId: (user as any).id
+      });
+
+      // Driver must have either the role OR the driver data
+      if (!hasDriverRole) {
+        console.log('❌ Driver access denied - missing driver role:', { 
           hasRole: hasDriverRole, 
-          hasData: hasDriverData 
+          hasData: hasDriverData,
+          userObject: user
         });
-        setAuthError('Your account does not have the necessary permissions to access driver features. Please contact support to verify your driver account status.');
+        setAuthError('Your account does not have driver role. Please log in with a driver account or contact support.');
         router.replace('/driver/login');
         return;
       }

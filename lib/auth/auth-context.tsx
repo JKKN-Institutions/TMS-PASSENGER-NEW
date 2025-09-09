@@ -467,11 +467,24 @@ export function AuthProvider({
             // CRITICAL: SET COOKIES for middleware validation
             if (typeof window !== 'undefined') {
               const maxAge = 24 * 60 * 60; // 24 hours
-              document.cookie = `tms_driver_user=${encodeURIComponent(driverUser)}; path=/; max-age=${maxAge}; SameSite=Lax`;
-              document.cookie = `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-token')}; path=/; max-age=${maxAge}; SameSite=Lax`;
-              document.cookie = `tms_driver_session=${encodeURIComponent(JSON.stringify(sessionData))}; path=/; max-age=${maxAge}; SameSite=Lax`;
+              const cookieOptions = `path=/; max-age=${maxAge}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`;
               
-              console.log('✅ Driver cookies set for middleware validation');
+              document.cookie = `tms_driver_user=${encodeURIComponent(driverUser)}; ${cookieOptions}`;
+              document.cookie = `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-token')}; ${cookieOptions}`;
+              document.cookie = `tms_driver_session=${encodeURIComponent(JSON.stringify(sessionData))}; ${cookieOptions}`;
+              
+              console.log('✅ Driver cookies set for middleware validation:', {
+                driverUserCookie: `tms_driver_user=${encodeURIComponent(driverUser).substring(0, 50)}...`,
+                driverTokenCookie: `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-token').substring(0, 50)}...`,
+                cookieOptions
+              });
+              
+              // Verify cookies were set
+              setTimeout(() => {
+                const cookies = document.cookie.split(';').map(c => c.trim());
+                const driverCookies = cookies.filter(c => c.startsWith('tms_driver_'));
+                console.log('🔍 Verification - Driver cookies in browser:', driverCookies);
+              }, 100);
             }
             
             console.log('✅ Driver state set successfully:', {

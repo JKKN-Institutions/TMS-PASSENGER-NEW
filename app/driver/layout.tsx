@@ -34,8 +34,11 @@ export default function DriverLayout({
 
   // Skip auth check for driver login page
   if (typeof window !== 'undefined' && window.location.pathname === '/driver/login') {
+    console.log('🔄 Driver layout: Skipping auth check for /driver/login');
     return <div className="min-h-screen">{children}</div>;
   }
+
+  console.log('🔍 Driver layout auth state:', { isAuthenticated, userType, isLoading, user });
 
   // Show loading while checking auth
   if (isLoading) {

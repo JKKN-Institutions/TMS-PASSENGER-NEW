@@ -7,13 +7,21 @@ import { useAuth } from '@/lib/auth/auth-context';
 
 export default function DriverLoginPage() {
   const router = useRouter();
-  const { loginDriverDirect } = useAuth();
+  const { loginDriverDirect, isAuthenticated, userType, isLoading } = useAuth();
   const [email, setEmail] = useState('arthanareswaran22@jkkn.ac.in');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Redirect if already authenticated as driver
+  React.useEffect(() => {
+    if (!isLoading && isAuthenticated && userType === 'driver') {
+      console.log('✅ Driver already authenticated, redirecting to dashboard');
+      router.push('/driver');
+    }
+  }, [isAuthenticated, userType, isLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +39,9 @@ export default function DriverLoginPage() {
         console.log('✅ Driver login successful via auth context');
         setSuccess('Login successful! Redirecting to driver dashboard...');
         
-        // Redirect after a short delay
-        setTimeout(() => {
-          router.push('/driver');
-        }, 1500);
+        // Redirect immediately since login was successful
+        console.log('🔄 Redirecting to driver dashboard...');
+        router.push('/driver');
       } else {
         throw new Error('Driver login failed. Please check your credentials.');
       }

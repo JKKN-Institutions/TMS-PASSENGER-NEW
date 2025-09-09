@@ -16,7 +16,10 @@ export function middleware(request: NextRequest) {
     console.log('🔍 Middleware: Cookies found:', { 
       hasUser: !!driverUser, 
       hasToken: !!driverToken, 
-      hasSession: !!driverSession 
+      hasSession: !!driverSession,
+      driverUserValue: driverUser?.value ? 'PRESENT' : 'MISSING',
+      driverTokenValue: driverToken?.value ? 'PRESENT' : 'MISSING',
+      allCookies: request.cookies.getAll().map(c => c.name).join(', ')
     });
     
     // If no driver authentication, redirect to driver login
