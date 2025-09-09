@@ -167,7 +167,15 @@ export async function POST(request: NextRequest) {
               
               // IMPORTANT: Use the actual student ID from the database, not the JWT sub
               console.log('🔄 Using actual student ID from database instead of JWT sub');
+              // Store the original studentId for reference
+              const originalStudentId = studentId;
               studentId = emailStudent.id;
+              
+              console.log('🔧 Student ID mapping:', {
+                original: originalStudentId,
+                database: studentId,
+                email: emailStudent.email
+              });
             } else {
               console.log('❌ Email lookup also failed:', emailError?.message);
             }
