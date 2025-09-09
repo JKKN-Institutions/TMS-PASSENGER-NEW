@@ -24,8 +24,8 @@ export default function DriverHomePage() {
         }
         
         if (!isAuthenticated || userType !== 'driver') {
-          console.log('❌ Driver access denied:', { isAuthenticated, userType });
-          router.replace('/login');
+          console.log('❌ Driver page access denied:', { isAuthenticated, userType, user });
+          router.replace('/driver/login');
           return;
         }
         

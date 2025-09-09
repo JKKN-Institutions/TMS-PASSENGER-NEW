@@ -19,9 +19,13 @@ export default function DriverLoginPage() {
   React.useEffect(() => {
     if (!isLoading && isAuthenticated && userType === 'driver') {
       console.log('✅ Driver already authenticated, redirecting to dashboard');
-      router.push('/driver');
+      // Add a small delay to ensure all state is properly set
+      setTimeout(() => {
+        // Use window.location.href for a hard redirect to avoid React Router issues
+        window.location.href = '/driver';
+      }, 100);
     }
-  }, [isAuthenticated, userType, isLoading, router]);
+  }, [isAuthenticated, userType, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +45,8 @@ export default function DriverLoginPage() {
         
         // Redirect immediately since login was successful
         console.log('🔄 Redirecting to driver dashboard...');
-        router.push('/driver');
+        // Use window.location.href for a hard redirect to avoid React Router issues
+        window.location.href = '/driver';
       } else {
         throw new Error('Driver login failed. Please check your credentials.');
       }

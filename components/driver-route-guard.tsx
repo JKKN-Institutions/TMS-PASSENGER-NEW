@@ -15,18 +15,23 @@ export default function DriverRouteGuard({ children }: DriverRouteGuardProps) {
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isLoading) return;
+    console.log('🔍 DriverRouteGuard: Auth check started:', { isLoading, isAuthenticated, userType, user });
+    
+    if (isLoading) {
+      console.log('🔄 DriverRouteGuard: Still loading, waiting...');
+      return;
+    }
 
     // Check if user is authenticated and has driver role
     if (!isAuthenticated) {
-      console.log('❌ Driver access denied: Not authenticated');
+      console.log('❌ DriverRouteGuard: Not authenticated, redirecting to driver login');
       setAuthError('You must be logged in to access driver features. Please log in with your driver account.');
       router.replace('/driver/login');
       return;
     }
 
     if (userType !== 'driver') {
-      console.log('❌ Driver access denied: Wrong user type:', userType);
+      console.log('❌ DriverRouteGuard: Wrong user type:', { userType, expectedType: 'driver' });
       setAuthError(`You are logged in as a ${userType}, but driver access requires a driver account. Please log in with a driver account or contact support if you believe this is an error.`);
       router.replace('/driver/login');
       return;
@@ -60,6 +65,7 @@ export default function DriverRouteGuard({ children }: DriverRouteGuardProps) {
     }
 
     // All checks passed
+    console.log('✅ DriverRouteGuard: All checks passed, authorizing access');
     setIsAuthorized(true);
     setAuthError(null);
   }, [isAuthenticated, userType, isLoading, user, router]);
