@@ -102,6 +102,20 @@ export function AuthProvider({
                 setUser(driverUserData);
                 setUserType('driver');
                 setIsLoading(false);
+                
+                // CRITICAL: Also set cookies when loading from localStorage
+                if (typeof window !== 'undefined') {
+                  const maxAge = 24 * 60 * 60; // 24 hours
+                  const isSecure = window.location.protocol === 'https:';
+                  const cookieOptions = `path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`;
+                  
+                  document.cookie = `tms_driver_user=${encodeURIComponent(driverUser)}; ${cookieOptions}`;
+                  document.cookie = `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-direct-token')}; ${cookieOptions}`;
+                  document.cookie = `tms_driver_session=${encodeURIComponent(driverSession)}; ${cookieOptions}`;
+                  
+                  console.log('✅ Driver cookies refreshed from localStorage auth');
+                }
+                
                 return; // Skip unified auth check since we have valid driver auth
               } else {
                 console.log('❌ Driver token expired, clearing localStorage');
@@ -467,23 +481,47 @@ export function AuthProvider({
             // CRITICAL: SET COOKIES for middleware validation
             if (typeof window !== 'undefined') {
               const maxAge = 24 * 60 * 60; // 24 hours
-              const cookieOptions = `path=/; max-age=${maxAge}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`;
+              const isSecure = window.location.protocol === 'https:';
+              const cookieOptions = `path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`;
               
-              document.cookie = `tms_driver_user=${encodeURIComponent(driverUser)}; ${cookieOptions}`;
-              document.cookie = `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-token')}; ${cookieOptions}`;
-              document.cookie = `tms_driver_session=${encodeURIComponent(JSON.stringify(sessionData))}; ${cookieOptions}`;
+              // Set cookies with proper encoding
+              const userCookie = `tms_driver_user=${encodeURIComponent(driverUser)}; ${cookieOptions}`;
+              const tokenCookie = `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-direct-token')}; ${cookieOptions}`;
+              const sessionCookie = `tms_driver_session=${encodeURIComponent(JSON.stringify(sessionData))}; ${cookieOptions}`;
+              
+              document.cookie = userCookie;
+              document.cookie = tokenCookie;
+              document.cookie = sessionCookie;
               
               console.log('✅ Driver cookies set for middleware validation:', {
-                driverUserCookie: `tms_driver_user=${encodeURIComponent(driverUser).substring(0, 50)}...`,
-                driverTokenCookie: `tms_driver_token=${encodeURIComponent(sessionData.access_token || 'driver-token').substring(0, 50)}...`,
-                cookieOptions
+                userCookieLength: userCookie.length,
+                tokenCookieLength: tokenCookie.length,
+                sessionCookieLength: sessionCookie.length,
+                cookieOptions,
+                isSecure
               });
               
-              // Verify cookies were set
+              // Verify cookies were set immediately
+              const allCookies = document.cookie;
+              const hasDriverUser = allCookies.includes('tms_driver_user=');
+              const hasDriverToken = allCookies.includes('tms_driver_token=');
+              const hasDriverSession = allCookies.includes('tms_driver_session=');
+              
+              console.log('🔍 Immediate cookie verification:', {
+                hasDriverUser,
+                hasDriverToken, 
+                hasDriverSession,
+                totalCookieLength: allCookies.length
+              });
+              
+              // Additional verification after a delay
               setTimeout(() => {
                 const cookies = document.cookie.split(';').map(c => c.trim());
                 const driverCookies = cookies.filter(c => c.startsWith('tms_driver_'));
-                console.log('🔍 Verification - Driver cookies in browser:', driverCookies);
+                console.log('🔍 Delayed verification - Driver cookies in browser:', {
+                  count: driverCookies.length,
+                  names: driverCookies.map(c => c.split('=')[0])
+                });
               }, 100);
             }
             

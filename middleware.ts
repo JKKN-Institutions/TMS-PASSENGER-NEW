@@ -24,10 +24,8 @@ export function middleware(request: NextRequest) {
     
     // If no driver authentication, redirect to driver login
     if (!driverUser || !driverToken) {
-      console.log('❌ Middleware: No driver authentication, but allowing through for debugging');
-      console.log('⚠️ Middleware: Client-side guards will handle authentication');
-      // Temporarily allow through - the DriverRouteGuard will handle authentication
-      // return NextResponse.redirect(new URL('/driver/login', request.url));
+      console.log('❌ Middleware: No driver authentication, redirecting to driver login');
+      return NextResponse.redirect(new URL('/driver/login', request.url));
     }
     
     try {
@@ -38,8 +36,8 @@ export function middleware(request: NextRequest) {
         // Check if user has driver role
         if (driverData.role !== 'driver') {
           console.log('❌ Middleware: User does not have driver role:', driverData.role);
-          console.log('⚠️ Middleware: Allowing through for debugging - client guards will handle this');
-          // return NextResponse.redirect(new URL('/driver/login', request.url));
+          console.log('⚠️ Middleware: Redirecting to driver login due to insufficient role permissions');
+          return NextResponse.redirect(new URL('/driver/login', request.url));
         }
       }
       
