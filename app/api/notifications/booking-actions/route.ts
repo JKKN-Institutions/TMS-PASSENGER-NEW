@@ -4,12 +4,14 @@ import webpush from 'web-push';
 
 const supabase = createClient();
 
-// Configure web-push with VAPID keys
-webpush.setVapidDetails(
-  'mailto:admin@tms.local',
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+// Configure web-push with VAPID keys (only if keys are available)
+if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    'mailto:admin@tms.local',
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+}
 
 interface BookingActionRequest {
   action: 'confirm' | 'decline' | 'view';
