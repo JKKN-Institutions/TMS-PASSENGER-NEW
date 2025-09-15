@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
+import { pushNotificationService } from '@/lib/push-notifications';
 
 interface Notification {
   id: string;
@@ -98,6 +99,12 @@ const NotificationsPage = () => {
   // Student state management
   const [student, setStudent] = useState<any>(null);
   
+  // Push notification state
+  const [pushSupported, setPushSupported] = useState(false);
+  const [pushPermission, setPushPermission] = useState<NotificationPermission>('default');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [pushLoading, setPushLoading] = useState(false);
+  
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -147,6 +154,7 @@ const NotificationsPage = () => {
     if (studentId) {
       fetchNotifications();
       fetchSettings();
+      initializePushStatus();
     }
   }, [studentId]); // Only when student ID changes
 
@@ -204,6 +212,107 @@ const NotificationsPage = () => {
       console.error('Error fetching settings:', error);
     }
   }, [studentId]);
+
+  const initializePushStatus = useCallback(async () => {
+    if (!studentId) return;
+    
+    try {
+      // Set student ID for push service
+      pushNotificationService.setStudentId(studentId);
+
+      // Check push notification status
+      const status = await pushNotificationService.getSubscriptionStatus();
+      setPushSupported(status.supported);
+      setPushPermission(status.permission);
+      setIsSubscribed(status.subscribed);
+
+      console.log('📱 Push notification status:', status);
+    } catch (error) {
+      console.error('Error initializing push notifications:', error);
+    }
+  }, [studentId]);
+
+  const handlePushNotificationToggle = async () => {
+    if (!pushSupported) {
+      toast.error('Push notifications are not supported on this device');
+      return;
+    }
+
+    if (pushPermission === 'denied') {
+      toast.error('Push notifications are blocked. Please enable them in your browser settings.');
+      return;
+    }
+
+    setPushLoading(true);
+
+    try {
+      if (!isSubscribed && pushPermission !== 'granted') {
+        // Request permission first
+        const permission = await pushNotificationService.requestPermission();
+        setPushPermission(permission);
+
+        if (permission !== 'granted') {
+          toast.error('Push notification permission is required to enable notifications');
+          return;
+        }
+      }
+
+      if (!isSubscribed) {
+        // Subscribe to push notifications
+        const subscription = await pushNotificationService.subscribe();
+        
+        if (subscription) {
+          setIsSubscribed(true);
+          await updateSettings({ pushEnabled: true });
+          toast.success('✅ Push notifications enabled! You\'ll now receive important updates.');
+          
+          // Send a test notification
+          setTimeout(() => {
+            sendTestNotification();
+          }, 2000);
+        } else {
+          throw new Error('Failed to create subscription');
+        }
+      } else {
+        // Unsubscribe from push notifications
+        const unsubscribed = await pushNotificationService.unsubscribe();
+        
+        if (unsubscribed) {
+          setIsSubscribed(false);
+          await updateSettings({ pushEnabled: false });
+          toast.success('Push notifications disabled');
+        } else {
+          throw new Error('Failed to unsubscribe');
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling push notifications:', error);
+      toast.error('Failed to update push notification settings. Please try again.');
+    } finally {
+      setPushLoading(false);
+    }
+  };
+
+  const sendTestNotification = async () => {
+    try {
+      const response = await fetch('/api/notifications/test-push', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          testType: 'welcome'
+        })
+      });
+
+      if (response.ok) {
+        console.log('✅ Test notification sent');
+      }
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+    }
+  };
 
   const markAsRead = async (notificationId: string) => {
     if (!studentId) return;
@@ -465,20 +574,74 @@ const NotificationsPage = () => {
             <div>
               <h4 className="text-sm font-medium text-gray-900 mb-3">General</h4>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm text-gray-700">Push notifications</label>
-                  <button
-                    onClick={() => updateSettings({ pushEnabled: !settings.pushEnabled })}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      settings.pushEnabled ? 'bg-blue-600' : 'bg-gray-200'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        settings.pushEnabled ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <label className="text-sm font-medium text-gray-700">Push notifications</label>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {!pushSupported ? 'Not supported on this device' :
+                         pushPermission === 'denied' ? 'Blocked by browser settings' :
+                         !isSubscribed ? 'Click to enable browser notifications' :
+                         'Enabled - you\'ll receive important updates'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={handlePushNotificationToggle}
+                      disabled={!pushSupported || pushLoading}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        isSubscribed ? 'bg-blue-600' : 'bg-gray-200'
+                      } ${(!pushSupported || pushLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          isSubscribed ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                      {pushLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-3 w-3 border-b-1 border-white"></div>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                  
+                  {pushPermission === 'denied' && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                      <div className="flex items-start space-x-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                        <div className="text-xs text-amber-700">
+                          <p className="font-medium">Push notifications are blocked</p>
+                          <p className="mt-1">To enable:</p>
+                          <ol className="list-decimal list-inside mt-1 space-y-0.5">
+                            <li>Click the lock icon in your browser's address bar</li>
+                            <li>Select "Allow" for notifications</li>
+                            <li>Refresh this page</li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {pushSupported && pushPermission === 'granted' && isSubscribed && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                        <div className="text-xs text-green-700">
+                          <p className="font-medium">Push notifications are active</p>
+                          <p className="mt-1">You'll receive booking reminders and important updates</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {pushSupported && isSubscribed && (
+                    <button
+                      onClick={sendTestNotification}
+                      className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      Send test notification
+                    </button>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <label className="text-sm text-gray-700">Sound notifications</label>

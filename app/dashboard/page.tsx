@@ -31,7 +31,6 @@ import {
   LoadingOverlay,
   SwipeHandler 
 } from '@/components/modern-ui-components';
-import PushNotificationSetup from '@/components/push-notification-setup';
 import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
@@ -448,19 +447,6 @@ export default function DashboardPage() {
             {/* Available Services Info for Inactive Accounts */}
             <AvailableServicesInfo isActive={paymentStatus.isActive} />
           </>
-        )}
-
-        {/* Push Notification Setup */}
-        {user && (user as any).studentId && (
-          <PushNotificationSetup 
-            studentId={(user as any).studentId}
-            onPermissionGranted={() => {
-              console.log('✅ Push notifications enabled for student:', (user as any).studentId);
-            }}
-            onPermissionDenied={() => {
-              console.log('❌ Push notifications denied for student:', (user as any).studentId);
-            }}
-          />
         )}
 
         {/* Enhanced Passenger Dashboard */}
