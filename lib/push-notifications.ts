@@ -127,10 +127,29 @@ class PushNotificationService {
     return permission;
   }
 
+  // Ensure service worker is ready
+  private async ensureServiceWorkerReady(): Promise<ServiceWorkerRegistration> {
+    if (this.registration) {
+      return this.registration;
+    }
+
+    // Try to re-register if not available
+    if ('serviceWorker' in navigator) {
+      this.registration = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      return this.registration;
+    }
+
+    throw new Error('Service Worker not supported');
+  }
+
   // Subscribe to push notifications
   public async subscribe(): Promise<PushSubscription | null> {
+    // Ensure service worker is ready
+    await this.ensureServiceWorkerReady();
+
     if (!this.registration) {
-      throw new Error('Service Worker not registered');
+      throw new Error('Service Worker not ready');
     }
 
     if (this.getPermissionStatus() !== 'granted') {
@@ -361,9 +380,21 @@ class PushNotificationService {
     let subscribed = false;
     let subscription = null;
 
-    if (supported && this.registration) {
-      subscription = await this.registration.pushManager.getSubscription();
-      subscribed = !!subscription;
+    if (supported) {
+      try {
+        // Ensure service worker is ready before checking subscription
+        await this.ensureServiceWorkerReady();
+        
+        if (this.registration) {
+          subscription = await this.registration.pushManager.getSubscription();
+          subscribed = !!subscription;
+          
+          // Update internal subscription reference
+          this.subscription = subscription;
+        }
+      } catch (error) {
+        console.error('Error checking subscription status:', error);
+      }
     }
 
     return {
