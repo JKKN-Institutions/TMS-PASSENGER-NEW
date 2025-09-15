@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +12,10 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const supabase = createClientComponentClient();
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
 
     // Get student info
     const { data: student, error: studentError } = await supabase
@@ -100,7 +103,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send notification to admin API (which handles the actual push sending)
-    const adminResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'}/api/admin/notifications/push`, {
+    const adminResponse = await fetch(`${process.env.ADMIN_API_URL || 'http://localhost:3001'}/api/admin/notifications/push`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
