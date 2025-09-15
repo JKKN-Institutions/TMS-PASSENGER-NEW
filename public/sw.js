@@ -36,14 +36,19 @@ const API_CACHE_PATTERNS = [
 self.addEventListener('install', (event) => {
   console.log('🔧 Service Worker installing...');
   
+  // Skip waiting immediately for faster activation
+  self.skipWaiting();
+  
   event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE_NAME).then((cache) => {
-        console.log('📦 Caching static files');
-        return cache.addAll(STATIC_FILES);
-      }),
-      self.skipWaiting()
-    ])
+    caches.open(STATIC_CACHE_NAME).then((cache) => {
+      console.log('📦 Caching static files');
+      // Cache files in the background, don't block activation
+      return cache.addAll(STATIC_FILES).catch((error) => {
+        console.warn('⚠️ Failed to cache some files:', error);
+        // Don't fail installation if caching fails
+        return Promise.resolve();
+      });
+    })
   );
 });
 
@@ -51,22 +56,22 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log('✅ Service Worker activated');
   
+  // Claim clients immediately
+  self.clients.claim();
+  
   event.waitUntil(
-    Promise.all([
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== STATIC_CACHE_NAME && 
-                cacheName !== DYNAMIC_CACHE_NAME && 
-                cacheName !== CACHE_NAME) {
-              console.log('🗑️ Deleting old cache:', cacheName);
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      }),
-      self.clients.claim()
-    ])
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== STATIC_CACHE_NAME && 
+              cacheName !== DYNAMIC_CACHE_NAME && 
+              cacheName !== CACHE_NAME) {
+            console.log('🗑️ Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 

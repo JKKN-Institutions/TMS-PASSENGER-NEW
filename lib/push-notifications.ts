@@ -127,20 +127,51 @@ class PushNotificationService {
     return permission;
   }
 
-  // Ensure service worker is ready
+  // Ensure service worker is ready and active
   private async ensureServiceWorkerReady(): Promise<ServiceWorkerRegistration> {
-    if (this.registration) {
-      return this.registration;
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('Service Worker not supported');
     }
 
-    // Try to re-register if not available
-    if ('serviceWorker' in navigator) {
+    // Get or register service worker
+    if (!this.registration) {
       this.registration = await navigator.serviceWorker.register('/sw.js');
-      await navigator.serviceWorker.ready;
-      return this.registration;
+      console.log('🔧 Service Worker registered');
     }
 
-    throw new Error('Service Worker not supported');
+    // Wait for service worker to be ready
+    await navigator.serviceWorker.ready;
+    console.log('⏳ Service Worker ready');
+
+    // Ensure there's an active service worker
+    if (!this.registration.active) {
+      // Wait for the service worker to become active (with timeout)
+      await new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Service Worker activation timeout (10s)'));
+        }, 10000); // 10 second timeout
+
+        const checkActive = () => {
+          if (this.registration?.active) {
+            clearTimeout(timeout);
+            console.log('✅ Service Worker is now active');
+            resolve();
+          } else {
+            console.log('🔄 Waiting for service worker to activate...');
+            setTimeout(checkActive, 100);
+          }
+        };
+        checkActive();
+      });
+    }
+
+    // Double-check that we have an active service worker
+    if (!this.registration.active) {
+      throw new Error('Service Worker failed to activate');
+    }
+
+    console.log('🎯 Service Worker is ready and active');
+    return this.registration;
   }
 
   // Subscribe to push notifications
