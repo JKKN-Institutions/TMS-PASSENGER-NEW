@@ -1,124 +1,205 @@
-// Push Notification Utility for Passenger Application
+// Enhanced Push Notification Service for TMS Passenger App
+// Handles subscription, sending, and interactive notifications
 
-export class PushNotificationService {
+interface PushSubscriptionData {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
+
+interface NotificationAction {
+  action: string;
+  title: string;
+  icon?: string;
+}
+
+interface NotificationOptions {
+  body: string;
+  icon?: string;
+  badge?: string;
+  tag?: string;
+  requireInteraction?: boolean;
+  actions?: NotificationAction[];
+  data?: any;
+  vibrate?: number[];
+  silent?: boolean;
+  timestamp?: number;
+}
+
+interface BookingReminderNotification {
+  title: string;
+  body: string;
+  scheduleId: string;
+  scheduleDate: string;
+  departureTime: string;
+  routeName: string;
+  boardingStop: string;
+  canBook: boolean;
+  paymentRequired: boolean;
+  notificationId: string;
+}
+
+class PushNotificationService {
   private static instance: PushNotificationService;
-  private swRegistration: ServiceWorkerRegistration | null = null;
+  private registration: ServiceWorkerRegistration | null = null;
+  private subscription: PushSubscription | null = null;
+  private studentId: string | null = null;
 
-  static getInstance(): PushNotificationService {
+  private constructor() {
+    this.init();
+  }
+
+  public static getInstance(): PushNotificationService {
     if (!PushNotificationService.instance) {
       PushNotificationService.instance = new PushNotificationService();
     }
     return PushNotificationService.instance;
   }
 
-  // Check if push notifications are supported
-  static isSupported(): boolean {
-    return (
-      'serviceWorker' in navigator &&
-      'PushManager' in window &&
-      'Notification' in window
-    );
+  // Initialize push notification service
+  private async init() {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      try {
+        // Register service worker
+        this.registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('✅ Service Worker registered successfully');
+
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerMessage.bind(this));
+
+        // Wait for service worker to be ready
+        await navigator.serviceWorker.ready;
+        
+        // Get existing subscription
+        this.subscription = await this.registration.pushManager.getSubscription();
+        
+        if (this.subscription) {
+          console.log('📱 Existing push subscription found');
+        }
+
+      } catch (error) {
+        console.error('❌ Service Worker registration failed:', error);
+      }
+    } else {
+      console.warn('⚠️ Push notifications not supported');
+    }
   }
 
-  // Get current permission status
-  static getPermissionStatus(): NotificationPermission {
+  // Handle messages from service worker
+  private handleServiceWorkerMessage(event: MessageEvent) {
+    const { data } = event;
+    
+    if (data.type === 'GET_STUDENT_ID') {
+      // Send student ID back to service worker
+      event.ports[0].postMessage({ studentId: this.studentId });
+    }
+  }
+
+  // Set student ID for notifications
+  public setStudentId(studentId: string) {
+    this.studentId = studentId;
+    console.log('👤 Student ID set for push notifications:', studentId);
+  }
+
+  // Check if push notifications are supported
+  public isSupported(): boolean {
+    return 'serviceWorker' in navigator && 
+           'PushManager' in window && 
+           'Notification' in window;
+  }
+
+  // Check current permission status
+  public getPermissionStatus(): NotificationPermission {
     return Notification.permission;
   }
 
   // Request notification permission
-  async requestPermission(): Promise<NotificationPermission> {
-    if (!PushNotificationService.isSupported()) {
-      throw new Error('Push notifications are not supported');
+  public async requestPermission(): Promise<NotificationPermission> {
+    if (!this.isSupported()) {
+      throw new Error('Push notifications not supported');
     }
 
     const permission = await Notification.requestPermission();
+    console.log('🔔 Notification permission:', permission);
+    
     return permission;
   }
 
-  // Register service worker
-  async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
-    if (!('serviceWorker' in navigator)) {
-      throw new Error('Service workers are not supported');
-    }
-
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      this.swRegistration = registration;
-      console.log('Service Worker registered successfully');
-      return registration;
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
-      throw error;
-    }
-  }
-
   // Subscribe to push notifications
-  async subscribe(userId: string): Promise<PushSubscription | null> {
-    try {
-      // Register service worker if not already registered
-      if (!this.swRegistration) {
-        this.swRegistration = await this.registerServiceWorker();
-      }
+  public async subscribe(): Promise<PushSubscription | null> {
+    if (!this.registration) {
+      throw new Error('Service Worker not registered');
+    }
 
-      // Request permission if not granted
+    if (this.getPermissionStatus() !== 'granted') {
       const permission = await this.requestPermission();
       if (permission !== 'granted') {
-        throw new Error('Push notification permission denied');
+        throw new Error('Notification permission denied');
+      }
+    }
+
+    try {
+      // Convert VAPID public key
+      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (!vapidPublicKey) {
+        throw new Error('VAPID public key not configured');
       }
 
-      // Check if already subscribed
-      const existingSubscription = await this.swRegistration.pushManager.getSubscription();
-      if (existingSubscription) {
-        // Send existing subscription to server
-        await this.sendSubscriptionToServer(existingSubscription, userId);
-        return existingSubscription;
-      }
+      const applicationServerKey = this.urlBase64ToUint8Array(vapidPublicKey);
 
-      // Create new subscription
-      const subscription = await this.swRegistration.pushManager.subscribe({
+      // Subscribe to push notifications
+      this.subscription = await this.registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(
-          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-        )
+        applicationServerKey
       });
 
-      // Send subscription to server
-      await this.sendSubscriptionToServer(subscription, userId);
+      console.log('✅ Push subscription created:', this.subscription);
 
-      console.log('Push subscription successful');
-      return subscription;
+      // Send subscription to server
+      if (this.studentId) {
+        await this.sendSubscriptionToServer(this.subscription);
+      }
+
+      return this.subscription;
+
     } catch (error) {
-      console.error('Push subscription failed:', error);
+      console.error('❌ Push subscription failed:', error);
       throw error;
     }
   }
 
   // Unsubscribe from push notifications
-  async unsubscribe(userId: string): Promise<void> {
+  public async unsubscribe(): Promise<boolean> {
+    if (!this.subscription) {
+      return true;
+    }
+
     try {
-      if (!this.swRegistration) {
-        this.swRegistration = await navigator.serviceWorker.getRegistration('/sw.js') || null;
+      const success = await this.subscription.unsubscribe();
+      
+      if (success && this.studentId) {
+        // Remove subscription from server
+        await this.removeSubscriptionFromServer();
       }
 
-      if (!this.swRegistration) {
-        console.log('No service worker registration found');
-        return;
-      }
-
-      const subscription = await this.swRegistration.pushManager.getSubscription();
-      if (subscription) {
-        await subscription.unsubscribe();
-        await this.removeSubscriptionFromServer(userId, subscription.endpoint);
-        console.log('Push unsubscription successful');
-      }
+      this.subscription = null;
+      console.log('✅ Push subscription removed');
+      
+      return success;
     } catch (error) {
-      console.error('Push unsubscription failed:', error);
-      throw error;
+      console.error('❌ Push unsubscription failed:', error);
+      return false;
     }
   }
 
   // Send subscription to server
-  private async sendSubscriptionToServer(subscription: PushSubscription, userId: string): Promise<void> {
+  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
+    if (!this.studentId) {
+      throw new Error('Student ID not set');
+    }
+
     try {
       const response = await fetch('/api/push/subscribe', {
         method: 'POST',
@@ -126,44 +207,171 @@ export class PushNotificationService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          subscription: {
-            endpoint: subscription.endpoint,
-            keys: {
-              p256dh: this.arrayBufferToBase64(subscription.getKey('p256dh')),
-              auth: this.arrayBufferToBase64(subscription.getKey('auth'))
-            }
-          },
-          userId
+          subscription: subscription.toJSON(),
+          userId: this.studentId
         })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send subscription to server');
+        throw new Error(`Failed to save subscription: ${response.status}`);
       }
 
-      console.log('Subscription sent to server successfully');
+      const result = await response.json();
+      console.log('✅ Subscription saved to server:', result);
+
     } catch (error) {
-      console.error('Error sending subscription to server:', error);
+      console.error('❌ Failed to save subscription:', error);
       throw error;
     }
   }
 
   // Remove subscription from server
-  private async removeSubscriptionFromServer(userId: string, endpoint: string): Promise<void> {
+  private async removeSubscriptionFromServer(): Promise<void> {
+    if (!this.studentId) {
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/push/subscribe?userId=${userId}&endpoint=${encodeURIComponent(endpoint)}`, {
+      const response = await fetch(`/api/push/subscribe?userId=${this.studentId}`, {
         method: 'DELETE'
       });
 
       if (!response.ok) {
-        throw new Error('Failed to remove subscription from server');
+        console.warn('⚠️ Failed to remove subscription from server:', response.status);
+      } else {
+        console.log('✅ Subscription removed from server');
       }
 
-      console.log('Subscription removed from server successfully');
     } catch (error) {
-      console.error('Error removing subscription from server:', error);
-      throw error;
+      console.error('❌ Failed to remove subscription:', error);
     }
+  }
+
+  // Show local notification (for testing)
+  public async showLocalNotification(title: string, options: NotificationOptions): Promise<void> {
+    if (this.getPermissionStatus() !== 'granted') {
+      throw new Error('Notification permission not granted');
+    }
+
+    const notification = new Notification(title, {
+      body: options.body,
+      icon: options.icon || '/icons/bus-notification.png',
+      badge: options.badge || '/icons/badge.png',
+      tag: options.tag,
+      requireInteraction: options.requireInteraction,
+      data: options.data,
+      vibrate: options.vibrate || [200, 100, 200],
+      silent: options.silent,
+      timestamp: options.timestamp || Date.now()
+    });
+
+    // Handle click events
+    notification.onclick = () => {
+      notification.close();
+      
+      if (options.data?.url) {
+        window.open(options.data.url, '_blank');
+      }
+    };
+
+    // Auto-close after 10 seconds if not requiring interaction
+    if (!options.requireInteraction) {
+      setTimeout(() => {
+        notification.close();
+      }, 10000);
+    }
+  }
+
+  // Create booking reminder notification
+  public createBookingReminderNotification(data: BookingReminderNotification): NotificationOptions {
+    const actions: NotificationAction[] = [
+      {
+        action: 'confirm',
+        title: data.canBook ? 'Confirm Booking' : 'Pay & Book',
+        icon: '/icons/confirm.png'
+      },
+      {
+        action: 'view',
+        title: 'View Details',
+        icon: '/icons/view.png'
+      },
+      {
+        action: 'dismiss',
+        title: 'Not Traveling',
+        icon: '/icons/dismiss.png'
+      }
+    ];
+
+    return {
+      body: data.body,
+      icon: '/icons/bus-notification.png',
+      badge: '/icons/badge.png',
+      tag: `booking-reminder-${data.scheduleId}`,
+      requireInteraction: true,
+      actions,
+      data: {
+        type: 'booking_reminder',
+        notificationId: data.notificationId,
+        scheduleId: data.scheduleId,
+        scheduleDate: data.scheduleDate,
+        departureTime: data.departureTime,
+        routeName: data.routeName,
+        boardingStop: data.boardingStop,
+        canBook: data.canBook,
+        paymentRequired: data.paymentRequired,
+        url: `/dashboard/schedules?date=${data.scheduleDate}&schedule=${data.scheduleId}`
+      },
+      vibrate: [200, 100, 200, 100, 200],
+      timestamp: Date.now()
+    };
+  }
+
+  // Test booking reminder notification
+  public async testBookingReminder(): Promise<void> {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const testData: BookingReminderNotification = {
+      title: '🚌 Test Trip Reminder - Route 101',
+      body: 'Your test trip is tomorrow at 07:30 AM. Tap to confirm your booking!',
+      scheduleId: 'test-schedule-123',
+      scheduleDate: tomorrow.toISOString().split('T')[0],
+      departureTime: '07:30:00',
+      routeName: 'Test Route 101',
+      boardingStop: 'Test Stop',
+      canBook: true,
+      paymentRequired: false,
+      notificationId: 'test-notification-123'
+    };
+
+    const options = this.createBookingReminderNotification(testData);
+    await this.showLocalNotification(testData.title, options);
+  }
+
+  // Get subscription status
+  public async getSubscriptionStatus(): Promise<{
+    supported: boolean;
+    permission: NotificationPermission;
+    subscribed: boolean;
+    subscription: PushSubscription | null;
+  }> {
+    const supported = this.isSupported();
+    const permission = this.getPermissionStatus();
+    
+    let subscribed = false;
+    let subscription = null;
+
+    if (supported && this.registration) {
+      subscription = await this.registration.pushManager.getSubscription();
+      subscribed = !!subscription;
+    }
+
+    return {
+      supported,
+      permission,
+      subscribed,
+      subscription
+    };
   }
 
   // Utility function to convert VAPID key
@@ -179,63 +387,50 @@ export class PushNotificationService {
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
+
     return outputArray;
   }
 
-  // Utility function to convert ArrayBuffer to base64
-  private arrayBufferToBase64(buffer: ArrayBuffer | null): string {
-    if (!buffer) return '';
-    
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-  }
-
-  // Check subscription status
-  async getSubscriptionStatus(): Promise<{
-    isSubscribed: boolean;
-    subscription: PushSubscription | null;
-  }> {
-    try {
-      if (!this.swRegistration) {
-        this.swRegistration = await navigator.serviceWorker.getRegistration('/sw.js') || null;
-      }
-
-      if (!this.swRegistration) {
-        return { isSubscribed: false, subscription: null };
-      }
-
-      const subscription = await this.swRegistration.pushManager.getSubscription();
-      return {
-        isSubscribed: !!subscription,
-        subscription
-      };
-    } catch (error) {
-      console.error('Error checking subscription status:', error);
-      return { isSubscribed: false, subscription: null };
-    }
-  }
-
-  // Show a test notification
-  async showTestNotification(): Promise<void> {
-    if (!('Notification' in window)) {
-      throw new Error('Notifications are not supported');
-    }
-
-    if (Notification.permission === 'granted') {
-      new Notification('TMS Test Notification', {
-        body: 'Push notifications are working correctly!',
-        icon: '/favicon.ico',
-        badge: '/favicon.ico'
-      });
+  // Enable/disable booking reminders
+  public async setBookingRemindersEnabled(enabled: boolean): Promise<void> {
+    if (enabled) {
+      await this.subscribe();
     } else {
-      throw new Error('Notification permission not granted');
+      await this.unsubscribe();
+    }
+
+    // Save preference to localStorage
+    localStorage.setItem('bookingRemindersEnabled', enabled.toString());
+  }
+
+  // Check if booking reminders are enabled
+  public isBookingRemindersEnabled(): boolean {
+    const stored = localStorage.getItem('bookingRemindersEnabled');
+    return stored !== 'false'; // Default to true
+  }
+
+  // Update service worker
+  public async updateServiceWorker(): Promise<void> {
+    if (!this.registration) {
+      return;
+    }
+
+    try {
+      await this.registration.update();
+      console.log('🔄 Service Worker updated');
+    } catch (error) {
+      console.error('❌ Service Worker update failed:', error);
     }
   }
 }
 
-// Singleton instance
-export const pushNotificationService = PushNotificationService.getInstance(); 
+// Export singleton instance
+export const pushNotificationService = PushNotificationService.getInstance();
+
+// Export types
+export type {
+  PushSubscriptionData,
+  NotificationAction,
+  NotificationOptions,
+  BookingReminderNotification
+};
