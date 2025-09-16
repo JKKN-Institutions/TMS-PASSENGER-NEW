@@ -20,6 +20,16 @@
       "maxDuration": 30
     }
   },
+  "crons": [
+    {
+      "path": "/api/notifications/daily-scheduler",
+      "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/notifications/daily-scheduler", 
+      "schedule": "0 18 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
