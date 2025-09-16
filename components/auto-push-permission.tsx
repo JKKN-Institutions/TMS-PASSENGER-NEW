@@ -36,6 +36,9 @@ export default function AutoPushPermission({
       // Only proceed if user is authenticated
       if (!user?.id) return;
 
+      // Set student ID for push service
+      pushNotificationService.setStudentId(user.id);
+
       // Check session storage to avoid showing multiple times
       if (oncePerSession && sessionStorage.getItem('push-permission-prompted')) {
         return;
@@ -63,6 +66,12 @@ export default function AutoPushPermission({
             setShowPrompt(true);
             console.log('📢 Showing push notification permission prompt');
           }, delay);
+        } else {
+          console.log('📢 Not showing push permission prompt:', {
+            supported: status.supported,
+            permission: status.permission,
+            subscribed: status.subscribed
+          });
         }
       } catch (error) {
         console.error('Error checking push notification status:', error);
@@ -71,6 +80,17 @@ export default function AutoPushPermission({
 
     checkAndShowPrompt();
   }, [user, delay, oncePerSession]);
+
+  // Function to refresh push status after changes
+  const refreshPushStatus = async () => {
+    try {
+      const status = await pushNotificationService.getSubscriptionStatus();
+      setPushStatus(status);
+      console.log('🔄 Push status refreshed:', status);
+    } catch (error) {
+      console.error('Error refreshing push status:', error);
+    }
+  };
 
   const handleEnableNotifications = async () => {
     setIsLoading(true);
@@ -82,6 +102,10 @@ export default function AutoPushPermission({
       
       if (result.success) {
         console.log('✅ Push notifications enabled successfully');
+        
+        // Refresh the push status state to reflect the change
+        await refreshPushStatus();
+        
         toast.success('🔔 Push notifications enabled! You\'ll receive important updates about your transport.');
         
         // Send a welcome notification
@@ -112,6 +136,10 @@ export default function AutoPushPermission({
       } else {
         console.log('❌ Push notifications not enabled:', result.error);
         toast.error(result.error || 'Failed to enable push notifications');
+        
+        // Refresh status even on failure to get the latest permission state
+        await refreshPushStatus();
+        
         setShowPrompt(false);
         
         // Still mark as prompted even if denied
@@ -122,6 +150,10 @@ export default function AutoPushPermission({
     } catch (error) {
       console.error('Error enabling push notifications:', error);
       toast.error('Failed to enable push notifications');
+      
+      // Refresh status to ensure we have the latest state
+      await refreshPushStatus();
+      
       setShowPrompt(false);
       
       // Mark as prompted even on error

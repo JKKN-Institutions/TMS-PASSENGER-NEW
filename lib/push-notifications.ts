@@ -471,6 +471,46 @@ class PushNotificationService {
     return stored !== 'false'; // Default to true
   }
 
+  // Request permission and subscribe in one action (for UI convenience)
+  public async requestPermissionAndSubscribe(): Promise<{ success: boolean; error?: string }> {
+    try {
+      // Check if already subscribed
+      const status = await this.getSubscriptionStatus();
+      if (status.subscribed) {
+        return { success: true };
+      }
+
+      // Request permission if not already granted
+      if (status.permission !== 'granted') {
+        const permission = await this.requestPermission();
+        if (permission !== 'granted') {
+          return { 
+            success: false, 
+            error: permission === 'denied' 
+              ? 'Push notifications are blocked. Please enable them in your browser settings.' 
+              : 'Push notification permission is required.'
+          };
+        }
+      }
+
+      // Subscribe to push notifications
+      const subscription = await this.subscribe();
+      
+      if (subscription) {
+        return { success: true };
+      } else {
+        return { success: false, error: 'Failed to create push subscription' };
+      }
+
+    } catch (error) {
+      console.error('❌ Request permission and subscribe failed:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error occurred' 
+      };
+    }
+  }
+
   // Update service worker
   public async updateServiceWorker(): Promise<void> {
     if (!this.registration) {
