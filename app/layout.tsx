@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import AutoLoginWrapper from "@/components/auto-login-wrapper";
+import AutoPushPermission from "@/components/auto-push-permission";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,6 +51,8 @@ export default function RootLayout({
             <AutoLoginWrapper>
               <div id="root" className="h-full overflow-x-hidden">
                 {children}
+                {/* Auto push permission prompt */}
+                <AutoPushPermission delay={5000} oncePerSession={true} />
               </div>
             </AutoLoginWrapper>
             <Toaster
