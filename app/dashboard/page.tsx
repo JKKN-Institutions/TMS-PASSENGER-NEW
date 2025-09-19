@@ -20,7 +20,7 @@ import StaffDashboard from '@/components/staff-dashboard';
 import PaymentStatusBadge from '@/components/payment-status-badge';
 import { ServiceStatusBanner, AvailableServicesInfo } from '@/components/account-access-control';
 import EnrollmentStatusBanner from '@/components/enrollment-status-banner';
-import { useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
+import { useEnrollmentStatus, useEnrollment } from '@/lib/enrollment/enrollment-context';
 import { StudentDashboardData } from '@/types';
 import { 
   Button, 
@@ -35,7 +35,7 @@ import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
-  const enrollmentStatus = useEnrollmentStatus();
+  const { enrollmentStatus, isLoading: enrollmentLoading, refreshEnrollmentStatus } = useEnrollment();
   const [dashboardData, setDashboardData] = useState<StudentDashboardData | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<any>(null);
   const [availableFees, setAvailableFees] = useState<any>(null);
@@ -179,9 +179,22 @@ export default function DashboardPage() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchDashboardData();
-    setRefreshing(false);
-    toast.success('Dashboard refreshed successfully');
+    
+    try {
+      // Refresh both dashboard data and enrollment status
+      await Promise.all([
+        fetchDashboardData(),
+        // Refresh enrollment status to ensure latest state
+        refreshEnrollmentStatus ? refreshEnrollmentStatus() : Promise.resolve()
+      ]);
+      
+      toast.success('Dashboard refreshed successfully');
+    } catch (error) {
+      console.error('Error refreshing dashboard:', error);
+      toast.error('Failed to refresh dashboard');
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
@@ -276,6 +289,58 @@ export default function DashboardPage() {
     profileTransportEnrolled: profile?.transport_enrolled,
     enrollmentStatusFromContext: enrollmentStatus?.enrollmentStatus
   });
+
+  // Show loading overlay during enrollment status check on app startup
+  if (authLoading || (isAuthenticated && enrollmentLoading && !enrollmentStatus)) {
+    const loadingMessage = authLoading 
+      ? "Authenticating..." 
+      : "Checking enrollment status...";
+    
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center z-50">
+        <div className="text-center p-8">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-2xl shadow-xl p-8 max-w-sm mx-auto"
+          >
+            {/* TMS Logo/Icon */}
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto">
+                <Bus className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            
+            {/* Loading Spinner */}
+            <div className="mb-4">
+              <Spinner size="lg" color="green" />
+            </div>
+            
+            {/* Loading Message */}
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Welcome to TMS
+            </h2>
+            <p className="text-gray-600">
+              {loadingMessage}
+            </p>
+            
+            {/* Progress indicator */}
+            <div className="mt-6">
+              <div className="w-full bg-gray-200 rounded-full h-1">
+                <motion.div
+                  className="h-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-full"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
   
   if (shouldShowEnrollmentDashboard) {
     return (
@@ -418,44 +483,68 @@ export default function DashboardPage() {
 
   // Show enhanced main transport dashboard with swipe support
   return (
-    <SwipeHandler
-      onSwipeDown={handleRefresh}
-      className="min-h-screen bg-gray-50"
-    >
-      <div className="container-modern py-8 space-y-8">
-        {/* Payment Status Components - ONLY for students with route allocation */}
-        {hasRouteAllocation && paymentStatus && (
-          <>
-            {/* Payment Status Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <PaymentStatusBadge
+    <>
+      {/* Loading overlay for dashboard data loading (after enrollment status is checked) */}
+      <LoadingOverlay
+        isVisible={isLoading && !enrollmentLoading && enrollmentStatus !== null}
+        message="Loading dashboard..."
+        className="bg-gray-50/80"
+      />
+      
+      {/* Refreshing indicator */}
+      {refreshing && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-white shadow-lg rounded-full px-6 py-3 flex items-center space-x-3"
+          >
+            <Spinner size="sm" color="green" />
+            <span className="text-sm font-medium text-gray-700">Refreshing...</span>
+          </motion.div>
+        </div>
+      )}
+      
+      <SwipeHandler
+        onSwipeDown={handleRefresh}
+        className="min-h-screen bg-gray-50"
+      >
+        <div className="container-modern py-8 space-y-8">
+          {/* Payment Status Components - ONLY for students with route allocation */}
+          {hasRouteAllocation && paymentStatus && (
+            <>
+              {/* Payment Status Badge */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <PaymentStatusBadge
+                  isActive={paymentStatus.isActive}
+                  lastPaidTerm={paymentStatus.lastPaidTerm}
+                  nextDueAmount={nextDueAmount}
+                />
+              </motion.div>
+
+              {/* Service Status Banner for Inactive Accounts */}
+              <ServiceStatusBanner 
                 isActive={paymentStatus.isActive}
-                lastPaidTerm={paymentStatus.lastPaidTerm}
                 nextDueAmount={nextDueAmount}
               />
-            </motion.div>
 
-            {/* Service Status Banner for Inactive Accounts */}
-            <ServiceStatusBanner 
-              isActive={paymentStatus.isActive}
-              nextDueAmount={nextDueAmount}
-            />
+              {/* Available Services Info for Inactive Accounts */}
+              <AvailableServicesInfo isActive={paymentStatus.isActive} />
+            </>
+          )}
 
-            {/* Available Services Info for Inactive Accounts */}
-            <AvailableServicesInfo isActive={paymentStatus.isActive} />
-          </>
-        )}
-
-        {/* Enhanced Passenger Dashboard */}
-        <EnhancedPassengerDashboard 
-          data={dashboardData}
-          loading={isLoading}
-          onRefresh={handleRefresh}
-        />
-      </div>
-    </SwipeHandler>
+          {/* Enhanced Passenger Dashboard */}
+          <EnhancedPassengerDashboard 
+            data={dashboardData}
+            loading={isLoading && !enrollmentLoading}
+            onRefresh={handleRefresh}
+          />
+        </div>
+      </SwipeHandler>
+    </>
   );
 } 
