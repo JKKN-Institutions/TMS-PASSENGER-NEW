@@ -33,6 +33,13 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, isLoading, isAuthenticated, hasPermission, hasRole, hasAnyRole } = useAuth();
   const router = useRouter();
+  
+  console.log('🔐 PROTECTED ROUTE: Auth state check', { 
+    isLoading, 
+    isAuthenticated, 
+    hasUser: !!user,
+    userEmail: user?.email 
+  });
 
   useEffect(() => {
     if (isLoading) return;
@@ -87,17 +94,21 @@ export function ProtectedRoute({
   };
 
   if (isLoading) {
+    console.log('🔐 PROTECTED ROUTE: Returning loading component');
     return loadingComponent ? <>{loadingComponent}</> : <DefaultLoading />;
   }
 
   if (!isAuthenticated) {
+    console.log('🔐 PROTECTED ROUTE: Not authenticated, returning fallback');
     return fallback ? <>{fallback}</> : null;
   }
 
   if (!checkAuthorization()) {
+    console.log('🔐 PROTECTED ROUTE: Authorization failed, returning fallback');
     return fallback ? <>{fallback}</> : null;
   }
 
+  console.log('🔐 PROTECTED ROUTE: Auth successful, rendering children');
   return <>{children}</>;
 }
 

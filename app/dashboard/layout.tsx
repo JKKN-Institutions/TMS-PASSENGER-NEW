@@ -431,10 +431,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log('🏗️ DASHBOARD LAYOUT: Rendering layout...');
+  
   return (
     <RequireAuth>
       <EnrollmentProvider>
-        <DashboardContent>{children}</DashboardContent>
+        <DashboardContent>
+          {console.log('👶 DASHBOARD LAYOUT: Rendering children...')}
+          {children}
+        </DashboardContent>
       </EnrollmentProvider>
     </RequireAuth>
   );
