@@ -43,6 +43,24 @@ export default function DashboardPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [minLoadingTime, setMinLoadingTime] = useState(true);
+
+  // Ensure minimum loading time for better UX
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMinLoadingTime(false);
+    }, 1500); // Minimum 1.5 seconds loading time
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Track when initial loading is complete
+  useEffect(() => {
+    if (!authLoading && !enrollmentLoading && enrollmentStatus !== null && !isLoading && !minLoadingTime) {
+      setInitialLoadComplete(true);
+    }
+  }, [authLoading, enrollmentLoading, enrollmentStatus, isLoading, minLoadingTime]);
 
   const fetchDashboardData = async () => {
     try {
@@ -290,11 +308,25 @@ export default function DashboardPage() {
     enrollmentStatusFromContext: enrollmentStatus?.enrollmentStatus
   });
 
-  // Show loading overlay during enrollment status check on app startup
-  if (authLoading || (isAuthenticated && enrollmentLoading && !enrollmentStatus)) {
+  // Show loading overlay during initial app loading and enrollment status check
+  const isInitialLoading = !initialLoadComplete && (authLoading || minLoadingTime || (isAuthenticated && (enrollmentLoading || enrollmentStatus === null)));
+  
+  if (isInitialLoading) {
+    // Debug logging for loading states
+    console.log('🔄 Loading overlay state:', {
+      authLoading,
+      enrollmentLoading,
+      enrollmentStatus: enrollmentStatus ? 'loaded' : 'null',
+      minLoadingTime,
+      initialLoadComplete,
+      isInitialLoading
+    });
+
     const loadingMessage = authLoading 
       ? "Authenticating..." 
-      : "Checking enrollment status...";
+      : enrollmentLoading || enrollmentStatus === null
+      ? "Checking enrollment status..."
+      : "Finalizing setup...";
     
     return (
       <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center z-50">
@@ -325,15 +357,47 @@ export default function DashboardPage() {
               {loadingMessage}
             </p>
             
-            {/* Progress indicator */}
-            <div className="mt-6">
+            {/* Step indicator */}
+            <div className="mt-6 space-y-2">
+              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <span>
+                  {authLoading ? 'Authenticating...' : 
+                   enrollmentLoading || enrollmentStatus === null ? 'Checking enrollment...' : 
+                   'Setting up dashboard...'}
+                </span>
+                <span>
+                  {authLoading ? '1/3' : 
+                   enrollmentLoading || enrollmentStatus === null ? '2/3' : 
+                   '3/3'}
+                </span>
+              </div>
               <div className="w-full bg-gray-200 rounded-full h-1">
                 <motion.div
                   className="h-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-full"
                   initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  animate={{ 
+                    width: authLoading ? "33%" : 
+                           enrollmentLoading || enrollmentStatus === null ? "66%" : 
+                           "100%" 
+                  }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
                 />
+              </div>
+              
+              {/* Loading steps */}
+              <div className="flex justify-between text-xs mt-3">
+                <div className={`flex items-center space-x-1 ${!authLoading ? 'text-green-600' : 'text-gray-400'}`}>
+                  {!authLoading ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
+                  <span>Auth</span>
+                </div>
+                <div className={`flex items-center space-x-1 ${!authLoading && (!enrollmentLoading && enrollmentStatus !== null) ? 'text-green-600' : 'text-gray-400'}`}>
+                  {!authLoading && (!enrollmentLoading && enrollmentStatus !== null) ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
+                  <span>Enrollment</span>
+                </div>
+                <div className={`flex items-center space-x-1 ${!minLoadingTime && !isLoading ? 'text-green-600' : 'text-gray-400'}`}>
+                  {!minLoadingTime && !isLoading ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
+                  <span>Dashboard</span>
+                </div>
               </div>
             </div>
           </motion.div>
