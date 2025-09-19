@@ -20,7 +20,7 @@ import StaffDashboard from '@/components/staff-dashboard';
 import PaymentStatusBadge from '@/components/payment-status-badge';
 import { ServiceStatusBanner, AvailableServicesInfo } from '@/components/account-access-control';
 import EnrollmentStatusBanner from '@/components/enrollment-status-banner';
-import { useEnrollmentStatus, useEnrollment } from '@/lib/enrollment/enrollment-context';
+import { useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import { StudentDashboardData } from '@/types';
 import { 
   Button, 
@@ -34,13 +34,8 @@ import {
 import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
-  console.log('🏁 Dashboard: Component rendering...');
-  
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
-  const { enrollmentStatus, isLoading: enrollmentLoading, refreshEnrollmentStatus } = useEnrollment();
-  
-  console.log('🔑 Dashboard: Auth state:', { isAuthenticated, authLoading, userType });
-  console.log('📋 Dashboard: Enrollment state:', { enrollmentStatus: enrollmentStatus ? 'loaded' : 'null', enrollmentLoading });
+  const enrollmentStatus = useEnrollmentStatus();
   const [dashboardData, setDashboardData] = useState<StudentDashboardData | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<any>(null);
   const [availableFees, setAvailableFees] = useState<any>(null);
@@ -48,39 +43,6 @@ export default function DashboardPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
-  const [minLoadingTime, setMinLoadingTime] = useState(true);
-  const [loadingStartTime] = useState(Date.now());
-
-  // Ensure minimum loading time for better UX
-  useEffect(() => {
-    console.log('🚀 Dashboard: Setting up minimum loading time...');
-    const timer = setTimeout(() => {
-      console.log('⏰ Dashboard: Minimum loading time completed');
-      setMinLoadingTime(false);
-    }, 2000); // Increased to 2 seconds for better visibility
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Track when initial loading is complete
-  useEffect(() => {
-    const isAllLoaded = !authLoading && !enrollmentLoading && enrollmentStatus !== null && !isLoading && !minLoadingTime;
-    console.log('🔍 Dashboard: Checking if loading complete:', {
-      authLoading,
-      enrollmentLoading,
-      enrollmentStatusExists: enrollmentStatus !== null,
-      isLoading,
-      minLoadingTime,
-      isAllLoaded
-    });
-    
-    if (isAllLoaded) {
-      const totalLoadTime = Date.now() - loadingStartTime;
-      console.log(`✅ Dashboard: Initial load complete in ${totalLoadTime}ms`);
-      setInitialLoadComplete(true);
-    }
-  }, [authLoading, enrollmentLoading, enrollmentStatus, isLoading, minLoadingTime, loadingStartTime]);
 
   const fetchDashboardData = async () => {
     try {
@@ -217,22 +179,9 @@ export default function DashboardPage() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    
-    try {
-      // Refresh both dashboard data and enrollment status
-      await Promise.all([
-        fetchDashboardData(),
-        // Refresh enrollment status to ensure latest state
-        refreshEnrollmentStatus ? refreshEnrollmentStatus() : Promise.resolve()
-      ]);
-      
-      toast.success('Dashboard refreshed successfully');
-    } catch (error) {
-      console.error('Error refreshing dashboard:', error);
-      toast.error('Failed to refresh dashboard');
-    } finally {
-      setRefreshing(false);
-    }
+    await fetchDashboardData();
+    setRefreshing(false);
+    toast.success('Dashboard refreshed successfully');
   };
 
   useEffect(() => {
@@ -327,115 +276,6 @@ export default function DashboardPage() {
     profileTransportEnrolled: profile?.transport_enrolled,
     enrollmentStatusFromContext: enrollmentStatus?.enrollmentStatus
   });
-
-  // Show loading overlay during initial app loading and enrollment status check
-  const isInitialLoading = !initialLoadComplete && (authLoading || minLoadingTime || (isAuthenticated && (enrollmentLoading || enrollmentStatus === null)));
-  
-  // Always log the loading state decision
-  console.log('🎯 LOADING DECISION:', {
-    shouldShowLoading: isInitialLoading,
-    initialLoadComplete,
-    authLoading,
-    minLoadingTime,
-    isAuthenticated,
-    enrollmentLoading,
-    enrollmentStatusNull: enrollmentStatus === null
-  });
-  
-  if (isInitialLoading) {
-    // Debug logging for loading states
-    console.log('🎭 LOADING OVERLAY: Showing loading screen!', {
-      authLoading,
-      enrollmentLoading,
-      enrollmentStatus: enrollmentStatus ? 'loaded' : 'null',
-      minLoadingTime,
-      initialLoadComplete,
-      isInitialLoading
-    });
-
-    const loadingMessage = authLoading 
-      ? "Authenticating..." 
-      : enrollmentLoading || enrollmentStatus === null
-      ? "Checking enrollment status..."
-      : "Finalizing setup...";
-    
-    return (
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center z-50">
-        <div className="text-center p-8">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl shadow-xl p-8 max-w-sm mx-auto"
-          >
-            {/* TMS Logo/Icon */}
-            <div className="mb-6">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto">
-                <Bus className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            
-            {/* Loading Spinner */}
-            <div className="mb-4">
-              <Spinner size="lg" color="green" />
-            </div>
-            
-            {/* Loading Message */}
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              Welcome to TMS
-            </h2>
-            <p className="text-gray-600">
-              {loadingMessage}
-            </p>
-            
-            {/* Step indicator */}
-            <div className="mt-6 space-y-2">
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
-                <span>
-                  {authLoading ? 'Authenticating...' : 
-                   enrollmentLoading || enrollmentStatus === null ? 'Checking enrollment...' : 
-                   'Setting up dashboard...'}
-                </span>
-                <span>
-                  {authLoading ? '1/3' : 
-                   enrollmentLoading || enrollmentStatus === null ? '2/3' : 
-                   '3/3'}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1">
-                <motion.div
-                  className="h-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-full"
-                  initial={{ width: "0%" }}
-                  animate={{ 
-                    width: authLoading ? "33%" : 
-                           enrollmentLoading || enrollmentStatus === null ? "66%" : 
-                           "100%" 
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                />
-              </div>
-              
-              {/* Loading steps */}
-              <div className="flex justify-between text-xs mt-3">
-                <div className={`flex items-center space-x-1 ${!authLoading ? 'text-green-600' : 'text-gray-400'}`}>
-                  {!authLoading ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
-                  <span>Auth</span>
-                </div>
-                <div className={`flex items-center space-x-1 ${!authLoading && (!enrollmentLoading && enrollmentStatus !== null) ? 'text-green-600' : 'text-gray-400'}`}>
-                  {!authLoading && (!enrollmentLoading && enrollmentStatus !== null) ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
-                  <span>Enrollment</span>
-                </div>
-                <div className={`flex items-center space-x-1 ${!minLoadingTime && !isLoading ? 'text-green-600' : 'text-gray-400'}`}>
-                  {!minLoadingTime && !isLoading ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 border border-gray-400 rounded-full" />}
-                  <span>Dashboard</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
   
   if (shouldShowEnrollmentDashboard) {
     return (
@@ -578,68 +418,44 @@ export default function DashboardPage() {
 
   // Show enhanced main transport dashboard with swipe support
   return (
-    <>
-      {/* Loading overlay for dashboard data loading (after enrollment status is checked) */}
-      <LoadingOverlay
-        isVisible={isLoading && !enrollmentLoading && enrollmentStatus !== null}
-        message="Loading dashboard..."
-        className="bg-gray-50/80"
-      />
-      
-      {/* Refreshing indicator */}
-      {refreshing && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="bg-white shadow-lg rounded-full px-6 py-3 flex items-center space-x-3"
-          >
-            <Spinner size="sm" color="green" />
-            <span className="text-sm font-medium text-gray-700">Refreshing...</span>
-          </motion.div>
-        </div>
-      )}
-      
-      <SwipeHandler
-        onSwipeDown={handleRefresh}
-        className="min-h-screen bg-gray-50"
-      >
-        <div className="container-modern py-8 space-y-8">
-          {/* Payment Status Components - ONLY for students with route allocation */}
-          {hasRouteAllocation && paymentStatus && (
-            <>
-              {/* Payment Status Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <PaymentStatusBadge
-                  isActive={paymentStatus.isActive}
-                  lastPaidTerm={paymentStatus.lastPaidTerm}
-                  nextDueAmount={nextDueAmount}
-                />
-              </motion.div>
-
-              {/* Service Status Banner for Inactive Accounts */}
-              <ServiceStatusBanner 
+    <SwipeHandler
+      onSwipeDown={handleRefresh}
+      className="min-h-screen bg-gray-50"
+    >
+      <div className="container-modern py-8 space-y-8">
+        {/* Payment Status Components - ONLY for students with route allocation */}
+        {hasRouteAllocation && paymentStatus && (
+          <>
+            {/* Payment Status Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <PaymentStatusBadge
                 isActive={paymentStatus.isActive}
+                lastPaidTerm={paymentStatus.lastPaidTerm}
                 nextDueAmount={nextDueAmount}
               />
+            </motion.div>
 
-              {/* Available Services Info for Inactive Accounts */}
-              <AvailableServicesInfo isActive={paymentStatus.isActive} />
-            </>
-          )}
+            {/* Service Status Banner for Inactive Accounts */}
+            <ServiceStatusBanner 
+              isActive={paymentStatus.isActive}
+              nextDueAmount={nextDueAmount}
+            />
 
-          {/* Enhanced Passenger Dashboard */}
-          <EnhancedPassengerDashboard 
-            data={dashboardData}
-            loading={isLoading && !enrollmentLoading}
-            onRefresh={handleRefresh}
-          />
-        </div>
-      </SwipeHandler>
-    </>
+            {/* Available Services Info for Inactive Accounts */}
+            <AvailableServicesInfo isActive={paymentStatus.isActive} />
+          </>
+        )}
+
+        {/* Enhanced Passenger Dashboard */}
+        <EnhancedPassengerDashboard 
+          data={dashboardData}
+          loading={isLoading}
+          onRefresh={handleRefresh}
+        />
+      </div>
+    </SwipeHandler>
   );
 } 

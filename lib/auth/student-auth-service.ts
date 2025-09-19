@@ -11,7 +11,7 @@ class StudentAuthService {
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   /**
-   * Check if a user is a student by querying the external students API and local database
+   * Check if a user is a student by querying the external students API
    */
   async checkStudentStatus(email: string): Promise<StudentAuthData> {
     // Check cache first
@@ -20,10 +20,6 @@ class StudentAuthService {
       console.log('📋 Using cached student status for:', email);
       return cached.data;
     }
-
-    // Clear cache for this email to force fresh lookup
-    console.log('🔄 Clearing student status cache for fresh lookup:', email);
-    this.studentStatusCache.delete(email);
 
     try {
       console.log('🔍 Checking student status for:', email);
@@ -69,50 +65,12 @@ class StudentAuthService {
           role: 'student'
         };
       } else {
-        console.log('ℹ️ User not found in external students API, checking local database...');
-        
-        // Fallback: Check local students database
-        try {
-          const localResponse = await fetch('/api/students/find-by-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          });
-
-          if (localResponse.ok) {
-            const localResult = await localResponse.json();
-            if (localResult.success && localResult.student) {
-              console.log('✅ Found student in local database:', localResult.student.email);
-              
-              result = {
-                isStudent: true,
-                studentMember: localResult.student,
-                role: 'student'
-              };
-            } else {
-              console.log('ℹ️ User not found in local students database either');
-              result = {
-                isStudent: false,
-                studentMember: null,
-                role: 'unknown'
-              };
-            }
-          } else {
-            console.log('❌ Local students API error:', localResponse.status);
-            result = {
-              isStudent: false,
-              studentMember: null,
-              role: 'unknown'
-            };
-          }
-        } catch (localError) {
-          console.error('❌ Error checking local students database:', localError);
-          result = {
-            isStudent: false,
-            studentMember: null,
-            role: 'unknown'
-          };
-        }
+        console.log('ℹ️ User not found in students database');
+        result = {
+          isStudent: false,
+          studentMember: null,
+          role: 'unknown'
+        };
       }
       
       // Cache the result

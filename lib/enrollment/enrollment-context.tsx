@@ -51,16 +51,6 @@ export function EnrollmentProvider({
     try {
       setIsLoading(true);
       setError(null);
-      
-      console.log('🔄 ENROLLMENT CONTEXT: Starting enrollment status check...');
-      console.log('📊 ENROLLMENT CONTEXT: Current state before check:', { 
-        isLoading: isLoading, 
-        hasEnrollmentStatus: !!enrollmentStatus 
-      });
-      
-      // Add minimum loading time for better UX
-      const startTime = Date.now();
-      const minLoadingTime = 800; // 800ms minimum loading time
 
       // Get student ID from user context - prioritize JWT sub field
       const studentId = (user as any)?.sub || 
@@ -144,16 +134,6 @@ export function EnrollmentProvider({
         setError(null);
       }
 
-      // Ensure minimum loading time has elapsed
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
-      
-      if (remainingTime > 0) {
-        console.log(`⏱️ ENROLLMENT CONTEXT: Waiting ${remainingTime}ms to meet minimum loading time...`);
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
-      
-      console.log('✅ ENROLLMENT CONTEXT: Status check completed successfully');
       setEnrollmentStatus(status);
       return status;
 
@@ -161,15 +141,6 @@ export function EnrollmentProvider({
       console.error('❌ Error checking enrollment status:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to check enrollment status';
       setError(errorMessage);
-      
-      // Still enforce minimum loading time on error
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
-      
-      if (remainingTime > 0) {
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
-      
       return null;
     } finally {
       setIsLoading(false);
