@@ -52,7 +52,11 @@ export function EnrollmentProvider({
       setIsLoading(true);
       setError(null);
       
-      console.log('🔄 Starting enrollment status check...');
+      console.log('🔄 ENROLLMENT CONTEXT: Starting enrollment status check...');
+      console.log('📊 ENROLLMENT CONTEXT: Current state before check:', { 
+        isLoading: isLoading, 
+        hasEnrollmentStatus: !!enrollmentStatus 
+      });
       
       // Add minimum loading time for better UX
       const startTime = Date.now();
@@ -145,11 +149,11 @@ export function EnrollmentProvider({
       const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
       
       if (remainingTime > 0) {
-        console.log(`⏱️ Waiting ${remainingTime}ms to meet minimum loading time...`);
+        console.log(`⏱️ ENROLLMENT CONTEXT: Waiting ${remainingTime}ms to meet minimum loading time...`);
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
       
-      console.log('✅ Enrollment status check completed');
+      console.log('✅ ENROLLMENT CONTEXT: Status check completed successfully');
       setEnrollmentStatus(status);
       return status;
 

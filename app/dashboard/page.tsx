@@ -34,8 +34,13 @@ import {
 import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
+  console.log('🏁 Dashboard: Component rendering...');
+  
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
   const { enrollmentStatus, isLoading: enrollmentLoading, refreshEnrollmentStatus } = useEnrollment();
+  
+  console.log('🔑 Dashboard: Auth state:', { isAuthenticated, authLoading, userType });
+  console.log('📋 Dashboard: Enrollment state:', { enrollmentStatus: enrollmentStatus ? 'loaded' : 'null', enrollmentLoading });
   const [dashboardData, setDashboardData] = useState<StudentDashboardData | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<any>(null);
   const [availableFees, setAvailableFees] = useState<any>(null);
@@ -45,22 +50,37 @@ export default function DashboardPage() {
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const [minLoadingTime, setMinLoadingTime] = useState(true);
+  const [loadingStartTime] = useState(Date.now());
 
   // Ensure minimum loading time for better UX
   useEffect(() => {
+    console.log('🚀 Dashboard: Setting up minimum loading time...');
     const timer = setTimeout(() => {
+      console.log('⏰ Dashboard: Minimum loading time completed');
       setMinLoadingTime(false);
-    }, 1500); // Minimum 1.5 seconds loading time
+    }, 2000); // Increased to 2 seconds for better visibility
 
     return () => clearTimeout(timer);
   }, []);
 
   // Track when initial loading is complete
   useEffect(() => {
-    if (!authLoading && !enrollmentLoading && enrollmentStatus !== null && !isLoading && !minLoadingTime) {
+    const isAllLoaded = !authLoading && !enrollmentLoading && enrollmentStatus !== null && !isLoading && !minLoadingTime;
+    console.log('🔍 Dashboard: Checking if loading complete:', {
+      authLoading,
+      enrollmentLoading,
+      enrollmentStatusExists: enrollmentStatus !== null,
+      isLoading,
+      minLoadingTime,
+      isAllLoaded
+    });
+    
+    if (isAllLoaded) {
+      const totalLoadTime = Date.now() - loadingStartTime;
+      console.log(`✅ Dashboard: Initial load complete in ${totalLoadTime}ms`);
       setInitialLoadComplete(true);
     }
-  }, [authLoading, enrollmentLoading, enrollmentStatus, isLoading, minLoadingTime]);
+  }, [authLoading, enrollmentLoading, enrollmentStatus, isLoading, minLoadingTime, loadingStartTime]);
 
   const fetchDashboardData = async () => {
     try {
@@ -311,9 +331,20 @@ export default function DashboardPage() {
   // Show loading overlay during initial app loading and enrollment status check
   const isInitialLoading = !initialLoadComplete && (authLoading || minLoadingTime || (isAuthenticated && (enrollmentLoading || enrollmentStatus === null)));
   
+  // Always log the loading state decision
+  console.log('🎯 LOADING DECISION:', {
+    shouldShowLoading: isInitialLoading,
+    initialLoadComplete,
+    authLoading,
+    minLoadingTime,
+    isAuthenticated,
+    enrollmentLoading,
+    enrollmentStatusNull: enrollmentStatus === null
+  });
+  
   if (isInitialLoading) {
     // Debug logging for loading states
-    console.log('🔄 Loading overlay state:', {
+    console.log('🎭 LOADING OVERLAY: Showing loading screen!', {
       authLoading,
       enrollmentLoading,
       enrollmentStatus: enrollmentStatus ? 'loaded' : 'null',
