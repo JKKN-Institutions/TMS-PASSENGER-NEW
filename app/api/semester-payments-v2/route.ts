@@ -75,14 +75,28 @@ async function fetchAvailablePaymentOptions(studentId: string) {
     
     const { academicYear, currentTerm } = getCurrentAcademicInfo();
     
-    // Get student's route and boarding information
+    // Get student's route, boarding information, and quota details
     const { data: studentInfo, error: studentError } = await supabase
       .from('students')
       .select(`
         id,
+        student_name,
+        roll_number,
         allocated_route_id,
         boarding_point,
-        boarding_stop
+        boarding_stop,
+        quota_type_id,
+        transport_fee_amount,
+        outstanding_amount,
+        payment_status,
+        quota_type:quota_types(
+          id,
+          quota_name,
+          quota_code,
+          description,
+          annual_fee_amount,
+          is_government_quota
+        )
       `)
       .eq('id', studentId)
       .single();
@@ -101,45 +115,76 @@ async function fetchAvailablePaymentOptions(studentId: string) {
       }, { status: 400 });
     }
 
-    // Get fee structure directly from semester_fees table
-    const { data: feeData, error: feeError } = await supabase
-      .from('semester_fees')
-      .select(`
-        semester,
-        semester_fee,
-        full_year_discount_percent
-      `)
-      .eq('allocated_route_id', routeId)
-      .eq('stop_name', boardingStop)
-      .eq('academic_year', academicYear)
-      .eq('is_active', true);
+    // Use quota-based fee structure instead of semester_fees table
+    const quotaInfo = studentInfo.quota_type;
+    const annualFee = parseFloat(studentInfo.transport_fee_amount || 0);
+    const outstandingAmount = parseFloat(studentInfo.outstanding_amount || 0);
+    const paidAmount = annualFee - outstandingAmount;
 
-    if (feeError) {
-      console.error('Error fetching fee structure:', feeError);
-      return NextResponse.json({ error: 'Failed to fetch fee structure' }, { status: 500 });
+    // If no quota assigned, fall back to semester_fees table for backward compatibility
+    let fees;
+    if (quotaInfo && annualFee > 0) {
+      // Use quota-based system
+      const termFee = Math.round(annualFee / 3); // Divide annual fee into 3 terms
+      const discountPercent = 5; // Standard discount for full year payment
+      const fullYearFee = Math.round(annualFee * (1 - discountPercent / 100));
+
+      fees = {
+        term_1_fee: termFee,
+        term_2_fee: termFee,
+        term_3_fee: termFee,
+        full_year_discount_percent: discountPercent,
+        total_term_fees: annualFee,
+        full_year_fee: fullYearFee,
+        // Quota-specific information
+        quota_info: quotaInfo,
+        annual_fee: annualFee,
+        outstanding_amount: outstandingAmount,
+        paid_amount: paidAmount,
+        payment_status: studentInfo.payment_status
+      };
+    } else {
+      // Fall back to semester_fees table for students without quota
+      const { data: feeData, error: feeError } = await supabase
+        .from('semester_fees')
+        .select(`
+          semester,
+          semester_fee,
+          full_year_discount_percent
+        `)
+        .eq('allocated_route_id', routeId)
+        .eq('stop_name', boardingStop)
+        .eq('academic_year', academicYear)
+        .eq('is_active', true);
+
+      if (feeError || !feeData || feeData.length === 0) {
+        return NextResponse.json({ 
+          error: 'No fee structure found. Please contact admin to assign quota information.' 
+        }, { status: 404 });
+      }
+
+      const term1Fee = feeData.find(f => f.semester === '1')?.semester_fee || 0;
+      const term2Fee = feeData.find(f => f.semester === '2')?.semester_fee || 0;
+      const term3Fee = feeData.find(f => f.semester === '3')?.semester_fee || 0;
+      const discountPercent = feeData[0]?.full_year_discount_percent || 5;
+      
+      const totalTermFees = term1Fee + term2Fee + term3Fee;
+      const fullYearFee = Math.round(totalTermFees * (1 - discountPercent / 100));
+
+      fees = {
+        term_1_fee: term1Fee,
+        term_2_fee: term2Fee,
+        term_3_fee: term3Fee,
+        full_year_discount_percent: discountPercent,
+        total_term_fees: totalTermFees,
+        full_year_fee: fullYearFee,
+        quota_info: null,
+        annual_fee: totalTermFees,
+        outstanding_amount: totalTermFees, // Assume nothing paid for legacy students
+        paid_amount: 0,
+        payment_status: 'pending'
+      };
     }
-
-    if (!feeData || feeData.length === 0) {
-      return NextResponse.json({ error: 'Fee structure not found for this route and stop' }, { status: 404 });
-    }
-
-    // Process the fees into our expected structure
-    const term1Fee = feeData.find(f => f.semester === '1')?.semester_fee || 0;
-    const term2Fee = feeData.find(f => f.semester === '2')?.semester_fee || 0;
-    const term3Fee = feeData.find(f => f.semester === '3')?.semester_fee || 0;
-    const discountPercent = feeData[0]?.full_year_discount_percent || 5;
-    
-    const totalTermFees = term1Fee + term2Fee + term3Fee;
-    const fullYearFee = Math.round(totalTermFees * (1 - discountPercent / 100));
-
-    const fees = {
-      term_1_fee: term1Fee,
-      term_2_fee: term2Fee,
-      term_3_fee: term3Fee,
-      full_year_discount_percent: discountPercent,
-      total_term_fees: totalTermFees,
-      full_year_fee: fullYearFee
-    };
 
     // Check existing payments to determine what's available
     const { data: existingPayments, error: paymentsError } = await supabase
@@ -285,6 +330,8 @@ async function fetchAvailablePaymentOptions(studentId: string) {
 
     return NextResponse.json({
       student_id: studentId,
+      student_name: studentInfo.student_name,
+      roll_number: studentInfo.roll_number,
       academic_year: academicYear,
       current_term: currentTerm,
       route: routeInfo || null,
@@ -293,7 +340,15 @@ async function fetchAvailablePaymentOptions(studentId: string) {
       paid_terms: Array.from(paidTerms),
       has_full_year_payment: hasFullYearPayment,
       term_statuses: termStatuses,
-      available_options: availableOptions
+      available_options: availableOptions,
+      // Quota-based payment information
+      quota_info: fees.quota_info,
+      payment_summary: {
+        annual_fee: fees.annual_fee,
+        paid_amount: fees.paid_amount,
+        outstanding_amount: fees.outstanding_amount,
+        payment_status: fees.payment_status
+      }
     });
 
   } catch (error) {
@@ -531,51 +586,92 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: validation.reason }, { status: 409 });
     }
 
-    // Get fee amount using direct table query
-    const { data: feeData, error: feeError } = await supabase
-      .from('semester_fees')
+    // Get student quota information first
+    const { data: studentInfo, error: studentError } = await supabase
+      .from('students')
       .select(`
         id,
-        semester,
-        semester_fee,
-        full_year_discount_percent
+        quota_type_id,
+        transport_fee_amount,
+        outstanding_amount,
+        payment_status,
+        quota_type:quota_types(
+          id,
+          quota_name,
+          annual_fee_amount,
+          is_government_quota
+        )
       `)
-      .eq('allocated_route_id', routeId)
-      .eq('stop_name', stopName)
-      .eq('academic_year', academicYear)
-      .eq('is_active', true);
+      .eq('id', studentId)
+      .single();
 
-    if (feeError) {
-      console.error('Error fetching fee structure:', feeError);
-      return NextResponse.json({ error: 'Failed to fetch fee structure' }, { status: 500 });
+    if (studentError || !studentInfo) {
+      console.error('Error fetching student info:', studentError);
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    if (!feeData || feeData.length === 0) {
-      return NextResponse.json({ error: 'Fee structure not found' }, { status: 404 });
+    let fees;
+    const quotaInfo = studentInfo.quota_type;
+    const annualFee = parseFloat(studentInfo.transport_fee_amount || 0);
+
+    if (quotaInfo && annualFee > 0) {
+      // Use quota-based system
+      const termFee = Math.round(annualFee / 3);
+      const discountPercent = 5;
+      const fullYearFee = Math.round(annualFee * (1 - discountPercent / 100));
+
+      fees = {
+        term_1_fee: termFee,
+        term_2_fee: termFee,
+        term_3_fee: termFee,
+        full_year_fee: fullYearFee,
+        annual_fee: annualFee,
+        quota_info: quotaInfo
+      };
+    } else {
+      // Fall back to semester_fees table
+      const { data: feeData, error: feeError } = await supabase
+        .from('semester_fees')
+        .select(`
+          id,
+          semester,
+          semester_fee,
+          full_year_discount_percent
+        `)
+        .eq('allocated_route_id', routeId)
+        .eq('stop_name', stopName)
+        .eq('academic_year', academicYear)
+        .eq('is_active', true);
+
+      if (feeError || !feeData || feeData.length === 0) {
+        return NextResponse.json({ 
+          error: 'No fee structure found. Please contact admin to assign quota information.' 
+        }, { status: 404 });
+      }
+
+      const term1Data = feeData.find(f => f.semester === '1');
+      const term2Data = feeData.find(f => f.semester === '2');
+      const term3Data = feeData.find(f => f.semester === '3');
+      
+      const term1Fee = term1Data?.semester_fee || 0;
+      const term2Fee = term2Data?.semester_fee || 0;
+      const term3Fee = term3Data?.semester_fee || 0;
+      const discountPercent = feeData[0]?.full_year_discount_percent || 5;
+      
+      const totalTermFees = term1Fee + term2Fee + term3Fee;
+      const fullYearFee = Math.round(totalTermFees * (1 - discountPercent / 100));
+
+      fees = {
+        term_1_fee: term1Fee,
+        term_2_fee: term2Fee,
+        term_3_fee: term3Fee,
+        full_year_fee: fullYearFee,
+        term_1_id: term1Data?.id,
+        term_2_id: term2Data?.id,
+        term_3_id: term3Data?.id,
+        annual_fee: totalTermFees
+      };
     }
-
-    // Process the fees into our expected structure
-    const term1Data = feeData.find(f => f.semester === '1');
-    const term2Data = feeData.find(f => f.semester === '2');
-    const term3Data = feeData.find(f => f.semester === '3');
-    
-    const term1Fee = term1Data?.semester_fee || 0;
-    const term2Fee = term2Data?.semester_fee || 0;
-    const term3Fee = term3Data?.semester_fee || 0;
-    const discountPercent = feeData[0]?.full_year_discount_percent || 5;
-    
-    const totalTermFees = term1Fee + term2Fee + term3Fee;
-    const fullYearFee = Math.round(totalTermFees * (1 - discountPercent / 100));
-
-    const fees = {
-      term_1_fee: term1Fee,
-      term_2_fee: term2Fee,
-      term_3_fee: term3Fee,
-      full_year_fee: fullYearFee,
-      term_1_id: term1Data?.id,
-      term_2_id: term2Data?.id,
-      term_3_id: term3Data?.id
-    };
 
     let amount: number;
     let coversTerms: string[];
@@ -641,6 +737,29 @@ export async function POST(request: NextRequest) {
     if (paymentError) {
       console.error('Error creating payment record:', paymentError);
       return NextResponse.json({ error: 'Failed to create payment record' }, { status: 500 });
+    }
+
+    // Update outstanding amount in students table for quota-based students
+    if (quotaInfo && annualFee > 0) {
+      const currentOutstanding = parseFloat(studentInfo.outstanding_amount || 0);
+      const newOutstanding = Math.max(0, currentOutstanding - amount);
+      const newPaymentStatus = newOutstanding > 0 ? 'overdue' : 'current';
+
+      const { error: updateError } = await supabase
+        .from('students')
+        .update({
+          outstanding_amount: newOutstanding,
+          payment_status: newPaymentStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', studentId);
+
+      if (updateError) {
+        console.error('Error updating student outstanding amount:', updateError);
+        // Don't fail the payment, just log the error
+      } else {
+        console.log(`Updated student ${studentId} outstanding amount: ${currentOutstanding} -> ${newOutstanding}`);
+      }
     }
 
     return NextResponse.json({

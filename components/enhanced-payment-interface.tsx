@@ -100,6 +100,8 @@ interface PaymentOption {
 
 interface PaymentData {
   student_id: string;
+  student_name: string;
+  roll_number: string;
   academic_year: string;
   current_term: string;
   route: any;
@@ -108,6 +110,20 @@ interface PaymentData {
   paid_terms: string[];
   has_full_year_payment: boolean;
   available_options: PaymentOption[];
+  quota_info?: {
+    id: string;
+    quota_name: string;
+    quota_code: string;
+    description: string;
+    annual_fee_amount: number;
+    is_government_quota: boolean;
+  };
+  payment_summary?: {
+    annual_fee: number;
+    paid_amount: number;
+    outstanding_amount: number;
+    payment_status: string;
+  };
 }
 
 interface EnhancedPaymentInterfaceProps {
@@ -445,6 +461,81 @@ const EnhancedPaymentInterface: React.FC<EnhancedPaymentInterfaceProps> = ({
           </Card>
         ))}
       </div>
+
+      {/* Quota Information */}
+      {paymentData.quota_info && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5 text-blue-600" />
+              <span>Quota & Payment Information</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Quota Details */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Quota Details</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Quota Type:</span>
+                      <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+                        paymentData.quota_info.is_government_quota 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {paymentData.quota_info.quota_name}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Annual Fee:</span>
+                      <span className="text-sm font-semibold">₹{paymentData.payment_summary.annual_fee.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Summary */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Payment Summary</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Total Fee:</span>
+                      <span className="text-sm font-medium">₹{paymentData.payment_summary.annual_fee.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Paid Amount:</span>
+                      <span className="text-sm font-medium text-green-600">₹{paymentData.payment_summary.paid_amount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="text-sm font-medium text-gray-700">Outstanding:</span>
+                      <span className={`text-sm font-bold ${
+                        paymentData.payment_summary.outstanding_amount > 0 
+                          ? 'text-red-600' 
+                          : 'text-green-600'
+                      }`}>
+                        ₹{paymentData.payment_summary.outstanding_amount.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <span className={`text-sm px-2 py-1 rounded-full font-medium ${
+                        paymentData.payment_summary.payment_status === 'current' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {paymentData.payment_summary.payment_status === 'current' ? 'Up to Date' : 'Overdue'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Fee Structure Summary */}
       <Card>
