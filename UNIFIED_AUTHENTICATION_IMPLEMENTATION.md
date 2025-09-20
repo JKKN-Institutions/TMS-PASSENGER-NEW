@@ -95,7 +95,7 @@ NEXT_PUBLIC_REDIRECT_URI=https://el.app/auth/callback
 login(); // No role flag set
 
 // 2. OAuth URL generated with unified callback
-redirect_uri=https://tms-passenger.vercel.app/auth/callback
+redirect_uri=https://tms.jkkn.ac.in/auth/callback
 
 // 3. Callback processing
 const userType = sessionStorage.getItem('tms_oauth_role') || 'passenger';
@@ -112,7 +112,7 @@ sessionStorage.setItem('tms_oauth_role', 'driver');
 loginDriverOAuth();
 
 // 2. OAuth URL generated with unified callback
-redirect_uri=https://tms-passenger.vercel.app/auth/callback
+redirect_uri=https://tms.jkkn.ac.in/auth/callback
 
 // 3. Callback processing
 const userType = sessionStorage.getItem('tms_oauth_role');
@@ -148,7 +148,7 @@ Allowed Redirect URIs:
 ### **Environment Variables**
 ```env
 # Required
-NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger.vercel.app/auth/callback
+NEXT_PUBLIC_REDIRECT_URI=https://tms.jkkn.ac.in/auth/callback
 
 # Optional
 NEXT_PUBLIC_AUTH_DEBUG=true

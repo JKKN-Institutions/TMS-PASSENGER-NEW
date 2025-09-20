@@ -149,7 +149,7 @@ Comprehensive testing of the unified authentication system has been completed. T
 ### **Production Configuration**
 ```env
 # Production environment variables
-NEXT_PUBLIC_REDIRECT_URI=https://tms-passenger.vercel.app/auth/callback
+NEXT_PUBLIC_REDIRECT_URI=https://tms.jkkn.ac.in/auth/callback
 NEXT_PUBLIC_PARENT_APP_URL=https://my.jkkn.ac.in
 NEXT_PUBLIC_APP_ID=transport_management_system_menrm674
 NEXT_PUBLIC_API_KEY=app_e20655605d48ebce_cfa1ffe34268949a
