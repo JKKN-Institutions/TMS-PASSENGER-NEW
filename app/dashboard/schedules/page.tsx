@@ -232,14 +232,6 @@ const BookingConfirmationModal: React.FC<{
             <span className="text-gray-600">Boarding Stop:</span>
             <span className="font-medium">{allocation?.boardingStop.stopName}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Fare:</span>
-            <span className="font-medium">{formatCurrency(allocation?.route.fare || 0)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Available Seats:</span>
-            <span className="font-medium">{schedule.availableSeats}</span>
-          </div>
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
