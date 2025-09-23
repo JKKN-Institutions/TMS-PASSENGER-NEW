@@ -26,6 +26,7 @@ import NotificationCenter from '@/components/notification-center';
 import { ThemeToggle } from '@/components/modern-ui-components';
 import { useTheme } from '@/components/theme-provider';
 import { EnrollmentProvider, useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
+import BugReportWrapper from '@/components/bug-report-wrapper';
 
 interface NavigationItem {
   name: string;
@@ -422,6 +423,9 @@ function DashboardContent({
           </div>
         </main>
       </div>
+      
+      {/* Floating bug report button for dashboard */}
+      <BugReportWrapper />
     </div>
   );
 }

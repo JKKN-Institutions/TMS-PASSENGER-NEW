@@ -293,7 +293,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
           position: 'fixed',
           bottom: '24px',
           right: '24px',
-          zIndex: 9999,
+          zIndex: 99999,
           minWidth: '56px',
           minHeight: '56px'
         }}
@@ -316,7 +316,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
               left: 0,
               right: 0,
               bottom: 0,
-              zIndex: 9999
+              zIndex: 99999
             }}
           >
             <motion.div
