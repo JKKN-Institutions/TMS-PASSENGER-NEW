@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import AutoLoginWrapper from "@/components/auto-login-wrapper";
 import AutoPushPermission from "@/components/auto-push-permission";
+import BugReportWrapper from "@/components/bug-report-wrapper";
 import "./globals.css";
 
 const inter = Inter({
@@ -53,6 +54,8 @@ export default function RootLayout({
                 {children}
                 {/* Auto push permission prompt */}
                 <AutoPushPermission delay={5000} oncePerSession={true} />
+                {/* Floating bug report button */}
+                <BugReportWrapper />
               </div>
             </AutoLoginWrapper>
             <Toaster
