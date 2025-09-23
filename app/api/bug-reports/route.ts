@@ -55,12 +55,29 @@ async function uploadFile(file: File, bugReportId: string, uploadedBy: string): 
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🐛 Bug report API called');
+    
     const formData = await request.formData();
-    const bugReportData = JSON.parse(formData.get('bugReport') as string);
+    const bugReportDataString = formData.get('bugReport') as string;
+    
+    console.log('🐛 Raw bug report data:', bugReportDataString);
+    
+    if (!bugReportDataString) {
+      return NextResponse.json(
+        { success: false, error: 'Bug report data is missing' },
+        { status: 400 }
+      );
+    }
+    
+    const bugReportData = JSON.parse(bugReportDataString);
     const files = formData.getAll('files') as File[];
+
+    console.log('🐛 Parsed bug report data:', bugReportData);
+    console.log('🐛 Files received:', files.length);
 
     // Validate required fields
     if (!bugReportData.title || !bugReportData.description) {
+      console.log('🐛 Validation failed: missing title or description');
       return NextResponse.json(
         { success: false, error: 'Title and description are required' },
         { status: 400 }
@@ -68,6 +85,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!bugReportData.reporterId || !bugReportData.reporterEmail) {
+      console.log('🐛 Validation failed: missing reporter info');
       return NextResponse.json(
         { success: false, error: 'Reporter information is required' },
         { status: 400 }
@@ -76,41 +94,47 @@ export async function POST(request: NextRequest) {
 
     // Create bug report
     const bugReportId = uuidv4();
+    console.log('🐛 Creating bug report with ID:', bugReportId);
+    
+    const insertData = {
+      id: bugReportId,
+      title: bugReportData.title,
+      description: bugReportData.description,
+      steps_to_reproduce: bugReportData.stepsToReproduce || null,
+      expected_behavior: bugReportData.expectedBehavior || null,
+      actual_behavior: bugReportData.actualBehavior || null,
+      category: bugReportData.category || 'other',
+      severity: bugReportData.severity || 'medium',
+      priority: 'normal', // Default priority
+      status: 'open',
+      reporter_type: 'student',
+      reporter_id: bugReportData.reporterId,
+      reporter_name: bugReportData.reporterName || bugReportData.reporterEmail,
+      reporter_email: bugReportData.reporterEmail,
+      browser_info: bugReportData.systemInfo || {},
+      device_info: bugReportData.systemInfo?.deviceInfo || {},
+      screen_resolution: bugReportData.systemInfo?.screenResolution || null,
+      user_agent: bugReportData.systemInfo?.userAgent || null,
+      page_url: bugReportData.systemInfo?.url || null
+    };
+    
+    console.log('🐛 Insert data:', insertData);
+    
     const { data: bugReport, error: bugError } = await supabase
       .from('bug_reports')
-      .insert({
-        id: bugReportId,
-        title: bugReportData.title,
-        description: bugReportData.description,
-        steps_to_reproduce: bugReportData.stepsToReproduce,
-        expected_behavior: bugReportData.expectedBehavior,
-        actual_behavior: bugReportData.actualBehavior,
-        category: bugReportData.category,
-        severity: bugReportData.severity,
-        priority: 'normal', // Default priority
-        status: 'open',
-        reporter_type: 'student',
-        reporter_id: bugReportData.reporterId,
-        reporter_name: bugReportData.reporterName,
-        reporter_email: bugReportData.reporterEmail,
-        browser_info: {
-          userAgent: bugReportData.systemInfo.userAgent,
-          deviceInfo: bugReportData.systemInfo.deviceInfo
-        },
-        screen_resolution: bugReportData.systemInfo.screenResolution,
-        user_agent: bugReportData.systemInfo.userAgent,
-        page_url: bugReportData.systemInfo.url
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (bugError) {
-      console.error('Error creating bug report:', bugError);
+      console.error('🐛 Database error creating bug report:', bugError);
       return NextResponse.json(
-        { success: false, error: 'Failed to create bug report' },
+        { success: false, error: 'Failed to create bug report', details: bugError.message },
         { status: 500 }
       );
     }
+    
+    console.log('🐛 Bug report created successfully:', bugReport);
 
     // Upload files if any
     const uploadPromises = files.map(file => 

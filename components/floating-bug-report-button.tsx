@@ -112,7 +112,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   // Screenshot functionality
   const captureScreenshot = async () => {
     try {
-      toast.info('Capturing screenshot...');
+      toast('Capturing screenshot...');
       
       // Hide the bug report modal temporarily
       const modal = document.querySelector('[data-bug-report-modal]');

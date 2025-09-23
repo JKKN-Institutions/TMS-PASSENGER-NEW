@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/auth-context';
-import FloatingBugReportButton from './floating-bug-report-button';
+import BugButtonPortal from './bug-button-portal';
 
 const BugReportWrapper: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -37,7 +37,7 @@ const BugReportWrapper: React.FC = () => {
   });
 
   return (
-    <FloatingBugReportButton
+    <BugButtonPortal
       userId={fallbackUserId}
       userEmail={fallbackEmail}
       userName={fallbackName}
