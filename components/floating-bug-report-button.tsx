@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bug,
@@ -64,6 +64,21 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🐛 FloatingBugReportButton rendered with props:', {
+      userId,
+      userEmail,
+      userName,
+      className
+    });
+  }, [userId, userEmail, userName, className]);
+
+  // Debug modal state
+  useEffect(() => {
+    console.log('🐛 Modal state changed:', { isOpen });
+  }, [isOpen]);
 
   const [bugReport, setBugReport] = useState<BugReportData>({
     title: '',
@@ -264,13 +279,24 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     <>
       {/* Floating Bug Report Button */}
       <motion.button
-        onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-40 bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 ${className}`}
+        onClick={() => {
+          console.log('🐛 Main bug button clicked, opening modal...');
+          setIsOpen(true);
+        }}
+        className={`fixed bottom-6 right-6 z-50 bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 ${className}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1 }}
+        transition={{ delay: 0.5 }}
+        style={{ 
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 9999,
+          minWidth: '56px',
+          minHeight: '56px'
+        }}
       >
         <Bug className="w-6 h-6" />
       </motion.button>
@@ -279,11 +305,19 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             data-bug-report-modal
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9999
+            }}
           >
             <motion.div
               className="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
