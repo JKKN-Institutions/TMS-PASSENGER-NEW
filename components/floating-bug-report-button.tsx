@@ -62,7 +62,6 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [screenshots, setScreenshots] = useState<File[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Debug logging
@@ -113,6 +112,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   // Screenshot functionality
   const captureScreenshot = async () => {
     try {
+      toast.info('Capturing screenshot...');
+      
       // Hide the bug report modal temporarily
       const modal = document.querySelector('[data-bug-report-modal]');
       if (modal) {
@@ -120,8 +121,9 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       }
 
       // Wait a moment for the modal to hide
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
+      // Configure html2canvas with more robust options
       const canvas = await html2canvas(document.body, {
         height: window.innerHeight,
         width: window.innerWidth,
@@ -129,8 +131,52 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         scrollY: 0,
         useCORS: true,
         allowTaint: true,
-        scale: 0.5, // Reduce file size
-        logging: false
+        scale: 0.7, // Better quality while keeping file size reasonable
+        logging: false,
+        backgroundColor: '#ffffff',
+        removeContainer: true,
+        ignoreElements: (element) => {
+          // Ignore any problematic elements
+          return element.tagName === 'SCRIPT' || 
+                 element.tagName === 'STYLE' ||
+                 element.hasAttribute('data-html2canvas-ignore');
+        },
+        onclone: (clonedDoc) => {
+          // Replace problematic CSS colors in the cloned document
+          const styleSheets = clonedDoc.styleSheets;
+          try {
+            for (let i = 0; i < styleSheets.length; i++) {
+              const styleSheet = styleSheets[i];
+              if (styleSheet.cssRules) {
+                for (let j = 0; j < styleSheet.cssRules.length; j++) {
+                  const rule = styleSheet.cssRules[j];
+                  if (rule instanceof CSSStyleRule) {
+                    // Replace oklch colors with fallback colors
+                    rule.style.cssText = rule.style.cssText
+                      .replace(/oklch\([^)]+\)/g, '#000000')
+                      .replace(/color-mix\([^)]+\)/g, '#000000');
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            // Ignore CSS parsing errors and continue
+            console.log('CSS processing skipped due to CORS or parsing issues');
+          }
+          
+          // Add fallback styles to cloned document
+          const style = clonedDoc.createElement('style');
+          style.textContent = `
+            * {
+              color: inherit !important;
+              background-color: inherit !important;
+            }
+            body {
+              background-color: #ffffff !important;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+        }
       });
 
       // Show the modal again
@@ -145,11 +191,55 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
           });
           setScreenshots(prev => [...prev, file]);
           toast.success('Screenshot captured successfully!');
+        } else {
+          throw new Error('Failed to create screenshot blob');
         }
       }, 'image/png', 0.8);
     } catch (error) {
       console.error('Error capturing screenshot:', error);
-      toast.error('Failed to capture screenshot');
+      
+      // Show the modal again if it was hidden
+      const modal = document.querySelector('[data-bug-report-modal]');
+      if (modal) {
+        (modal as HTMLElement).style.display = 'block';
+      }
+      
+      // Offer alternative screenshot method
+      toast.error('Failed to capture automatic screenshot. Please upload a manual screenshot instead.');
+      
+      // Try fallback method using screen capture API if available
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+          const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: { mediaSource: 'screen' }
+          });
+          
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+          
+          video.addEventListener('loadedmetadata', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(video, 0, 0);
+            
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const file = new File([blob], `screen-capture-${Date.now()}.png`, {
+                  type: 'image/png'
+                });
+                setScreenshots(prev => [...prev, file]);
+                toast.success('Screen capture completed!');
+              }
+              stream.getTracks().forEach(track => track.stop());
+            }, 'image/png', 0.8);
+          });
+        }
+      } catch (fallbackError) {
+        console.log('Screen capture API not available');
+      }
     }
   };
 
@@ -157,11 +247,11 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const validFiles = files.filter(file => {
-      const isValidType = file.type.startsWith('image/') || file.type === 'text/plain' || file.type === 'application/pdf';
+      const isValidType = file.type.startsWith('image/');
       const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
       
       if (!isValidType) {
-        toast.error(`${file.name}: Only images, text files, and PDFs are allowed`);
+        toast.error(`${file.name}: Only image files are allowed for screenshots`);
         return false;
       }
       
@@ -173,20 +263,21 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       return true;
     });
 
-    setUploadedFiles(prev => [...prev, ...validFiles]);
+    // Add images as screenshots
+    setScreenshots(prev => [...prev, ...validFiles]);
     
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    
+    if (validFiles.length > 0) {
+      toast.success(`${validFiles.length} screenshot(s) uploaded successfully!`);
+    }
   };
 
-  // Remove file
-  const removeFile = (index: number, type: 'screenshot' | 'upload') => {
-    if (type === 'screenshot') {
-      setScreenshots(prev => prev.filter((_, i) => i !== index));
-    } else {
-      setUploadedFiles(prev => prev.filter((_, i) => i !== index));
-    }
+  // Remove screenshot
+  const removeScreenshot = (index: number) => {
+    setScreenshots(prev => prev.filter((_, i) => i !== index));
   };
 
   // Submit bug report
@@ -205,7 +296,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       setIsSubmitting(true);
 
       const systemInfo = collectSystemInfo();
-      const allFiles = [...screenshots, ...uploadedFiles];
+      const allFiles = [...screenshots];
 
       // Create FormData for file uploads
       const formData = new FormData();
@@ -461,34 +552,37 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                       </h3>
                       
                       <div className="space-y-3">
-                        <button
-                          onClick={captureScreenshot}
-                          className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
-                        >
-                          <Camera className="w-4 h-4" />
-                          <span>Capture Screenshot</span>
-                        </button>
+                        <div className="grid grid-cols-1 gap-2">
+                          <button
+                            onClick={captureScreenshot}
+                            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
+                          >
+                            <Camera className="w-4 h-4" />
+                            <span>Auto Screenshot</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
+                          >
+                            <Upload className="w-4 h-4" />
+                            <span>Upload Screenshot</span>
+                          </button>
+                        </div>
 
                         <div className="relative">
                           <input
                             ref={fileInputRef}
                             type="file"
                             multiple
-                            accept="image/*,.txt,.pdf"
+                            accept="image/*"
                             onChange={handleFileUpload}
                             className="hidden"
                           />
-                          <button
-                            onClick={() => fileInputRef.current?.click()}
-                            className="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
-                          >
-                            <Upload className="w-4 h-4" />
-                            <span>Upload Files</span>
-                          </button>
                         </div>
 
                         {/* File List */}
-                        {(screenshots.length > 0 || uploadedFiles.length > 0) && (
+                        {screenshots.length > 0 && (
                           <div className="space-y-2 max-h-32 overflow-y-auto">
                             {screenshots.map((file, index) => (
                               <div key={`screenshot-${index}`} className="flex items-center justify-between bg-white p-2 rounded border">
@@ -497,21 +591,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                                   <span className="text-sm truncate">{file.name}</span>
                                 </div>
                                 <button
-                                  onClick={() => removeFile(index, 'screenshot')}
-                                  className="text-red-500 hover:text-red-700"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                            ))}
-                            {uploadedFiles.map((file, index) => (
-                              <div key={`upload-${index}`} className="flex items-center justify-between bg-white p-2 rounded border">
-                                <div className="flex items-center space-x-2">
-                                  <ImageIcon className="w-4 h-4 text-green-500" />
-                                  <span className="text-sm truncate">{file.name}</span>
-                                </div>
-                                <button
-                                  onClick={() => removeFile(index, 'upload')}
+                                  onClick={() => removeScreenshot(index)}
                                   className="text-red-500 hover:text-red-700"
                                 >
                                   <X className="w-4 h-4" />
