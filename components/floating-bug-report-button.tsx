@@ -111,16 +111,38 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   };
 
   // Native screen capture only - NO html2canvas
-  // Helper function to detect mobile devices
+  // Enhanced mobile device detection
   const isMobileDevice = () => {
     if (typeof window === 'undefined') return false;
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           (window.innerWidth <= 768);
+    
+    // Check multiple indicators
+    const userAgent = navigator.userAgent;
+    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent);
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
+    
+    // Additional mobile indicators
+    const isPortraitOrientation = window.innerHeight > window.innerWidth;
+    const hasDevicePixelRatio = window.devicePixelRatio > 1;
+    
+    console.log('🐛 Mobile detection:', {
+      userAgent: userAgent,
+      isMobileUA,
+      isTouchDevice,
+      isSmallScreen,
+      screenSize: `${window.innerWidth}x${window.innerHeight}`,
+      isPortraitOrientation,
+      devicePixelRatio: window.devicePixelRatio
+    });
+    
+    // Return true if ANY mobile indicator is present
+    return isMobileUA || (isTouchDevice && isSmallScreen) || 
+           (userAgent.includes('Mobile') || userAgent.includes('mobile'));
   };
 
   const captureScreenshot = async () => {
     try {
-      console.log('🐛 Starting native screen capture - VERSION: NATIVE_ONLY_NO_HTML2CANVAS');
+      console.log('🐛 Starting native screen capture - VERSION: MOBILE_SAFE_NO_CAMERA');
       console.log('🐛 html2canvas should NOT be available:', typeof window !== 'undefined' ? !!(window as any).html2canvas : 'server-side');
       
       // Ensure we're in a browser environment
@@ -128,15 +150,31 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         throw new Error('Screen capture is only available in browser environment');
       }
 
+      // AGGRESSIVE MOBILE DETECTION AND BLOCKING
       const mobile = isMobileDevice();
-      console.log('🐛 Device type:', mobile ? 'Mobile' : 'Desktop');
       
-      // Mobile-specific handling: Skip automatic capture, prompt for manual upload
-      if (mobile) {
-        console.log('🐛 Mobile device detected - skipping automatic screen capture');
-        toast('On mobile devices, please use the "Upload Screenshot" button below to select a screenshot from your photos');
-        return;
+      // Additional safety checks
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileUserAgent = userAgent.includes('mobile') || userAgent.includes('android') || 
+                                userAgent.includes('iphone') || userAgent.includes('ipad');
+      const isTouchscreen = 'ontouchstart' in window;
+      
+      console.log('🐛 Device detection results:', {
+        mobile,
+        isMobileUserAgent,
+        isTouchscreen,
+        userAgent: navigator.userAgent,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`
+      });
+      
+      // BLOCK ALL MEDIA APIs ON MOBILE - MULTIPLE SAFETY CHECKS
+      if (mobile || isMobileUserAgent || isTouchscreen) {
+        console.log('🐛 MOBILE DETECTED - COMPLETELY BLOCKING ALL MEDIA CAPTURE');
+        toast.error('📱 Mobile Device: Screen capture disabled. Please use "Upload Screenshot" button below to select an image from your photos.');
+        return; // EARLY EXIT - NO FURTHER PROCESSING
       }
+      
+      console.log('🐛 Desktop confirmed - proceeding with screen capture');
       
       // Hide the bug report modal temporarily for clean capture
       const modal = document.querySelector('[data-bug-report-modal]');
@@ -147,8 +185,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       // Wait for modal to hide
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Method 1: Screen Capture API (Primary method)
-      if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+      // Method 1: Screen Capture API (Desktop Only - Double check mobile blocking)
+      if (!isMobileDevice() && !isTouchscreen && navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
         try {
           console.log('🐛 Using Screen Capture API...');
           toast('Please select the browser window to capture your screen');
@@ -223,77 +261,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         }
       }
 
-      // Method 2: Desktop-only alternative screen capture approach
-      // Note: Skip getUserMedia as it can trigger camera on mobile devices
-      if (!mobile && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        try {
-          console.log('🐛 Trying alternative screen capture (Desktop only)...');
-          
-          // Some browsers support screen capture through getUserMedia
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              // @ts-ignore - Browser-specific screen capture
-              mediaSource: 'screen',
-              width: { ideal: 1920 },
-              height: { ideal: 1080 }
-            }
-          });
-          
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          video.play();
-          
-          return new Promise<void>((resolve) => {
-            video.addEventListener('loadedmetadata', () => {
-              const canvas = document.createElement('canvas');
-              canvas.width = video.videoWidth;
-              canvas.height = video.videoHeight;
-              const ctx = canvas.getContext('2d');
-              
-              if (ctx) {
-                ctx.drawImage(video, 0, 0);
-                
-                  canvas.toBlob((blob) => {
-                    if (blob) {
-                      try {
-                        const file = new File([blob], `alt-screen-capture-${Date.now()}.png`, {
-                          type: 'image/png'
-                        });
-                        setScreenshots(prev => {
-                          const newScreenshots = [...prev, file];
-                          console.log('🐛 Alternative screenshot added, total count:', newScreenshots.length);
-                          return newScreenshots;
-                        });
-                        toast.success('Screenshot captured successfully!');
-                      } catch (fileError) {
-                        console.error('🐛 Error creating alternative screenshot file:', fileError);
-                        toast.error('Failed to create screenshot file');
-                      }
-                    } else {
-                      console.error('🐛 No blob created from alternative canvas');
-                      toast.error('Failed to capture screenshot');
-                    }
-                    
-                    try {
-                      stream.getTracks().forEach(track => track.stop());
-                    } catch (cleanupError) {
-                      console.warn('🐛 Error cleaning up alternative stream:', cleanupError);
-                    }
-                    
-                    if (modal) {
-                      (modal as HTMLElement).style.display = 'block';
-                    }
-                    
-                    resolve();
-                  }, 'image/png', 0.9);
-              }
-            });
-          });
-          
-        } catch (altError) {
-          console.log('🐛 Alternative screen capture failed:', altError);
-        }
-      }
+      // REMOVED: All getUserMedia fallback methods to prevent camera access
+      console.log('🐛 Skipping getUserMedia fallback to prevent camera activation');
 
       // Show modal again if all methods failed
       if (modal) {
