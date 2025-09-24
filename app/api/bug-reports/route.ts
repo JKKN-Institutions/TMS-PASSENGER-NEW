@@ -29,16 +29,16 @@ async function uploadFile(file: File, bugReportId: string, uploadedBy: string): 
 
     // Save file record to database
     const { error: dbError } = await supabase
-      .from('bug_screenshots')
+      .from('bug_attachments')
       .insert({
         bug_report_id: bugReportId,
-        filename: `${uuidv4()}.${file.name.split('.').pop()}`,
-        original_filename: file.name,
-        file_path: filePath,
+        file_name: file.name,
+        file_type: file.type,
         file_size: file.size,
-        mime_type: file.type,
-        uploaded_by: uploadedBy,
-        uploaded_by_type: 'student'
+        file_path: filePath,
+        is_screenshot: file.type.startsWith('image/'),
+        uploaded_by_id: uploadedBy,
+        uploaded_by_name: 'Student User'
       });
 
     if (dbError) {
@@ -197,7 +197,7 @@ export async function GET(request: NextRequest) {
       .from('bug_reports')
       .select(`
         *,
-        bug_screenshots(*)
+        bug_attachments(*)
       `)
       .eq('reported_by', userId)
       .order('created_at', { ascending: false })

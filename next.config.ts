@@ -35,6 +35,26 @@ const nextConfig: NextConfig = {
     
     return config;
   },
+
+  // Optimize resource loading to reduce preload warnings
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+  },
+
+  // Configure resource hints
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
