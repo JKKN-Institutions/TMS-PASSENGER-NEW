@@ -1,9 +1,9 @@
 // Enhanced Service Worker for TMS Passenger App
 // Handles push notifications, caching, and offline functionality
 
-const CACHE_NAME = 'tms-passenger-v1.2.0';
-const STATIC_CACHE_NAME = 'tms-static-v1.2.0';
-const DYNAMIC_CACHE_NAME = 'tms-dynamic-v1.2.0';
+const CACHE_NAME = 'tms-passenger-v1.2.1758697106180';
+const STATIC_CACHE_NAME = 'tms-static-v1.2.1758697106180';
+const DYNAMIC_CACHE_NAME = 'tms-dynamic-v1.2.1758697106180';
 
 // Files to cache for offline functionality
 const STATIC_FILES = [
@@ -394,6 +394,11 @@ async function getStudentId() {
 async function handleApiRequest(request) {
   const url = new URL(request.url);
   
+  // Only cache GET requests - POST, PUT, DELETE should not be cached
+  if (request.method !== 'GET') {
+    return fetch(request);
+  }
+  
   // Check if this API should be cached
   const shouldCache = API_CACHE_PATTERNS.some(pattern => 
     url.pathname.includes(pattern)
@@ -408,18 +413,20 @@ async function handleApiRequest(request) {
     // Network first strategy for API requests
     const networkResponse = await fetch(request);
     
-    if (networkResponse.ok) {
+    if (networkResponse.ok && request.method === 'GET') {
       const cache = await caches.open(DYNAMIC_CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
     
     return networkResponse;
   } catch (error) {
-    // Fallback to cache if network fails
-    const cachedResponse = await caches.match(request);
-    
-    if (cachedResponse) {
-      return cachedResponse;
+    // Fallback to cache if network fails (only for GET requests)
+    if (request.method === 'GET') {
+      const cachedResponse = await caches.match(request);
+      
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
     
     throw error;
@@ -454,19 +461,21 @@ async function handleDynamicRequest(request) {
   try {
     const networkResponse = await fetch(request);
     
-    // Cache successful responses
-    if (networkResponse.ok) {
+    // Only cache GET requests for successful responses
+    if (networkResponse.ok && request.method === 'GET') {
       const cache = await caches.open(DYNAMIC_CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
     
     return networkResponse;
   } catch (error) {
-    // Try cache first
-    const cachedResponse = await caches.match(request);
-    
-    if (cachedResponse) {
-      return cachedResponse;
+    // Try cache first (only for GET requests)
+    if (request.method === 'GET') {
+      const cachedResponse = await caches.match(request);
+      
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
     
     // Return offline page for navigation requests

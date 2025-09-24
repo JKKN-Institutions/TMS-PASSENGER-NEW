@@ -17,7 +17,8 @@ import {
   MapPin,
   Settings,
   BarChart3,
-  Navigation
+  Navigation,
+  Bug
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
@@ -112,6 +113,13 @@ function DashboardContent({
         current: pathname === '/dashboard/location',
         requiresEnrollment: true,
         disabled: true // Disabled as requested
+      },
+      { 
+        name: 'Bug Reports', 
+        href: '/dashboard/bug-reports', 
+        icon: Bug, 
+        current: pathname === '/dashboard/bug-reports',
+        requiresEnrollment: false // Always accessible
       },
       { 
         name: 'Profile', 
