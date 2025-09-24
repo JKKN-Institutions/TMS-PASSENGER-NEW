@@ -64,21 +64,18 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Debug logging
+  // Cleanup effect for object URLs
   useEffect(() => {
-    console.log('🐛 FloatingBugReportButton rendered with props:', {
-      userId,
-      userEmail,
-      userName,
-      className
-    });
-    console.log('🐛 Component version: NATIVE_SCREENSHOT_ONLY - No html2canvas');
-  }, [userId, userEmail, userName, className]);
-
-  // Debug modal state
-  useEffect(() => {
-    console.log('🐛 Modal state changed:', { isOpen });
-  }, [isOpen]);
+    return () => {
+      // Cleanup any remaining object URLs when component unmounts
+      screenshots.forEach(file => {
+        if (file instanceof File) {
+          const url = URL.createObjectURL(file);
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [screenshots]);
 
   const [bugReport, setBugReport] = useState<BugReportData>({
     title: '',
@@ -110,223 +107,90 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     };
   };
 
-  // Native screen capture only - NO html2canvas
-  // Enhanced mobile device detection
-  const isMobileDevice = () => {
-    if (typeof window === 'undefined') return false;
-    
-    // Check multiple indicators
-    const userAgent = navigator.userAgent;
-    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(userAgent);
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
-    
-    // Additional mobile indicators
-    const isPortraitOrientation = window.innerHeight > window.innerWidth;
-    const hasDevicePixelRatio = window.devicePixelRatio > 1;
-    
-    console.log('🐛 Mobile detection:', {
-      userAgent: userAgent,
-      isMobileUA,
-      isTouchDevice,
-      isSmallScreen,
-      screenSize: `${window.innerWidth}x${window.innerHeight}`,
-      isPortraitOrientation,
-      devicePixelRatio: window.devicePixelRatio
-    });
-    
-    // Return true if ANY mobile indicator is present
-    return isMobileUA || (isTouchDevice && isSmallScreen) || 
-           (userAgent.includes('Mobile') || userAgent.includes('mobile'));
-  };
+  // Upload-only solution - no screen capture functionality
 
-  const captureScreenshot = async () => {
-    try {
-      console.log('🐛 Starting native screen capture - VERSION: MOBILE_SAFE_NO_CAMERA');
-      console.log('🐛 html2canvas should NOT be available:', typeof window !== 'undefined' ? !!(window as any).html2canvas : 'server-side');
-      
-      // Ensure we're in a browser environment
-      if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-        throw new Error('Screen capture is only available in browser environment');
-      }
-
-      // AGGRESSIVE MOBILE DETECTION AND BLOCKING
-      const mobile = isMobileDevice();
-      
-      // Additional safety checks
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobileUserAgent = userAgent.includes('mobile') || userAgent.includes('android') || 
-                                userAgent.includes('iphone') || userAgent.includes('ipad');
-      const isTouchscreen = 'ontouchstart' in window;
-      
-      console.log('🐛 Device detection results:', {
-        mobile,
-        isMobileUserAgent,
-        isTouchscreen,
-        userAgent: navigator.userAgent,
-        screenSize: `${window.innerWidth}x${window.innerHeight}`
-      });
-      
-      // BLOCK ALL MEDIA APIs ON MOBILE - MULTIPLE SAFETY CHECKS
-      if (mobile || isMobileUserAgent || isTouchscreen) {
-        console.log('🐛 MOBILE DETECTED - COMPLETELY BLOCKING ALL MEDIA CAPTURE');
-        toast.error('📱 Mobile Device: Screen capture disabled. Please use "Upload Screenshot" button below to select an image from your photos.');
-        return; // EARLY EXIT - NO FURTHER PROCESSING
-      }
-      
-      console.log('🐛 Desktop confirmed - proceeding with screen capture');
-      
-      // Hide the bug report modal temporarily for clean capture
-      const modal = document.querySelector('[data-bug-report-modal]');
-      if (modal) {
-        (modal as HTMLElement).style.display = 'none';
-      }
-
-      // Wait for modal to hide
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Method 1: Screen Capture API (Desktop Only - Double check mobile blocking)
-      if (!isMobileDevice() && !isTouchscreen && navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-        try {
-          console.log('🐛 Using Screen Capture API...');
-          toast('Please select the browser window to capture your screen');
-          
-          const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { 
-              mediaSource: 'screen',
-              width: { ideal: 1920, max: 1920 },
-              height: { ideal: 1080, max: 1080 }
-            },
-            audio: false
-          });
-          
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          video.play();
-          
-          return new Promise<void>((resolve) => {
-            video.addEventListener('loadedmetadata', () => {
-              const canvas = document.createElement('canvas');
-              canvas.width = video.videoWidth;
-              canvas.height = video.videoHeight;
-              const ctx = canvas.getContext('2d');
-              
-              if (ctx) {
-                ctx.drawImage(video, 0, 0);
-                
-                canvas.toBlob((blob) => {
-                  if (blob) {
-                    try {
-                      const file = new File([blob], `screen-capture-${Date.now()}.png`, {
-                        type: 'image/png'
-                      });
-                      setScreenshots(prev => {
-                        const newScreenshots = [...prev, file];
-                        console.log('🐛 Screenshot added, total count:', newScreenshots.length);
-                        return newScreenshots;
-                      });
-                      toast.success('Screenshot captured successfully!');
-                    } catch (fileError) {
-                      console.error('🐛 Error creating screenshot file:', fileError);
-                      toast.error('Failed to create screenshot file');
-                    }
-                  } else {
-                    console.error('🐛 No blob created from canvas');
-                    toast.error('Failed to capture screenshot');
-                  }
-                  
-                  // Clean up
-                  try {
-                    stream.getTracks().forEach(track => track.stop());
-                  } catch (cleanupError) {
-                    console.warn('🐛 Error cleaning up stream:', cleanupError);
-                  }
-                  
-                  // Show modal again
-                  if (modal) {
-                    (modal as HTMLElement).style.display = 'block';
-                  }
-                  
-                  resolve();
-                }, 'image/png', 0.9);
-              } else {
-                throw new Error('Could not get canvas context');
-              }
-            });
-          });
-          
-        } catch (screenError) {
-          console.log('🐛 Screen Capture API failed:', screenError);
-          // Continue to fallback methods
-        }
-      }
-
-      // REMOVED: All getUserMedia fallback methods to prevent camera access
-      console.log('🐛 Skipping getUserMedia fallback to prevent camera activation');
-
-      // Show modal again if all methods failed
-      if (modal) {
-        (modal as HTMLElement).style.display = 'block';
-      }
-
-      // If we reach here, all native methods failed
-      throw new Error('Native screen capture not supported');
-      
-    } catch (error) {
-      console.error('🐛 Error capturing screenshot:', error);
-      
-      // Ensure modal is visible again
-      const modal = document.querySelector('[data-bug-report-modal]');
-      if (modal) {
-        (modal as HTMLElement).style.display = 'block';
-      }
-      
-      // Show user-friendly message
-      toast.error('Screen capture not available in your browser. Please use the "Upload Screenshot" button to manually add a screenshot.');
-    }
-  };
-
-  // File upload handler
+  // Enhanced file upload handler
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    const validFiles = files.filter(file => {
-      const isValidType = file.type.startsWith('image/');
-      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
-      
-      if (!isValidType) {
-        toast.error(`${file.name}: Only image files are allowed for screenshots`);
-        return false;
+    
+    if (files.length === 0) return;
+
+    // Define validation rules
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_FILES = 5;
+    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+
+    // Check current file count
+    if (screenshots.length + files.length > MAX_FILES) {
+      toast.error(`Maximum ${MAX_FILES} images allowed. Current: ${screenshots.length}, Adding: ${files.length}`);
+      return;
+    }
+
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    files.forEach(file => {
+      // Check file type
+      if (!ALLOWED_TYPES.includes(file.type.toLowerCase())) {
+        errors.push(`${file.name}: Unsupported format. Please use PNG, JPEG, GIF, or WebP`);
+        return;
       }
       
-      if (!isValidSize) {
-        toast.error(`${file.name}: File size must be less than 10MB`);
-        return false;
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+        errors.push(`${file.name}: File too large (${sizeMB}MB). Maximum 10MB allowed`);
+        return;
       }
-      
-      return true;
+
+      // Check for duplicate names
+      const isDuplicate = screenshots.some(existing => existing.name === file.name);
+      if (isDuplicate) {
+        errors.push(`${file.name}: Duplicate file name`);
+        return;
+      }
+
+      validFiles.push(file);
     });
 
-    // Add images as screenshots
-    setScreenshots(prev => [...prev, ...validFiles]);
+    // Show errors if any
+    errors.forEach(error => toast.error(error));
+
+    // Add valid files
+    if (validFiles.length > 0) {
+      setScreenshots(prev => [...prev, ...validFiles]);
+      toast.success(`${validFiles.length} image(s) uploaded successfully!`);
+    }
     
+    // Clear input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    
-    if (validFiles.length > 0) {
-      toast.success(`${validFiles.length} screenshot(s) uploaded successfully!`);
-    }
   };
 
-  // Remove screenshot
+  // Remove uploaded image
   const removeScreenshot = (index: number) => {
     setScreenshots(prev => prev.filter((_, i) => i !== index));
+    toast.success('Image removed');
+  };
+
+  // Get file size in human readable format
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  // Create preview URL for images
+  const createPreviewUrl = (file: File): string => {
+    return URL.createObjectURL(file);
   };
 
   // Submit bug report
   const submitBugReport = async () => {
-    console.log('🐛 Starting bug report submission...');
-    
+    // Validate required fields
     if (!bugReport.title.trim() || !bugReport.description.trim()) {
       toast.error('Please fill in the title and description');
       return;
@@ -339,11 +203,10 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
 
     try {
       setIsSubmitting(true);
-      console.log('🐛 Collecting system info and files...');
+      toast.loading('Submitting bug report...', { duration: 10000 });
 
       const systemInfo = collectSystemInfo();
       const allFiles = [...screenshots];
-      console.log('🐛 Files to upload:', allFiles.length);
 
       // Create FormData for file uploads
       const formData = new FormData();
@@ -357,16 +220,15 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         systemInfo
       };
       
-      console.log('🐛 Bug report data:', bugReportData);
       formData.append('bugReport', JSON.stringify(bugReportData));
 
       // Add files with error handling
-      allFiles.forEach((file, index) => {
+      allFiles.forEach((file) => {
         try {
           formData.append(`files`, file);
-          console.log(`🐛 Added file ${index + 1}:`, file.name, file.size, 'bytes');
         } catch (fileError) {
-          console.error(`🐛 Error adding file ${index + 1}:`, fileError);
+          console.error('Error adding file:', fileError);
+          toast.error(`Failed to attach file: ${file.name}`);
         }
       });
 
@@ -378,42 +240,43 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       const result = await response.json();
 
       if (result.success) {
-        console.log('🐛 Bug report submitted successfully:', result);
+        toast.dismiss(); // Dismiss loading toast
         toast.success('Bug report submitted successfully! Thank you for your feedback.');
         
-        // Reset form with comprehensive state clearing
-        try {
-          setBugReport({
-            title: '',
-            description: '',
-            stepsToReproduce: '',
-            expectedBehavior: '',
-            actualBehavior: '',
-            category: 'functionality',
-            severity: 'medium'
-          });
-          
-          setScreenshots([]);
-          console.log('🐛 Form state reset successfully');
-          
-          // Clear file input if it exists
-          if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+        // Reset form state
+        setBugReport({
+          title: '',
+          description: '',
+          stepsToReproduce: '',
+          expectedBehavior: '',
+          actualBehavior: '',
+          category: 'functionality',
+          severity: 'medium'
+        });
+        
+        // Clear uploaded images and cleanup object URLs
+        screenshots.forEach(file => {
+          if (file instanceof File) {
+            const url = URL.createObjectURL(file);
+            URL.revokeObjectURL(url);
           }
-          
-          setIsOpen(false);
-        } catch (resetError) {
-          console.error('🐛 Error resetting form:', resetError);
-          // Still close the modal even if reset fails
-          setIsOpen(false);
+        });
+        setScreenshots([]);
+        
+        // Clear file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
         }
+        
+        setIsOpen(false);
       } else {
-        console.error('🐛 Bug report submission failed:', result);
-        toast.error(result.error || 'Failed to submit bug report');
+        toast.dismiss();
+        toast.error(result.error || 'Failed to submit bug report. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting bug report:', error);
-      toast.error('Failed to submit bug report');
+      toast.dismiss();
+      toast.error('Failed to submit bug report. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -438,10 +301,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     <>
       {/* Floating Bug Report Button */}
       <motion.button
-        onClick={() => {
-          console.log('🐛 Main bug button clicked, opening modal...');
-          setIsOpen(true);
-        }}
+        onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 z-50 bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 ${className}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -615,42 +475,32 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                     {/* Screenshot Section */}
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-                        <Camera className="w-4 h-4 mr-2" />
-                        Screenshots
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Screenshots
                       </h3>
                       
-                      {typeof window !== 'undefined' && isMobileDevice() && (
-                        <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                          <p className="text-sm text-blue-800">
-                            📱 <strong>Mobile tip:</strong> Take a screenshot using your device's built-in screenshot function 
-                            (usually Power + Volume Down), then use "Upload Screenshot" below to select it.
-                          </p>
-                        </div>
-                      )}
+                      <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                        <p className="text-sm text-blue-800">
+                          📸 <strong>Add Screenshots:</strong> Upload images to help us understand the issue better.
+                          <br />
+                          <strong>How to add screenshots:</strong>
+                          <br />
+                          • Take a screenshot using your device's built-in function
+                          <br />
+                          • Click "Upload Screenshots" below to select images from your device
+                          <br />
+                          • Supports PNG, JPEG, GIF, and WebP formats (max 10MB each)
+                        </p>
+                      </div>
                       
                       <div className="space-y-3">
-                        <div className="grid grid-cols-1 gap-2">
-                          <button
-                            onClick={captureScreenshot}
-                            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
-                          >
-                            <Camera className="w-4 h-4" />
-                            <span>
-                              {typeof window !== 'undefined' && isMobileDevice() 
-                                ? 'Capture Screen (Use Upload Below on Mobile)' 
-                                : 'Capture Screen'
-                              }
-                            </span>
-                          </button>
-                          
-                          <button
-                            onClick={() => fileInputRef.current?.click()}
-                            className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
-                          >
-                            <Upload className="w-4 h-4" />
-                            <span>Upload Screenshot</span>
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
+                        >
+                          <Upload className="w-4 h-4" />
+                          <span>Upload Screenshots</span>
+                        </button>
 
                         <div className="relative">
                           <input
@@ -663,23 +513,51 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                           />
                         </div>
 
-                        {/* File List */}
+                        {/* Uploaded Images Preview */}
                         {screenshots.length > 0 && (
-                          <div className="space-y-2 max-h-32 overflow-y-auto">
-                            {screenshots.map((file, index) => (
-                              <div key={`screenshot-${index}`} className="flex items-center justify-between bg-white p-2 rounded border">
-                                <div className="flex items-center space-x-2">
-                                  <Camera className="w-4 h-4 text-blue-500" />
-                                  <span className="text-sm truncate">{file.name}</span>
-                                </div>
-                                <button
-                                  onClick={() => removeScreenshot(index)}
-                                  className="text-red-500 hover:text-red-700"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                            ))}
+                          <div className="space-y-3">
+                            <div className="text-sm text-gray-600 font-medium">
+                              {screenshots.length} image{screenshots.length !== 1 ? 's' : ''} uploaded
+                            </div>
+                            <div className="space-y-2 max-h-64 overflow-y-auto">
+                              {screenshots.map((file, index) => {
+                                const previewUrl = createPreviewUrl(file);
+                                return (
+                                  <div key={`image-${index}`} className="bg-white p-3 rounded-lg border shadow-sm">
+                                    <div className="flex items-start space-x-3">
+                                      {/* Thumbnail */}
+                                      <div className="flex-shrink-0">
+                                        <img 
+                                          src={previewUrl}
+                                          alt={`Uploaded image ${index + 1}`}
+                                          className="w-12 h-12 object-cover rounded border"
+                                          onLoad={() => URL.revokeObjectURL(previewUrl)}
+                                        />
+                                      </div>
+                                      
+                                      {/* File Info */}
+                                      <div className="flex-grow min-w-0">
+                                        <div className="text-sm font-medium text-gray-900 truncate">
+                                          {file.name}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                          {formatFileSize(file.size)} • {file.type.split('/')[1].toUpperCase()}
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Remove Button */}
+                                      <button
+                                        onClick={() => removeScreenshot(index)}
+                                        className="flex-shrink-0 text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50"
+                                        title="Remove image"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         )}
                       </div>
