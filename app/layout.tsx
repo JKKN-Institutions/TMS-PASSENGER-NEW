@@ -6,6 +6,7 @@ import { AuthProvider } from "@/lib/auth/auth-context";
 import AutoLoginWrapper from "@/components/auto-login-wrapper";
 import AutoPushPermission from "@/components/auto-push-permission";
 import BugReportWrapper from "@/components/bug-report-wrapper";
+import DeploymentVersionCheck from "@/components/deployment-version-check";
 import "./globals.css";
 
 const inter = Inter({
@@ -56,6 +57,8 @@ export default function RootLayout({
                 <AutoPushPermission delay={5000} oncePerSession={true} />
                 {/* Floating bug report button */}
                 <BugReportWrapper />
+                {/* Deployment version check (Ctrl+Shift+V) */}
+                <DeploymentVersionCheck />
               </div>
             </AutoLoginWrapper>
             <Toaster

@@ -72,6 +72,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       userName,
       className
     });
+    console.log('🐛 Component version: NATIVE_SCREENSHOT_ONLY - No html2canvas');
   }, [userId, userEmail, userName, className]);
 
   // Debug modal state
@@ -112,7 +113,13 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   // Native screen capture only - NO html2canvas
   const captureScreenshot = async () => {
     try {
-      console.log('🐛 Starting native screen capture...');
+      console.log('🐛 Starting native screen capture - VERSION: NATIVE_ONLY_NO_HTML2CANVAS');
+      console.log('🐛 html2canvas should NOT be available:', typeof window !== 'undefined' ? !!(window as any).html2canvas : 'server-side');
+      
+      // Ensure we're in a browser environment
+      if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+        throw new Error('Screen capture is only available in browser environment');
+      }
       
       // Hide the bug report modal temporarily for clean capture
       const modal = document.querySelector('[data-bug-report-modal]');
@@ -154,15 +161,31 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                 
                 canvas.toBlob((blob) => {
                   if (blob) {
-                    const file = new File([blob], `screen-capture-${Date.now()}.png`, {
-                      type: 'image/png'
-                    });
-                    setScreenshots(prev => [...prev, file]);
-                    toast.success('Screenshot captured successfully!');
+                    try {
+                      const file = new File([blob], `screen-capture-${Date.now()}.png`, {
+                        type: 'image/png'
+                      });
+                      setScreenshots(prev => {
+                        const newScreenshots = [...prev, file];
+                        console.log('🐛 Screenshot added, total count:', newScreenshots.length);
+                        return newScreenshots;
+                      });
+                      toast.success('Screenshot captured successfully!');
+                    } catch (fileError) {
+                      console.error('🐛 Error creating screenshot file:', fileError);
+                      toast.error('Failed to create screenshot file');
+                    }
+                  } else {
+                    console.error('🐛 No blob created from canvas');
+                    toast.error('Failed to capture screenshot');
                   }
                   
                   // Clean up
-                  stream.getTracks().forEach(track => track.stop());
+                  try {
+                    stream.getTracks().forEach(track => track.stop());
+                  } catch (cleanupError) {
+                    console.warn('🐛 Error cleaning up stream:', cleanupError);
+                  }
                   
                   // Show modal again
                   if (modal) {
@@ -212,23 +235,39 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
               if (ctx) {
                 ctx.drawImage(video, 0, 0);
                 
-                canvas.toBlob((blob) => {
-                  if (blob) {
-                    const file = new File([blob], `alt-screen-capture-${Date.now()}.png`, {
-                      type: 'image/png'
-                    });
-                    setScreenshots(prev => [...prev, file]);
-                    toast.success('Screenshot captured successfully!');
-                  }
-                  
-                  stream.getTracks().forEach(track => track.stop());
-                  
-                  if (modal) {
-                    (modal as HTMLElement).style.display = 'block';
-                  }
-                  
-                  resolve();
-                }, 'image/png', 0.9);
+                  canvas.toBlob((blob) => {
+                    if (blob) {
+                      try {
+                        const file = new File([blob], `alt-screen-capture-${Date.now()}.png`, {
+                          type: 'image/png'
+                        });
+                        setScreenshots(prev => {
+                          const newScreenshots = [...prev, file];
+                          console.log('🐛 Alternative screenshot added, total count:', newScreenshots.length);
+                          return newScreenshots;
+                        });
+                        toast.success('Screenshot captured successfully!');
+                      } catch (fileError) {
+                        console.error('🐛 Error creating alternative screenshot file:', fileError);
+                        toast.error('Failed to create screenshot file');
+                      }
+                    } else {
+                      console.error('🐛 No blob created from alternative canvas');
+                      toast.error('Failed to capture screenshot');
+                    }
+                    
+                    try {
+                      stream.getTracks().forEach(track => track.stop());
+                    } catch (cleanupError) {
+                      console.warn('🐛 Error cleaning up alternative stream:', cleanupError);
+                    }
+                    
+                    if (modal) {
+                      (modal as HTMLElement).style.display = 'block';
+                    }
+                    
+                    resolve();
+                  }, 'image/png', 0.9);
               }
             });
           });
@@ -299,6 +338,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
 
   // Submit bug report
   const submitBugReport = async () => {
+    console.log('🐛 Starting bug report submission...');
+    
     if (!bugReport.title.trim() || !bugReport.description.trim()) {
       toast.error('Please fill in the title and description');
       return;
@@ -311,25 +352,35 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
 
     try {
       setIsSubmitting(true);
+      console.log('🐛 Collecting system info and files...');
 
       const systemInfo = collectSystemInfo();
       const allFiles = [...screenshots];
+      console.log('🐛 Files to upload:', allFiles.length);
 
       // Create FormData for file uploads
       const formData = new FormData();
       
       // Add bug report data
-      formData.append('bugReport', JSON.stringify({
+      const bugReportData = {
         ...bugReport,
         reporterId: userId,
         reporterEmail: userEmail,
         reporterName: userName || userEmail,
         systemInfo
-      }));
+      };
+      
+      console.log('🐛 Bug report data:', bugReportData);
+      formData.append('bugReport', JSON.stringify(bugReportData));
 
-      // Add files
+      // Add files with error handling
       allFiles.forEach((file, index) => {
-        formData.append(`files`, file);
+        try {
+          formData.append(`files`, file);
+          console.log(`🐛 Added file ${index + 1}:`, file.name, file.size, 'bytes');
+        } catch (fileError) {
+          console.error(`🐛 Error adding file ${index + 1}:`, fileError);
+        }
       });
 
       const response = await fetch('/api/bug-reports', {
@@ -340,21 +391,37 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       const result = await response.json();
 
       if (result.success) {
+        console.log('🐛 Bug report submitted successfully:', result);
         toast.success('Bug report submitted successfully! Thank you for your feedback.');
         
-        // Reset form
-        setBugReport({
-          title: '',
-          description: '',
-          stepsToReproduce: '',
-          expectedBehavior: '',
-          actualBehavior: '',
-          category: 'functionality',
-          severity: 'medium'
-        });
-        setScreenshots([]);
-        setIsOpen(false);
+        // Reset form with comprehensive state clearing
+        try {
+          setBugReport({
+            title: '',
+            description: '',
+            stepsToReproduce: '',
+            expectedBehavior: '',
+            actualBehavior: '',
+            category: 'functionality',
+            severity: 'medium'
+          });
+          
+          setScreenshots([]);
+          console.log('🐛 Form state reset successfully');
+          
+          // Clear file input if it exists
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+          
+          setIsOpen(false);
+        } catch (resetError) {
+          console.error('🐛 Error resetting form:', resetError);
+          // Still close the modal even if reset fails
+          setIsOpen(false);
+        }
       } else {
+        console.error('🐛 Bug report submission failed:', result);
         toast.error(result.error || 'Failed to submit bug report');
       }
     } catch (error) {

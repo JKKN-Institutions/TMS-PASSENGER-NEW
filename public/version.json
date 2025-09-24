@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0-native-screenshot",
+  "build_date": "2024-09-24T10:45:00Z",
+  "features": {
+    "native_screenshot": true,
+    "html2canvas_removed": true,
+    "deployment_fixes": true
+  },
+  "changes": [
+    "Completely removed html2canvas dependency",
+    "Implemented native Screen Capture API only",
+    "Fixed deployment build errors",
+    "Added runtime-only Razorpay initialization",
+    "Simplified Next.js configuration"
+  ]
+}
