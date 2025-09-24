@@ -20,10 +20,10 @@ const nextConfig: NextConfig = {
   // Optimize resource loading to reduce preload warnings
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
-    optimizeCss: true,
+    // Removed optimizeCss to fix critters dependency issue
   },
 
-  // Configure resource hints and preload optimization
+  // Configure resource hints
   async headers() {
     return [
       {
@@ -33,23 +33,13 @@ const nextConfig: NextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
           },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
         ],
       },
     ];
   },
 
-  // Consolidated webpack configuration
+  // Simplified webpack configuration for stable builds
   webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      config.infrastructureLogging = {
-        level: 'error',
-      };
-    }
-    
     // Suppress Supabase realtime critical dependency warnings
     config.ignoreWarnings = [
       {
@@ -57,23 +47,6 @@ const nextConfig: NextConfig = {
         message: /Critical dependency: the request of a dependency is an expression/,
       },
     ];
-
-    // Optimize chunk splitting to reduce preload warnings
-    if (!dev && !isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-            },
-          },
-        },
-      };
-    }
     
     return config;
   },

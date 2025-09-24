@@ -24,18 +24,24 @@ function validateRazorpayConfig() {
   return { keyId, keySecret };
 }
 
-// Initialize Razorpay instance with validation (only in production)
+// Initialize Razorpay instance with validation (only at runtime)
 let razorpay: Razorpay | null = null;
 
-try {
-  const { keyId, keySecret } = validateRazorpayConfig();
-  razorpay = new Razorpay({
-    key_id: keyId,
-    key_secret: keySecret
-  });
-} catch (error) {
-  console.warn('Razorpay not configured:', error);
-  // Don't throw error during build time
+// Only initialize during runtime, not build time
+function initializeRazorpay() {
+  if (razorpay) return razorpay;
+  
+  try {
+    const { keyId, keySecret } = validateRazorpayConfig();
+    razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret
+    });
+    return razorpay;
+  } catch (error) {
+    console.warn('Razorpay not configured:', error);
+    return null;
+  }
 }
 
 // Razorpay configuration
@@ -70,7 +76,8 @@ export interface PaymentVerificationData {
 // Create a payment order
 export async function createPaymentOrder(orderData: PaymentOrderData) {
   try {
-    if (!razorpay) {
+    const razorpayInstance = initializeRazorpay();
+    if (!razorpayInstance) {
       return { 
         success: false, 
         error: 'Razorpay is not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.' 
@@ -79,7 +86,7 @@ export async function createPaymentOrder(orderData: PaymentOrderData) {
 
     console.log('Creating Razorpay order:', orderData);
     
-    const order = await razorpay.orders.create({
+    const order = await razorpayInstance.orders.create({
       amount: orderData.amount, // Amount in paisa
       currency: orderData.currency,
       receipt: orderData.receipt,
@@ -123,7 +130,15 @@ export function verifyPaymentSignature(data: PaymentVerificationData): boolean {
 // Get payment details from Razorpay
 export async function getPaymentDetails(paymentId: string) {
   try {
-    const payment = await razorpay.payments.fetch(paymentId);
+    const razorpayInstance = initializeRazorpay();
+    if (!razorpayInstance) {
+      return { 
+        success: false, 
+        error: 'Razorpay is not configured' 
+      };
+    }
+    
+    const payment = await razorpayInstance.payments.fetch(paymentId);
     console.log('Payment details fetched:', payment);
     return { success: true, payment };
   } catch (error: any) {
