@@ -65,6 +65,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
 
   // Cleanup effect for object URLs
   useEffect(() => {
+    console.log('🐛 FloatingBugReportButton loaded - VERSION: UPLOAD_ONLY_NO_CAPTURE');
     return () => {
       // Cleanup any remaining object URLs when component unmounts
       screenshots.forEach(file => {
@@ -106,8 +107,9 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     };
   };
 
-  // Upload-only solution - NO screen capture functionality
+  // Upload-only solution - NO screen capture functionality  
   // UPDATED: All screen capture functionality completely removed
+  // VERSION: UPLOAD_ONLY_2024_FINAL
 
   // Enhanced file upload handler
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

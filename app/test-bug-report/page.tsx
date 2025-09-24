@@ -16,7 +16,7 @@ export default function TestBugReportPage() {
           <ol className="list-decimal list-inside space-y-2 text-gray-700">
             <li>Look for the red bug report button in the bottom-right corner</li>
             <li>Click the bug report button to open the modal</li>
-            <li>Try the "Capture Screen" button (should use native APIs, no html2canvas)</li>
+            <li>Try the "Upload Screenshots" button (upload-only functionality)</li>
             <li>Fill out the form and try to submit</li>
             <li>Check the browser console for logs starting with "🐛"</li>
           </ol>
@@ -25,9 +25,9 @@ export default function TestBugReportPage() {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Expected Console Logs</h2>
           <div className="bg-gray-100 p-4 rounded font-mono text-sm">
-            <div className="text-green-600">✅ 🐛 Component version: NATIVE_SCREENSHOT_ONLY - No html2canvas</div>
-            <div className="text-green-600">✅ 🐛 Starting native screen capture - VERSION: NATIVE_ONLY_NO_HTML2CANVAS</div>
-            <div className="text-green-600">✅ 🐛 html2canvas should NOT be available: false</div>
+            <div className="text-green-600">✅ 🐛 Component version: UPLOAD_ONLY - No screen capture</div>
+            <div className="text-green-600">✅ 🐛 File upload working correctly</div>
+            <div className="text-green-600">✅ 🐛 No screen capture functionality</div>
           </div>
         </div>
 
