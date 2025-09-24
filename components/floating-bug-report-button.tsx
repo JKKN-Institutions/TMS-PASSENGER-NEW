@@ -123,61 +123,114 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       // Wait a moment for the modal to hide
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Configure html2canvas with more robust options
-      const canvas = await html2canvas(document.body, {
-        height: window.innerHeight,
-        width: window.innerWidth,
-        scrollX: 0,
-        scrollY: 0,
-        useCORS: true,
-        allowTaint: true,
-        scale: 0.7, // Better quality while keeping file size reasonable
-        logging: false,
-        backgroundColor: '#ffffff',
-        removeContainer: true,
-        ignoreElements: (element) => {
-          // Ignore any problematic elements
-          return element.tagName === 'SCRIPT' || 
-                 element.tagName === 'STYLE' ||
-                 element.hasAttribute('data-html2canvas-ignore');
-        },
+            // Try with safer html2canvas configuration first
+            let canvas;
+            try {
+              // First attempt: Standard configuration with color fixes
+              canvas = await html2canvas(document.body, {
+                height: window.innerHeight,
+                width: window.innerWidth,
+                scrollX: 0,
+                scrollY: 0,
+                useCORS: true,
+                allowTaint: true,
+                scale: 0.7,
+                logging: false,
+                backgroundColor: '#ffffff',
+                removeContainer: true,
+                ignoreElements: (element) => {
+                  return element.tagName === 'SCRIPT' || 
+                         element.tagName === 'STYLE' ||
+                         element.hasAttribute('data-html2canvas-ignore');
+                },
         onclone: (clonedDoc) => {
-          // Replace problematic CSS colors in the cloned document
-          const styleSheets = clonedDoc.styleSheets;
+          // More aggressive approach to handle oklch colors
           try {
-            for (let i = 0; i < styleSheets.length; i++) {
-              const styleSheet = styleSheets[i];
-              if (styleSheet.cssRules) {
-                for (let j = 0; j < styleSheet.cssRules.length; j++) {
-                  const rule = styleSheet.cssRules[j];
-                  if (rule instanceof CSSStyleRule) {
-                    // Replace oklch colors with fallback colors
-                    rule.style.cssText = rule.style.cssText
-                      .replace(/oklch\([^)]+\)/g, '#000000')
-                      .replace(/color-mix\([^)]+\)/g, '#000000');
-                  }
+            // Replace colors in all elements' computed styles
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach((element) => {
+              const computedStyle = window.getComputedStyle(element);
+              
+              // Check for problematic color values and replace them
+              const problematicProperties = ['color', 'background-color', 'border-color', 'fill', 'stroke'];
+              
+              problematicProperties.forEach(prop => {
+                const value = computedStyle.getPropertyValue(prop);
+                if (value && (value.includes('oklch') || value.includes('color-mix'))) {
+                  // Set a safe fallback color
+                  (element as HTMLElement).style.setProperty(prop, '#333333', 'important');
                 }
-              }
-            }
+              });
+            });
           } catch (e) {
-            // Ignore CSS parsing errors and continue
-            console.log('CSS processing skipped due to CORS or parsing issues');
+            console.log('Element style processing failed, using fallback approach');
           }
           
-          // Add fallback styles to cloned document
+          // Add comprehensive fallback styles
           const style = clonedDoc.createElement('style');
           style.textContent = `
             * {
-              color: inherit !important;
-              background-color: inherit !important;
+              color: #333333 !important;
+              background-color: transparent !important;
+              border-color: #cccccc !important;
+              fill: #333333 !important;
+              stroke: #333333 !important;
             }
             body {
               background-color: #ffffff !important;
+              color: #333333 !important;
+            }
+            .bg-primary, .text-primary {
+              background-color: #3b82f6 !important;
+              color: #ffffff !important;
+            }
+            .bg-secondary, .text-secondary {
+              background-color: #6b7280 !important;
+              color: #ffffff !important;
+            }
+            .bg-success, .text-success {
+              background-color: #10b981 !important;
+              color: #ffffff !important;
+            }
+            .bg-danger, .text-danger {
+              background-color: #ef4444 !important;
+              color: #ffffff !important;
+            }
+            .bg-warning, .text-warning {
+              background-color: #f59e0b !important;
+              color: #000000 !important;
+            }
+            .bg-info, .text-info {
+              background-color: #3b82f6 !important;
+              color: #ffffff !important;
             }
           `;
           clonedDoc.head.appendChild(style);
         }
-      });
+              });
+            } catch (primaryError) {
+              console.log('Primary screenshot method failed, trying fallback:', primaryError);
+              
+              // Fallback: Simpler configuration without color processing
+              canvas = await html2canvas(document.body, {
+                height: window.innerHeight,
+                width: window.innerWidth,
+                scale: 0.5,
+                logging: false,
+                backgroundColor: '#ffffff',
+                useCORS: false,
+                allowTaint: false,
+                foreignObjectRendering: false,
+                ignoreElements: (element) => {
+                  // Ignore more elements that might cause issues
+                  return element.tagName === 'SCRIPT' || 
+                         element.tagName === 'STYLE' ||
+                         element.tagName === 'LINK' ||
+                         element.hasAttribute('data-html2canvas-ignore') ||
+                         element.classList.contains('bug-report-modal');
+                }
+              });
+            }
 
       // Show the modal again
       if (modal) {

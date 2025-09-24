@@ -46,3 +46,4 @@ const BugButtonPortal: React.FC<BugButtonPortalProps> = ({ userId, userEmail, us
 };
 
 export default BugButtonPortal;
+

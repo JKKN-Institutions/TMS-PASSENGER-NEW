@@ -29,16 +29,16 @@ async function uploadFile(file: File, bugReportId: string, uploadedBy: string): 
 
     // Save file record to database
     const { error: dbError } = await supabase
-      .from('bug_attachments')
+      .from('bug_screenshots')
       .insert({
         bug_report_id: bugReportId,
-        file_name: file.name,
-        file_type: file.type,
-        file_size: file.size,
+        filename: `${uuidv4()}.${file.name.split('.').pop()}`,
+        original_filename: file.name,
         file_path: filePath,
-        is_screenshot: file.name.includes('screenshot'),
-        uploaded_by_id: uploadedBy,
-        uploaded_by_name: 'User' // This should come from user data
+        file_size: file.size,
+        mime_type: file.type,
+        uploaded_by: uploadedBy,
+        uploaded_by_type: 'student'
       });
 
     if (dbError) {
@@ -100,19 +100,15 @@ export async function POST(request: NextRequest) {
       id: bugReportId,
       title: bugReportData.title,
       description: bugReportData.description,
-      steps_to_reproduce: bugReportData.stepsToReproduce || null,
-      expected_behavior: bugReportData.expectedBehavior || null,
-      actual_behavior: bugReportData.actualBehavior || null,
       category: bugReportData.category || 'other',
-      severity: bugReportData.severity || 'medium',
       priority: 'normal', // Default priority
       status: 'open',
+      reported_by: bugReportData.reporterId,
       reporter_type: 'student',
-      reporter_id: bugReportData.reporterId,
       reporter_name: bugReportData.reporterName || bugReportData.reporterEmail,
       reporter_email: bugReportData.reporterEmail,
-      browser_info: bugReportData.systemInfo || {},
-      device_info: bugReportData.systemInfo?.deviceInfo || {},
+      browser_info: JSON.stringify(bugReportData.systemInfo || {}),
+      device_info: JSON.stringify(bugReportData.systemInfo?.deviceInfo || {}),
       screen_resolution: bugReportData.systemInfo?.screenResolution || null,
       user_agent: bugReportData.systemInfo?.userAgent || null,
       page_url: bugReportData.systemInfo?.url || null
@@ -148,17 +144,22 @@ export async function POST(request: NextRequest) {
       console.warn(`${failedUploads} files failed to upload`);
     }
 
-    // Create initial comment with system info
-    await supabase
-      .from('bug_comments')
-      .insert({
-        bug_report_id: bugReportId,
-        comment_text: `System Information:\n${JSON.stringify(bugReportData.systemInfo, null, 2)}`,
-        is_internal: true,
-        commenter_type: 'student',
-        commenter_id: bugReportData.reporterId,
-        commenter_name: bugReportData.reporterName
-      });
+    // Create initial comment with system info (if bug_comments table exists)
+    try {
+      await supabase
+        .from('bug_comments')
+        .insert({
+          bug_report_id: bugReportId,
+          comment_text: `System Information:\n${JSON.stringify(bugReportData.systemInfo, null, 2)}`,
+          is_internal: true,
+          commenter_type: 'student',
+          commenter_id: bugReportData.reporterId,
+          commenter_name: bugReportData.reporterName || bugReportData.reporterEmail
+        });
+    } catch (commentError) {
+      console.log('🐛 Could not create initial comment:', commentError);
+      // Don't fail the entire request if comment creation fails
+    }
 
     return NextResponse.json({
       success: true,
@@ -196,9 +197,9 @@ export async function GET(request: NextRequest) {
       .from('bug_reports')
       .select(`
         *,
-        bug_attachments(*)
+        bug_screenshots(*)
       `)
-      .eq('reporter_id', userId)
+      .eq('reported_by', userId)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
