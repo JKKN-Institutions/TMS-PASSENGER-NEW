@@ -155,3 +155,4 @@ FROM bug_reports;
 -- GRANT ALL ON bug_reports TO authenticated;
 -- GRANT ALL ON bug_attachments TO authenticated;
 -- GRANT ALL ON bug_comments TO authenticated;
+

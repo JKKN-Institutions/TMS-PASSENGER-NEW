@@ -407,3 +407,4 @@ const BugBountyTracker: React.FC<BugBountyTrackerProps> = ({
 };
 
 export default BugBountyTracker;
+

@@ -54,3 +54,4 @@ checkBugReports().then(() => {
   console.error('❌ Check failed:', error);
   process.exit(1);
 });
+
