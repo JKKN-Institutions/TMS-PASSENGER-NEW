@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bug,
   X,
-  Camera,
   Upload,
   Send,
   AlertCircle,
@@ -17,7 +16,7 @@ import {
   FileText,
   Zap
 } from 'lucide-react';
-// Removed html2canvas import - using only native screen capture APIs
+// Upload-only solution - no dependencies needed
 import toast from 'react-hot-toast';
 
 interface BugReportData {
@@ -107,7 +106,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     };
   };
 
-  // Upload-only solution - no screen capture functionality
+  // Upload-only solution - NO screen capture functionality
+  // UPDATED: All screen capture functionality completely removed
 
   // Enhanced file upload handler
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
