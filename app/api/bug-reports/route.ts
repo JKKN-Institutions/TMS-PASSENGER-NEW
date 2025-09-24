@@ -121,14 +121,26 @@ export async function POST(request: NextRequest) {
       console.log('🔑 Generated UUID for reported_by:', reportedBy);
     }
 
-    // Prepare bug report data
+    // Prepare bug report data to match actual database schema
+    // Combine steps, expected, and actual behavior into description
+    let fullDescription = bugReportData.description;
+    
+    if (bugReportData.stepsToReproduce) {
+      fullDescription += `\n\n**Steps to Reproduce:**\n${bugReportData.stepsToReproduce}`;
+    }
+    
+    if (bugReportData.expectedBehavior) {
+      fullDescription += `\n\n**Expected Behavior:**\n${bugReportData.expectedBehavior}`;
+    }
+    
+    if (bugReportData.actualBehavior) {
+      fullDescription += `\n\n**Actual Behavior:**\n${bugReportData.actualBehavior}`;
+    }
+
     const dbBugReport = {
       id: bugReportId,
       title: bugReportData.title,
-      description: bugReportData.description,
-      steps_to_reproduce: bugReportData.stepsToReproduce || null,
-      expected_behavior: bugReportData.expectedBehavior || null,
-      actual_behavior: bugReportData.actualBehavior || null,
+      description: fullDescription,
       category: bugReportData.category || 'functionality',
       priority: bugReportData.severity || 'medium', // Map severity to priority
       status: 'open',
@@ -138,9 +150,13 @@ export async function POST(request: NextRequest) {
       reporter_type: 'student',
       screenshot_url: screenshotUrl,
       browser_info: bugReportData.systemInfo?.browser || null,
+      device_info: bugReportData.systemInfo?.deviceInfo || null,
       screen_resolution: bugReportData.systemInfo?.screenResolution || null,
       user_agent: bugReportData.systemInfo?.userAgent || null,
       page_url: bugReportData.systemInfo?.currentPage || null,
+      tags: null,
+      is_duplicate: false,
+      duplicate_of: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
