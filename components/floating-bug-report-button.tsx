@@ -17,7 +17,7 @@ import {
   FileText,
   Zap
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
+// Removed html2canvas import - using only native screen capture APIs
 import toast from 'react-hot-toast';
 
 interface BugReportData {
@@ -109,41 +109,40 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     };
   };
 
-  // Prioritize actual screen capture over html2canvas
+  // Native screen capture only - NO html2canvas
   const captureScreenshot = async () => {
     try {
-      console.log('🐛 Starting screenshot capture...');
+      console.log('🐛 Starting native screen capture...');
       
-      // Hide the bug report modal temporarily
+      // Hide the bug report modal temporarily for clean capture
       const modal = document.querySelector('[data-bug-report-modal]');
       if (modal) {
         (modal as HTMLElement).style.display = 'none';
       }
 
-      // Wait a moment for the modal to hide
+      // Wait for modal to hide
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      let captureSuccess = false;
-
-      // Method 1: Try Screen Capture API first (most reliable)
+      // Method 1: Screen Capture API (Primary method)
       if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
         try {
-          console.log('🐛 Trying Screen Capture API...');
-          toast('Please select the browser window to capture...');
+          console.log('🐛 Using Screen Capture API...');
+          toast('Please select the browser window to capture your screen');
           
           const stream = await navigator.mediaDevices.getDisplayMedia({
             video: { 
               mediaSource: 'screen',
               width: { ideal: 1920, max: 1920 },
               height: { ideal: 1080, max: 1080 }
-            }
+            },
+            audio: false
           });
           
           const video = document.createElement('video');
           video.srcObject = stream;
           video.play();
           
-          await new Promise((resolve) => {
+          return new Promise<void>((resolve) => {
             video.addEventListener('loadedmetadata', () => {
               const canvas = document.createElement('canvas');
               canvas.width = video.videoWidth;
@@ -160,42 +159,42 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                     });
                     setScreenshots(prev => [...prev, file]);
                     toast.success('Screenshot captured successfully!');
-                    captureSuccess = true;
                   }
+                  
+                  // Clean up
+                  stream.getTracks().forEach(track => track.stop());
+                  
+                  // Show modal again
+                  if (modal) {
+                    (modal as HTMLElement).style.display = 'block';
+                  }
+                  
+                  resolve();
                 }, 'image/png', 0.9);
+              } else {
+                throw new Error('Could not get canvas context');
               }
-              
-              // Clean up
-              stream.getTracks().forEach(track => track.stop());
-              resolve(null);
             });
           });
           
-          // Show modal again
-          if (modal) {
-            (modal as HTMLElement).style.display = 'block';
-          }
-          
-          if (captureSuccess) {
-            return; // Success, exit early
-          }
         } catch (screenError) {
           console.log('🐛 Screen Capture API failed:', screenError);
-          console.log('🐛 Screen capture API not available');
+          // Continue to fallback methods
         }
-      } else {
-        console.log('🐛 Screen capture API not available');
       }
 
-      // Method 2: Try navigator.mediaDevices.getUserMedia with screen constraint (fallback)
-      if (!captureSuccess) {
+      // Method 2: Alternative screen capture approach
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
-          console.log('🐛 Trying getUserMedia screen capture...');
-          // This is a fallback that might work in some browsers
+          console.log('🐛 Trying alternative screen capture...');
+          
+          // Some browsers support screen capture through getUserMedia
           const stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              // @ts-ignore - This might work in some browsers
-              mediaSource: 'screen'
+              // @ts-ignore - Browser-specific screen capture
+              mediaSource: 'screen',
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
             }
           });
           
@@ -203,7 +202,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
           video.srcObject = stream;
           video.play();
           
-          await new Promise((resolve) => {
+          return new Promise<void>((resolve) => {
             video.addEventListener('loadedmetadata', () => {
               const canvas = document.createElement('canvas');
               canvas.width = video.videoWidth;
@@ -215,112 +214,49 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                 
                 canvas.toBlob((blob) => {
                   if (blob) {
-                    const file = new File([blob], `user-media-capture-${Date.now()}.png`, {
+                    const file = new File([blob], `alt-screen-capture-${Date.now()}.png`, {
                       type: 'image/png'
                     });
                     setScreenshots(prev => [...prev, file]);
                     toast.success('Screenshot captured successfully!');
-                    captureSuccess = true;
                   }
+                  
+                  stream.getTracks().forEach(track => track.stop());
+                  
+                  if (modal) {
+                    (modal as HTMLElement).style.display = 'block';
+                  }
+                  
+                  resolve();
                 }, 'image/png', 0.9);
               }
-              
-              stream.getTracks().forEach(track => track.stop());
-              resolve(null);
             });
           });
           
-          if (captureSuccess) {
-            // Show modal again
-            if (modal) {
-              (modal as HTMLElement).style.display = 'block';
-            }
-            return;
-          }
-        } catch (userMediaError) {
-          console.log('🐛 getUserMedia screen capture failed:', userMediaError);
+        } catch (altError) {
+          console.log('🐛 Alternative screen capture failed:', altError);
         }
       }
 
-      // Method 3: Only use html2canvas as absolute last resort with minimal CSS
-      if (!captureSuccess) {
-        console.log('🐛 Attempting minimal html2canvas as last resort...');
-        
-        try {
-          // Create a minimal version of the page for capture
-          const tempDiv = document.createElement('div');
-          tempDiv.style.position = 'fixed';
-          tempDiv.style.top = '0';
-          tempDiv.style.left = '0';
-          tempDiv.style.width = '100vw';
-          tempDiv.style.height = '100vh';
-          tempDiv.style.backgroundColor = '#ffffff';
-          tempDiv.style.zIndex = '-1';
-          
-          // Copy only text content, no complex styling
-          const mainContent = document.querySelector('main') || document.body;
-          tempDiv.innerHTML = `
-            <div style="padding: 20px; font-family: Arial, sans-serif; color: #000;">
-              <h1>Page Screenshot</h1>
-              <p>URL: ${window.location.href}</p>
-              <p>Time: ${new Date().toLocaleString()}</p>
-              <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
-                ${mainContent.textContent?.substring(0, 500) || 'Content not available'}...
-              </div>
-            </div>
-          `;
-          
-          document.body.appendChild(tempDiv);
-          
-          const canvas = await html2canvas(tempDiv, {
-            width: 800,
-            height: 600,
-            scale: 1,
-            logging: false,
-            backgroundColor: '#ffffff',
-            useCORS: false,
-            allowTaint: false,
-            foreignObjectRendering: false
-          });
-          
-          document.body.removeChild(tempDiv);
-          
-          canvas.toBlob((blob) => {
-            if (blob) {
-              const file = new File([blob], `fallback-capture-${Date.now()}.png`, {
-                type: 'image/png'
-              });
-              setScreenshots(prev => [...prev, file]);
-              toast.success('Basic screenshot captured. For better quality, please use manual upload.');
-              captureSuccess = true;
-            }
-          }, 'image/png', 0.8);
-          
-        } catch (fallbackError) {
-          console.log('🐛 Fallback capture failed:', fallbackError);
-        }
-      }
-
-      // Show the modal again
+      // Show modal again if all methods failed
       if (modal) {
         (modal as HTMLElement).style.display = 'block';
       }
 
-      if (!captureSuccess) {
-        throw new Error('All screenshot methods failed');
-      }
+      // If we reach here, all native methods failed
+      throw new Error('Native screen capture not supported');
       
     } catch (error) {
       console.error('🐛 Error capturing screenshot:', error);
       
-      // Show the modal again if it was hidden
+      // Ensure modal is visible again
       const modal = document.querySelector('[data-bug-report-modal]');
       if (modal) {
         (modal as HTMLElement).style.display = 'block';
       }
       
-      // Show user-friendly message with specific guidance
-      toast.error('Automatic screenshot failed. Please use the "Upload Screenshot" button to manually add a screenshot.');
+      // Show user-friendly message
+      toast.error('Screen capture not available in your browser. Please use the "Upload Screenshot" button to manually add a screenshot.');
     }
   };
 
@@ -636,7 +572,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                             className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
                           >
                             <Camera className="w-4 h-4" />
-                            <span>Auto Screenshot</span>
+                            <span>Capture Screen</span>
                           </button>
                           
                           <button

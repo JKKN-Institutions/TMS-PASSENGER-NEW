@@ -17,7 +17,32 @@ const nextConfig: NextConfig = {
     pagesBufferLength: 2,
   },
 
-  // Suppress console warnings for hydration mismatches and Supabase realtime warnings
+  // Optimize resource loading to reduce preload warnings
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizeCss: true,
+  },
+
+  // Configure resource hints and preload optimization
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
+  // Consolidated webpack configuration
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       config.infrastructureLogging = {
@@ -32,28 +57,25 @@ const nextConfig: NextConfig = {
         message: /Critical dependency: the request of a dependency is an expression/,
       },
     ];
+
+    // Optimize chunk splitting to reduce preload warnings
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+          },
+        },
+      };
+    }
     
     return config;
-  },
-
-  // Optimize resource loading to reduce preload warnings
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
-  },
-
-  // Configure resource hints
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-        ],
-      },
-    ];
   },
 };
 
