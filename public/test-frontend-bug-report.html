@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Report Frontend Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .pass { background-color: #d4edda; color: #155724; }
+        .fail { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .modern-css-test {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: oklch(0.7 0.15 180);
+            color: color-mix(in srgb, blue 50%, white);
+            border: 2px solid lch(50% 50 180);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #console-output {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Bug Report Frontend Component Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <p>This page tests the bug report component functionality. Follow these steps:</p>
+        <ol>
+            <li>Open browser developer console (F12)</li>
+            <li>Click "Run Frontend Tests" to check component availability</li>
+            <li>Look for the bug report button (should appear if component is loaded)</li>
+            <li>Test screenshot capture functionality</li>
+            <li>Monitor console for error messages</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Automated Tests</h2>
+        <button onclick="runFrontendTests()">Run Frontend Tests</button>
+        <button onclick="testScreenCaptureAPI()">Test Screen Capture API</button>
+        <button onclick="testModernCSS()">Test Modern CSS Compatibility</button>
+        <button onclick="clearConsole()">Clear Console</button>
+        
+        <div id="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Modern CSS Test Element</h2>
+        <p>This element uses modern CSS functions that would break html2canvas:</p>
+        <div class="modern-css-test">
+            <strong>Modern CSS Test Element</strong><br>
+            Uses: oklch(), color-mix(), lch() functions<br>
+            If screenshot capture works with this element visible, native APIs are working correctly.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Results</h2>
+        <div class="test-result pass">✅ Component loads without html2canvas references</div>
+        <div class="test-result pass">✅ Native screen capture APIs are available</div>
+        <div class="test-result pass">✅ No OKLCH parsing errors</div>
+        <div class="test-result pass">✅ No setUploadedFiles errors</div>
+        <div class="test-result fail">❌ Should NOT see: "html2canvas" in console</div>
+        <div class="test-result fail">❌ Should NOT see: "setUploadedFiles is not defined"</div>
+    </div>
+
+    <script>
+        // Console output capture
+        const consoleOutput = document.getElementById('console-output');
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+
+        function logToPage(type, ...args) {
+            const timestamp = new Date().toLocaleTimeString();
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            
+            consoleOutput.textContent += `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Also log to real console
+            originalConsole[type](...args);
+        }
+
+        // Override console methods
+        console.log = (...args) => logToPage('log', ...args);
+        console.error = (...args) => logToPage('error', ...args);
+        console.warn = (...args) => logToPage('warn', ...args);
+        console.info = (...args) => logToPage('info', ...args);
+
+        function clearConsole() {
+            consoleOutput.textContent = '';
+        }
+
+        function runFrontendTests() {
+            console.log('🧪 Starting Frontend Component Tests...');
+            
+            // Test 1: Check if html2canvas is NOT available
+            console.log('\n📋 Test 1: html2canvas Availability Check');
+            const hasHtml2Canvas = typeof window.html2canvas !== 'undefined';
+            if (hasHtml2Canvas) {
+                console.error('❌ FAIL: html2canvas is still available globally');
+            } else {
+                console.log('✅ PASS: html2canvas is not available (good!)');
+            }
+
+            // Test 2: Check for bug report component
+            console.log('\n📋 Test 2: Bug Report Component Check');
+            // This would need to be run on the actual Next.js app
+            console.info('ℹ️ This test requires the Next.js app to be running');
+            console.info('ℹ️ Navigate to http://localhost:3003/test-bug-report to test');
+
+            // Test 3: Check Screen Capture API availability
+            console.log('\n📋 Test 3: Screen Capture API Availability');
+            testScreenCaptureAPI();
+
+            // Test 4: Check for common error patterns
+            console.log('\n📋 Test 4: Error Pattern Check');
+            console.info('ℹ️ Monitor console for these error patterns:');
+            console.info('   - "setUploadedFiles is not defined"');
+            console.info('   - "Attempting to parse an unsupported color function"');
+            console.info('   - "html2canvas" references');
+
+            console.log('\n🎯 Frontend tests completed. Check results above.');
+        }
+
+        function testScreenCaptureAPI() {
+            console.log('\n📋 Screen Capture API Test');
+            
+            if (!navigator.mediaDevices) {
+                console.error('❌ navigator.mediaDevices not available');
+                return;
+            }
+
+            if (typeof navigator.mediaDevices.getDisplayMedia === 'function') {
+                console.log('✅ getDisplayMedia API available');
+            } else {
+                console.warn('⚠️ getDisplayMedia API not available');
+            }
+
+            if (typeof navigator.mediaDevices.getUserMedia === 'function') {
+                console.log('✅ getUserMedia API available');
+            } else {
+                console.warn('⚠️ getUserMedia API not available');
+            }
+
+            // Test HTTPS requirement
+            if (location.protocol === 'https:' || location.hostname === 'localhost') {
+                console.log('✅ HTTPS/localhost - Screen Capture should work');
+            } else {
+                console.warn('⚠️ Screen Capture requires HTTPS or localhost');
+            }
+        }
+
+        function testModernCSS() {
+            console.log('\n📋 Modern CSS Compatibility Test');
+            
+            try {
+                // Test if browser supports modern CSS functions
+                const testElement = document.createElement('div');
+                testElement.style.background = 'oklch(0.7 0.15 180)';
+                
+                if (testElement.style.background) {
+                    console.log('✅ Browser supports oklch() function');
+                } else {
+                    console.warn('⚠️ Browser may not support oklch() function');
+                }
+
+                testElement.style.color = 'color-mix(in srgb, blue 50%, white)';
+                if (testElement.style.color) {
+                    console.log('✅ Browser supports color-mix() function');
+                } else {
+                    console.warn('⚠️ Browser may not support color-mix() function');
+                }
+
+                console.info('ℹ️ Modern CSS functions are present on this page');
+                console.info('ℹ️ If screenshot capture works, native APIs handle them correctly');
+                
+            } catch (error) {
+                console.error('❌ Modern CSS test failed:', error.message);
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.addEventListener('load', () => {
+            console.log('🚀 Bug Report Frontend Test Page Loaded');
+            console.log('📍 Current URL:', window.location.href);
+            console.log('🔒 Protocol:', window.location.protocol);
+            console.log('💻 User Agent:', navigator.userAgent);
+            console.log('\nClick "Run Frontend Tests" to start testing...');
+        });
+
+        // Listen for errors
+        window.addEventListener('error', (event) => {
+            console.error('🚨 JavaScript Error:', event.error?.message || event.message);
+            console.error('📍 File:', event.filename);
+            console.error('📍 Line:', event.lineno);
+        });
+
+        // Listen for unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('🚨 Unhandled Promise Rejection:', event.reason);
+        });
+    </script>
+</body>
+</html>
