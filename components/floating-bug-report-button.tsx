@@ -161,36 +161,40 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         }
       }
 
-      // Method 2: Ultra-simple html2canvas (no CSS processing)
+      // Method 2: Skip html2canvas entirely if oklch is detected in the page
       if (!success) {
-        try {
-          console.log('🐛 Trying simple html2canvas...');
-          canvas = await html2canvas(document.body, {
-            height: window.innerHeight,
-            width: window.innerWidth,
-            scale: 0.5,
-            logging: false,
-            backgroundColor: '#ffffff',
-            useCORS: false,
-            allowTaint: false,
-            foreignObjectRendering: false,
-            // Ignore all potentially problematic elements
-            ignoreElements: (element) => {
-              return element.tagName === 'SCRIPT' || 
-                     element.tagName === 'STYLE' ||
-                     element.tagName === 'LINK' ||
-                     element.hasAttribute('data-html2canvas-ignore') ||
-                     element.classList.contains('bug-report-modal') ||
-                     // Ignore elements with modern CSS that might cause issues
-                     element.style.color?.includes('oklch') ||
-                     element.style.backgroundColor?.includes('oklch') ||
-                     element.style.color?.includes('color-mix') ||
-                     element.style.backgroundColor?.includes('color-mix');
-            }
-          });
-          success = true;
-        } catch (simpleError) {
-          console.log('🐛 Simple html2canvas failed:', simpleError);
+        // Check if the page contains oklch colors that would cause issues
+        const hasOklchColors = document.documentElement.innerHTML.includes('oklch') || 
+                              document.documentElement.innerHTML.includes('color-mix');
+        
+        if (hasOklchColors) {
+          console.log('🐛 Detected oklch colors, skipping html2canvas methods');
+          // Skip to manual upload immediately
+        } else {
+          try {
+            console.log('🐛 Trying simple html2canvas...');
+            canvas = await html2canvas(document.body, {
+              height: window.innerHeight,
+              width: window.innerWidth,
+              scale: 0.5,
+              logging: false,
+              backgroundColor: '#ffffff',
+              useCORS: false,
+              allowTaint: false,
+              foreignObjectRendering: false,
+              // Ignore all potentially problematic elements
+              ignoreElements: (element) => {
+                return element.tagName === 'SCRIPT' || 
+                       element.tagName === 'STYLE' ||
+                       element.tagName === 'LINK' ||
+                       element.hasAttribute('data-html2canvas-ignore') ||
+                       element.classList.contains('bug-report-modal');
+              }
+            });
+            success = true;
+          } catch (simpleError) {
+            console.log('🐛 Simple html2canvas failed:', simpleError);
+          }
         }
       }
 
@@ -233,7 +237,21 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
           }
         }, 'image/png', 0.8);
       } else {
-        throw new Error('All screenshot methods failed');
+        // Check if we detected oklch colors
+        const hasOklchColors = document.documentElement.innerHTML.includes('oklch') || 
+                              document.documentElement.innerHTML.includes('color-mix');
+        
+        if (hasOklchColors) {
+          // Show modal again
+          if (modal) {
+            (modal as HTMLElement).style.display = 'block';
+          }
+          
+          toast.error('Auto-screenshot unavailable due to modern CSS features. Please use "Upload Screenshot" button below or try the screen capture option.');
+          return; // Exit early, don't throw error
+        } else {
+          throw new Error('All screenshot methods failed');
+        }
       }
     } catch (error) {
       console.error('🐛 All screenshot methods failed:', error);
