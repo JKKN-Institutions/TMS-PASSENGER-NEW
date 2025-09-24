@@ -111,6 +111,13 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   };
 
   // Native screen capture only - NO html2canvas
+  // Helper function to detect mobile devices
+  const isMobileDevice = () => {
+    if (typeof window === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.innerWidth <= 768);
+  };
+
   const captureScreenshot = async () => {
     try {
       console.log('🐛 Starting native screen capture - VERSION: NATIVE_ONLY_NO_HTML2CANVAS');
@@ -119,6 +126,16 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       // Ensure we're in a browser environment
       if (typeof window === 'undefined' || typeof navigator === 'undefined') {
         throw new Error('Screen capture is only available in browser environment');
+      }
+
+      const mobile = isMobileDevice();
+      console.log('🐛 Device type:', mobile ? 'Mobile' : 'Desktop');
+      
+      // Mobile-specific handling: Skip automatic capture, prompt for manual upload
+      if (mobile) {
+        console.log('🐛 Mobile device detected - skipping automatic screen capture');
+        toast('On mobile devices, please use the "Upload Screenshot" button below to select a screenshot from your photos');
+        return;
       }
       
       // Hide the bug report modal temporarily for clean capture
@@ -206,10 +223,11 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         }
       }
 
-      // Method 2: Alternative screen capture approach
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Method 2: Desktop-only alternative screen capture approach
+      // Note: Skip getUserMedia as it can trigger camera on mobile devices
+      if (!mobile && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
-          console.log('🐛 Trying alternative screen capture...');
+          console.log('🐛 Trying alternative screen capture (Desktop only)...');
           
           // Some browsers support screen capture through getUserMedia
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -632,6 +650,15 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                         Screenshots
                       </h3>
                       
+                      {typeof window !== 'undefined' && isMobileDevice() && (
+                        <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                          <p className="text-sm text-blue-800">
+                            📱 <strong>Mobile tip:</strong> Take a screenshot using your device's built-in screenshot function 
+                            (usually Power + Volume Down), then use "Upload Screenshot" below to select it.
+                          </p>
+                        </div>
+                      )}
+                      
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 gap-2">
                           <button
@@ -639,7 +666,12 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
                             className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center justify-center space-x-2"
                           >
                             <Camera className="w-4 h-4" />
-                            <span>Capture Screen</span>
+                            <span>
+                              {typeof window !== 'undefined' && isMobileDevice() 
+                                ? 'Capture Screen (Use Upload Below on Mobile)' 
+                                : 'Capture Screen'
+                              }
+                            </span>
                           </button>
                           
                           <button
