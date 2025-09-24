@@ -16,7 +16,7 @@ async function uploadFile(file: File, bugReportId: string, uploadedBy: string): 
     const filePath = `bug-reports/${fileName}`;
 
     const { data, error } = await supabase.storage
-      .from('bug-attachments')
+      .from('bug-screenshots')
       .upload(filePath, file, {
         contentType: file.type,
         upsert: false
@@ -27,23 +27,27 @@ async function uploadFile(file: File, bugReportId: string, uploadedBy: string): 
       return null;
     }
 
-    // Save file record to database
-    const { error: dbError } = await supabase
-      .from('bug_attachments')
-      .insert({
-        bug_report_id: bugReportId,
-        file_name: file.name,
-        file_type: file.type,
-        file_size: file.size,
-        file_path: filePath,
-        is_screenshot: file.type.startsWith('image/'),
-        uploaded_by_id: uploadedBy,
-        uploaded_by_name: 'Student User'
-      });
+    // Update bug report with screenshot URL (since bug_attachments table doesn't exist)
+    if (file.type.startsWith('image/')) {
+      const { data: publicUrlData } = supabase.storage
+        .from('bug-screenshots')
+        .getPublicUrl(filePath);
+      
+      const { error: updateError } = await supabase
+        .from('bug_reports')
+        .update({ screenshot_url: publicUrlData.publicUrl })
+        .eq('id', bugReportId);
 
-    if (dbError) {
-      console.error('Error saving file record:', dbError);
-      return null;
+      if (updateError) {
+        console.error('Error updating screenshot URL:', {
+          message: updateError.message,
+          details: updateError.details,
+          hint: updateError.hint,
+          code: updateError.code,
+          fileName: file.name
+        });
+        return null;
+      }
     }
 
     return filePath;
@@ -96,14 +100,22 @@ export async function POST(request: NextRequest) {
     const bugReportId = uuidv4();
     console.log('🐛 Creating bug report with ID:', bugReportId);
     
+    // Ensure reported_by is a valid UUID
+    let reportedByUuid = bugReportData.reporterId;
+    if (!reportedByUuid || typeof reportedByUuid !== 'string' || !reportedByUuid.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      // Generate a UUID if not provided or invalid
+      reportedByUuid = uuidv4();
+      console.log('🐛 Generated UUID for reporter:', reportedByUuid);
+    }
+
     const insertData = {
       id: bugReportId,
       title: bugReportData.title,
       description: bugReportData.description,
-      category: bugReportData.category || 'other',
-      priority: 'normal', // Default priority
+      category: bugReportData.category || 'functionality',
+      priority: 'medium', // Default priority
       status: 'open',
-      reported_by: bugReportData.reporterId,
+      reported_by: reportedByUuid,
       reporter_type: 'student',
       reporter_name: bugReportData.reporterName || bugReportData.reporterEmail,
       reporter_email: bugReportData.reporterEmail,
@@ -123,9 +135,21 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (bugError) {
-      console.error('🐛 Database error creating bug report:', bugError);
+      console.error('🐛 Database error creating bug report:', {
+        message: bugError.message,
+        details: bugError.details,
+        hint: bugError.hint,
+        code: bugError.code,
+        insertData: insertData
+      });
       return NextResponse.json(
-        { success: false, error: 'Failed to create bug report', details: bugError.message },
+        { 
+          success: false, 
+          error: 'Failed to create bug report', 
+          details: bugError.message,
+          hint: bugError.hint,
+          code: bugError.code
+        },
         { status: 500 }
       );
     }
@@ -195,10 +219,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('bug_reports')
-      .select(`
-        *,
-        bug_attachments(*)
-      `)
+      .select('*')
       .eq('reported_by', userId)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);

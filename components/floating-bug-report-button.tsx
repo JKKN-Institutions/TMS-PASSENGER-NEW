@@ -26,7 +26,7 @@ interface BugReportData {
   stepsToReproduce: string;
   expectedBehavior: string;
   actualBehavior: string;
-  category: 'ui_bug' | 'functional_bug' | 'performance_issue' | 'crash' | 'security_issue' | 'feature_request' | 'other';
+  category: 'ui_ux' | 'functionality' | 'performance' | 'security' | 'other';
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
@@ -85,7 +85,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     stepsToReproduce: '',
     expectedBehavior: '',
     actualBehavior: '',
-    category: 'other',
+    category: 'functionality',
     severity: 'medium'
   });
 
@@ -109,10 +109,10 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
     };
   };
 
-  // Enhanced screenshot functionality with robust error handling
+  // Prioritize actual screen capture over html2canvas
   const captureScreenshot = async () => {
     try {
-      toast('Capturing screenshot...');
+      console.log('🐛 Starting screenshot capture...');
       
       // Hide the bug report modal temporarily
       const modal = document.querySelector('[data-bug-report-modal]');
@@ -123,166 +123,181 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       // Wait a moment for the modal to hide
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Enhanced detection for problematic CSS features
-      const detectProblematicCSS = () => {
-        const html = document.documentElement.innerHTML;
-        const stylesheets = Array.from(document.styleSheets);
-        
-        // Check for oklch, color-mix, and other modern CSS functions
-        const problematicPatterns = [
-          /oklch\s*\(/gi,
-          /color-mix\s*\(/gi,
-          /lch\s*\(/gi,
-          /lab\s*\(/gi,
-          /hwb\s*\(/gi,
-          /color\s*\(\s*display-p3/gi
-        ];
-        
-        // Check HTML content
-        const hasProblematicHTML = problematicPatterns.some(pattern => pattern.test(html));
-        
-        // Check stylesheets (if accessible)
-        let hasProblematicCSS = false;
-        try {
-          for (const sheet of stylesheets) {
-            try {
-              const rules = sheet.cssRules || sheet.rules;
-              if (rules) {
-                for (const rule of Array.from(rules)) {
-                  const cssText = rule.cssText || '';
-                  if (problematicPatterns.some(pattern => pattern.test(cssText))) {
-                    hasProblematicCSS = true;
-                    break;
-                  }
-                }
-              }
-            } catch (e) {
-              // Cross-origin stylesheet, skip
-              continue;
-            }
-            if (hasProblematicCSS) break;
-          }
-        } catch (e) {
-          console.log('🐛 Could not check stylesheets:', e);
-        }
-        
-        return hasProblematicHTML || hasProblematicCSS;
-      };
+      let captureSuccess = false;
 
-      const hasProblematicCSS = detectProblematicCSS();
-      
-      if (hasProblematicCSS) {
-        console.log('🐛 Detected problematic CSS features, using alternative capture methods');
-        
-        // Show modal again immediately
-        if (modal) {
-          (modal as HTMLElement).style.display = 'block';
-        }
-        
-        // Try screen capture API as primary alternative
-        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-          try {
-            toast('Please select the browser window to capture...');
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-              video: { 
-                mediaSource: 'screen',
-                width: { ideal: 1920 },
-                height: { ideal: 1080 }
-              }
-            });
-            
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.play();
-            
-            await new Promise((resolve) => {
-              video.addEventListener('loadedmetadata', () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx?.drawImage(video, 0, 0);
-                
-                stream.getTracks().forEach(track => track.stop());
+      // Method 1: Try Screen Capture API first (most reliable)
+      if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+        try {
+          console.log('🐛 Trying Screen Capture API...');
+          toast('Please select the browser window to capture...');
+          
+          const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: { 
+              mediaSource: 'screen',
+              width: { ideal: 1920, max: 1920 },
+              height: { ideal: 1080, max: 1080 }
+            }
+          });
+          
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+          
+          await new Promise((resolve) => {
+            video.addEventListener('loadedmetadata', () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              const ctx = canvas.getContext('2d');
+              
+              if (ctx) {
+                ctx.drawImage(video, 0, 0);
                 
                 canvas.toBlob((blob) => {
                   if (blob) {
-                    const file = new File([blob], `screenshot-${Date.now()}.png`, {
+                    const file = new File([blob], `screen-capture-${Date.now()}.png`, {
                       type: 'image/png'
                     });
                     setScreenshots(prev => [...prev, file]);
                     toast.success('Screenshot captured successfully!');
+                    captureSuccess = true;
                   }
-                }, 'image/png', 0.8);
-                
-                resolve(null);
-              });
+                }, 'image/png', 0.9);
+              }
+              
+              // Clean up
+              stream.getTracks().forEach(track => track.stop());
+              resolve(null);
             });
-            return; // Success, exit early
-          } catch (screenError) {
-            console.log('🐛 Screen capture failed:', screenError);
+          });
+          
+          // Show modal again
+          if (modal) {
+            (modal as HTMLElement).style.display = 'block';
           }
+          
+          if (captureSuccess) {
+            return; // Success, exit early
+          }
+        } catch (screenError) {
+          console.log('🐛 Screen Capture API failed:', screenError);
+          console.log('🐛 Screen capture API not available');
         }
-        
-        // If screen capture fails, show helpful message
-        toast.error('Auto-screenshot unavailable due to modern CSS features. Please use "Upload Screenshot" button below.');
-        return;
+      } else {
+        console.log('🐛 Screen capture API not available');
       }
 
-      // Try html2canvas methods for pages without problematic CSS
-      let canvas;
-      let success = false;
-
-      // Method 1: Simple html2canvas with conservative settings
-      if (!success) {
+      // Method 2: Try navigator.mediaDevices.getUserMedia with screen constraint (fallback)
+      if (!captureSuccess) {
         try {
-          console.log('🐛 Trying conservative html2canvas...');
-          canvas = await html2canvas(document.body, {
-            height: window.innerHeight,
-            width: window.innerWidth,
-            scale: 0.5,
-            logging: false,
-            backgroundColor: '#ffffff',
-            useCORS: false,
-            allowTaint: false,
-            foreignObjectRendering: false,
-            removeContainer: true,
-            // Ignore potentially problematic elements
-            ignoreElements: (element) => {
-              return element.tagName === 'SCRIPT' || 
-                     element.tagName === 'STYLE' ||
-                     element.tagName === 'LINK' ||
-                     element.tagName === 'META' ||
-                     element.hasAttribute('data-html2canvas-ignore') ||
-                     element.classList.contains('bug-report-modal') ||
-                     element.id === 'bug-report-portal';
+          console.log('🐛 Trying getUserMedia screen capture...');
+          // This is a fallback that might work in some browsers
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              // @ts-ignore - This might work in some browsers
+              mediaSource: 'screen'
             }
           });
-          success = true;
-        } catch (error) {
-          console.log('🐛 Conservative html2canvas failed:', error);
+          
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+          
+          await new Promise((resolve) => {
+            video.addEventListener('loadedmetadata', () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              const ctx = canvas.getContext('2d');
+              
+              if (ctx) {
+                ctx.drawImage(video, 0, 0);
+                
+                canvas.toBlob((blob) => {
+                  if (blob) {
+                    const file = new File([blob], `user-media-capture-${Date.now()}.png`, {
+                      type: 'image/png'
+                    });
+                    setScreenshots(prev => [...prev, file]);
+                    toast.success('Screenshot captured successfully!');
+                    captureSuccess = true;
+                  }
+                }, 'image/png', 0.9);
+              }
+              
+              stream.getTracks().forEach(track => track.stop());
+              resolve(null);
+            });
+          });
+          
+          if (captureSuccess) {
+            // Show modal again
+            if (modal) {
+              (modal as HTMLElement).style.display = 'block';
+            }
+            return;
+          }
+        } catch (userMediaError) {
+          console.log('🐛 getUserMedia screen capture failed:', userMediaError);
         }
       }
 
-      // Method 2: Viewport-only screenshot (fallback)
-      if (!success) {
+      // Method 3: Only use html2canvas as absolute last resort with minimal CSS
+      if (!captureSuccess) {
+        console.log('🐛 Attempting minimal html2canvas as last resort...');
+        
         try {
-          console.log('🐛 Trying viewport-only screenshot...');
-          const viewport = document.querySelector('main') || document.body;
-          canvas = await html2canvas(viewport, {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            scale: 0.3,
+          // Create a minimal version of the page for capture
+          const tempDiv = document.createElement('div');
+          tempDiv.style.position = 'fixed';
+          tempDiv.style.top = '0';
+          tempDiv.style.left = '0';
+          tempDiv.style.width = '100vw';
+          tempDiv.style.height = '100vh';
+          tempDiv.style.backgroundColor = '#ffffff';
+          tempDiv.style.zIndex = '-1';
+          
+          // Copy only text content, no complex styling
+          const mainContent = document.querySelector('main') || document.body;
+          tempDiv.innerHTML = `
+            <div style="padding: 20px; font-family: Arial, sans-serif; color: #000;">
+              <h1>Page Screenshot</h1>
+              <p>URL: ${window.location.href}</p>
+              <p>Time: ${new Date().toLocaleString()}</p>
+              <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+                ${mainContent.textContent?.substring(0, 500) || 'Content not available'}...
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(tempDiv);
+          
+          const canvas = await html2canvas(tempDiv, {
+            width: 800,
+            height: 600,
+            scale: 1,
             logging: false,
             backgroundColor: '#ffffff',
             useCORS: false,
             allowTaint: false,
-            foreignObjectRendering: false,
-            removeContainer: true
+            foreignObjectRendering: false
           });
-          success = true;
-        } catch (error) {
-          console.log('🐛 Viewport screenshot failed:', error);
+          
+          document.body.removeChild(tempDiv);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const file = new File([blob], `fallback-capture-${Date.now()}.png`, {
+                type: 'image/png'
+              });
+              setScreenshots(prev => [...prev, file]);
+              toast.success('Basic screenshot captured. For better quality, please use manual upload.');
+              captureSuccess = true;
+            }
+          }, 'image/png', 0.8);
+          
+        } catch (fallbackError) {
+          console.log('🐛 Fallback capture failed:', fallbackError);
         }
       }
 
@@ -291,21 +306,10 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         (modal as HTMLElement).style.display = 'block';
       }
 
-      if (success && canvas) {
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const file = new File([blob], `screenshot-${Date.now()}.png`, {
-              type: 'image/png'
-            });
-            setScreenshots(prev => [...prev, file]);
-            toast.success('Screenshot captured successfully!');
-          } else {
-            throw new Error('Failed to create screenshot blob');
-          }
-        }, 'image/png', 0.8);
-      } else {
+      if (!captureSuccess) {
         throw new Error('All screenshot methods failed');
       }
+      
     } catch (error) {
       console.error('🐛 Error capturing screenshot:', error);
       
@@ -315,8 +319,8 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         (modal as HTMLElement).style.display = 'block';
       }
       
-      // Show user-friendly message
-      toast.error('Screenshot capture failed. Please upload a screenshot manually using the "Upload Screenshot" button below.');
+      // Show user-friendly message with specific guidance
+      toast.error('Automatic screenshot failed. Please use the "Upload Screenshot" button to manually add a screenshot.');
     }
   };
 
@@ -409,7 +413,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
           stepsToReproduce: '',
           expectedBehavior: '',
           actualBehavior: '',
-          category: 'other',
+          category: 'functionality',
           severity: 'medium'
         });
         setScreenshots([]);
@@ -426,12 +430,10 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   };
 
   const categoryOptions = [
-    { value: 'ui_bug', label: 'UI/Visual Bug', icon: Monitor },
-    { value: 'functional_bug', label: 'Functional Issue', icon: AlertCircle },
-    { value: 'performance_issue', label: 'Performance Issue', icon: Zap },
-    { value: 'crash', label: 'App Crash/Error', icon: X },
-    { value: 'security_issue', label: 'Security Concern', icon: AlertCircle },
-    { value: 'feature_request', label: 'Feature Request', icon: FileText },
+    { value: 'ui_ux', label: 'UI/UX Issue', icon: Monitor },
+    { value: 'functionality', label: 'Functional Issue', icon: AlertCircle },
+    { value: 'performance', label: 'Performance Issue', icon: Zap },
+    { value: 'security', label: 'Security Concern', icon: AlertCircle },
     { value: 'other', label: 'Other', icon: Bug }
   ];
 
