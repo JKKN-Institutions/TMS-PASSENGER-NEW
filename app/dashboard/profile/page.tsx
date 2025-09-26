@@ -135,7 +135,6 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [editForm, setEditForm] = useState<Partial<StudentProfile>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -302,7 +301,6 @@ export default function ProfilePage() {
         setProfile(data.data || { ...profile!, ...editForm });
         setEditForm({});
         setErrors({});
-        setTouched({});
         setIsEditing(false);
         toast.success('Profile updated successfully!');
       }
@@ -317,8 +315,7 @@ export default function ProfilePage() {
   const handleCancel = () => {
     // Reset form to original profile data
     setEditForm({ ...profile });
-    setErrors({});
-    setTouched({});
+    setErrors({}); // Clear any validation errors
     setIsEditing(false);
     toast.info('Changes discarded');
   };
@@ -326,50 +323,16 @@ export default function ProfilePage() {
   const startEditing = () => {
     // Initialize edit form with current profile data
     setEditForm({ ...profile });
-    setErrors({});
-    setTouched({});
+    setErrors({}); // Clear any previous validation errors
     setIsEditing(true);
   };
 
-  // Create stable callback references to prevent re-renders
+  // Simple input change handler - only update form data, no validation
   const handleInputChange = useCallback((field: keyof StudentProfile, value: string) => {
-    // Update form data immediately for smooth typing experience
     setEditForm(prev => ({ ...prev, [field]: value }));
-    
-    // Clear any existing error for this field when user starts typing again
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      if (newErrors[field]) {
-        delete newErrors[field];
-      }
-      return newErrors;
-    });
   }, []);
 
-  // Separate handler for when field loses focus (onBlur validation)
-  const handleFieldBlur = useCallback((field: keyof StudentProfile) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Only validate on blur to avoid interrupting user input
-    const value = editForm[field] as string;
-    const validator = fieldValidators[field as keyof typeof fieldValidators];
-    
-    if (validator && value) {
-      const error = validator(value);
-      if (error) {
-        setErrors(prev => ({ ...prev, [field]: error }));
-      }
-    }
-  }, [editForm, fieldValidators]);
-
-  // Create stable callback factories to prevent re-renders
-  const createInputChangeHandler = useCallback((field: keyof StudentProfile) => {
-    return (value: string) => handleInputChange(field, value);
-  }, [handleInputChange]);
-
-  const createInputBlurHandler = useCallback((field: keyof StudentProfile) => {
-    return () => handleFieldBlur(field);
-  }, [handleFieldBlur]);
+  // No need for blur validation - only validate on submit
 
   const calculateProfileCompletion = () => {
     if (!profile) return 0;
@@ -435,18 +398,14 @@ export default function ProfilePage() {
     const fieldError = errors[field];
     const fieldValue = editForm[field] || '';
     
-    // Create stable handlers using factory functions
-    const handleChange = useMemo(() => createInputChangeHandler(field), [field, createInputChangeHandler]);
-    const handleBlur = useMemo(() => createInputBlurHandler(field), [field, createInputBlurHandler]);
-    
     return (
       <div>
         {isEditing ? (
           <StableInput
             label={label}
             value={fieldValue}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            onChange={(newValue) => handleInputChange(field, newValue)}
+            onBlur={() => {}} // No blur validation needed
             type={type}
             placeholder={placeholder}
             required={required}

@@ -66,34 +66,25 @@ export default function FocusTestPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Simple input change handler - only update form data, no validation
   const handleInputChange = useCallback((field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      if (newErrors[field]) {
-        delete newErrors[field];
-      }
-      return newErrors;
-    });
   }, []);
 
-  const handleFieldBlur = useCallback((field: string) => {
-    const value = formData[field as keyof typeof formData];
-    if (field === 'mobile' && value && !/^\d{10}$/.test(value)) {
-      setErrors(prev => ({ ...prev, [field]: 'Mobile must be 10 digits' }));
+  // Validate all fields only when needed (e.g., on form submit)
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (formData.mobile && !/^\d{10}$/.test(formData.mobile)) {
+      newErrors.mobile = 'Mobile must be 10 digits';
     }
-    if (field === 'emergencyContact' && value && value.length < 2) {
-      setErrors(prev => ({ ...prev, [field]: 'Emergency contact must be at least 2 characters' }));
+    if (formData.emergencyContact && formData.emergencyContact.length < 2) {
+      newErrors.emergencyContact = 'Emergency contact must be at least 2 characters';
     }
-  }, [formData]);
-
-  const createInputChangeHandler = useCallback((field: string) => {
-    return (value: string) => handleInputChange(field, value);
-  }, [handleInputChange]);
-
-  const createInputBlurHandler = useCallback((field: string) => {
-    return () => handleFieldBlur(field);
-  }, [handleFieldBlur]);
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const EditableField = React.memo(({ 
     label, 
@@ -111,15 +102,12 @@ export default function FocusTestPage() {
     const fieldError = errors[field];
     const fieldValue = formData[field as keyof typeof formData] || '';
     
-    const handleChange = useMemo(() => createInputChangeHandler(field), [field, createInputChangeHandler]);
-    const handleBlur = useMemo(() => createInputBlurHandler(field), [field, createInputBlurHandler]);
-    
     return (
       <StableInput
         label={label}
         value={fieldValue}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(value) => handleInputChange(field, value)}
+        onBlur={() => {}} // No blur validation
         type={type}
         placeholder={placeholder}
         required={required}
@@ -160,13 +148,22 @@ export default function FocusTestPage() {
         />
       </div>
 
+      <div className="mt-6">
+        <button
+          onClick={validateForm}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Validate Form (Submit Test)
+        </button>
+      </div>
+
       <div className="mt-8 p-4 bg-gray-100 rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Current Form Data:</h3>
         <pre className="text-sm">{JSON.stringify(formData, null, 2)}</pre>
         
         {Object.keys(errors).length > 0 && (
           <>
-            <h3 className="text-lg font-semibold mt-4 mb-2">Current Errors:</h3>
+            <h3 className="text-lg font-semibold mt-4 mb-2">Validation Errors:</h3>
             <pre className="text-sm text-red-600">{JSON.stringify(errors, null, 2)}</pre>
           </>
         )}
@@ -177,7 +174,8 @@ export default function FocusTestPage() {
         <ul className="text-blue-800 space-y-1">
           <li>• Type continuously in each field without stopping</li>
           <li>• The focus should NOT be lost while typing</li>
-          <li>• Validation should only trigger when you tab away (onBlur)</li>
+          <li>• No validation warnings should appear while typing</li>
+          <li>• Click "Validate Form" to see validation errors (submit behavior)</li>
           <li>• The form data should update in real-time below</li>
         </ul>
       </div>
