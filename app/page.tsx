@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
 import { Loader2 } from 'lucide-react';
-import { EnhancedLoading } from '@/components/enhanced-loading';
 
 export default function Home() {
   const router = useRouter();
@@ -54,14 +53,20 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, [isAuthenticated, isLoading, user, userType, router]);
 
-  // Enhanced loading state with better UX
+  // Loading state while authentication is being determined
   return (
-    <EnhancedLoading
-      type="auth"
-      message={isLoading ? 'Checking authentication...' : 'Redirecting...'}
-      submessage={isLoading ? 'Verifying your session and credentials' : 'Taking you to your dashboard'}
-      size="xl"
-      showLogo={true}
-    />
+    <div className="min-h-screen flex items-center justify-center" style={{
+      background: 'linear-gradient(135deg, #fefff8 0%, #f0fdf4 100%)'
+    }}>
+      <div className="text-center space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto" style={{color: '#22c55e'}} />
+        <div>
+          <p className="text-gray-600 text-lg font-semibold">MYJKKN TMS</p>
+          <p className="text-gray-500 text-sm">
+            {isLoading ? 'Checking authentication...' : 'Redirecting...'}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

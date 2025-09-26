@@ -110,18 +110,9 @@ async function fetchAvailablePaymentOptions(studentId: string) {
     const boardingStop = studentInfo.boarding_point || studentInfo.boarding_stop;
 
     if (!routeId || !boardingStop) {
-      console.log(`Student ${studentId} route allocation: routeId=${routeId}, boardingStop=${boardingStop}`);
       return NextResponse.json({ 
-        error: 'Student transport route not allocated yet',
-        details: 'Please complete enrollment process or contact admin for route allocation',
-        student_info: {
-          student_id: studentId,
-          student_name: studentInfo.student_name,
-          roll_number: studentInfo.roll_number,
-          has_route: !!routeId,
-          has_boarding_stop: !!boardingStop
-        }
-      }, { status: 404 }); // Changed to 404 instead of 400
+        error: 'Student route or boarding stop not configured' 
+      }, { status: 400 });
     }
 
     // Use quota-based fee structure instead of semester_fees table

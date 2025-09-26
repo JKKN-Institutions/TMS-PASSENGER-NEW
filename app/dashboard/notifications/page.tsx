@@ -521,52 +521,30 @@ const NotificationsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0">
               {/* Header */}
-        <div className="mb-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.25)'
-                }}>
-                  <Bell className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                    Notifications
-                  </h1>
-                  <p className="text-gray-600">
-                    Stay updated with your transport and payment notifications
-                  </p>
-                </div>
-              </div>
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Notifications</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">
+                Stay updated with your transport and payment notifications
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleManualRefresh}
-                disabled={loading}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
-                style={{
-                  background: loading ? '#6b7280' : 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-                  boxShadow: loading ? 'none' : '0 4px 12px rgba(34, 197, 94, 0.25)'
-                }}
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                <span>Refresh</span>
-              </button>
-              
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(34, 197, 94, 0.2)',
-                  color: '#15803d'
-                }}
-              >
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </button>
+            <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3">
+            <button
+              onClick={handleManualRefresh}
+              disabled={loading}
+              className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 lg:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
+            </button>
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 lg:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Settings</span>
+            </button>
             <button
               onClick={markAllAsRead}
               disabled={unreadCount === 0}

@@ -19,9 +19,7 @@ import {
   ExternalLink,
   Star,
   Award,
-  Trophy,
-  Send,
-  Upload
+  Trophy
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,11 +27,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/lib/auth/auth-context';
-import { EnhancedLoading, SkeletonCard } from '@/components/enhanced-loading';
-import { EmptyState } from '@/components/empty-states';
-import BugBountyTracker from '@/components/bug-bounty-tracker';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/lib/auth/auth-context';
+import BugBountyTracker from '@/components/bug-bounty-tracker';
 
 interface BugReport {
   id: string;
@@ -50,15 +46,13 @@ interface BugReport {
 }
 
 export default function BugReportsPage() {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('my-reports');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [bugReports, setBugReports] = useState<BugReport[]>([]);
   const [filteredReports, setFilteredReports] = useState<BugReport[]>([]);
   const [selectedBug, setSelectedBug] = useState<BugReport | null>(null);
   const [showBugDetails, setShowBugDetails] = useState(false);
-  const [showNewBugForm, setShowNewBugForm] = useState(false);
   
   // Filters
   const [filters, setFilters] = useState({
@@ -69,13 +63,10 @@ export default function BugReportsPage() {
   });
 
   useEffect(() => {
-    if (!authLoading && isAuthenticated && user?.email) {
+    if (user?.email) {
       loadMyBugReports();
-    } else if (!authLoading && !isAuthenticated) {
-      setError('Please log in to view bug reports');
-      setLoading(false);
     }
-  }, [authLoading, isAuthenticated, user]);
+  }, [user]);
 
   useEffect(() => {
     filterReports();
@@ -84,31 +75,22 @@ export default function BugReportsPage() {
   const loadMyBugReports = async () => {
     if (!user?.email) return;
     
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-      
       const response = await fetch(`/api/bug-reports?userEmail=${encodeURIComponent(user.email)}`);
       const data = await response.json();
       
       if (data.success) {
         setBugReports(data.bugReports || []);
       } else {
-        setError(data.error || 'Failed to load bug reports');
         toast.error(data.error || 'Failed to load bug reports');
       }
     } catch (error) {
       console.error('Error loading bug reports:', error);
-      setError('Failed to connect to server');
       toast.error('Failed to load bug reports');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleRefresh = async () => {
-    await loadMyBugReports();
-    toast.success('Bug reports refreshed');
   };
 
   const filterReports = () => {
@@ -203,92 +185,26 @@ export default function BugReportsPage() {
     critical: bugReports.filter(b => b.priority === 'critical').length
   };
 
-  // Enhanced loading states
-  if (authLoading) {
-    return (
-      <EnhancedLoading
-        type="auth"
-        message="Authenticating..."
-        submessage="Verifying your access to bug reports"
-        size="lg"
-      />
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <EnhancedLoading
-        type="auth"
-        error="Authentication required to access bug reports"
-        size="lg"
-      />
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <SkeletonCard className="h-32" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <SkeletonCard className="h-24" />
-          <SkeletonCard className="h-24" />
-          <SkeletonCard className="h-24" />
-        </div>
-        <SkeletonCard className="h-96" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <EnhancedLoading
-        type="page"
-        error={error}
-        size="lg"
-      />
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Enhanced Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-        <div className="flex items-center space-x-4">
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center" style={{
-            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-            boxShadow: '0 8px 24px rgba(239, 68, 68, 0.25)'
-          }}>
-            <Bug className="w-8 h-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Bug Reports</h1>
-            <p className="text-gray-600">Track and manage your submitted issues</p>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-2">
+            <Bug className="w-8 h-8 text-red-500" />
+            <span>My Bug Reports</span>
+          </h1>
+          <p className="text-gray-600 mt-1">Track and manage your submitted bug reports</p>
         </div>
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={handleRefresh}
-            disabled={loading}
-            className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 disabled:opacity-50 hover:scale-105"
-            style={{
-              background: loading ? '#6b7280' : 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-              boxShadow: loading ? 'none' : '0 4px 12px rgba(34, 197, 94, 0.25)'
-            }}
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh</span>
-          </button>
-          <button
-            onClick={openBugReportModal}
-            className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 hover:scale-105"
-            style={{
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.25)'
-            }}
-          >
-            <Plus className="w-4 h-4" />
-            <span>Report Bug</span>
-          </button>
+        <div className="flex items-center space-x-2">
+          <Button onClick={() => loadMyBugReports()} variant="outline" size="sm">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+          <Button onClick={openBugReportModal}>
+            <Plus className="w-4 h-4 mr-2" />
+            Report Bug
+          </Button>
         </div>
       </div>
 

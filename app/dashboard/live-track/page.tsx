@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Navigation, 
   MapPin, 
@@ -13,16 +12,10 @@ import {
   Bus,
   AlertCircle,
   CheckCircle,
-  XCircle,
-  Locate,
-  Route as RouteIcon,
-  Users,
-  Phone
+  XCircle
 } from 'lucide-react';
-import { useAuth } from '@/lib/auth/auth-context';
-import { EnhancedLoading, SkeletonCard } from '@/components/enhanced-loading';
-import { EmptyState } from '@/components/empty-states';
 import toast from 'react-hot-toast';
+import { sessionManager } from '@/lib/session';
 import dynamic from 'next/dynamic';
 
 // Dynamically import the map component to avoid SSR issues
@@ -99,11 +92,11 @@ interface TrackingData {
 
 export default function LiveTrackPage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [studentId, setStudentId] = useState<string | null>(null);
 
   useEffect(() => {
     checkSessionAndLoadData();
@@ -199,59 +192,50 @@ export default function LiveTrackPage() {
     return updateTime.toLocaleDateString();
   };
 
-  // Enhanced loading states
-  if (authLoading) {
-    return (
-      <EnhancedLoading
-        type="auth"
-        message="Authenticating..."
-        submessage="Verifying your access to live tracking"
-        size="lg"
-      />
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <EnhancedLoading
-        type="auth"
-        error="Authentication required to access live tracking"
-        size="lg"
-      />
-    );
-  }
-
   if (isLoading) {
     return (
-      <EnhancedLoading
-        type="data"
-        message="Loading live tracking..."
-        submessage="Fetching your bus location and route information"
-        size="lg"
-        showLogo={true}
-      />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading live tracking...</p>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <EnhancedLoading
-        type="page"
-        error={error}
-        size="lg"
-      />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Unable to Load Tracking</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={checkSessionAndLoadData}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
     );
   }
 
   if (!trackingData) {
     return (
-      <EmptyState
-        type="routes"
-        title="No Route Assigned"
-        description="You don't have a route assigned yet. Please contact administration."
-        actionText="View My Routes"
-        onAction={() => router.push('/dashboard/routes')}
-      />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <Bus className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">No Route Assigned</h2>
+          <p className="text-gray-600 mb-4">You don't have a route assigned yet. Please contact your administration.</p>
+          <button
+            onClick={() => router.push('/dashboard/routes')}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            View My Routes
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -260,30 +244,15 @@ export default function LiveTrackPage() {
   const gpsStatus = gps?.status || 'offline';
 
   return (
-    <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, rgba(254, 255, 248, 0.5) 0%, rgba(240, 253, 244, 0.5) 100%)'
-    }}>
-      {/* Enhanced Header */}
-      <div
-        className="bg-white shadow-lg border-b"
-        style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(34, 197, 94, 0.1)'
-        }}
-      >
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{
-                background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-                boxShadow: '0 8px 24px rgba(34, 197, 94, 0.25)'
-              }}>
-                <Navigation className="h-7 w-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Live Bus Tracking</h1>
-                <p className="text-gray-600">Real-time location and status</p>
+              <div className="flex items-center space-x-2">
+                <Navigation className="h-6 w-6 text-green-600" />
+                <h1 className="text-xl font-semibold text-gray-900">Live Bus Tracking</h1>
               </div>
               <div className="text-sm text-gray-500">
                 Route {route.routeNumber} - {route.routeName}
