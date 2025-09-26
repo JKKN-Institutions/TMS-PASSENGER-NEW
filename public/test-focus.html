@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .field { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        .error { color: red; font-size: 14px; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Focus Test - Profile Form</h1>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useCallback, useMemo } = React;
+
+        // StableInput component - same as in our implementation
+        const StableInput = React.memo(({ 
+            label, 
+            value, 
+            onChange, 
+            onBlur,
+            placeholder,
+            error
+        }) => {
+            return (
+                <div className="field">
+                    <label>{label}</label>
+                    <input
+                        type="text"
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        onBlur={onBlur}
+                        placeholder={placeholder}
+                    />
+                    {error && <div className="error">{error}</div>}
+                </div>
+            );
+        });
+
+        function TestForm() {
+            const [formData, setFormData] = useState({
+                mobile: '',
+                emergencyContact: '',
+                address: ''
+            });
+            const [errors, setErrors] = useState({});
+
+            const handleInputChange = useCallback((field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                setErrors(prev => {
+                    const newErrors = { ...prev };
+                    if (newErrors[field]) {
+                        delete newErrors[field];
+                    }
+                    return newErrors;
+                });
+            }, []);
+
+            const handleFieldBlur = useCallback((field) => {
+                const value = formData[field];
+                if (field === 'mobile' && value && !/^\d{10}$/.test(value)) {
+                    setErrors(prev => ({ ...prev, [field]: 'Mobile must be 10 digits' }));
+                }
+            }, [formData]);
+
+            const createInputChangeHandler = useCallback((field) => {
+                return (value) => handleInputChange(field, value);
+            }, [handleInputChange]);
+
+            const createInputBlurHandler = useCallback((field) => {
+                return () => handleFieldBlur(field);
+            }, [handleFieldBlur]);
+
+            return (
+                <div>
+                    <StableInput
+                        label="Mobile Number"
+                        value={formData.mobile}
+                        onChange={createInputChangeHandler('mobile')}
+                        onBlur={createInputBlurHandler('mobile')}
+                        placeholder="Enter 10-digit mobile number"
+                        error={errors.mobile}
+                    />
+                    
+                    <StableInput
+                        label="Emergency Contact"
+                        value={formData.emergencyContact}
+                        onChange={createInputChangeHandler('emergencyContact')}
+                        onBlur={createInputBlurHandler('emergencyContact')}
+                        placeholder="Enter emergency contact name"
+                        error={errors.emergencyContact}
+                    />
+                    
+                    <StableInput
+                        label="Address"
+                        value={formData.address}
+                        onChange={createInputChangeHandler('address')}
+                        onBlur={createInputBlurHandler('address')}
+                        placeholder="Enter your address"
+                        error={errors.address}
+                    />
+
+                    <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>
+                        <h3>Current Values:</h3>
+                        <pre>{JSON.stringify(formData, null, 2)}</pre>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<TestForm />, document.getElementById('root'));
+    </script>
+</body>
+</html>
