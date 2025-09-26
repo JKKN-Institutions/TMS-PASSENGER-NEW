@@ -31,6 +31,7 @@ import {
   LoadingOverlay,
   SwipeHandler 
 } from '@/components/modern-ui-components';
+import { EnhancedLoading } from '@/components/enhanced-loading';
 import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
@@ -193,29 +194,27 @@ export default function DashboardPage() {
     }
   }, [authLoading, isAuthenticated, user]);
 
-  // Enhanced Loading state with overlay
-  if (authLoading || isLoading) {
+  // Enhanced Loading states
+  if (authLoading) {
     return (
-      <>
-        <LoadingOverlay 
-          isVisible={true} 
-          message="Loading your transport dashboard..."
-        />
-        <div className="min-h-screen bg-gray-50">
-          <div className="container-modern py-8">
-            <div className="space-y-6">
-              {/* Skeleton loading for dashboard cards */}
-              {[...Array(3)].map((_, index) => (
-                <Card key={index} className="modern-card" padding="lg">
-                  <div className="skeleton h-6 w-32 mb-4" />
-                  <div className="skeleton h-4 w-full mb-2" />
-                  <div className="skeleton h-4 w-3/4" />
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </>
+      <EnhancedLoading
+        type="auth"
+        message="Authenticating..."
+        submessage="Setting up your transport dashboard"
+        size="lg"
+      />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <EnhancedLoading
+        type="data"
+        message="Loading dashboard..."
+        submessage="Fetching your transport information and status"
+        size="lg"
+        showLogo={true}
+      />
     );
   }
 
@@ -316,7 +315,10 @@ export default function DashboardPage() {
               <div className="text-center">
                 {/* Enrollment Icon */}
                 <div className="mb-6">
-                  <div className="inline-flex p-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-2xl">
+                  <div className="inline-flex p-6 rounded-2xl" style={{
+                    background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
+                    boxShadow: '0 8px 24px rgba(34, 197, 94, 0.25)'
+                  }}>
                     <Bus className="w-16 h-16 text-white" />
                   </div>
                 </div>
@@ -335,7 +337,19 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => setShowEnrollmentForm(true)}
                     size="lg"
-                    className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full text-white font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    style={{
+                      background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
+                      border: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #ca8a04 100%)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
                   >
                     Start Enrollment Process
                   </Button>
