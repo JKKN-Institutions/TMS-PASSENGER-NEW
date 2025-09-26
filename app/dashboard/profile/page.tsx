@@ -405,10 +405,26 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  // Simple input change handler - only update form data, no validation
+  // Input change handler - update form data and clear errors for valid inputs
   const handleInputChange = useCallback((field: keyof StudentProfile, value: string) => {
     setEditForm(prev => ({ ...prev, [field]: value }));
-  }, []);
+    
+    // Clear error for this field if it becomes valid
+    if (errors[field]) {
+      const validator = fieldValidators[field as keyof typeof fieldValidators];
+      if (validator) {
+        const error = validator(value);
+        if (!error) {
+          // Input is now valid, clear the error
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[field];
+            return newErrors;
+          });
+        }
+      }
+    }
+  }, [errors, fieldValidators]);
 
   // No need for blur validation - only validate on submit
 
