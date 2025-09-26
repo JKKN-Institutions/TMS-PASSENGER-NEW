@@ -185,16 +185,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{
-      background: 'linear-gradient(135deg, #fefff8 0%, #f0fdf4 50%, #fefce8 100%)'
-    }}>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 rounded-full flex items-center justify-center" style={{
-            background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-            boxShadow: '0 8px 24px rgba(34, 197, 94, 0.25)'
-          }}>
+          <div className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
             <GraduationCap className="h-8 w-8 text-white" />
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
@@ -231,27 +226,10 @@ export default function LoginPage() {
                   {/* Passenger Option */}
                   <button
                     onClick={() => setSelectedRole('passenger')}
-                    className="group relative w-full flex items-center p-6 border-2 rounded-lg focus:outline-none transition-all duration-200"
-                    style={{
-                      borderColor: 'rgba(34, 197, 94, 0.2)',
-                      background: 'rgba(255, 255, 255, 0.8)',
-                      backdropFilter: 'blur(8px)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = '#22c55e';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(34, 197, 94, 0.15)';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(34, 197, 94, 0.2)';
-                      e.currentTarget.style.boxShadow = 'none';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 hover:shadow-md"
                   >
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full transition-colors" style={{
-                      background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(234, 179, 8, 0.1) 100%)'
-                    }}>
-                      <Users className="h-6 w-6" style={{color: '#22c55e'}} />
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-colors">
+                      <Users className="h-6 w-6 text-blue-600" />
                     </div>
                     <div className="ml-4 text-left">
                       <h4 className="text-lg font-medium text-gray-900">Passenger</h4>
@@ -262,27 +240,10 @@ export default function LoginPage() {
                   {/* Driver Option */}
                   <button
                     onClick={() => setSelectedRole('driver')}
-                    className="group relative w-full flex items-center p-6 border-2 rounded-lg focus:outline-none transition-all duration-200"
-                    style={{
-                      borderColor: 'rgba(234, 179, 8, 0.2)',
-                      background: 'rgba(255, 255, 255, 0.8)',
-                      backdropFilter: 'blur(8px)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = '#eab308';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(234, 179, 8, 0.15)';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(234, 179, 8, 0.2)';
-                      e.currentTarget.style.boxShadow = 'none';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-lg hover:border-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 hover:shadow-md"
                   >
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full transition-colors" style={{
-                      background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)'
-                    }}>
-                      <Car className="h-6 w-6" style={{color: '#eab308'}} />
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 group-hover:bg-green-200 transition-colors">
+                      <Car className="h-6 w-6 text-green-600" />
                     </div>
                     <div className="ml-4 text-left">
                       <h4 className="text-lg font-medium text-gray-900">Driver</h4>

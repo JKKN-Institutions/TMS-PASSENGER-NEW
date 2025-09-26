@@ -102,7 +102,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
         {/* Left Icon */}
         {Icon && iconPosition === 'left' && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon className={`h-5 w-5 ${focused ? 'text-brand-green-500' : 'text-gray-400'} transition-colors`} />
+            <Icon className={`h-5 w-5 ${focused ? 'text-green-500' : 'text-gray-400'} transition-colors`} />
           </div>
         )}
         
@@ -123,7 +123,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             ${Icon && iconPosition === 'right' ? 'pr-10' : ''}
             ${isPassword ? 'pr-10' : ''}
             ${hasError ? 'form-input-error' : ''}
-            ${hasSuccess ? 'border-brand-green-500 focus:border-brand-green-600' : ''}
+            ${hasSuccess ? 'border-green-500 focus:border-green-600' : ''}
             ${focused ? 'ring-2' : ''}
             transition-all duration-200
           `.trim()}
@@ -132,7 +132,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
         {/* Right Icon or Password Toggle */}
         <div className="absolute inset-y-0 right-0 flex items-center space-x-2 pr-3">
           {Icon && iconPosition === 'right' && (
-            <Icon className={`h-5 w-5 ${focused ? 'text-brand-green-500' : 'text-gray-400'} transition-colors`} />
+            <Icon className={`h-5 w-5 ${focused ? 'text-green-500' : 'text-gray-400'} transition-colors`} />
           )}
           
           {isPassword && (
@@ -154,7 +154,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
             <AlertCircle className="h-5 w-5 text-red-500" />
           )}
           {hasSuccess && (
-            <CheckCircle className="h-5 w-5 text-brand-green-500" />
+            <CheckCircle className="h-5 w-5 text-green-500" />
           )}
         </div>
       </div>
@@ -466,7 +466,7 @@ export const EnhancedTextArea: React.FC<EnhancedTextAreaProps> = ({
           form-input
           resize-vertical
           ${hasError ? 'form-input-error' : ''}
-          ${hasSuccess ? 'border-brand-green-500 focus:border-brand-green-600' : ''}
+          ${hasSuccess ? 'border-green-500 focus:border-green-600' : ''}
           ${focused ? 'ring-2' : ''}
           transition-all duration-200
         `.trim()}
@@ -545,7 +545,7 @@ export const EnhancedDateInput: React.FC<EnhancedDateInputProps> = ({
       )}
       
       <div className="relative">
-        <Calendar className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${focused ? 'text-brand-green-500' : 'text-gray-400'} transition-colors`} />
+        <Calendar className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${focused ? 'text-green-500' : 'text-gray-400'} transition-colors`} />
         
         <input
           type="date"

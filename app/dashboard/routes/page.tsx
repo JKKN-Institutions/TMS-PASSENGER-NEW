@@ -22,7 +22,6 @@ import { studentHelpers } from '@/lib/supabase';
 import { sessionManager } from '@/lib/session';
 import { RouteAccessControl } from '@/components/account-access-control';
 import { Card, Button, Badge, Spinner, Alert, Avatar } from '@/components/modern-ui-components';
-import { EnhancedLoading, SkeletonCard } from '@/components/enhanced-loading';
 
 import toast from 'react-hot-toast';
 
@@ -143,13 +142,15 @@ export default function RoutesPage() {
 
   if (isLoading) {
     return (
-      <EnhancedLoading
-        type="data"
-        message="Loading your route information..."
-        submessage="Fetching your transport route details and schedules"
-        size="lg"
-        showLogo={true}
-      />
+      <div className="space-y-6">
+        <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
+          <Spinner size="lg" color="green" />
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Route Information</h2>
+            <p className="text-gray-600">Please wait while we fetch your route details...</p>
+          </div>
+        </div>
+      </div>
     );
   }
 

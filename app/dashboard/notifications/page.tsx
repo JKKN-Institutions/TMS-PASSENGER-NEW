@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Bell, 
   Search, 
@@ -16,14 +16,11 @@ import {
   CreditCard,
   Shield,
   ExternalLink,
-  RefreshCw,
-  CheckCheck,
-  Eye,
-  Trash2
+  RefreshCw
 } from 'lucide-react';
-import { useAuth } from '@/lib/auth/auth-context';
-import { EnhancedLoading, SkeletonCard } from '@/components/enhanced-loading';
 import toast from 'react-hot-toast';
+import { sessionManager } from '@/lib/session';
+import { pushNotificationService } from '@/lib/push-notifications';
 
 interface Notification {
   id: string;
@@ -72,11 +69,8 @@ interface NotificationSettings {
 }
 
 const NotificationsPage = () => {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<NotificationSettings>({
     pushEnabled: true,
     emailEnabled: false,
@@ -101,6 +95,9 @@ const NotificationsPage = () => {
     soundEnabled: true,
     vibrationEnabled: true
   });
+  
+  // Student state management
+  const [student, setStudent] = useState<any>(null);
   
   // Push notification state
   const [pushSupported, setPushSupported] = useState(false);
@@ -468,53 +465,19 @@ const NotificationsPage = () => {
     setSelectedNotifications([]);
   };
 
-  // Enhanced loading states
-  if (authLoading) {
+  // Show loading state while student is being initialized
+  if (!student) {
     return (
-      <EnhancedLoading
-        type="auth"
-        message="Authenticating..."
-        submessage="Verifying your access to notifications"
-        size="lg"
-      />
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <EnhancedLoading
-        type="auth"
-        error="Authentication required to access notifications"
-        size="lg"
-      />
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        <SkeletonCard className="h-24" />
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <SkeletonCard key={i} className="h-16" />
-          ))}
-        </div>
-        <div className="space-y-4">
-          {[...Array(6)].map((_, i) => (
-            <SkeletonCard key={i} className="h-20" />
-          ))}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="space-y-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-gray-200 rounded-lg h-32"></div>
+            ))}
+          </div>
         </div>
       </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <EnhancedLoading
-        type="page"
-        error={error}
-        size="lg"
-      />
     );
   }
 

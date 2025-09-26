@@ -28,7 +28,6 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { EnhancedInput, validators } from '@/components/enhanced-form-components';
-import { EnhancedLoading } from '@/components/enhanced-loading';
 
 // Stable input component to prevent focus loss
 const StableInput = React.memo(({ 
@@ -448,23 +447,28 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <EnhancedLoading
-        type="data"
-        message="Loading your profile..."
-        submessage="Fetching your personal information and preferences"
-        size="lg"
-        showLogo={true}
-      />
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <p className="text-gray-600">Loading your profile...</p>
+        </div>
+      </div>
     );
   }
 
   if (!profile) {
     return (
-      <EnhancedLoading
-        type="page"
-        error="Failed to load your profile data. Please try again."
-        size="lg"
-      />
+      <div className="p-6 text-center">
+        <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Profile</h2>
+        <p className="text-gray-600">Please refresh the page or try again later.</p>
+        <button 
+          onClick={fetchProfile}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Retry
+        </button>
+      </div>
     );
   }
 
@@ -498,22 +502,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving || Object.values(errors).some(error => error !== '')}
-                className="flex items-center space-x-2 px-4 py-2 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-                  border: 'none',
-                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.25)'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isSaving && !Object.values(errors).some(error => error !== '')) {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #ca8a04 100%)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isSaving && !Object.values(errors).some(error => error !== '')) {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)';
-                  }
-                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -526,20 +515,7 @@ export default function ProfilePage() {
           ) : (
             <button
               onClick={startEditing}
-              className="flex items-center space-x-2 px-4 py-2 text-white rounded-lg transition-all duration-200"
-              style={{
-                background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
-                border: 'none',
-                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.25)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #ca8a04 100%)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               <Edit className="h-4 w-4" />
               <span>Edit Profile</span>
@@ -549,28 +525,22 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Completion */}
-      <div className="rounded-lg p-6" style={{
-        background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(234, 179, 8, 0.1) 100%)',
-        border: '1px solid rgba(34, 197, 94, 0.2)'
-      }}>
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <CheckCircle className="h-6 w-6" style={{color: '#22c55e'}} />
+            <CheckCircle className="h-6 w-6 text-blue-600" />
             <div>
-              <h3 className="text-lg font-medium" style={{color: '#15803d'}}>Profile Completion</h3>
-              <p className="text-sm" style={{color: '#16a34a'}}>
+              <h3 className="text-lg font-medium text-blue-900">Profile Completion</h3>
+              <p className="text-sm text-blue-700">
                 Your profile is {calculateProfileCompletion()}% complete
               </p>
             </div>
           </div>
         </div>
-        <div className="rounded-full h-2" style={{background: 'rgba(34, 197, 94, 0.2)'}}>
+        <div className="bg-blue-200 rounded-full h-2">
           <div 
-            className="h-2 rounded-full transition-all duration-300"
-            style={{ 
-              width: `${calculateProfileCompletion()}%`,
-              background: 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)'
-            }}
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${calculateProfileCompletion()}%` }}
           />
         </div>
       </div>

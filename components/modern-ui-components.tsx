@@ -33,12 +33,12 @@ export const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 touch-feedback relative overflow-hidden';
   
   const variants = {
-    primary: 'btn-primary btn-brand-hover',
+    primary: 'btn-primary',
     secondary: 'btn-secondary', 
     ghost: 'btn-ghost',
     danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 hover:shadow-lg hover:-translate-y-1',
-    success: 'text-white focus:ring-green-500 hover:shadow-lg hover:-translate-y-1',
-    warning: 'text-white focus:ring-yellow-500 hover:shadow-lg hover:-translate-y-1'
+    success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500 hover:shadow-lg hover:-translate-y-1',
+    warning: 'bg-amber-600 hover:bg-amber-700 text-white focus:ring-amber-500 hover:shadow-lg hover:-translate-y-1'
   };
   
   const sizes = {
@@ -130,8 +130,10 @@ export const Card: React.FC<CardProps> = ({
   };
   
   const classes = `
-    brand-card
+    bg-white border border-gray-200 rounded-2xl transition-all duration-200
     ${paddings[padding]}
+    ${shadows[shadow]}
+    ${hover ? 'hover:shadow-lg hover:-translate-y-1' : ''}
     ${className}
   `.trim();
 

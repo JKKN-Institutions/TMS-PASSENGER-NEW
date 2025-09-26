@@ -42,8 +42,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased h-full overflow-x-hidden`}
-        style={{background: 'linear-gradient(135deg, #fefff8 0%, #f0fdf4 100%)'}}
+        className={`${inter.variable} font-sans antialiased h-full bg-gray-50 overflow-x-hidden`}
       >
         <AuthProvider
           autoValidate={true}
@@ -67,25 +66,17 @@ export default function RootLayout({
               toastOptions={{
                 duration: 4000,
                 style: {
-                  background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                  background: '#363636',
                   color: '#fff',
                   maxWidth: '90vw',
                   wordBreak: 'break-word',
                   zIndex: 9999,
-                  borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(8px)',
                 },
                 success: {
                   duration: 3000,
                   iconTheme: {
-                    primary: '#22c55e', // Brand green
+                    primary: '#10b981',
                     secondary: '#fff',
-                  },
-                  style: {
-                    background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
-                    border: '1px solid #22c55e',
                   },
                 },
                 error: {
@@ -93,20 +84,6 @@ export default function RootLayout({
                   iconTheme: {
                     primary: '#ef4444',
                     secondary: '#fff',
-                  },
-                  style: {
-                    background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-                    border: '1px solid #ef4444',
-                  },
-                },
-                loading: {
-                  iconTheme: {
-                    primary: '#eab308', // Brand yellow
-                    secondary: '#fff',
-                  },
-                  style: {
-                    background: 'linear-gradient(135deg, #ca8a04 0%, #a16207 100%)',
-                    border: '1px solid #eab308',
                   },
                 },
               }}
