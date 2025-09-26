@@ -170,54 +170,60 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto"></div>
+          <p className="text-green-700 font-medium">Loading...</p>
+        </div>
       </div>
     );
   }
 
   if (isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto"></div>
+          <p className="text-green-700 font-medium">Redirecting...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
-            <GraduationCap className="h-8 w-8 text-white" />
+          <div className="mx-auto h-20 w-20 bg-gradient-to-r from-green-600 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+            <GraduationCap className="h-10 w-10 text-white drop-shadow-sm" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">
             Transport Management System
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-700 font-medium">
             JKKN College Transport Portal
           </p>
         </div>
 
         {/* Error Display */}
         {(error || fallbackError) && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="text-sm text-red-700">{error || fallbackError}</div>
+          <div className="rounded-lg bg-red-50 p-4 border border-red-200 shadow-sm">
+            <div className="text-sm text-red-700 font-medium">{error || fallbackError}</div>
           </div>
         )}
 
         {/* Login Card */}
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg">
+        <div className="bg-white py-8 px-6 shadow-2xl rounded-2xl border border-green-100 backdrop-blur-sm bg-white/95">
           <div className="space-y-6">
             {!selectedRole ? (
               /* Role Selection */
               <>
                 <div className="text-center">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     Choose Your Role
                   </h3>
-                  <p className="text-sm text-gray-600 mb-6">
+                  <p className="text-sm text-gray-600 mb-8">
                     Select how you want to access the transport portal
                   </p>
                 </div>
@@ -226,59 +232,63 @@ export default function LoginPage() {
                   {/* Passenger Option */}
                   <button
                     onClick={() => setSelectedRole('passenger')}
-                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 hover:shadow-md"
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-green-400 focus:outline-none focus:ring-3 focus:ring-green-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-colors">
-                      <Users className="h-6 w-6 text-blue-600" />
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-green-100 to-yellow-100 group-hover:from-green-200 group-hover:to-yellow-200 transition-all duration-300 shadow-md">
+                      <Users className="h-7 w-7 text-green-600" />
                     </div>
-                    <div className="ml-4 text-left">
-                      <h4 className="text-lg font-medium text-gray-900">Passenger</h4>
+                    <div className="ml-4 text-left flex-1">
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-green-700 transition-colors">Passenger</h4>
                       <p className="text-sm text-gray-600">Students and staff members</p>
                     </div>
+                    <div className="w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </button>
                   
                   {/* Driver Option */}
                   <button
                     onClick={() => setSelectedRole('driver')}
-                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-lg hover:border-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 hover:shadow-md"
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-yellow-400 focus:outline-none focus:ring-3 focus:ring-yellow-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 group-hover:bg-green-200 transition-colors">
-                      <Car className="h-6 w-6 text-green-600" />
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-yellow-100 to-green-100 group-hover:from-yellow-200 group-hover:to-green-200 transition-all duration-300 shadow-md">
+                      <Car className="h-7 w-7 text-yellow-600" />
                     </div>
-                    <div className="ml-4 text-left">
-                      <h4 className="text-lg font-medium text-gray-900">Driver</h4>
+                    <div className="ml-4 text-left flex-1">
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-yellow-700 transition-colors">Driver</h4>
                       <p className="text-sm text-gray-600">Bus drivers and transport staff</p>
                     </div>
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </button>
                 </div>
               </>
             ) : !showFallback ? (
               /* Authentication Method Selection */
               <>
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-6">
                   <button
                     onClick={() => setSelectedRole(null)}
-                    className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+                    className="flex items-center text-gray-500 hover:text-green-600 transition-colors duration-200 group"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                     Back
                   </button>
                 </div>
                 
                 <div className="text-center">
-                  <div className={`mx-auto h-12 w-12 rounded-full flex items-center justify-center mb-4 ${
-                    selectedRole === 'passenger' ? 'bg-blue-100' : 'bg-green-100'
+                  <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg ${
+                    selectedRole === 'passenger' 
+                      ? 'bg-gradient-to-br from-green-100 to-yellow-100' 
+                      : 'bg-gradient-to-br from-yellow-100 to-green-100'
                   }`}>
                     {selectedRole === 'passenger' ? (
-                      <Users className={`h-6 w-6 ${selectedRole === 'passenger' ? 'text-blue-600' : 'text-green-600'}`} />
+                      <Users className="h-8 w-8 text-green-600" />
                     ) : (
-                      <Car className="h-6 w-6 text-green-600" />
+                      <Car className="h-8 w-8 text-yellow-600" />
                     )}
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {selectedRole === 'passenger' ? 'Passenger Login' : 'Driver Login'}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-6">
+                  <p className="text-sm text-gray-600 mb-8">
                     {selectedRole === 'passenger' 
                       ? 'Sign in with your MYJKKN account'
                       : 'Sign in with your MYJKKN account'
@@ -289,15 +299,15 @@ export default function LoginPage() {
                 <button
                   onClick={handleLogin}
                   disabled={isLoading}
-                  className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                  className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
                     selectedRole === 'passenger' 
-                      ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' 
-                      : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+                      ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:ring-green-200' 
+                      : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-200'
                   }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                       Connecting...
                     </div>
                   ) : (
@@ -305,18 +315,18 @@ export default function LoginPage() {
                   )}
                 </button>
                 
-                <div className="text-center text-xs text-gray-500">
-                  <p>You'll be redirected to MYJKKN for secure authentication</p>
+                <div className="text-center text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
+                  <p>🔒 You'll be redirected to MYJKKN for secure authentication</p>
                 </div>
 
                 {/* Alternative login option for both roles */}
-                <div className="text-center border-t pt-4">
+                <div className="text-center border-t border-gray-100 pt-6">
                   <button
                     onClick={() => setShowFallback(true)}
-                    className={`text-sm underline ${
+                    className={`text-sm font-medium underline transition-colors duration-200 ${
                       selectedRole === 'passenger' 
-                        ? 'text-blue-600 hover:text-blue-500'
-                        : 'text-green-600 hover:text-green-500'
+                        ? 'text-green-600 hover:text-green-700'
+                        : 'text-yellow-600 hover:text-yellow-700'
                     }`}
                   >
                     {selectedRole === 'passenger' 
@@ -329,30 +339,32 @@ export default function LoginPage() {
             ) : (
               /* Login Form */
               <>
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-6">
                   <button
                     onClick={() => setShowFallback(false)}
-                    className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+                    className="flex items-center text-gray-500 hover:text-green-600 transition-colors duration-200 group"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                     Back
                   </button>
                 </div>
                 
                 <div className="text-center">
-                  <div className={`mx-auto h-12 w-12 rounded-full flex items-center justify-center mb-4 ${
-                    selectedRole === 'passenger' ? 'bg-blue-100' : 'bg-green-100'
+                  <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg ${
+                    selectedRole === 'passenger' 
+                      ? 'bg-gradient-to-br from-green-100 to-yellow-100' 
+                      : 'bg-gradient-to-br from-yellow-100 to-green-100'
                   }`}>
                     {selectedRole === 'passenger' ? (
-                      <Users className="h-6 w-6 text-blue-600" />
+                      <Users className="h-8 w-8 text-green-600" />
                     ) : (
-                      <Car className="h-6 w-6 text-green-600" />
+                      <Car className="h-8 w-8 text-yellow-600" />
                     )}
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {selectedRole === 'passenger' ? 'Alternative Login' : 'Direct Driver Login'}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-6">
+                  <p className="text-sm text-gray-600 mb-8">
                     {selectedRole === 'passenger'
                       ? 'Sign in with your email and password'
                       : 'Enhanced authentication with parent app integration'
@@ -360,9 +372,9 @@ export default function LoginPage() {
                   </p>
                 </div>
 
-                <form onSubmit={selectedRole === 'driver' ? handleDriverDirectLogin : handleFallbackLogin} className="space-y-4">
-                  <div>
-                    <label htmlFor="email" className="sr-only">
+                <form onSubmit={selectedRole === 'driver' ? handleDriverDirectLogin : handleFallbackLogin} className="space-y-6">
+                  <div className="space-y-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                       Email address
                     </label>
                     <input
@@ -373,12 +385,12 @@ export default function LoginPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                      placeholder="Email address"
+                      className="relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                      placeholder="Enter your email address"
                     />
                   </div>
-                  <div>
-                    <label htmlFor="password" className="sr-only">
+                  <div className="space-y-1">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                       Password
                     </label>
                     <input
@@ -389,22 +401,22 @@ export default function LoginPage() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                      placeholder="Password"
+                      className="relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                      placeholder="Enter your password"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={fallbackLoading}
-                    className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
                       selectedRole === 'passenger'
-                        ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                        : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+                        ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:ring-green-200'
+                        : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-200'
                     }`}
                   >
                     {fallbackLoading ? (
                       <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                         Signing in...
                       </div>
                     ) : (
@@ -419,26 +431,11 @@ export default function LoginPage() {
 
         {/* Help Text */}
         <div className="text-center">
-          <div className="mt-4 text-xs text-gray-500">
-            <p>Need help? Contact your transport administrator</p>
-            <p className="mt-1">
-              Don't have a MYJKKN account? Contact the college administration
+          <div className="mt-6 text-sm text-gray-600 bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm">
+            <p className="font-medium">Need help?</p>
+            <p className="mt-1 text-xs">
+              Contact your transport administrator or college administration
             </p>
-            <div className="mt-2 space-x-4">
-              <a
-                href="/auth/diagnostic"
-                className="text-blue-600 hover:text-blue-500 underline"
-              >
-                Authentication Diagnostic
-              </a>
-              <span className="text-gray-300">|</span>
-              <a
-                href="/auth/debug-redirect"
-                className="text-blue-600 hover:text-blue-500 underline"
-              >
-                Redirect Debug
-              </a>
-            </div>
           </div>
         </div>
       </div>
