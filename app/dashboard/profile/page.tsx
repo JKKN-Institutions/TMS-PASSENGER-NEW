@@ -91,6 +91,84 @@ const StableInput = React.memo(({
   );
 });
 
+// Simple EditableField component with direct HTML input to prevent focus loss
+const EditableField = ({ 
+  label, 
+  value, 
+  field, 
+  type = 'text', 
+  placeholder,
+  required = false,
+  icon,
+  isEditing,
+  editForm,
+  errors,
+  onInputChange
+}: {
+  label: string;
+  value: string;
+  field: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  icon?: any;
+  isEditing: boolean;
+  editForm: any;
+  errors: Record<string, string>;
+  onInputChange: (field: string, value: string) => void;
+}) => {
+  const fieldError = errors[field];
+  const fieldValue = editForm[field] || '';
+  
+  return (
+    <div>
+      {isEditing ? (
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          <div className="relative">
+            {icon && (
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {React.createElement(icon, { className: "h-5 w-5 text-gray-400" })}
+              </div>
+            )}
+            <input
+              type={type}
+              value={fieldValue}
+              onChange={(e) => onInputChange(field, e.target.value)}
+              placeholder={placeholder}
+              className={`
+                block w-full rounded-lg border px-3 py-2 text-sm
+                ${icon ? 'pl-10' : ''}
+                ${fieldError 
+                  ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                }
+                placeholder-gray-400 focus:outline-none focus:ring-1
+                transition-colors duration-200
+              `.trim()}
+            />
+          </div>
+          {fieldError && (
+            <p className="mt-1 text-sm text-red-600">{fieldError}</p>
+          )}
+        </div>
+      ) : (
+        <div>
+          <label className="block text-sm font-medium text-gray-500 mb-1">{label}</label>
+          <p className="text-gray-900 font-medium py-2">
+            {value || <span className="text-gray-400 italic">Not provided</span>}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+EditableField.displayName = 'EditableField';
+
 interface StudentProfile {
   id: string;
   student_name: string;
@@ -378,51 +456,6 @@ export default function ProfilePage() {
     );
   }
 
-  const EditableField = React.memo(({ 
-    label, 
-    value, 
-    field, 
-    type = 'text', 
-    placeholder,
-    required = false,
-    icon 
-  }: {
-    label: string;
-    value: string;
-    field: keyof StudentProfile;
-    type?: string;
-    placeholder?: string;
-    required?: boolean;
-    icon?: any;
-  }) => {
-    const fieldError = errors[field];
-    const fieldValue = editForm[field] || '';
-    
-    return (
-      <div>
-        {isEditing ? (
-          <StableInput
-            label={label}
-            value={fieldValue}
-            onChange={(newValue) => handleInputChange(field, newValue)}
-            onBlur={() => {}} // No blur validation needed
-            type={type}
-            placeholder={placeholder}
-            required={required}
-            error={fieldError}
-            icon={icon}
-          />
-        ) : (
-          <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1">{label}</label>
-            <p className="text-gray-900 font-medium py-2">
-              {value || <span className="text-gray-400 italic">Not provided</span>}
-            </p>
-          </div>
-        )}
-      </div>
-    );
-  });
 
   const ReadOnlyField = ({ label, value }: { label: string; value: string }) => (
     <div>
@@ -512,6 +545,10 @@ export default function ProfilePage() {
               field="roll_number"
               placeholder="Enter your roll number"
               icon={BookOpen}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <EditableField 
               label="Mobile Number" 
@@ -521,6 +558,10 @@ export default function ProfilePage() {
               placeholder="Enter 10-digit mobile number"
               required
               icon={Phone}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <ReadOnlyField label="Date of Birth" value={profile.date_of_birth ? formatDate(profile.date_of_birth) : 'Not provided'} />
             <ReadOnlyField label="Gender" value={profile.gender} />
@@ -551,6 +592,10 @@ export default function ProfilePage() {
               placeholder="Enter emergency contact name"
               required
               icon={User}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <EditableField 
               label="Emergency Contact Phone" 
@@ -560,6 +605,10 @@ export default function ProfilePage() {
               placeholder="Enter 10-digit mobile number"
               required
               icon={Phone}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
           </div>
         </div>
@@ -593,6 +642,10 @@ export default function ProfilePage() {
               type="tel"
               placeholder="Enter father's mobile number"
               icon={Phone}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <ReadOnlyField label="Mother's Name" value={profile.mother_name} />
             <EditableField 
@@ -602,6 +655,10 @@ export default function ProfilePage() {
               type="tel"
               placeholder="Enter mother's mobile number"
               icon={Phone}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
           </div>
         </div>
@@ -619,6 +676,10 @@ export default function ProfilePage() {
               field="address_street"
               placeholder="Enter your street address"
               icon={Home}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <EditableField 
               label="District" 
@@ -626,6 +687,10 @@ export default function ProfilePage() {
               field="address_district"
               placeholder="Enter your district"
               icon={MapPin}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <EditableField 
               label="State" 
@@ -633,6 +698,10 @@ export default function ProfilePage() {
               field="address_state"
               placeholder="Enter your state"
               icon={MapPin}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
             <EditableField 
               label="PIN Code" 
@@ -640,6 +709,10 @@ export default function ProfilePage() {
               field="address_pin_code"
               placeholder="Enter 6-digit PIN code"
               icon={MapPin}
+              isEditing={isEditing}
+              editForm={editForm}
+              errors={errors}
+              onInputChange={handleInputChange}
             />
           </div>
         </div>
