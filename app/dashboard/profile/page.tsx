@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   User, 
   Mail, 
@@ -27,6 +27,7 @@ import {
 import { useAuth } from '@/lib/auth/auth-context';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { EnhancedInput, validators } from '@/components/enhanced-form-components';
 
 interface StudentProfile {
   id: string;
@@ -130,72 +131,65 @@ export default function ProfilePage() {
     }
   };
 
-  const validateField = useCallback((field: keyof StudentProfile, value: string): string => {
-    const trimmedValue = value?.trim();
-    
-    switch (field) {
-      case 'mobile':
-        if (!trimmedValue) return '';
-        if (!/^[6-9]\d{9}$/.test(trimmedValue)) {
-          return 'Enter a valid 10-digit mobile number starting with 6-9';
-        }
-        return '';
-        
-      case 'emergency_contact_phone':
-        if (!trimmedValue) return '';
-        if (!/^[6-9]\d{9}$/.test(trimmedValue)) {
-          return 'Enter a valid 10-digit emergency contact number';
-        }
-        return '';
-        
-      case 'father_mobile':
-        if (!trimmedValue) return '';
-        if (!/^[6-9]\d{9}$/.test(trimmedValue)) {
-          return 'Enter a valid 10-digit father\'s mobile number';
-        }
-        return '';
-        
-      case 'mother_mobile':
-        if (!trimmedValue) return '';
-        if (!/^[6-9]\d{9}$/.test(trimmedValue)) {
-          return 'Enter a valid 10-digit mother\'s mobile number';
-        }
-        return '';
-        
-      case 'address_pin_code':
-        if (!trimmedValue) return '';
-        if (!/^\d{6}$/.test(trimmedValue)) {
-          return 'Enter a valid 6-digit PIN code';
-        }
-        return '';
-        
-      case 'emergency_contact_name':
-        if (trimmedValue && trimmedValue.length < 2) {
-          return 'Emergency contact name should be at least 2 characters';
-        }
-        return '';
-        
-      case 'roll_number':
-        if (trimmedValue && trimmedValue.length < 3) {
-          return 'Roll number should be at least 3 characters';
-        }
-        return '';
-        
-      default:
-        return '';
+  // Enhanced validation with better user experience
+  const fieldValidators = useMemo(() => ({
+    mobile: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.phone(value) || undefined;
+    },
+    emergency_contact_phone: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.phone(value) || undefined;
+    },
+    father_mobile: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.phone(value) || undefined;
+    },
+    mother_mobile: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.phone(value) || undefined;
+    },
+    address_pin_code: (value: string) => {
+      if (!value?.trim()) return undefined;
+      const pinRegex = /^\d{6}$/;
+      return pinRegex.test(value) ? undefined : 'Enter a valid 6-digit PIN code';
+    },
+    emergency_contact_name: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.minLength(2)(value) || undefined;
+    },
+    roll_number: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.minLength(3)(value) || undefined;
+    },
+    address_street: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.minLength(5)(value) || undefined;
+    },
+    address_district: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.minLength(2)(value) || undefined;
+    },
+    address_state: (value: string) => {
+      if (!value?.trim()) return undefined;
+      return validators.minLength(2)(value) || undefined;
     }
-  }, []);
+  }), []);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
-    // Validate all form fields
+    // Validate all form fields using enhanced validators
     Object.keys(editForm).forEach(key => {
       const field = key as keyof StudentProfile;
       const value = editForm[field] as string;
-      const error = validateField(field, value || '');
-      if (error) {
-        newErrors[field] = error;
+      const validator = fieldValidators[field as keyof typeof fieldValidators];
+      
+      if (validator) {
+        const error = validator(value || '');
+        if (error) {
+          newErrors[field] = error;
+        }
       }
     });
 
@@ -232,6 +226,12 @@ export default function ProfilePage() {
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle validation errors from API
+        if (data.validationErrors) {
+          setErrors(data.validationErrors);
+          toast.error('Please fix the validation errors and try again');
+          return;
+        }
         throw new Error(data.error || 'Failed to update profile');
       }
 
@@ -253,10 +253,12 @@ export default function ProfilePage() {
   };
 
   const handleCancel = () => {
-    setEditForm(profile || {});
+    // Reset form to original profile data
+    setEditForm({ ...profile });
     setErrors({});
     setTouched({});
     setIsEditing(false);
+    toast.info('Changes discarded');
   };
 
   const startEditing = () => {
@@ -268,14 +270,34 @@ export default function ProfilePage() {
   };
 
   const handleInputChange = useCallback((field: keyof StudentProfile, value: string) => {
-    // Use functional updates to prevent unnecessary re-renders
+    // Update form data immediately for smooth typing experience
     setEditForm(prev => ({ ...prev, [field]: value }));
+    
+    // Clear any existing error for this field when user starts typing again
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      if (newErrors[field]) {
+        delete newErrors[field];
+      }
+      return newErrors;
+    });
+  }, []);
+
+  // Separate handler for when field loses focus (onBlur validation)
+  const handleFieldBlur = useCallback((field: keyof StudentProfile) => {
     setTouched(prev => ({ ...prev, [field]: true }));
     
-    // Real-time validation with debounce-like behavior
-    const error = validateField(field, value);
-    setErrors(prev => ({ ...prev, [field]: error }));
-  }, [validateField]);
+    // Only validate on blur to avoid interrupting user input
+    const value = editForm[field] as string;
+    const validator = fieldValidators[field as keyof typeof fieldValidators];
+    
+    if (validator && value) {
+      const error = validator(value);
+      if (error) {
+        setErrors(prev => ({ ...prev, [field]: error }));
+      }
+    }
+  }, [editForm, fieldValidators]);
 
   const calculateProfileCompletion = () => {
     if (!profile) return 0;
@@ -327,7 +349,8 @@ export default function ProfilePage() {
     field, 
     type = 'text', 
     placeholder,
-    required = false 
+    required = false,
+    icon 
   }: {
     label: string;
     value: string;
@@ -335,56 +358,42 @@ export default function ProfilePage() {
     type?: string;
     placeholder?: string;
     required?: boolean;
+    icon?: any;
   }) => {
-    const hasError = errors[field] && touched[field];
-    const isValid = touched[field] && !errors[field] && (editForm[field] || '').trim() !== '';
+    const fieldError = errors[field];
+    const fieldValue = editForm[field] || '';
+    const validator = fieldValidators[field as keyof typeof fieldValidators];
     
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      handleInputChange(field, e.target.value);
-    }, [field, handleInputChange]);
+    const handleChange = useCallback((newValue: string) => {
+      handleInputChange(field, newValue);
+    }, [field]);
+    
+    const handleBlur = useCallback(() => {
+      handleFieldBlur(field);
+    }, [field]);
     
     return (
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label} {required && <span className="text-red-500">*</span>}
-        </label>
         {isEditing ? (
-          <div>
-            <input
-              type={type}
-              value={editForm[field] || ''}
-              onChange={handleChange}
-              placeholder={placeholder}
-              autoComplete="off"
-              className={`w-full px-3 py-2 border-2 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                hasError 
-                  ? 'border-red-500 bg-red-50' 
-                  : isValid 
-                    ? 'border-green-500 bg-green-50' 
-                    : 'border-gray-300 bg-white hover:border-gray-400'
-              }`}
-            />
-            {hasError && (
-              <div className="flex items-center mt-1 text-red-600">
-                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm">{errors[field]}</p>
-              </div>
-            )}
-            {isValid && (
-              <div className="flex items-center mt-1 text-green-600">
-                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm">Looks good!</p>
-              </div>
-            )}
-          </div>
+          <EnhancedInput
+            label={label}
+            value={fieldValue}
+            onChange={handleChange}
+            type={type as any}
+            placeholder={placeholder}
+            required={required}
+            error={fieldError}
+            icon={icon}
+            onValidate={validator}
+            className="mb-4"
+          />
         ) : (
-          <p className="text-gray-900 font-medium py-2">
-            {value || <span className="text-gray-400 italic">Not provided</span>}
-          </p>
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1">{label}</label>
+            <p className="text-gray-900 font-medium py-2">
+              {value || <span className="text-gray-400 italic">Not provided</span>}
+            </p>
+          </div>
         )}
       </div>
     );
@@ -477,6 +486,7 @@ export default function ProfilePage() {
               value={profile.roll_number} 
               field="roll_number"
               placeholder="Enter your roll number"
+              icon={BookOpen}
             />
             <EditableField 
               label="Mobile Number" 
@@ -485,6 +495,7 @@ export default function ProfilePage() {
               type="tel"
               placeholder="Enter 10-digit mobile number"
               required
+              icon={Phone}
             />
             <ReadOnlyField label="Date of Birth" value={profile.date_of_birth ? formatDate(profile.date_of_birth) : 'Not provided'} />
             <ReadOnlyField label="Gender" value={profile.gender} />
@@ -514,6 +525,7 @@ export default function ProfilePage() {
               field="emergency_contact_name"
               placeholder="Enter emergency contact name"
               required
+              icon={User}
             />
             <EditableField 
               label="Emergency Contact Phone" 
@@ -522,6 +534,7 @@ export default function ProfilePage() {
               type="tel"
               placeholder="Enter 10-digit mobile number"
               required
+              icon={Phone}
             />
           </div>
         </div>
@@ -554,6 +567,7 @@ export default function ProfilePage() {
               field="father_mobile"
               type="tel"
               placeholder="Enter father's mobile number"
+              icon={Phone}
             />
             <ReadOnlyField label="Mother's Name" value={profile.mother_name} />
             <EditableField 
@@ -562,6 +576,7 @@ export default function ProfilePage() {
               field="mother_mobile"
               type="tel"
               placeholder="Enter mother's mobile number"
+              icon={Phone}
             />
           </div>
         </div>
@@ -578,24 +593,28 @@ export default function ProfilePage() {
               value={profile.address_street} 
               field="address_street"
               placeholder="Enter your street address"
+              icon={Home}
             />
             <EditableField 
               label="District" 
               value={profile.address_district} 
               field="address_district"
               placeholder="Enter your district"
+              icon={MapPin}
             />
             <EditableField 
               label="State" 
               value={profile.address_state} 
               field="address_state"
               placeholder="Enter your state"
+              icon={MapPin}
             />
             <EditableField 
               label="PIN Code" 
               value={profile.address_pin_code} 
               field="address_pin_code"
               placeholder="Enter 6-digit PIN code"
+              icon={MapPin}
             />
           </div>
         </div>

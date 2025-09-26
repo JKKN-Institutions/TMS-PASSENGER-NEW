@@ -157,22 +157,65 @@ export async function PUT(request: NextRequest) {
     // Add updated timestamp
     filteredUpdates.updated_at = new Date().toISOString();
 
-    // Validate required fields
+    // Trim all string values to prevent empty spaces
+    Object.keys(filteredUpdates).forEach(key => {
+      if (typeof filteredUpdates[key] === 'string') {
+        filteredUpdates[key] = filteredUpdates[key].trim();
+      }
+    });
+
+    // Enhanced validation with specific field error messages
+    const validationErrors: Record<string, string> = {};
+
+    // Validate phone numbers
     if (filteredUpdates.mobile && !/^[6-9]\d{9}$/.test(filteredUpdates.mobile)) {
-      return NextResponse.json({ 
-        error: 'Invalid mobile number. Must be a 10-digit Indian mobile number.' 
-      }, { status: 400 });
+      validationErrors.mobile = 'Mobile number must be a 10-digit Indian number starting with 6-9';
     }
 
     if (filteredUpdates.emergency_contact_phone && !/^[6-9]\d{9}$/.test(filteredUpdates.emergency_contact_phone)) {
-      return NextResponse.json({ 
-        error: 'Invalid emergency contact phone. Must be a 10-digit Indian mobile number.' 
-      }, { status: 400 });
+      validationErrors.emergency_contact_phone = 'Emergency contact phone must be a 10-digit Indian number starting with 6-9';
     }
 
+    if (filteredUpdates.father_mobile && !/^[6-9]\d{9}$/.test(filteredUpdates.father_mobile)) {
+      validationErrors.father_mobile = 'Father\'s mobile must be a 10-digit Indian number starting with 6-9';
+    }
+
+    if (filteredUpdates.mother_mobile && !/^[6-9]\d{9}$/.test(filteredUpdates.mother_mobile)) {
+      validationErrors.mother_mobile = 'Mother\'s mobile must be a 10-digit Indian number starting with 6-9';
+    }
+
+    // Validate PIN code
     if (filteredUpdates.address_pin_code && !/^\d{6}$/.test(filteredUpdates.address_pin_code)) {
+      validationErrors.address_pin_code = 'PIN code must be exactly 6 digits';
+    }
+
+    // Validate text fields with minimum length
+    if (filteredUpdates.emergency_contact_name && filteredUpdates.emergency_contact_name.trim().length < 2) {
+      validationErrors.emergency_contact_name = 'Emergency contact name must be at least 2 characters';
+    }
+
+    if (filteredUpdates.roll_number && filteredUpdates.roll_number.trim().length < 3) {
+      validationErrors.roll_number = 'Roll number must be at least 3 characters';
+    }
+
+    if (filteredUpdates.address_street && filteredUpdates.address_street.trim().length < 5) {
+      validationErrors.address_street = 'Street address must be at least 5 characters';
+    }
+
+    if (filteredUpdates.address_district && filteredUpdates.address_district.trim().length < 2) {
+      validationErrors.address_district = 'District must be at least 2 characters';
+    }
+
+    if (filteredUpdates.address_state && filteredUpdates.address_state.trim().length < 2) {
+      validationErrors.address_state = 'State must be at least 2 characters';
+    }
+
+    // If there are validation errors, return them
+    if (Object.keys(validationErrors).length > 0) {
       return NextResponse.json({ 
-        error: 'Invalid PIN code. Must be a 6-digit number.' 
+        error: 'Validation failed',
+        validationErrors,
+        details: 'Please fix the validation errors and try again'
       }, { status: 400 });
     }
 
@@ -190,6 +233,34 @@ export async function PUT(request: NextRequest) {
         error: 'Failed to update profile',
         details: error.message 
       }, { status: 500 });
+    }
+
+    // Calculate and update profile completion percentage
+    if (updatedStudent) {
+      const profileFields = [
+        updatedStudent.mobile,
+        updatedStudent.emergency_contact_name,
+        updatedStudent.emergency_contact_phone,
+        updatedStudent.address_street,
+        updatedStudent.address_district,
+        updatedStudent.address_state,
+        updatedStudent.address_pin_code
+      ];
+      
+      const completedFields = profileFields.filter(field => field && field.trim() !== '').length;
+      const completionPercentage = Math.round((completedFields / profileFields.length) * 100);
+      
+      // Update completion percentage
+      await supabase
+        .from('students')
+        .update({ 
+          profile_completion_percentage: completionPercentage,
+          is_profile_complete: completionPercentage >= 85
+        })
+        .eq('id', studentId);
+        
+      updatedStudent.profile_completion_percentage = completionPercentage;
+      updatedStudent.is_profile_complete = completionPercentage >= 85;
     }
 
     return NextResponse.json({
