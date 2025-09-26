@@ -521,11 +521,7 @@ const NotificationsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0">
               {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
+        <div className="mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
@@ -546,12 +542,10 @@ const NotificationsPage = () => {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={handleManualRefresh}
                 disabled={loading}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
                 style={{
                   background: loading ? '#6b7280' : 'linear-gradient(135deg, #22c55e 0%, #eab308 100%)',
                   boxShadow: loading ? 'none' : '0 4px 12px rgba(34, 197, 94, 0.25)'
@@ -559,13 +553,11 @@ const NotificationsPage = () => {
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 <span>Refresh</span>
-              </motion.button>
+              </button>
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105"
                 style={{
                   background: 'rgba(255, 255, 255, 0.9)',
                   border: '1px solid rgba(34, 197, 94, 0.2)',
@@ -574,7 +566,7 @@ const NotificationsPage = () => {
               >
                 <Settings className="w-4 h-4" />
                 <span>Settings</span>
-              </motion.button>
+              </button>
             <button
               onClick={markAllAsRead}
               disabled={unreadCount === 0}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   MessageSquare, 
@@ -13,21 +14,28 @@ import {
   Send,
   Activity,
   FileText,
-  Users
+  Users,
+  RefreshCw,
+  Filter,
+  HelpCircle,
+  Star
 } from 'lucide-react';
+import { useAuth } from '@/lib/auth/auth-context';
+import { EnhancedLoading, SkeletonCard } from '@/components/enhanced-loading';
+import { EmptyState } from '@/components/empty-states';
 import { studentHelpers } from '@/lib/supabase';
-import { sessionManager } from '@/lib/session';
-import { GrievanceAccessControl } from '@/components/account-access-control';
 import { Grievance, Route, Student } from '@/types';
 import { formatDate, getStatusColor, getStatusText, capitalizeFirst, getErrorMessage } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import GrievanceGroupChatModal from '@/components/grievance-group-chat-modal-fixed';
 
 export default function GrievancesPage() {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [grievances, setGrievances] = useState<Grievance[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [student, setStudent] = useState<Student | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showGrievanceModal, setShowGrievanceModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<any>(null);
@@ -247,18 +255,49 @@ export default function GrievancesPage() {
     }
   };
 
+  // Enhanced loading states
+  if (authLoading) {
+    return (
+      <EnhancedLoading
+        type="auth"
+        message="Authenticating..."
+        submessage="Verifying your access to grievance system"
+        size="lg"
+      />
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <EnhancedLoading
+        type="auth"
+        error="Authentication required to access grievances"
+        size="lg"
+      />
+    );
+  }
+
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 h-32 bg-gray-200"></div>
-            ))}
-          </div>
+      <div className="space-y-6">
+        <SkeletonCard className="h-32" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SkeletonCard className="h-24" />
+          <SkeletonCard className="h-24" />
+          <SkeletonCard className="h-24" />
         </div>
+        <SkeletonCard className="h-96" />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <EnhancedLoading
+        type="page"
+        error={error}
+        size="lg"
+      />
     );
   }
 
