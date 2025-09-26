@@ -201,7 +201,7 @@ export default function DashboardPage() {
           isVisible={true} 
           message="Loading your transport dashboard..."
         />
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
           <div className="container-modern py-8">
             <div className="space-y-6">
               {/* Skeleton loading for dashboard cards */}
@@ -227,7 +227,7 @@ export default function DashboardPage() {
   // Enhanced Error state with recovery actions
   if (error || !dashboardData) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
         <div className="container-modern py-8">
           <ErrorState
             title="Failed to Load Dashboard"
@@ -279,7 +279,7 @@ export default function DashboardPage() {
   
   if (shouldShowEnrollmentDashboard) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
         <div className="container-modern py-12 px-4">
           {/* Simplified Welcome Section */}
           <motion.div
@@ -290,16 +290,16 @@ export default function DashboardPage() {
             <div className="max-w-2xl mx-auto">
               {/* Welcome Icon */}
               <div className="mb-6">
-                <div className="inline-flex p-4 bg-gradient-to-r from-green-500 to-blue-600 rounded-3xl shadow-lg">
-                  <Bus className="w-12 h-12 text-white" />
+                <div className="inline-flex p-4 bg-gradient-to-r from-green-500 to-yellow-500 rounded-3xl shadow-xl">
+                  <Bus className="w-12 h-12 text-white drop-shadow-sm" />
                 </div>
               </div>
               
               {/* Welcome Text */}
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent mb-4">
                 Welcome to TMS Transport!
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-gray-700 leading-relaxed font-medium">
                 Get started with your transport services in just a few simple steps
               </p>
             </div>
@@ -312,12 +312,12 @@ export default function DashboardPage() {
             transition={{ delay: 0.2 }}
             className="max-w-2xl mx-auto"
           >
-            <Card className="bg-white shadow-xl border-0" padding="xl">
+            <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border border-green-100" padding="xl">
               <div className="text-center">
                 {/* Enrollment Icon */}
                 <div className="mb-6">
-                  <div className="inline-flex p-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-2xl">
-                    <Bus className="w-16 h-16 text-white" />
+                  <div className="inline-flex p-6 bg-gradient-to-r from-green-500 to-yellow-500 rounded-2xl shadow-lg">
+                    <Bus className="w-16 h-16 text-white drop-shadow-sm" />
                   </div>
                 </div>
                 
@@ -325,7 +325,7 @@ export default function DashboardPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
                   Ready to Get Started?
                 </h2>
-                <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+                <p className="text-gray-700 mb-8 text-lg leading-relaxed font-medium">
                   Enroll for transport services to access routes, schedules, and live tracking. 
                   It only takes a few minutes to set up.
                 </p>
@@ -335,13 +335,13 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => setShowEnrollmentForm(true)}
                     size="lg"
-                    className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Start Enrollment Process
                   </Button>
                   
-                  <p className="text-sm text-gray-500">
-                    You'll be able to choose your preferred route and boarding stop
+                  <p className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                    🚌 You'll be able to choose your preferred route and boarding stop
                   </p>
                 </div>
               </div>
@@ -355,13 +355,13 @@ export default function DashboardPage() {
             transition={{ delay: 0.4 }}
             className="max-w-2xl mx-auto mt-8"
           >
-            <Card className="bg-gray-50 border-gray-200" padding="md">
+            <Card className="bg-white/70 backdrop-blur-sm border-green-100 shadow-sm" padding="md">
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Need Help?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Contact transport office or check the help section for guidance
+                  💬 Contact transport office or check the help section for guidance
                 </p>
               </div>
             </Card>
@@ -420,7 +420,7 @@ export default function DashboardPage() {
   return (
     <SwipeHandler
       onSwipeDown={handleRefresh}
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100"
     >
       <div className="container-modern py-8 space-y-8">
         {/* Payment Status Components - ONLY for students with route allocation */}

@@ -82,20 +82,20 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
         <motion.div
           variants={badgeVariants}
           animate="active"
-          className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-emerald-100 border-2 border-green-200 p-4 sm:p-6 shadow-lg w-full ${className}`}
+          className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-yellow-50 border-2 border-green-200 p-4 sm:p-6 shadow-lg w-full ${className}`}
         >
           {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-600/10"></div>
-          <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-green-200/20 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
-          <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-emerald-200/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-yellow-400/10"></div>
+          <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-yellow-200/20 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-green-200/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
           
           {/* Content */}
           <div className="relative z-10">
             {/* Header with Icon */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-500 rounded-lg flex-shrink-0">
-                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <div className="p-2 bg-gradient-to-r from-green-500 to-yellow-500 rounded-lg flex-shrink-0 shadow-md">
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="text-base sm:text-lg font-bold text-green-800 truncate">Account Active</h3>
@@ -224,7 +224,7 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
 
           {/* Status Badge */}
           <div className="mt-4 flex items-center justify-center">
-            <div className="px-3 sm:px-4 py-2 bg-green-500 text-white rounded-full text-xs sm:text-sm font-medium text-center">
+            <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-full text-xs sm:text-sm font-medium text-center shadow-md">
               ✓ Term Active
             </div>
           </div>
