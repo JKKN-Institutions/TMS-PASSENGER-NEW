@@ -155,10 +155,21 @@ const EnhancedPaymentInterface: React.FC<EnhancedPaymentInterfaceProps> = ({
   const fetchPaymentOptions = async () => {
     try {
       setLoading(true);
+      setError('');
       const response = await fetch(`/api/semester-payments-v2?studentId=${studentId}&type=available`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch payment options');
+        const errorData = await response.json();
+        console.error('Payment options fetch error:', errorData);
+        
+        if (response.status === 404 && errorData.error?.includes('route not allocated')) {
+          // Handle specific route allocation error
+          setError(`Transport route not yet assigned. ${errorData.details || 'Please contact admin for route allocation.'}`);
+          setPaymentData(null);
+          return;
+        }
+        
+        throw new Error(errorData.error || 'Failed to fetch payment options');
       }
       
       const data = await response.json();
