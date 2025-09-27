@@ -172,10 +172,10 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-[400px] bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
         <div className="text-center">
-          <RefreshCw className="h-8 w-8 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading settings...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
+          <p className="text-green-700 font-medium">Loading settings...</p>
         </div>
       </div>
     );
@@ -276,7 +276,7 @@ export default function SettingsPage() {
                   onChange={(e) => handleInputChange(item.key, e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-yellow-500"></div>
               </label>
             </div>
           ))}
@@ -303,7 +303,7 @@ export default function SettingsPage() {
                   onChange={(e) => handleInputChange(item.key, e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-yellow-500"></div>
               </label>
             </div>
           ))}
@@ -410,16 +410,16 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100"
       >
         <div>
-          <h1 className="text-heading-1 mb-2">Settings</h1>
-          <p className="text-body">Manage your account preferences and transport settings</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent mb-2">Settings</h1>
+          <p className="text-gray-700 font-medium">Manage your account preferences and transport settings</p>
         </div>
       </motion.div>
 
@@ -427,20 +427,26 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar Navigation */}
         <div className="lg:col-span-1">
-          <Card padding="md">
+          <Card padding="md" className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
             <nav className="space-y-2">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg transition-colors ${
+                  className={`w-full flex items-center space-x-3 px-4 py-3 text-left rounded-xl transition-all duration-200 ${
                     activeTab === tab.id
-                      ? 'bg-green-50 text-green-700 border border-green-200'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-green-50 to-yellow-50 text-green-700 border border-green-200 shadow-md'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm'
                   }`}
                 >
-                  <tab.icon className="h-5 w-5" />
-                  <span className="font-medium">{tab.label}</span>
+                  <div className={`p-1 rounded-lg ${
+                    activeTab === tab.id 
+                      ? 'bg-gradient-to-r from-green-100 to-yellow-100' 
+                      : 'bg-gray-100'
+                  }`}>
+                    <tab.icon className="h-5 w-5" />
+                  </div>
+                  <span className="font-semibold">{tab.label}</span>
                 </button>
               ))}
             </nav>
@@ -449,7 +455,7 @@ export default function SettingsPage() {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <Card padding="lg">
+          <Card padding="lg" className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, x: 20 }}

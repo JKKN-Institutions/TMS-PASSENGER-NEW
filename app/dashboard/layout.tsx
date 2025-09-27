@@ -28,6 +28,7 @@ import { ThemeToggle } from '@/components/modern-ui-components';
 import { useTheme } from '@/components/theme-provider';
 import { EnrollmentProvider, useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import BugReportWrapper from '@/components/bug-report-wrapper';
+import MobileBottomNavbar from '@/components/mobile-bottom-navbar';
 
 interface NavigationItem {
   name: string;
@@ -426,11 +427,14 @@ function DashboardContent({
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto bg-gray-50 min-w-0 main-content">
-          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0">
+          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-20 lg:pb-6">
             {children}
           </div>
         </main>
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNavbar />
       
       {/* Floating bug report button for dashboard */}
       <BugReportWrapper />
