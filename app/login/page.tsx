@@ -288,35 +288,79 @@ export default function LoginPage() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {selectedRole === 'passenger' ? 'Passenger Login' : 'Driver Login'}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-8">
-                    {selectedRole === 'passenger' 
-                      ? 'Sign in with your MYJKKN account'
-                      : 'Sign in with your MYJKKN account'
-                    }
-                  </p>
+                  <div className="mb-8">
+                    <p className="text-sm text-gray-700 font-medium mb-3">
+                      {selectedRole === 'passenger' 
+                        ? 'Sign in with your MYJKKN account to access transport services'
+                        : 'Sign in with your MYJKKN account to manage transport operations'
+                      }
+                    </p>
+                    <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-4 border border-blue-200">
+                      <div className="flex items-start space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <GraduationCap className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold text-blue-900 mb-1">About MYJKKN Authentication</h4>
+                          <p className="text-xs text-blue-800 leading-relaxed">
+                            MYJKKN is JKKN College's unified authentication system. Use your college credentials to securely access all campus services including transport management.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 <button
                   onClick={handleLogin}
                   disabled={isLoading}
-                  className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
+                  className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl ${
                     selectedRole === 'passenger' 
-                      ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:ring-green-200' 
-                      : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-200'
+                      ? 'bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 focus:ring-green-200' 
+                      : 'bg-gradient-to-r from-yellow-500 to-green-600 hover:from-yellow-600 hover:to-green-700 focus:ring-yellow-200'
                   }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                      Connecting...
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-3"></div>
+                      <span>Connecting to MYJKKN...</span>
                     </div>
                   ) : (
-                    'Sign in with MYJKKN'
+                    <div className="flex items-center">
+                      <div className="p-1 bg-white/20 rounded-lg mr-3">
+                        <GraduationCap className="h-5 w-5 drop-shadow-sm" />
+                      </div>
+                      <span>Continue with MYJKKN</span>
+                    </div>
                   )}
                 </button>
                 
-                <div className="text-center text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
-                  <p>🔒 You'll be redirected to MYJKKN for secure authentication</p>
+                {/* Enhanced Security Information */}
+                <div className="space-y-3">
+                  <div className="text-center text-xs text-gray-600 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-4 border border-blue-200">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <div className="p-1 bg-blue-100 rounded-full">
+                        <svg className="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <span className="font-semibold text-blue-900">Secure Authentication</span>
+                    </div>
+                    <p className="text-blue-800 leading-relaxed">
+                      You'll be redirected to MYJKKN's secure login portal. Your credentials are protected by JKKN College's official authentication system.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-3 border border-green-200">
+                    <div className="flex items-center space-x-2 text-xs text-green-800">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                      </div>
+                      <span className="font-medium">Encrypted connection to JKKN College servers</span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Alternative login option for both roles */}

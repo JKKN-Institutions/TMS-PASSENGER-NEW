@@ -782,32 +782,49 @@ const NotificationsPage = () => {
                   key={notification.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 sm:p-5 lg:p-6 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 transition-all duration-300 ${
-                    !notification.read ? 'bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-green-400' : ''
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  className={`relative p-4 sm:p-5 lg:p-6 rounded-xl mx-4 mb-4 shadow-sm hover:shadow-lg transition-all duration-300 border ${
+                    !notification.read 
+                      ? 'bg-gradient-to-r from-blue-50 via-green-50 to-yellow-50 border-green-300 shadow-md' 
+                      : 'bg-white/90 backdrop-blur-sm border-gray-200 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50'
                   }`}
                 >
-                  <div className="flex items-start space-x-2 sm:space-x-3 lg:space-x-4">
-                    <div className="flex-shrink-0">
-                      <TypeIcon className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ${
-                        notification.type === 'error' ? 'text-red-500' :
-                        notification.type === 'warning' ? 'text-yellow-500' :
-                        notification.type === 'success' ? 'text-green-500' :
-                        'text-blue-500'
-                      }`} />
+                  <div className="flex items-start space-x-3 sm:space-x-4">
+                    <div className="flex-shrink-0 mt-1">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-md ${
+                        notification.type === 'error' ? 'bg-gradient-to-br from-red-100 to-red-200' :
+                        notification.type === 'warning' ? 'bg-gradient-to-br from-yellow-100 to-orange-200' :
+                        notification.type === 'success' ? 'bg-gradient-to-br from-green-100 to-emerald-200' :
+                        'bg-gradient-to-br from-blue-100 to-cyan-200'
+                      }`}>
+                        <TypeIcon className={`w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm ${
+                          notification.type === 'error' ? 'text-red-600' :
+                          notification.type === 'warning' ? 'text-yellow-600' :
+                          notification.type === 'success' ? 'text-green-600' :
+                          'text-blue-600'
+                        }`} />
+                      </div>
                     </div>
                     
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
-                        <h4 className={`text-sm font-medium truncate ${
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 mb-3">
+                        <h4 className={`text-base font-bold truncate ${
                           !notification.read ? 'text-gray-900' : 'text-gray-700'
                         }`}>
                           {notification.title}
                         </h4>
-                        <div className="flex items-center space-x-1 sm:space-x-2 min-w-0">
-                          <CategoryIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
-                          <span className="text-xs text-gray-500 truncate">
-                            {new Date(notification.created_at).toLocaleString()}
+                        <div className="flex items-center space-x-2 min-w-0">
+                          <span className={`px-3 py-1 text-xs font-semibold rounded-full shadow-sm ${
+                            notification.type === 'error' ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-800' :
+                            notification.type === 'warning' ? 'bg-gradient-to-r from-yellow-100 to-orange-200 text-yellow-800' :
+                            notification.type === 'success' ? 'bg-gradient-to-r from-green-100 to-emerald-200 text-green-800' :
+                            'bg-gradient-to-r from-blue-100 to-cyan-200 text-blue-800'
+                          }`}>
+                            {notification.type}
                           </span>
+                          <div className="p-1 bg-gray-100 rounded-lg">
+                            <CategoryIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                          </div>
                         </div>
                       </div>
                       

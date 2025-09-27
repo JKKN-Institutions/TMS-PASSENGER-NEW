@@ -381,8 +381,9 @@ export default function BugReportsPage() {
                   {filteredReports.map((bug) => (
                     <motion.div
                       key={bug.id}
-                      className="border border-green-100 rounded-xl p-6 hover:shadow-xl transition-all cursor-pointer bg-white/90 backdrop-blur-sm hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50"
-                      whileHover={{ scale: 1.02 }}
+                      className="border border-green-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white/95 backdrop-blur-sm hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 shadow-md"
+                      whileHover={{ scale: 1.02, y: -4 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => {
                         setSelectedBug(bug);
                         setShowBugDetails(true);
@@ -390,39 +391,51 @@ export default function BugReportsPage() {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-semibold text-gray-900">{bug.title}</h3>
-                            <Badge className={getPriorityColor(bug.priority)}>
-                              {bug.priority}
-                            </Badge>
-                            <Badge className={getStatusColor(bug.status)}>
-                              <span className="flex items-center space-x-1">
-                                {getStatusIcon(bug.status)}
-                                <span>{bug.status.replace('_', ' ')}</span>
-                              </span>
-                            </Badge>
+                          <div className="flex items-start space-x-4 mb-4">
+                            <div className="p-3 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl shadow-md">
+                              <Bug className="w-6 h-6 text-red-600" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-lg text-gray-900 mb-2">{bug.title}</h3>
+                              <div className="flex items-center space-x-2 flex-wrap gap-2">
+                                <Badge className={`${getPriorityColor(bug.priority)} shadow-sm font-semibold`}>
+                                  {bug.priority}
+                                </Badge>
+                                <Badge className={`${getStatusColor(bug.status)} shadow-sm font-semibold`}>
+                                  <span className="flex items-center space-x-1">
+                                    {getStatusIcon(bug.status)}
+                                    <span>{bug.status.replace('_', ' ')}</span>
+                                  </span>
+                                </Badge>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{bug.description}</p>
-                          <div className="flex items-center space-x-4 text-xs text-gray-500">
-                            <span className="flex items-center space-x-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>Created {formatDate(bug.created_at)}</span>
-                            </span>
-                            <span className="flex items-center space-x-1">
-                              <Clock className="w-3 h-3" />
-                              <span>Updated {formatDate(bug.updated_at)}</span>
-                            </span>
-                            {bug.screenshot_url && (
-                              <span className="flex items-center space-x-1">
-                                <ImageIcon className="w-3 h-3" />
-                                <span>Screenshot</span>
+                          <p className="text-gray-700 text-sm mb-4 line-clamp-2 leading-relaxed">{bug.description}</p>
+                          <div className="bg-gradient-to-r from-gray-50 to-green-50 rounded-xl p-3 mb-3">
+                            <div className="flex items-center space-x-4 text-xs text-gray-600 flex-wrap gap-2">
+                              <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
+                                <Calendar className="w-3 h-3 text-green-600" />
+                                <span className="font-medium">Created {formatDate(bug.created_at)}</span>
                               </span>
-                            )}
+                              <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
+                                <Clock className="w-3 h-3 text-blue-600" />
+                                <span className="font-medium">Updated {formatDate(bug.updated_at)}</span>
+                              </span>
+                              {bug.screenshot_url && (
+                                <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
+                                  <ImageIcon className="w-3 h-3 text-purple-600" />
+                                  <span className="font-medium">Screenshot</span>
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 hover:bg-green-50 rounded-xl transition-all duration-200">
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <div className="flex flex-col space-y-2">
+                          <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 hover:bg-green-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md">
+                            <Eye className="w-4 h-4 mr-1" />
+                            <span className="text-xs font-semibold">View</span>
+                          </Button>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
