@@ -186,22 +186,24 @@ export default function BugReportsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-2">
-            <Bug className="w-8 h-8 text-red-500" />
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent flex items-center space-x-3">
+            <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
+              <Bug className="w-8 h-8 text-green-600" />
+            </div>
             <span>My Bug Reports</span>
           </h1>
-          <p className="text-gray-600 mt-1">Track and manage your submitted bug reports</p>
+          <p className="text-gray-700 font-medium mt-2">Track and manage your submitted bug reports</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button onClick={() => loadMyBugReports()} variant="outline" size="sm">
+        <div className="flex items-center space-x-3">
+          <Button onClick={() => loadMyBugReports()} variant="outline" size="sm" className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-200 shadow-sm hover:shadow-md">
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={openBugReportModal}>
+          <Button onClick={openBugReportModal} className="bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
             <Plus className="w-4 h-4 mr-2" />
             Report Bug
           </Button>
@@ -210,70 +212,80 @@ export default function BugReportsPage() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Reports</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-sm font-semibold text-gray-700">Total Reports</p>
+                <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
               </div>
-              <Bug className="w-8 h-8 text-blue-500" />
+              <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl shadow-md">
+                <Bug className="w-8 h-8 text-green-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Open</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.open}</p>
+                <p className="text-sm font-semibold text-gray-700">Open</p>
+                <p className="text-3xl font-bold text-blue-600">{stats.open}</p>
               </div>
-              <AlertCircle className="w-8 h-8 text-blue-500" />
+              <div className="p-3 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl shadow-md">
+                <AlertCircle className="w-8 h-8 text-blue-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Resolved</p>
-                <p className="text-2xl font-bold text-green-600">{stats.resolved}</p>
+                <p className="text-sm font-semibold text-gray-700">Resolved</p>
+                <p className="text-3xl font-bold text-green-600">{stats.resolved}</p>
               </div>
-              <CheckCircle className="w-8 h-8 text-green-500" />
+              <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl shadow-md">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Critical</p>
-                <p className="text-2xl font-bold text-red-600">{stats.critical}</p>
+                <p className="text-sm font-semibold text-gray-700">Critical</p>
+                <p className="text-3xl font-bold text-red-600">{stats.critical}</p>
               </div>
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+              <div className="p-3 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl shadow-md">
+                <AlertTriangle className="w-8 h-8 text-red-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="my-reports">My Reports</TabsTrigger>
-          <TabsTrigger value="bug-bounty">Bug Bounty</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 rounded-xl p-1">
+          <TabsTrigger value="my-reports" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">My Reports</TabsTrigger>
+          <TabsTrigger value="bug-bounty" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">Bug Bounty</TabsTrigger>
         </TabsList>
 
         {/* My Reports Tab */}
         <TabsContent value="my-reports" className="space-y-6">
           {/* Filters */}
-          <Card>
-            <CardContent className="p-4">
+          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
+            <CardContent className="p-6">
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center space-x-2">
-                  <Filter className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium">Filters:</span>
+                  <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-lg">
+                    <Filter className="w-4 h-4 text-green-600" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-700">Filters:</span>
                 </div>
                 
                 <div className="flex-1 min-w-64">
@@ -281,12 +293,12 @@ export default function BugReportsPage() {
                     placeholder="Search bugs..."
                     value={filters.search}
                     onChange={(e) => setFilters({...filters, search: e.target.value})}
-                    className="w-full"
+                    className="w-full border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                   />
                 </div>
 
                 <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -299,7 +311,7 @@ export default function BugReportsPage() {
                 </Select>
 
                 <Select value={filters.priority} onValueChange={(value) => setFilters({...filters, priority: value})}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Priority" />
                   </SelectTrigger>
                   <SelectContent>
@@ -312,7 +324,7 @@ export default function BugReportsPage() {
                 </Select>
 
                 <Select value={filters.category} onValueChange={(value) => setFilters({...filters, category: value})}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -329,10 +341,10 @@ export default function BugReportsPage() {
           </Card>
 
           {/* Bug Reports List */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Bug Reports ({filteredReports.length})</CardTitle>
-              <CardDescription>
+          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
+            <CardHeader className="bg-gradient-to-r from-green-50 to-yellow-50 border-b border-green-100">
+              <CardTitle className="text-xl font-bold text-gray-900">Your Bug Reports ({filteredReports.length})</CardTitle>
+              <CardDescription className="text-gray-700 font-medium">
                 {filteredReports.length === 0 && bugReports.length > 0 
                   ? "No reports match your current filters" 
                   : "Track the status of your submitted bug reports"}
@@ -340,23 +352,25 @@ export default function BugReportsPage() {
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <RefreshCw className="w-6 h-6 animate-spin text-gray-500" />
-                  <span className="ml-2 text-gray-600">Loading your bug reports...</span>
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
+                  <span className="ml-2 text-green-700 font-medium">Loading your bug reports...</span>
                 </div>
               ) : filteredReports.length === 0 ? (
-                <div className="text-center py-12">
-                  <Bug className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <div className="text-center py-16">
+                  <div className="p-4 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full w-20 h-20 mx-auto mb-6 shadow-md">
+                    <Bug className="w-12 h-12 text-green-600 mx-auto mt-4" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {bugReports.length === 0 ? 'No bug reports yet' : 'No reports match filters'}
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
                     {bugReports.length === 0 
                       ? 'Start contributing by reporting bugs you encounter in the system.'
                       : 'Try adjusting your filters to see more results.'}
                   </p>
                   {bugReports.length === 0 && (
-                    <Button onClick={openBugReportModal}>
+                    <Button onClick={openBugReportModal} className="bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
                       <Plus className="w-4 h-4 mr-2" />
                       Report Your First Bug
                     </Button>
@@ -367,8 +381,8 @@ export default function BugReportsPage() {
                   {filteredReports.map((bug) => (
                     <motion.div
                       key={bug.id}
-                      className="border rounded-lg p-4 hover:shadow-md transition-all cursor-pointer bg-white"
-                      whileHover={{ scale: 1.01 }}
+                      className="border border-green-100 rounded-xl p-6 hover:shadow-xl transition-all cursor-pointer bg-white/90 backdrop-blur-sm hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50"
+                      whileHover={{ scale: 1.02 }}
                       onClick={() => {
                         setSelectedBug(bug);
                         setShowBugDetails(true);
@@ -406,7 +420,7 @@ export default function BugReportsPage() {
                             )}
                           </div>
                         </div>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 hover:bg-green-50 rounded-xl transition-all duration-200">
                           <Eye className="w-4 h-4" />
                         </Button>
                       </div>
@@ -434,22 +448,24 @@ export default function BugReportsPage() {
       <AnimatePresence>
         {showBugDetails && selectedBug && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+              className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-green-100"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
               {/* Modal Header */}
-              <div className="bg-gray-50 px-6 py-4 border-b flex items-center justify-between">
+              <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-6 py-4 border-b border-green-100 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Bug className="w-6 h-6 text-red-500" />
-                  <h2 className="text-xl font-semibold text-gray-900">{selectedBug.title}</h2>
+                  <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
+                    <Bug className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">{selectedBug.title}</h2>
                   <Badge className={getPriorityColor(selectedBug.priority)}>
                     {selectedBug.priority}
                   </Badge>
@@ -459,7 +475,7 @@ export default function BugReportsPage() {
                 </div>
                 <button
                   onClick={() => setShowBugDetails(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 p-2 hover:bg-white/50 rounded-xl transition-all duration-200"
                 >
                   ✕
                 </button>
@@ -509,8 +525,8 @@ export default function BugReportsPage() {
                   {/* Sidebar */}
                   <div className="space-y-6">
                     {/* Bug Info */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="font-medium text-gray-900 mb-3">Bug Information</h3>
+                    <div className="bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-6 border border-green-100 shadow-sm">
+                      <h3 className="font-semibold text-gray-900 mb-4">Bug Information</h3>
                       <div className="space-y-2 text-sm">
                         <div>
                           <span className="font-medium">Category:</span>
