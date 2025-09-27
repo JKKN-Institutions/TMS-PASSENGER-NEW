@@ -251,10 +251,10 @@ export default function GrievancesPage() {
     return (
       <div className="p-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="h-8 bg-gradient-to-r from-green-200 to-yellow-200 rounded-xl w-1/4 mb-6"></div>
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 h-32 bg-gray-200"></div>
+              <div key={i} className="bg-white rounded-xl p-6 h-32 bg-gradient-to-r from-green-100 to-yellow-100 shadow-md"></div>
             ))}
           </div>
         </div>
@@ -263,23 +263,23 @@ export default function GrievancesPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
       <GrievanceAccessControl
         isActive={paymentStatus?.isActive ?? true}
         nextDueAmount={nextDueAmount ?? undefined}
       >
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Grievances & Feedback</h1>
-            <p className="text-gray-600">Submit complaints, suggestions, and track their resolution</p>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Grievances & Feedback</h1>
+            <p className="text-gray-700 font-medium mt-1">Submit complaints, suggestions, and track their resolution</p>
           </div>
           <button
             onClick={() => setShowGrievanceModal(true)}
-            className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+            className="mt-4 sm:mt-0 bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Plus className="h-4 w-4" />
-            <span>Submit Grievance</span>
+            <Plus className="h-5 w-5" />
+            <span className="font-semibold">Submit Grievance</span>
           </button>
         </div>
 
@@ -291,14 +291,24 @@ export default function GrievancesPage() {
           { label: 'In Progress', value: grievances.filter(g => g.status === 'in_progress').length, color: 'yellow' },
           { label: 'Resolved', value: grievances.filter(g => g.status === 'resolved').length, color: 'green' }
         ].map((stat) => (
-          <div key={stat.label} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div key={stat.label} className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-sm font-medium text-gray-700">{stat.label}</p>
+                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
               </div>
-              <div className={`p-3 rounded-full bg-${stat.color}-50`}>
-                <MessageSquare className={`h-6 w-6 text-${stat.color}-600`} />
+              <div className={`p-3 rounded-full bg-gradient-to-br ${
+                stat.color === 'green' ? 'from-green-100 to-yellow-100' :
+                stat.color === 'yellow' ? 'from-yellow-100 to-green-100' :
+                stat.color === 'orange' ? 'from-orange-100 to-yellow-100' :
+                'from-blue-100 to-green-100'
+              } shadow-md`}>
+                <MessageSquare className={`h-6 w-6 ${
+                  stat.color === 'green' ? 'text-green-600' :
+                  stat.color === 'yellow' ? 'text-yellow-600' :
+                  stat.color === 'orange' ? 'text-orange-600' :
+                  'text-blue-600'
+                }`} />
               </div>
             </div>
           </div>
@@ -308,14 +318,14 @@ export default function GrievancesPage() {
 
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
             >
               <option value="all">All Status</option>
               <option value="open">Open</option>
@@ -326,11 +336,11 @@ export default function GrievancesPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
             >
               <option value="all">All Categories</option>
               <option value="complaint">Complaint</option>
@@ -341,15 +351,15 @@ export default function GrievancesPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Search</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500" />
               <input
                 type="text"
                 placeholder="Search grievances..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
               />
             </div>
           </div>
@@ -361,7 +371,7 @@ export default function GrievancesPage() {
                 setCategoryFilter('all');
                 setSearchTerm('');
               }}
-              className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+              className="text-green-600 hover:text-green-700 font-semibold text-sm bg-green-50 hover:bg-green-100 px-4 py-2 rounded-xl transition-all duration-200 border border-green-200"
             >
               Clear Filters
             </button>
@@ -373,10 +383,10 @@ export default function GrievancesPage() {
       <div className="space-y-4">
         {filteredGrievances.length > 0 ? (
           filteredGrievances.map((grievance) => (
-            <div key={grievance.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div key={grievance.id} className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
+                  <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl shadow-md">
                     {getGrievanceIcon(grievance.status)}
                   </div>
                   <div>
@@ -404,7 +414,7 @@ export default function GrievancesPage() {
               </div>
 
               {(grievance.driverName || grievance.routeId) && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-100">
                   {grievance.driverName && (
                     <div>
                       <p className="text-sm text-gray-500">Driver Name</p>
@@ -423,7 +433,7 @@ export default function GrievancesPage() {
               )}
 
               {grievance.resolution && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 rounded-xl shadow-sm">
                   <div className="flex items-center space-x-2 mb-2">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <h4 className="font-medium text-green-900">Resolution</h4>
@@ -464,34 +474,36 @@ export default function GrievancesPage() {
                   )}
                   <button
                     onClick={() => handleOpenProgressTracker(grievance.id)}
-                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1 rounded-md transition-colors"
+                    className="flex items-center space-x-1 text-green-600 hover:text-green-800 hover:bg-green-50 px-4 py-2 rounded-xl transition-all duration-200 border border-green-200 hover:border-green-300 shadow-sm hover:shadow-md"
                   >
                     <Activity className="h-4 w-4" />
-                    <span className="text-sm font-medium">Track Progress</span>
+                    <span className="text-sm font-semibold">Track Progress</span>
                   </button>
                   <button
                     onClick={() => handleOpenGroupChat(grievance)}
-                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1 rounded-md transition-colors"
+                    className="flex items-center space-x-1 text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 px-4 py-2 rounded-xl transition-all duration-200 border border-yellow-200 hover:border-yellow-300 shadow-sm hover:shadow-md"
                   >
                     <Users className="h-4 w-4" />
-                    <span className="text-sm font-medium">Chat</span>
+                    <span className="text-sm font-semibold">Chat</span>
                   </button>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-12">
-            <MessageSquare className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No grievances found</h3>
-            <p className="text-gray-500 mb-4">
+          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100">
+            <div className="p-4 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full w-24 h-24 mx-auto mb-6 shadow-md">
+              <MessageSquare className="h-16 w-16 text-green-600 mx-auto mt-4" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">No grievances found</h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
               {statusFilter !== 'all' || categoryFilter !== 'all' || searchTerm
-                ? 'Try adjusting your filters'
-                : "You haven't submitted any grievances yet"}
+                ? 'Try adjusting your filters to see more results'
+                : "You haven't submitted any grievances yet. Get started by submitting your first grievance."}
             </p>
             <button
               onClick={() => setShowGrievanceModal(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
             >
               Submit Your First Grievance
             </button>
@@ -501,16 +513,16 @@ export default function GrievancesPage() {
 
       {/* Grievance Modal */}
       {showGrievanceModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Submit Grievance</h2>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-green-100">
+            <div className="flex items-center justify-between p-6 border-b border-green-100 bg-gradient-to-r from-green-50 to-yellow-50">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Submit Grievance</h2>
               <button
                 onClick={() => {
                   setShowGrievanceModal(false);
                   resetForm();
                 }}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 p-2 hover:bg-white/50 rounded-xl transition-all duration-200"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -519,14 +531,14 @@ export default function GrievancesPage() {
             <form onSubmit={handleSubmitGrievance} className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Category <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as Grievance['category'] }))}
                     required
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                   >
                     <option value="complaint">Complaint</option>
                     <option value="suggestion">Suggestion</option>
@@ -536,14 +548,14 @@ export default function GrievancesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Priority <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.priority}
                     onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as Grievance['priority'] }))}
                     required
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -555,13 +567,13 @@ export default function GrievancesPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Related Route (Optional)
                   </label>
                   <select
                     value={formData.routeId}
                     onChange={(e) => setFormData(prev => ({ ...prev, routeId: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                   >
                     <option value="">Select a route</option>
                     {routes.map((route) => (
@@ -573,21 +585,21 @@ export default function GrievancesPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Driver Name (Optional)
                   </label>
                   <input
                     type="text"
                     value={formData.driverName}
                     onChange={(e) => setFormData(prev => ({ ...prev, driverName: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                     placeholder="Enter driver name if applicable"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Subject <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -595,13 +607,13 @@ export default function GrievancesPage() {
                   value={formData.subject}
                   onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
                   required
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
                   placeholder="Brief summary of your grievance"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -609,28 +621,28 @@ export default function GrievancesPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   required
                   rows={5}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm resize-none"
                   placeholder="Provide detailed information about your grievance..."
                 />
               </div>
 
-              <div className="flex space-x-3">
+              <div className="flex space-x-4">
                 <button
                   type="button"
                   onClick={() => {
                     setShowGrievanceModal(false);
                     resetForm();
                   }}
-                  className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors duration-200"
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-300 transition-all duration-200 font-semibold shadow-sm hover:shadow-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="flex-1 bg-gradient-to-r from-green-600 to-yellow-500 text-white py-3 px-6 rounded-xl hover:from-green-700 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-5 w-5" />
                   <span>{isSubmitting ? 'Submitting...' : 'Submit Grievance'}</span>
                 </button>
               </div>
@@ -641,61 +653,69 @@ export default function GrievancesPage() {
 
       {/* Simple Progress Tracker Modal */}
       {showProgressTracker && selectedGrievanceId && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-bold">Progress Tracker</h2>
-              <button onClick={handleCloseProgressTracker} className="text-gray-400 hover:text-gray-600">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-2xl border border-green-100">
+            <div className="flex items-center justify-between p-6 border-b border-green-100 bg-gradient-to-r from-green-50 to-yellow-50">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Progress Tracker</h2>
+              <button onClick={handleCloseProgressTracker} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-white/50 rounded-xl transition-all duration-200">
                 <X className="w-6 h-6" />
               </button>
             </div>
             
             <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <FileText className="w-6 h-6 text-blue-600" />
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-100">
+                  <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-full">
+                    <FileText className="w-6 h-6 text-green-600" />
+                  </div>
                   <div>
-                    <h3 className="font-medium">Grievance Submitted</h3>
-                    <p className="text-sm text-gray-500">Your grievance has been received</p>
+                    <h3 className="font-semibold text-gray-900">Grievance Submitted</h3>
+                    <p className="text-sm text-gray-600">Your grievance has been received</p>
                   </div>
                 </div>
                 
                 {grievances.find(g => g.id === selectedGrievanceId)?.status !== 'open' && (
-                  <div className="flex items-center space-x-3">
-                    <Clock className="w-6 h-6 text-orange-600" />
+                  <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-100">
+                    <div className="p-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full">
+                      <Clock className="w-6 h-6 text-yellow-600" />
+                    </div>
                     <div>
-                      <h3 className="font-medium">Under Review</h3>
-                      <p className="text-sm text-gray-500">Admin is reviewing your grievance</p>
+                      <h3 className="font-semibold text-gray-900">Under Review</h3>
+                      <p className="text-sm text-gray-600">Admin is reviewing your grievance</p>
                     </div>
                   </div>
                 )}
                 
                 {grievances.find(g => g.id === selectedGrievanceId)?.status === 'resolved' && (
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                    <div className="p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                    </div>
                     <div>
-                      <h3 className="font-medium">Resolved</h3>
-                      <p className="text-sm text-gray-500">Your grievance has been resolved</p>
+                      <h3 className="font-semibold text-gray-900">Resolved</h3>
+                      <p className="text-sm text-gray-600">Your grievance has been resolved</p>
                     </div>
                   </div>
                 )}
                 
                 {grievances.find(g => g.id === selectedGrievanceId)?.status === 'closed' && (
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-6 h-6 text-gray-600" />
+                  <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border border-gray-200">
+                    <div className="p-2 bg-gradient-to-r from-gray-100 to-slate-100 rounded-full">
+                      <CheckCircle className="w-6 h-6 text-gray-600" />
+                    </div>
                     <div>
-                      <h3 className="font-medium">Closed</h3>
-                      <p className="text-sm text-gray-500">Your grievance has been closed</p>
+                      <h3 className="font-semibold text-gray-900">Closed</h3>
+                      <p className="text-sm text-gray-600">Your grievance has been closed</p>
                     </div>
                   </div>
                 )}
               </div>
             </div>
             
-            <div className="border-t p-4">
+            <div className="border-t border-green-100 p-6 bg-gradient-to-r from-green-50 to-yellow-50">
               <button
                 onClick={handleCloseProgressTracker}
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                className="w-full bg-gradient-to-r from-green-600 to-yellow-500 text-white py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
               >
                 Close
               </button>
