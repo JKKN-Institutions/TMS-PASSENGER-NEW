@@ -233,22 +233,24 @@ export default function RoutesPage() {
         </div>
       </motion.div>
 
-      {/* Route Status Banner */}
+      {/* Enhanced Route Status Banner */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200" padding="lg">
+        <Card className="bg-gradient-to-r from-green-50 via-yellow-50 to-green-100 border-green-300 shadow-xl" padding="lg">
           <div className="flex items-center space-x-4">
-            <div className="p-4 bg-green-600 rounded-2xl">
-              <CheckCircle className="h-8 w-8 text-white" />
+            <div className="p-4 bg-gradient-to-r from-green-600 to-yellow-500 rounded-2xl shadow-lg">
+              <CheckCircle className="h-8 w-8 text-white drop-shadow-sm" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-green-900 mb-1">Route Successfully Allocated</h2>
-              <p className="text-green-700">You are assigned to route {route.routeNumber} - {route.routeName}</p>
+              <h2 className="text-2xl font-bold text-green-900 mb-2 drop-shadow-sm">Route Successfully Allocated</h2>
+              <p className="text-green-700 font-medium">You are assigned to route {route.routeNumber} - {route.routeName}</p>
             </div>
-            <Badge variant="success" size="md">Active</Badge>
+            <Badge variant="success" size="md" className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 shadow-md">
+              Active
+            </Badge>
           </div>
         </Card>
       </motion.div>
@@ -264,17 +266,17 @@ export default function RoutesPage() {
           >
             <Card padding="md" hover>
               <div className="flex items-center space-x-3">
-                <div className={`p-3 rounded-xl ${
-                  stat.color === 'green' ? 'bg-green-100' :
-                  stat.color === 'blue' ? 'bg-blue-100' :
-                  stat.color === 'purple' ? 'bg-purple-100' :
-                  'bg-orange-100'
+                <div className={`p-3 rounded-xl shadow-md ${
+                  stat.color === 'green' ? 'bg-gradient-to-r from-green-100 to-yellow-100' :
+                  stat.color === 'blue' ? 'bg-gradient-to-r from-green-100 to-green-200' :
+                  stat.color === 'purple' ? 'bg-gradient-to-r from-yellow-100 to-green-100' :
+                  'bg-gradient-to-r from-yellow-100 to-yellow-200'
                 }`}>
-                  <stat.icon className={`h-6 w-6 ${
+                  <stat.icon className={`h-6 w-6 drop-shadow-sm ${
                     stat.color === 'green' ? 'text-green-600' :
-                    stat.color === 'blue' ? 'text-blue-600' :
-                    stat.color === 'purple' ? 'text-purple-600' :
-                    'text-orange-600'
+                    stat.color === 'blue' ? 'text-green-700' :
+                    stat.color === 'purple' ? 'text-yellow-600' :
+                    'text-yellow-700'
                   }`} />
                 </div>
                 <div>
@@ -298,12 +300,12 @@ export default function RoutesPage() {
           >
             <Card padding="lg">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="p-3 bg-blue-50 rounded-xl">
-                  <Route className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
+                  <Route className="w-6 h-6 text-green-600 drop-shadow-sm" />
                 </div>
                 <div>
-                  <h3 className="text-heading-3">Route Information</h3>
-                  <p className="text-body">Complete route details and schedule</p>
+                  <h3 className="text-heading-3 text-gray-900 font-bold">Route Information</h3>
+                  <p className="text-body text-green-700">Complete route details and schedule</p>
                 </div>
               </div>
 
@@ -327,15 +329,15 @@ export default function RoutesPage() {
                             <div className="w-4 h-4 bg-green-600 rounded-full shadow-sm"></div>
                             <div className="w-0.5 h-4 bg-gray-300"></div>
                           </div>
-                          <div className="flex-1 p-4 bg-green-50 rounded-xl border border-green-200">
+                          <div className="flex-1 p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-300 shadow-md">
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="font-semibold text-green-900">
+                                <p className="font-bold text-green-900 drop-shadow-sm">
                                   {firstStop ? firstStop.stopName : route.startLocation}
                                 </p>
-                                <p className="text-sm text-green-700">Starting Point</p>
+                                <p className="text-sm text-green-700 font-medium">Starting Point</p>
                               </div>
-                              <Badge variant="success">
+                              <Badge variant="success" className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 shadow-sm">
                                 {firstStop ? firstStop.stopTime : route.departureTime}
                               </Badge>
                             </div>
@@ -353,25 +355,25 @@ export default function RoutesPage() {
                                 <div className="w-0.5 h-4 bg-gray-300"></div>
                               )}
                             </div>
-                            <div className={`flex-1 p-4 rounded-xl border ${
+                            <div className={`flex-1 p-4 rounded-xl border shadow-sm ${
                               stop.isMajorStop 
-                                ? 'bg-blue-50 border-blue-200' 
-                                : 'bg-gray-50 border-gray-200'
+                                ? 'bg-gradient-to-r from-yellow-50 to-green-50 border-yellow-300' 
+                                : 'bg-gradient-to-r from-green-50 to-green-100 border-green-200'
                             }`}>
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="flex items-center space-x-2">
-                                    <p className={`font-semibold ${
-                                      stop.isMajorStop ? 'text-blue-900' : 'text-gray-900'
+                                    <p className={`font-bold drop-shadow-sm ${
+                                      stop.isMajorStop ? 'text-yellow-900' : 'text-green-900'
                                     }`}>
                                       {stop.stopName}
                                     </p>
                                     {stop.isMajorStop && (
-                                      <Badge variant="info" size="sm">Major Stop</Badge>
+                                      <Badge variant="info" size="sm" className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800">Major Stop</Badge>
                                     )}
                                   </div>
-                                  <p className={`text-sm ${
-                                    stop.isMajorStop ? 'text-blue-700' : 'text-gray-700'
+                                  <p className={`text-sm font-medium ${
+                                    stop.isMajorStop ? 'text-yellow-700' : 'text-green-700'
                                   }`}>
                                     Boarding Point
                                   </p>
@@ -399,15 +401,15 @@ export default function RoutesPage() {
                           <div className="flex flex-col items-center">
                             <div className="w-4 h-4 bg-red-600 rounded-full shadow-sm"></div>
                           </div>
-                          <div className="flex-1 p-4 bg-red-50 rounded-xl border border-red-200">
+                          <div className="flex-1 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-orange-300 shadow-md">
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="font-semibold text-red-900">
+                                <p className="font-bold text-orange-900 drop-shadow-sm">
                                   {lastStop ? lastStop.stopName : route.endLocation}
                                 </p>
-                                <p className="text-sm text-red-700">Destination</p>
+                                <p className="text-sm text-orange-700 font-medium">Destination</p>
                               </div>
-                              <Badge variant="danger">
+                              <Badge variant="danger" className="bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 shadow-sm">
                                 {lastStop ? lastStop.stopTime : route.arrivalTime}
                               </Badge>
                             </div>
@@ -446,17 +448,17 @@ export default function RoutesPage() {
           >
             <Card padding="md">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-orange-50 rounded-lg">
-                  <MapPin className="w-5 w-5 text-orange-600" />
+                <div className="p-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg shadow-md">
+                  <MapPin className="w-5 w-5 text-orange-600 drop-shadow-sm" />
                 </div>
-                <h3 className="font-semibold text-gray-900">Boarding Stop</h3>
+                <h3 className="font-bold text-gray-900">Boarding Stop</h3>
               </div>
               
               {boardingStop ? (
                 <div className="space-y-3">
-                  <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                    <p className="font-medium text-orange-900">{boardingStop.stopName}</p>
-                    <p className="text-sm text-orange-700">Pickup Time: {boardingStop.stopTime}</p>
+                  <div className="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-orange-300 shadow-sm">
+                    <p className="font-bold text-orange-900 drop-shadow-sm">{boardingStop.stopName}</p>
+                    <p className="text-sm text-orange-700 font-medium">Pickup Time: {boardingStop.stopTime}</p>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Clock className="h-4 w-4" />
@@ -480,10 +482,10 @@ export default function RoutesPage() {
           >
             <Card padding="md">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-purple-50 rounded-lg">
-                  <Users className="w-5 w-5 text-purple-600" />
+                <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-lg shadow-md">
+                  <Users className="w-5 w-5 text-green-600 drop-shadow-sm" />
                 </div>
-                <h3 className="font-semibold text-gray-900">Driver Information</h3>
+                <h3 className="font-bold text-gray-900">Driver Information</h3>
               </div>
               
               {driver ? (
@@ -503,18 +505,18 @@ export default function RoutesPage() {
                     </div>
                   </div>
                   
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg border border-green-200 shadow-sm">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Experience:</span>
-                      <span className="font-medium text-gray-900">{driver.experience} years</span>
+                      <span className="text-gray-600 font-medium">Experience:</span>
+                      <span className="font-bold text-green-900">{driver.experience} years</span>
                     </div>
                     <div className="flex items-center justify-between text-sm mt-1">
-                      <span className="text-gray-600">Total Trips:</span>
-                      <span className="font-medium text-gray-900">{driver.totalTrips.toLocaleString()}+</span>
+                      <span className="text-gray-600 font-medium">Total Trips:</span>
+                      <span className="font-bold text-green-900">{driver.totalTrips.toLocaleString()}+</span>
                     </div>
                     <div className="flex items-center justify-between text-sm mt-1">
-                      <span className="text-gray-600">Contact:</span>
-                      <span className="font-medium text-gray-900">{driver.phone}</span>
+                      <span className="text-gray-600 font-medium">Contact:</span>
+                      <span className="font-bold text-green-900">{driver.phone}</span>
                     </div>
                   </div>
                 </div>
@@ -533,8 +535,8 @@ export default function RoutesPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <Card padding="md">
-              <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <Card padding="md" className="bg-gradient-to-r from-green-50 to-yellow-50 border-green-200 shadow-lg">
+              <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
                                  <Link href="/dashboard/schedules">
                    <Button fullWidth icon={Calendar}>

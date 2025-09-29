@@ -106,14 +106,14 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
 
   const getReceiptColorClass = (paymentType: string, semester: string) => {
     if (paymentType === 'full_year') {
-      return 'bg-green-50 border-green-300 text-green-800';
+      return 'border-green-300 text-green-800 bg-gradient-to-r from-green-50 to-yellow-50';
     }
     
     switch (semester) {
-      case '1': return 'bg-gray-50 border-gray-300 text-gray-800';
-      case '2': return 'bg-blue-50 border-blue-300 text-blue-800';
-      case '3': return 'bg-yellow-50 border-yellow-300 text-yellow-800';
-      default: return 'bg-gray-50 border-gray-300 text-gray-800';
+      case '1': return 'border-green-300 text-green-800 bg-gradient-to-r from-green-50 to-green-100';
+      case '2': return 'border-yellow-300 text-yellow-800 bg-gradient-to-r from-yellow-50 to-yellow-100';
+      case '3': return 'border-green-300 text-green-800 bg-gradient-to-r from-yellow-50 to-green-50';
+      default: return 'border-green-200 text-gray-800 bg-gradient-to-r from-gray-50 to-green-50';
     }
   };
 
@@ -155,35 +155,48 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center py-16">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
+          <span className="text-green-700 font-medium">Loading payment history...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+      {/* Enhanced Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 bg-gradient-to-r from-green-50 to-yellow-50 rounded-2xl p-6 border border-green-200">
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-bold text-gray-900">Payment History</h2>
-          <p className="text-gray-600">Your transport fee payment records</p>
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+              <Receipt className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Payment History</h2>
+              <p className="text-green-700 font-medium">Your transport fee payment records</p>
+            </div>
+          </div>
         </div>
         <button
           onClick={fetchPaymentHistory}
-          className="bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-1 sm:space-x-2"
+          className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-4 sm:px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 flex items-center space-x-2 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
         >
-          <RefreshCw className="w-4 h-4" />
-          <span className="hidden sm:inline">Refresh</span>
+          <RefreshCw className="w-5 h-5" />
+          <span>Refresh</span>
         </button>
       </div>
 
-      {/* Payment Records */}
+      {/* Enhanced Payment Records */}
       {payments.length === 0 ? (
-        <div className="text-center py-12">
-          <Receipt className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Payment History</h3>
-          <p className="text-gray-600">You haven't made any payments yet.</p>
+        <div className="text-center py-16 bg-gradient-to-r from-green-50 to-yellow-50 rounded-2xl border border-green-200">
+          <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Receipt className="h-10 w-10 text-gray-500" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">No Payment History</h3>
+          <p className="text-gray-600 mb-2">You haven't made any payments yet.</p>
+          <p className="text-sm text-gray-500">Your payment records will appear here once you make a payment.</p>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -192,7 +205,8 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
               key={payment.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-6 rounded-lg border-2 ${getReceiptColorClass(payment.payment_type, payment.semester)}`}
+              whileHover={{ scale: 1.02, y: -4 }}
+              className={`p-6 rounded-2xl border-2 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white/95 backdrop-blur-sm ${getReceiptColorClass(payment.payment_type, payment.semester)}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
                 <div className="flex items-center space-x-3 min-w-0 flex-1">

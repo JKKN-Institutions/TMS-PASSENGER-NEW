@@ -194,10 +194,11 @@ export default function LiveTrackPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading live tracking...</p>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <p className="text-green-700 font-bold text-lg">Loading Live Tracking...</p>
+          <p className="text-green-600 text-sm mt-2">Connecting to GPS system</p>
         </div>
       </div>
     );
@@ -205,14 +206,16 @@ export default function LiveTrackPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Unable to Load Tracking</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-red-200">
+          <div className="w-20 h-20 bg-gradient-to-r from-red-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <XCircle className="h-12 w-12 text-red-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Unable to Load Tracking</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={checkSessionAndLoadData}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Try Again
           </button>
@@ -223,14 +226,16 @@ export default function LiveTrackPage() {
 
   if (!trackingData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <Bus className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">No Route Assigned</h2>
-          <p className="text-gray-600 mb-4">You don't have a route assigned yet. Please contact your administration.</p>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200">
+          <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Bus className="h-12 w-12 text-gray-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">No Route Assigned</h2>
+          <p className="text-gray-600 mb-6">You don't have a route assigned yet. Please contact your administration.</p>
           <button
             onClick={() => router.push('/dashboard/routes')}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             View My Routes
           </button>

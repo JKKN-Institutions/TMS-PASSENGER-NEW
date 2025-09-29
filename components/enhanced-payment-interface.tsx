@@ -15,25 +15,25 @@ import DummyPaymentGateway from './dummy-payment-gateway';
 
 // Simple UI components using TailwindCSS
 const Card = ({ children, className = '', ...props }: any) => (
-  <div className={`bg-white rounded-lg border border-gray-200 shadow-sm ${className}`} {...props}>
+  <div className={`bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 shadow-xl hover:shadow-2xl transition-all duration-300 ${className}`} {...props}>
     {children}
   </div>
 );
 
 const CardHeader = ({ children, className = '' }: any) => (
-  <div className={`px-6 py-4 border-b border-gray-100 ${className}`}>
+  <div className={`px-6 py-5 border-b border-green-100 bg-gradient-to-r from-green-50 to-yellow-50 rounded-t-2xl ${className}`}>
     {children}
   </div>
 );
 
 const CardTitle = ({ children, className = '' }: any) => (
-  <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>
+  <h3 className={`text-xl font-bold text-gray-900 ${className}`}>
     {children}
   </h3>
 );
 
 const CardDescription = ({ children, className = '' }: any) => (
-  <div className={`text-sm text-gray-600 mt-1 ${className}`}>
+  <div className={`text-sm text-gray-600 mt-2 ${className}`}>
     {children}
   </div>
 );
@@ -45,16 +45,16 @@ const CardContent = ({ children, className = '' }: any) => (
 );
 
 const Button = ({ children, className = '', variant = 'primary' as 'primary' | 'secondary' | 'outline', size = 'md' as 'sm' | 'md' | 'lg', disabled = false, ...props }: any) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center rounded-xl font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl';
   const variants: Record<string, string> = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500'
+    primary: 'bg-gradient-to-r from-green-600 to-yellow-500 text-white hover:from-green-700 hover:to-yellow-600 focus:ring-green-300',
+    secondary: 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 hover:from-gray-200 hover:to-gray-300 focus:ring-gray-400',
+    outline: 'border-2 border-green-300 bg-white text-green-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 focus:ring-green-300'
   };
   const sizes: Record<string, string> = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base'
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-6 py-3 text-sm',
+    lg: 'px-8 py-4 text-base'
   };
   
   return (
@@ -70,13 +70,13 @@ const Button = ({ children, className = '', variant = 'primary' as 'primary' | '
 
 const Badge = ({ children, className = '', variant = 'default' as 'default' | 'secondary' | 'outline' }: any) => {
   const variants: Record<string, string> = {
-    default: 'bg-blue-100 text-blue-800',
-    secondary: 'bg-gray-100 text-gray-800',
-    outline: 'border border-gray-300 text-gray-700'
+    default: 'bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 shadow-sm',
+    secondary: 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 shadow-sm',
+    outline: 'border-2 border-green-300 text-green-700 bg-white shadow-sm'
   };
   
   return (
-    <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${variants[variant]} ${className}`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${variants[variant]} ${className}`}>
       {children}
     </span>
   );
