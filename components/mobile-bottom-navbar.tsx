@@ -166,3 +166,4 @@ export default function MobileBottomNavbar() {
     </div>
   );
 }
+

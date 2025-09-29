@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { 
   Bell, 
   X, 
@@ -88,10 +89,12 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
   userType = 'student', 
   className = '' 
 }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<NotificationSettings>({
     pushEnabled: true,
@@ -192,6 +195,20 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
       fetchingSettings.current = false;
     }
   }, [userId]);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -336,13 +353,20 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
   };
 
   const handleBellClick = useCallback(() => {
+    // On mobile, redirect to notifications page instead of showing popup
+    if (isMobile) {
+      router.push('/dashboard/notifications');
+      return;
+    }
+    
+    // Desktop behavior - show popup
     if (!isOpen) {
       // Only fetch when opening the panel
       fetchNotifications();
       fetchSettings();
     }
     setIsOpen(!isOpen);
-  }, [isOpen, fetchNotifications, fetchSettings]);
+  }, [isMobile, isOpen, router, fetchNotifications, fetchSettings]);
 
   return (
     <div className={`relative ${className}`} style={{ zIndex: 30 }}>
@@ -375,9 +399,9 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
         )}
       </button>
 
-      {/* Enhanced Notification Panel */}
+      {/* Enhanced Notification Panel - Only show on desktop */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && !isMobile && (
           <motion.div
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}

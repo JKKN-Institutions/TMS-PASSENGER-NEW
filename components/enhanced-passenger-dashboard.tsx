@@ -65,11 +65,11 @@ const StatCard = ({ title, value, icon: Icon, change, delay = 0 }: {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: delay * 0.1 }}
-    className="modern-card p-6 group cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+    className="modern-card p-6 group cursor-pointer"
   >
     <div className="flex items-center justify-between mb-4">
-      <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl group-hover:from-green-200 group-hover:to-yellow-200 transition-all duration-300 shadow-sm">
-        <Icon className="h-6 w-6 text-green-600 group-hover:text-green-700 transition-colors" />
+      <div className="p-3 bg-gray-100 rounded-xl group-hover:bg-green-100 transition-colors">
+        <Icon className="h-6 w-6 text-gray-600 group-hover:text-green-600 transition-colors" />
       </div>
       {change && (
         <div className={`flex items-center space-x-1 text-sm font-medium ${
@@ -120,10 +120,10 @@ const QuickActionCardContent = ({ title, description, icon: Icon, badge }: {
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
 }) => (
-  <div className="modern-card p-6 h-full group-hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+  <div className="modern-card p-6 h-full group-hover:shadow-lg transition-all duration-200">
     <div className="flex items-center justify-between mb-4">
-      <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl group-hover:from-green-200 group-hover:to-yellow-200 transition-all duration-300 shadow-sm">
-        <Icon className="h-6 w-6 text-green-600 group-hover:text-green-700" />
+      <div className="p-3 bg-green-50 rounded-xl group-hover:bg-green-100 transition-colors">
+        <Icon className="h-6 w-6 text-green-600" />
       </div>
       {badge && badge > 0 && (
         <div className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
@@ -135,7 +135,7 @@ const QuickActionCardContent = ({ title, description, icon: Icon, badge }: {
       <h3 className="font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
         {title}
       </h3>
-      <p className="text-sm text-gray-600">{description}</p>
+      <p className="text-sm text-gray-500">{description}</p>
     </div>
     <div className="flex items-center text-green-600 mt-4 group-hover:translate-x-1 transition-transform">
       <span className="text-sm font-medium mr-2">View Details</span>
