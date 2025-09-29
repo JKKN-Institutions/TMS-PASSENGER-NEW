@@ -98,26 +98,17 @@ export default function LiveTrackPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [studentId, setStudentId] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    checkSessionAndLoadData();
   }, []);
-
-  useEffect(() => {
-    if (isMounted) {
-      checkSessionAndLoadData();
-    }
-  }, [isMounted]);
 
   const checkSessionAndLoadData = async () => {
     try {
-      // Check if component is mounted and sessionManager is available
-      if (!isMounted || typeof window === 'undefined' || !sessionManager) {
-        if (isMounted) {
-          setError('Session manager not available');
-          setIsLoading(false);
-        }
+      // Check if sessionManager is available
+      if (typeof window === 'undefined' || !sessionManager) {
+        setError('Session manager not available');
+        setIsLoading(false);
         return;
       }
 
