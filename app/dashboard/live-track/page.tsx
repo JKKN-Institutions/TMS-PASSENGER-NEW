@@ -249,26 +249,30 @@ export default function LiveTrackPage() {
   const gpsStatus = gps?.status || 'offline';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      {/* Enhanced Header */}
+      <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 shadow-2xl border-b border-green-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Navigation className="h-6 w-6 text-green-600" />
-                <h1 className="text-xl font-semibold text-gray-900">Live Bus Tracking</h1>
-              </div>
-              <div className="text-sm text-gray-500">
-                Route {route.routeNumber} - {route.routeName}
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                  <Navigation className="h-7 w-7 text-white drop-shadow-sm" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-white drop-shadow-sm">Live Bus Tracking</h1>
+                  <div className="text-sm text-green-100 font-medium">
+                    Route {route.routeNumber} - {route.routeName}
+                  </div>
+                </div>
               </div>
             </div>
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl hover:bg-white/30 transition-all duration-300 disabled:opacity-50 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
             >
-              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
             </button>
           </div>
@@ -277,14 +281,19 @@ export default function LiveTrackPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content - Map */}
+          {/* Enhanced Main Content - Map */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Live Location</h2>
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(gpsStatus)}`}>
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Live Location</h2>
+                </div>
+                <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold shadow-md ${getStatusColor(gpsStatus)}`}>
                   {getStatusIcon(gpsStatus)}
-                  <span className="ml-1 capitalize">{gpsStatus}</span>
+                  <span className="ml-2 capitalize">{gpsStatus}</span>
                 </div>
               </div>
               
@@ -297,12 +306,14 @@ export default function LiveTrackPage() {
                   vehicleNumber={vehicle?.registrationNumber || 'Unknown Vehicle'}
                 />
               ) : (
-                <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="h-96 bg-gradient-to-r from-gray-50 to-green-50 rounded-2xl flex items-center justify-center border border-gray-200">
                   <div className="text-center">
-                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">Location not available</p>
+                    <div className="w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <MapPin className="h-8 w-8 text-gray-500" />
+                    </div>
+                    <p className="text-gray-700 font-medium text-lg">Location not available</p>
                     {gps?.statusMessage && (
-                      <p className="text-sm text-gray-500 mt-2">{gps.statusMessage}</p>
+                      <p className="text-sm text-gray-600 mt-2 bg-white/50 rounded-lg px-3 py-1 inline-block">{gps.statusMessage}</p>
                     )}
                   </div>
                 </div>
@@ -310,11 +321,16 @@ export default function LiveTrackPage() {
             </div>
           </div>
 
-          {/* Sidebar - Status Information */}
+          {/* Enhanced Sidebar - Status Information */}
           <div className="space-y-6">
-            {/* GPS Status Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Tracking Status</h3>
+            {/* Enhanced GPS Status Card */}
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                  <Wifi className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Tracking Status</h3>
+              </div>
               
               <div className="space-y-4">
                 {/* GPS Status */}
@@ -346,10 +362,10 @@ export default function LiveTrackPage() {
                   )}
                 </div>
 
-                {/* Location Information */}
+                {/* Enhanced Location Information */}
                 {gps?.currentLocation && (
-                  <div className="border rounded-lg p-4 bg-blue-50 border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Current Location</h4>
+                  <div className="border rounded-xl p-4 bg-gradient-to-r from-green-50 to-yellow-50 border-green-300 shadow-sm">
+                    <h4 className="font-bold text-green-900 mb-3">Current Location</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Latitude:</span>
@@ -402,9 +418,14 @@ export default function LiveTrackPage() {
               </div>
             </div>
 
-            {/* Route Information */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Route Information</h3>
+            {/* Enhanced Route Information */}
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                  <Bus className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Route Information</h3>
+              </div>
               
               <div className="space-y-3">
                 <div>
@@ -434,10 +455,15 @@ export default function LiveTrackPage() {
               </div>
             </div>
 
-            {/* Driver & Vehicle Information */}
+            {/* Enhanced Driver & Vehicle Information */}
             {(driver || vehicle) && (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Driver & Vehicle</h3>
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Driver & Vehicle</h3>
+                </div>
                 
                 <div className="space-y-4">
                   {driver && (
