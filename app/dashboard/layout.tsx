@@ -144,8 +144,95 @@ function DashboardContent({
 
   return (
     <div className="h-screen bg-gray-50 overflow-hidden flex">
+      {/* Desktop sidebar */}
+      <div className="hidden lg:flex lg:flex-shrink-0">
+        <div className="flex flex-col w-80 bg-white shadow-xl border-r border-gray-200">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
+                <Bus className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-gray-900">TMS Student</h1>
+                <p className="text-sm text-gray-500">Transport Management</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-6 py-6 space-y-8 overflow-y-auto">
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">MAIN MENU</p>
+              {navigationItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`sidebar-nav-item mb-1 ${isActive ? 'sidebar-nav-item-active' : ''}`}
+                  >
+                    <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
+              <Link
+                href="/dashboard/settings"
+                className="sidebar-nav-item mb-1"
+              >
+                <Settings className="h-5 w-5 mr-3 flex-shrink-0" />
+                <span className="font-medium">Settings</span>
+              </Link>
+            </div>
+          </nav>
+          
+          {/* User Profile */}
+          <div className="border-t border-gray-100 p-6">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="relative">
+                <img
+                  src="/api/placeholder/40/40"
+                  alt={user?.full_name}
+                  className="h-10 w-10 rounded-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <div className="hidden h-10 w-10 rounded-full bg-gradient-to-r from-green-600 to-yellow-500 flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">
+                    {user?.full_name?.charAt(0).toUpperCase() || 'S'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {user?.full_name || 'Student'}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user?.email || 'student@email.com'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <LogOut className="h-4 w-4 mr-3" />
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Enhanced Mobile sidebar */}
-      <div className={`fixed inset-0 z-40 lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
+      <div className={`fixed inset-0 z-[60] lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
         <div
           className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ease-out ${
             sidebarOpen ? 'opacity-100' : 'opacity-0'
