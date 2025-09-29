@@ -145,7 +145,7 @@ function DashboardContent({
   return (
     <div className="h-screen bg-gray-50 overflow-hidden flex">
       {/* Enhanced Mobile sidebar */}
-      <div className={`fixed inset-0 z-40 lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
+      <div className={`fixed inset-0 z-[60] lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
         <div
           className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ease-out ${
             sidebarOpen ? 'opacity-100' : 'opacity-0'
@@ -219,6 +219,7 @@ function DashboardContent({
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
               <Link
                 href="/dashboard/settings"
+                onClick={() => setSidebarOpen(false)}
                 className="sidebar-nav-item mb-1"
               >
                 <Settings className="h-5 w-5 mr-3 flex-shrink-0" />

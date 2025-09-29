@@ -140,6 +140,14 @@ export default function LiveTrackPage() {
       setError(null);
 
       const response = await fetch(`/api/routes/live-tracking?student_id=${studentId}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Live tracking service is not available');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const result = await response.json();
 
       if (result.success) {
@@ -149,7 +157,8 @@ export default function LiveTrackPage() {
       }
     } catch (error) {
       console.error('Error fetching tracking data:', error);
-      setError('Failed to load tracking data');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(`Failed to load tracking data: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
