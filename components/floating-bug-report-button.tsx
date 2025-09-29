@@ -61,7 +61,22 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [screenshots, setScreenshots] = useState<File[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Cleanup effect for object URLs
   useEffect(() => {
@@ -304,7 +319,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
       {/* Floating Bug Report Button */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 ${className}`}
+        className={`fixed bottom-24 lg:bottom-6 right-6 bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 ${className}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0 }}
@@ -312,7 +327,7 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         transition={{ delay: 0.5 }}
         style={{ 
           position: 'fixed',
-          bottom: '24px',
+          bottom: isMobile ? '96px' : '24px',
           right: '24px',
           zIndex: 99999,
           minWidth: '56px',
