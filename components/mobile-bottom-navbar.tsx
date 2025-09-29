@@ -70,7 +70,7 @@ export default function MobileBottomNavbar() {
   };
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30">
       {/* Background with blur effect */}
       <div className="bg-white/95 backdrop-blur-xl border-t border-green-100 shadow-2xl">
         <div className="px-4 py-2">

@@ -153,7 +153,7 @@ function DashboardContent({
           onClick={() => setSidebarOpen(false)}
         />
         <div
-          className={`fixed inset-y-0 left-0 flex w-80 flex-col bg-white shadow-2xl transition-all duration-300 ease-out transform z-[70] ${
+          className={`fixed inset-y-0 left-0 flex w-80 flex-col bg-white shadow-2xl transition-all duration-300 ease-out transform z-[100] ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
