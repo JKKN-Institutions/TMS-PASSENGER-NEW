@@ -12,9 +12,19 @@ interface BugButtonPortalProps {
 
 const BugButtonPortal: React.FC<BugButtonPortalProps> = ({ userId, userEmail, userName }) => {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!mounted) {
@@ -26,7 +36,10 @@ const BugButtonPortal: React.FC<BugButtonPortalProps> = ({ userId, userEmail, us
   return createPortal(
     <div
       id="bug-report-portal"
-      className="fixed bottom-96 right-6 lg:bottom-6 z-[999999] pointer-events-auto"
+      className="fixed right-6 z-[999999] pointer-events-auto"
+      style={{
+        bottom: isMobile ? '120px' : '24px'
+      }}
     >
       <FloatingBugReportButton
         userId={userId}
