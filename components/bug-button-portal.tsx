@@ -26,13 +26,7 @@ const BugButtonPortal: React.FC<BugButtonPortalProps> = ({ userId, userEmail, us
   return createPortal(
     <div
       id="bug-report-portal"
-      style={{
-        position: 'fixed',
-        bottom: '24px',
-        right: '24px',
-        zIndex: 999999,
-        pointerEvents: 'auto'
-      }}
+      className="fixed bottom-[104px] lg:bottom-6 right-6 z-[999999] pointer-events-auto"
     >
       <FloatingBugReportButton
         userId={userId}
