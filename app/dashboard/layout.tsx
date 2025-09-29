@@ -145,7 +145,7 @@ function DashboardContent({
   return (
     <div className="h-screen bg-gray-50 overflow-hidden flex">
       {/* Enhanced Mobile sidebar */}
-      <div className={`fixed inset-0 z-[60] lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
+      <div className={`fixed inset-0 z-[90] lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
         <div
           className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ease-out ${
             sidebarOpen ? 'opacity-100' : 'opacity-0'
@@ -234,14 +234,14 @@ function DashboardContent({
               <div className="relative">
                 <div className="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
                   <span className="text-sm font-bold text-white">
-                    {user?.full_name?.charAt(0).toUpperCase()}
+                    {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">
-                  {user?.full_name}
+                  {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
                   {user?.email || 'student@email.com'}
@@ -316,7 +316,6 @@ function DashboardContent({
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
             <Link
               href="/dashboard/settings"
-              onClick={() => setSidebarOpen(false)}
               className="sidebar-nav-item mb-1"
             >
               <Settings className="h-5 w-5 mr-3 flex-shrink-0" />
@@ -331,7 +330,7 @@ function DashboardContent({
             <div className="relative">
               <img
                 src="/api/placeholder/40/40"
-                alt={user?.full_name}
+                alt={user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
                 className="h-10 w-10 rounded-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -340,15 +339,15 @@ function DashboardContent({
                 }}
               />
               <div className="hidden h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
-                <span className="text-sm font-bold text-white">
-                  {user?.full_name?.charAt(0).toUpperCase()}
-                </span>
+                  <span className="text-sm font-bold text-white">
+                    {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
+                  </span>
               </div>
               <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">
-                {user?.full_name || 'Student'}
+                {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
               </p>
               <p className="text-xs text-gray-500 truncate">
                 {user?.email || 'student@email.com'}
@@ -427,14 +426,14 @@ function DashboardContent({
             <div className="relative group">
               <div className="h-9 w-9 rounded-xl bg-gradient-to-r from-green-600 to-yellow-500 flex items-center justify-center cursor-pointer hover:from-green-700 hover:to-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
                 <span className="text-sm font-bold text-white drop-shadow-sm">
-                  {user?.full_name?.charAt(0).toUpperCase() || 'S'}
+                  {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase() || 'S'}
                 </span>
               </div>
               
               {/* User info tooltip on hover */}
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-green-100 p-3 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-green-100 p-3 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-[110]">
                 <div className="text-sm">
-                  <p className="font-semibold text-gray-900 truncate">{user?.full_name || 'Student'}</p>
+                  <p className="font-semibold text-gray-900 truncate">{user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}</p>
                   <p className="text-green-600 text-xs mt-1">{user?.email}</p>
                   <div className="mt-2 pt-2 border-t border-green-100">
                     <p className="text-xs text-gray-500">Transport Management System</p>
