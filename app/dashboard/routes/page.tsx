@@ -212,11 +212,11 @@ export default function RoutesPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between"
         >
-        <div>
+        <div className="flex-1">
           <h1 className="text-heading-1 mb-2">My Transport Route</h1>
           <p className="text-body">Your allocated transport route and boarding information</p>
         </div>
-        <div className="flex space-x-4">
+        <div>
           <Button
             onClick={handleRefresh}
             loading={isLoading}
@@ -225,11 +225,6 @@ export default function RoutesPage() {
           >
             Refresh
           </Button>
-          <Link href="/dashboard/schedules">
-            <Button icon={Calendar}>
-              Book Trip
-            </Button>
-          </Link>
         </div>
       </motion.div>
 
@@ -537,24 +532,19 @@ export default function RoutesPage() {
           >
             <Card padding="md" className="bg-gradient-to-r from-green-50 to-yellow-50 border-green-200 shadow-lg">
               <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="space-y-3">
-                                 <Link href="/dashboard/schedules">
-                   <Button fullWidth icon={Calendar}>
-                     Book Trip
-                   </Button>
-                 </Link>
-                <Button 
-                  fullWidth 
-                  variant="secondary" 
-                  icon={Navigation}
-                  onClick={() => router.push('/dashboard/live-track')}
-                >
-                  Track Bus
-                </Button>
-                <Button fullWidth variant="ghost" icon={AlertCircle}>
-                  Report Issue
-                </Button>
-              </div>
+                <div className="space-y-3">
+                    <Button 
+                      fullWidth 
+                      variant="primary" 
+                      icon={Navigation}
+                      onClick={() => router.push('/dashboard/live-track')}
+                    >
+                      Track Bus
+                    </Button>
+                    <Button fullWidth variant="secondary" icon={AlertCircle}>
+                      Report Issue
+                    </Button>
+                  </div>
             </Card>
           </motion.div>
         </div>

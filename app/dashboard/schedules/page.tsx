@@ -107,7 +107,7 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
       lines.push(
         <div
           key={i}
-          className="bg-black"
+          className="bg-gray-800 dark:bg-gray-200"
           style={{ 
             width: `${lineWidth}px`, 
             height: '100%',
@@ -127,66 +127,77 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-[#1E1E1E] rounded-2xl overflow-hidden shadow-xl max-w-md w-full"
+          className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl max-w-md w-full border border-gray-200 dark:border-gray-700"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 bg-[#2C2C2C]">
-            <h2 className="text-xl font-bold text-white">Your E-Ticket</h2>
+          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Your E-Ticket</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
             >
               <X size={24} />
             </button>
           </div>
 
           {/* Ticket Container */}
-          <div className="bg-[#2C2C2C]">
-            {/* Ticket Header */}
-            <div className="bg-[#00A3FF] p-4 text-center">
-              <span className="text-white text-4xl font-bold">{booking.seatNumber}</span>
+          <div className="bg-white dark:bg-gray-800">
+            {/* Ticket Header - Seat Number */}
+            <div className="bg-gradient-to-r from-green-500 to-yellow-500 p-6 text-center">
+              <span className="text-white text-4xl font-bold drop-shadow-lg">{booking.seatNumber}</span>
             </div>
 
             {/* Ticket Content */}
-            <div className="p-5">
-              <h3 className="text-white text-2xl font-bold mb-1">{booking.studentName}</h3>
-              <p className="text-[#888] text-base mb-5">{booking.rollNumber}</p>
-              
-              <div className="mb-5">
-                <p className="text-white text-base mb-1">
-                  From: {booking.boardingStop}
-                </p>
-                <p className="text-white text-base">
-                  To: {booking.routeName.split(' - ')[1] || 'JKKN College'}
-                </p>
+            <div className="p-6 space-y-4">
+              <div className="text-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                <h3 className="text-gray-900 dark:text-white text-2xl font-bold mb-1">{booking.studentName}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-base">{booking.rollNumber}</p>
               </div>
               
-              <p className="text-[#00A3FF] text-lg font-bold mb-2">
-                {booking.scheduleDate} - {booking.departureTime}
-              </p>
-              <p className="text-[#888] text-sm">Route: {booking.routeNumber}</p>
-              <p className="text-[#888] text-sm">Ticket ID: {booking.id.slice(-8).toUpperCase()}</p>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">From:</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{booking.boardingStop}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">To:</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{booking.routeName.split(' - ')[1] || 'JKKN College'}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Date & Time:</span>
+                  <span className="text-green-600 dark:text-green-400 font-bold">{booking.scheduleDate} - {booking.departureTime}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Route:</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{booking.routeNumber}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Ticket ID:</span>
+                  <span className="text-gray-900 dark:text-white font-mono text-sm">{booking.id.slice(-8).toUpperCase()}</span>
+                </div>
+              </div>
             </div>
 
             {/* Barcode Container */}
-            <div className="bg-white p-4 text-center">
-              <div className="flex justify-center items-end h-20 w-full">
+            <div className="bg-gray-100 dark:bg-gray-700 p-4 text-center border-t border-gray-200 dark:border-gray-600">
+              <div className="flex justify-center items-end h-20 w-full bg-white dark:bg-gray-100 rounded-lg p-2">
                 {generateBarcodeLines()}
               </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Scan this code when boarding</p>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="p-4 bg-[#2C2C2C] border-t border-gray-600">
-            <div className="flex items-center justify-center space-x-2 text-green-400">
+          <div className="p-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+            <div className="flex items-center justify-center space-x-2 text-green-600 dark:text-green-400">
               <CheckCircle size={16} />
-              <span className="text-sm">Ticket Confirmed</span>
+              <span className="text-sm font-medium">Ticket Confirmed</span>
             </div>
           </div>
         </motion.div>
