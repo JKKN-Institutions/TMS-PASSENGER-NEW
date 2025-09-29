@@ -34,20 +34,18 @@ const BugButtonPortal: React.FC<BugButtonPortalProps> = ({ userId, userEmail, us
   // Create a portal to render the button directly in the body
   // This ensures it's not affected by any layout constraints
   return createPortal(
-    <div
-      id="bug-report-portal"
-      className="fixed right-6 z-[999999] pointer-events-auto"
+    <FloatingBugReportButton
+      userId={userId}
+      userEmail={userEmail}
+      userName={userName}
+      className="bug-report-portal-button"
       style={{
-        bottom: isMobile ? '120px' : '24px'
+        position: 'fixed',
+        bottom: isMobile ? '120px' : '24px',
+        right: '24px',
+        zIndex: 99999
       }}
-    >
-      <FloatingBugReportButton
-        userId={userId}
-        userEmail={userEmail}
-        userName={userName}
-        className="bug-report-portal-button"
-      />
-    </div>,
+    />,
     document.body
   );
 };

@@ -50,13 +50,15 @@ interface FloatingBugReportButtonProps {
   userEmail?: string;
   userName?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
   userId,
   userEmail,
   userName,
-  className = ''
+  className = '',
+  style = {}
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -311,12 +313,9 @@ const FloatingBugReportButton: React.FC<FloatingBugReportButtonProps> = ({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
         style={{ 
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 99999,
           minWidth: '56px',
-          minHeight: '56px'
+          minHeight: '56px',
+          ...style
         }}
       >
         <Bug className="w-6 h-6" />
