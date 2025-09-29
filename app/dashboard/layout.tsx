@@ -315,6 +315,7 @@ function DashboardContent({
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
             <Link
               href="/dashboard/settings"
+              onClick={() => setSidebarOpen(false)}
               className="sidebar-nav-item mb-1"
             >
               <Settings className="h-5 w-5 mr-3 flex-shrink-0" />
@@ -366,31 +367,33 @@ function DashboardContent({
       {/* Main content */}
       <div className="lg:pl-80 flex flex-col h-full flex-1 min-w-0">
         {/* Enhanced Top bar */}
-        <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200 flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200 lg:hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          
-          <div className="flex items-center lg:hidden">
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-              <Bus className="h-5 w-5 text-white" />
+        <div className="bg-white/95 backdrop-blur-xl border-b border-green-100 shadow-sm flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 text-gray-500 hover:text-green-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 lg:hidden shadow-sm hover:shadow-md"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            
+            <div className="flex items-center lg:hidden">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-yellow-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <Bus className="h-5 w-5 text-white drop-shadow-sm" />
+              </div>
+              <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">TMS</span>
             </div>
-            <span className="text-lg font-bold text-gray-900">TMS</span>
           </div>
 
-          <div className="hidden lg:flex lg:items-center lg:space-x-4">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
+          <div className="hidden lg:flex lg:items-center lg:space-x-4 flex-1 max-w-2xl mx-8">
+            <div className="flex items-center space-x-4 w-full">
+              <div className="relative flex-1 max-w-md">
                 <input
                   type="text"
-                  placeholder="Search transport..."
-                  className="w-64 lg:w-80 xl:w-96 pl-4 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Search transport services..."
+                  className="w-full pl-4 pr-12 py-2.5 border border-green-200 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">
+                  <kbd className="px-2 py-1 text-xs font-semibold text-green-600 bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 rounded shadow-sm">
                     ⌘ F
                   </kbd>
                 </div>
@@ -398,28 +401,44 @@ function DashboardContent({
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Theme Toggle */}
-            <ThemeToggle
-              isDark={actualTheme === 'dark'}
-              onToggle={(isDark) => setTheme(isDark ? 'dark' : 'light')}
-              className="hidden sm:block"
-            />
+            <div className="hidden sm:block">
+              <ThemeToggle
+                isDark={actualTheme === 'dark'}
+                onToggle={(isDark) => setTheme(isDark ? 'dark' : 'light')}
+                className="p-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+              />
+            </div>
             
             {/* Notification Center */}
             {user?.id && (
-              <NotificationCenter 
-                userId={user.id} 
-                userType="student" 
-                className="mr-1"
-              />
+              <div className="relative">
+                <NotificationCenter 
+                  userId={user.id} 
+                  userType="student" 
+                  className="p-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                />
+              </div>
             )}
             
-            <div className="relative">
-              <div className="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center cursor-pointer hover:bg-green-700 transition-colors">
-                <span className="text-xs font-bold text-white">
+            {/* Enhanced User Avatar */}
+            <div className="relative group">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-r from-green-600 to-yellow-500 flex items-center justify-center cursor-pointer hover:from-green-700 hover:to-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
+                <span className="text-sm font-bold text-white drop-shadow-sm">
                   {user?.full_name?.charAt(0).toUpperCase() || 'S'}
                 </span>
+              </div>
+              
+              {/* User info tooltip on hover */}
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-green-100 p-3 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50">
+                <div className="text-sm">
+                  <p className="font-semibold text-gray-900 truncate">{user?.full_name || 'Student'}</p>
+                  <p className="text-green-600 text-xs mt-1">{user?.email}</p>
+                  <div className="mt-2 pt-2 border-t border-green-100">
+                    <p className="text-xs text-gray-500">Transport Management System</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

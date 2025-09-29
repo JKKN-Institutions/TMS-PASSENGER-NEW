@@ -104,6 +104,13 @@ export default function LiveTrackPage() {
 
   const checkSessionAndLoadData = async () => {
     try {
+      // Check if sessionManager is available
+      if (typeof window === 'undefined' || !sessionManager) {
+        setError('Session manager not available');
+        setIsLoading(false);
+        return;
+      }
+
       const session = sessionManager.getSession();
       if (!session) {
         router.push('/login');
@@ -111,8 +118,9 @@ export default function LiveTrackPage() {
       }
 
       const currentStudent = sessionManager.getCurrentStudent();
-      if (!currentStudent) {
-        router.push('/login');
+      if (!currentStudent || !currentStudent.student_id) {
+        setError('Student information not found');
+        setIsLoading(false);
         return;
       }
 
@@ -120,7 +128,7 @@ export default function LiveTrackPage() {
       await fetchLiveTrackingData(currentStudent.student_id);
     } catch (error) {
       console.error('Session check failed:', error);
-      setError('Failed to load tracking data');
+      setError('Failed to load session data');
       setIsLoading(false);
     }
   };
