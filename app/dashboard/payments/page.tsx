@@ -80,7 +80,7 @@ export default function PaymentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-2 sm:p-4 lg:p-6 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-2 sm:p-4 lg:p-6 pb-24 lg:pb-6 overflow-x-hidden">
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 w-full min-w-0">
         {/* Enhanced Header */}
         <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-2xl border border-green-300">

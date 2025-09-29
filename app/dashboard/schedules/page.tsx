@@ -212,8 +212,13 @@ const BookingConfirmationModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">⚠️ Confirm Your Booking</h2>
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full shadow-2xl border border-green-200">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <Ticket className="w-7 h-7 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Confirm Your Booking</h2>
+        </div>
         
         <div className="space-y-3 mb-6">
           <div className="flex justify-between">
@@ -234,8 +239,8 @@ const BookingConfirmationModal: React.FC<{
           </div>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
-          <p className="text-blue-800 text-sm">
+        <div className="bg-gradient-to-r from-green-50 to-yellow-50 border border-green-300 rounded-xl p-4 mb-6 shadow-sm">
+          <p className="text-green-800 text-sm font-medium">
             <strong>Student:</strong> {student?.student_name} ({student?.roll_number})
           </p>
         </div>
@@ -243,13 +248,13 @@ const BookingConfirmationModal: React.FC<{
         <div className="flex space-x-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300 font-bold shadow-sm hover:shadow-md"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Confirm Booking
           </button>
@@ -1187,13 +1192,13 @@ export default function SchedulesPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'booked': return 'bg-green-500 text-white';
-      case 'available': return 'bg-blue-500 text-white hover:bg-blue-600';
-      case 'disabled': return 'bg-orange-500 text-white';
-      case 'completed': return 'bg-gray-500 text-white';
-      case 'closed': return 'bg-gray-400 text-white';
-      case 'full': return 'bg-red-500 text-white';
-      default: return 'bg-gray-200 text-gray-400';
+      case 'booked': return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg';
+      case 'available': return 'bg-gradient-to-r from-green-400 to-yellow-500 text-white hover:from-green-500 hover:to-yellow-600 shadow-md hover:shadow-lg';
+      case 'disabled': return 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-md';
+      case 'completed': return 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-md';
+      case 'closed': return 'bg-gradient-to-r from-gray-300 to-gray-400 text-white shadow-sm';
+      case 'full': return 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md';
+      default: return 'bg-gray-100 text-gray-400 border border-gray-200';
     }
   };
 
@@ -1611,12 +1616,11 @@ export default function SchedulesPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-          <div className="bg-white rounded-lg p-6">
-            <div className="h-64 bg-gray-200 rounded"></div>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-6 flex items-center justify-center">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <h2 className="text-xl font-bold text-green-900 mb-2">Loading Schedule</h2>
+          <p className="text-green-700">Fetching your transport schedule...</p>
         </div>
       </div>
     );
@@ -1624,16 +1628,18 @@ export default function SchedulesPage() {
 
   if (!studentAllocation) {
     return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg border p-8 text-center">
-          <AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-gray-900 mb-2">No Route Allocation</h2>
-          <p className="text-gray-600 mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-6 flex items-center justify-center">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-yellow-200 p-8 text-center shadow-xl max-w-md">
+          <div className="w-20 h-20 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-12 h-12 text-yellow-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">No Route Allocation</h2>
+          <p className="text-gray-600 mb-6">
             You don't have any route allocation yet. Please contact the administration to get assigned to a route.
           </p>
           <button
             onClick={() => window.location.href = '/dashboard'}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Go to Dashboard
           </button>
@@ -1643,12 +1649,17 @@ export default function SchedulesPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Transport Schedule</h1>
-          <p className="text-gray-600">Book your daily transport trips</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-6 pb-24 lg:pb-6 space-y-6">
+      {/* Enhanced Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-green-200">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <Calendar className="w-7 h-7 text-white drop-shadow-sm" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 drop-shadow-sm">My Transport Schedule</h1>
+            <p className="text-green-700 font-medium">Book your daily transport trips</p>
+          </div>
         </div>
         <div className="mt-4 lg:mt-0 flex items-center space-x-3">
           <div className="text-sm text-gray-500">
@@ -1691,10 +1702,10 @@ export default function SchedulesPage() {
               }
             }}
             disabled={verificationInProgress}
-            className={`px-3 py-1 text-sm text-white rounded-lg transition-colors flex items-center space-x-1 ${
+            className={`px-4 py-2 text-sm text-white rounded-xl transition-all duration-300 flex items-center space-x-2 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 ${
               verificationInProgress 
                 ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'
+                : 'bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600'
             }`}
           >
             {verificationInProgress ? (
@@ -1716,44 +1727,49 @@ export default function SchedulesPage() {
         </div>
       </div>
 
-      {/* Route Information */}
-      <div className="bg-white rounded-lg border p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Allocated Route</h2>
+      {/* Enhanced Route Information */}
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <Bus className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Your Allocated Route</h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Bus className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 shadow-sm">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl flex items-center justify-center shadow-md">
+              <Bus className="w-6 h-6 text-green-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Route</p>
-              <p className="font-medium text-gray-900">{studentAllocation.route.routeNumber}</p>
+              <p className="text-sm text-green-600 font-medium">Route</p>
+              <p className="font-bold text-gray-900 text-lg">{studentAllocation.route.routeNumber}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-green-600" />
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-yellow-50 to-green-50 rounded-xl p-4 shadow-sm">
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-100 to-green-100 rounded-xl flex items-center justify-center shadow-md">
+              <MapPin className="w-6 h-6 text-yellow-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Boarding Stop</p>
-              <p className="font-medium text-gray-900">{studentAllocation.boardingStop.stopName}</p>
+              <p className="text-sm text-yellow-600 font-medium">Boarding Stop</p>
+              <p className="font-bold text-gray-900 text-lg">{studentAllocation.boardingStop.stopName}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-5 h-5 text-purple-600" />
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-4 shadow-sm">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl flex items-center justify-center shadow-md">
+              <Clock className="w-6 h-6 text-green-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Departure Time</p>
-              <p className="font-medium text-gray-900">{formatTime(studentAllocation.boardingStop.stopTime)}</p>
+              <p className="text-sm text-green-600 font-medium">Departure Time</p>
+              <p className="font-bold text-gray-900 text-lg">{formatTime(studentAllocation.boardingStop.stopTime)}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-yellow-600" />
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 shadow-sm">
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl flex items-center justify-center shadow-md">
+              <CreditCard className="w-6 h-6 text-yellow-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Fare</p>
-              <p className="font-medium text-gray-900">{formatCurrency(studentAllocation.route.fare)}</p>
+              <p className="text-sm text-yellow-600 font-medium">Fare</p>
+              <p className="font-bold text-gray-900 text-lg">{formatCurrency(studentAllocation.route.fare)}</p>
             </div>
           </div>
         </div>
@@ -1764,29 +1780,34 @@ export default function SchedulesPage() {
         isActive={studentAllocation?.route ? (paymentStatus?.isActive ?? true) : true}
         nextDueAmount={studentAllocation?.route ? (nextDueAmount ?? undefined) : undefined}
       >
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-            </h2>
-            <div className="text-sm text-gray-600">
-              Detected bookings: {Array.from(bookingStatus.values()).filter(Boolean).length} | 
-              Schedules with bookings: {schedules.filter(s => s.userBooking).length}
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              </h2>
+              <div className="text-sm text-green-700 font-medium">
+                Detected bookings: {Array.from(bookingStatus.values()).filter(Boolean).length} | 
+                Schedules with bookings: {schedules.filter(s => s.userBooking).length}
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <button
               onClick={() => navigateMonth('prev')}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-3 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-600" />
+              <ChevronLeft className="w-6 h-6 text-green-600" />
             </button>
             <button
               onClick={() => navigateMonth('next')}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-3 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105"
             >
-              <ChevronRight className="w-5 h-5 text-gray-600" />
+              <ChevronRight className="w-6 h-6 text-green-600" />
             </button>
           </div>
         </div>
@@ -1879,59 +1900,64 @@ export default function SchedulesPage() {
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="bg-white rounded-lg border p-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Calendar Legend</h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-500 rounded"></div>
-            <span className="text-sm text-gray-600">Booked</span>
+      {/* Enhanced Legend */}
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <Star className="w-6 h-6 text-white" />
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
-            <span className="text-sm text-gray-600">Available</span>
+          <h3 className="text-xl font-bold text-gray-900">Calendar Legend</h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-3 shadow-sm">
+            <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-sm"></div>
+            <span className="text-sm font-bold text-green-800">Booked</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-orange-500 rounded"></div>
-            <span className="text-sm text-gray-600">Disabled</span>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-3 shadow-sm">
+            <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-yellow-500 rounded-lg shadow-sm"></div>
+            <span className="text-sm font-bold text-green-700">Available</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-gray-400 rounded"></div>
-            <span className="text-sm text-gray-600">Booking Closed</span>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-3 shadow-sm">
+            <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg shadow-sm"></div>
+            <span className="text-sm font-bold text-orange-700">Disabled</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-red-500 rounded"></div>
-            <span className="text-sm text-gray-600">Full</span>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-3 shadow-sm">
+            <div className="w-6 h-6 bg-gradient-to-r from-gray-300 to-gray-400 rounded-lg shadow-sm"></div>
+            <span className="text-sm font-bold text-gray-600">Closed</span>
+          </div>
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-3 shadow-sm">
+            <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-lg shadow-sm"></div>
+            <span className="text-sm font-bold text-red-700">Full</span>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="p-3 bg-blue-50 rounded-lg">
-            <p className="text-xs text-blue-800">
-              <strong>Booking Process:</strong> Click on blue (available) dates to book your trip. 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-200 shadow-sm">
+            <p className="text-sm text-green-800 font-medium">
+              <strong className="text-green-900">Booking Process:</strong> Click on green-yellow (available) dates to book your trip. 
               Green dates show your existing bookings - click to view your ticket.
             </p>
           </div>
-          <div className="p-3 bg-green-50 rounded-lg">
-            <p className="text-xs text-green-800">
-              <strong>Manual Refresh:</strong> Use the "Sync" button to refresh schedules. 
+          <div className="p-4 bg-gradient-to-r from-yellow-50 to-green-50 rounded-xl border border-yellow-200 shadow-sm">
+            <p className="text-sm text-green-800 font-medium">
+              <strong className="text-green-900">Manual Refresh:</strong> Use the "Refresh" button to sync schedules. 
               No automatic booking - all bookings require your confirmation.
             </p>
           </div>
         </div>
-        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-700">
-            <strong>Status Guide:</strong> 
-            <span className="text-orange-600"> Disabled</span> - Administration restricted. 
-            <span className="text-gray-600"> Closed</span> - Booking window expired. 
-            <span className="text-red-600"> Full</span> - No seats available.
+        <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-green-50 rounded-xl border border-gray-200 shadow-sm">
+          <p className="text-sm text-gray-700 font-medium">
+            <strong className="text-gray-900">Status Guide:</strong> 
+            <span className="text-orange-600 font-bold"> Disabled</span> - Administration restricted. 
+            <span className="text-gray-600 font-bold"> Closed</span> - Booking window expired. 
+            <span className="text-red-600 font-bold"> Full</span> - No seats available.
           </p>
-          <p className="text-xs text-gray-700 mt-2">
-            <strong>Visual Indicators:</strong>
-            <span className="text-red-600"> Red diagonal lines with "CANCELLED" or "DISABLED"</span> - Trip unavailable due to admin action.
+          <p className="text-sm text-gray-700 mt-2 font-medium">
+            <strong className="text-gray-900">Visual Indicators:</strong>
+            <span className="text-red-600 font-bold"> Red diagonal lines with "CANCELLED" or "DISABLED"</span> - Trip unavailable due to admin action.
           </p>
           {lastVerificationTime && (
-            <p className="text-xs text-blue-600 mt-1">
-              Last refreshed: {lastVerificationTime.toLocaleString()}
+            <p className="text-sm text-green-600 mt-2 font-medium">
+              <strong>Last refreshed:</strong> {lastVerificationTime.toLocaleString()}
             </p>
           )}
         </div>

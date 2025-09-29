@@ -249,7 +249,7 @@ export default function LiveTrackPage() {
   const gpsStatus = gps?.status || 'offline';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 pb-24 lg:pb-0">
       {/* Enhanced Header */}
       <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 shadow-2xl border-b border-green-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -485,20 +485,20 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
+    <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100 space-y-4 lg:space-y-0">
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">My Profile</h1>
           <p className="text-gray-700 font-medium mt-1">Manage your personal information and preferences</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
           {isEditing ? (
             <>
               <button
                 onClick={handleCancel}
                 disabled={isSaving}
-                className="flex items-center space-x-2 px-5 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md"
+                className="flex items-center justify-center space-x-2 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto"
               >
                 <X className="h-4 w-4" />
                 <span className="font-medium">Cancel</span>
@@ -506,7 +506,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving || Object.values(errors).some(error => error !== '')}
-                className="flex items-center space-x-2 px-5 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
               >
                 {isSaving ? (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
@@ -519,7 +519,7 @@ export default function ProfilePage() {
           ) : (
             <button
               onClick={startEditing}
-              className="flex items-center space-x-2 px-5 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
             >
               <Edit className="h-4 w-4" />
               <span className="font-semibold">Edit Profile</span>
