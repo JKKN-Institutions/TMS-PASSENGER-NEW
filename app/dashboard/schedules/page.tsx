@@ -82,7 +82,6 @@ interface ScheduleData {
 interface BoardingPassProps {
   isOpen: boolean;
   onClose: () => void;
-  onCancellation?: () => void;
   booking: {
     id: string;
     seatNumber: string;
@@ -97,68 +96,7 @@ interface BoardingPassProps {
   };
 }
 
-const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, onCancellation, booking }) => {
-  const [isCancelling, setIsCancelling] = useState(false);
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [canCancel, setCanCancel] = useState(true);
-  const [cancellationWindow, setCancellationWindow] = useState<string>('');
-
-  // Check if cancellation is allowed when component opens
-  useEffect(() => {
-    if (isOpen && booking.scheduleDate) {
-      checkCancellationEligibility();
-    }
-  }, [isOpen, booking.scheduleDate]);
-
-  const checkCancellationEligibility = async () => {
-    try {
-      const tripDate = new Date(booking.scheduleDate);
-      const { canBookTrip } = await import('@/lib/date-utils');
-      const result = await canBookTrip(tripDate);
-      
-      setCanCancel(result.canBook);
-      setCancellationWindow(result.bookingWindow || '');
-    } catch (error) {
-      console.error('Error checking cancellation eligibility:', error);
-      setCanCancel(false);
-    }
-  };
-
-  const handleCancelBooking = async () => {
-    setIsCancelling(true);
-    
-    try {
-      const response = await fetch('/api/bookings/cancel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          bookingId: booking.id,
-          studentId: sessionManager.getCurrentStudent()?.student_id
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        toast.success('Booking cancelled successfully!');
-        setShowCancelConfirm(false);
-        onClose();
-        if (onCancellation) {
-          onCancellation();
-        }
-      } else {
-        toast.error(result.error || 'Failed to cancel booking');
-      }
-    } catch (error) {
-      console.error('Error cancelling booking:', error);
-      toast.error('Failed to cancel booking');
-    } finally {
-      setIsCancelling(false);
-    }
-  };
-
+const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking }) => {
   const generateBarcodeLines = () => {
     const lines: React.JSX.Element[] = [];
     // Responsive barcode - fewer lines on mobile
@@ -266,94 +204,13 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, onCancella
 
           {/* Footer */}
           <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
-            <div className="flex flex-col space-y-3">
-              <div className="flex items-center justify-center space-x-2 text-green-600 dark:text-green-400">
-                <CheckCircle size={14} className="sm:w-4 sm:h-4" />
-                <span className="text-xs sm:text-sm font-medium">Ticket Confirmed</span>
-              </div>
-              
-              {/* Cancellation Section */}
-              {canCancel ? (
-                <button
-                  onClick={() => setShowCancelConfirm(true)}
-                  disabled={isCancelling}
-                  className="w-full px-4 py-2 text-xs sm:text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-900/20 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
-                >
-                  {isCancelling ? 'Cancelling...' : 'Cancel Booking'}
-                </button>
-              ) : (
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Cancellation deadline has passed
-                  </p>
-                  {cancellationWindow && (
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                      {cancellationWindow}
-                    </p>
-                  )}
-                </div>
-              )}
+            <div className="flex items-center justify-center space-x-2 text-green-600 dark:text-green-400">
+              <CheckCircle size={14} className="sm:w-4 sm:h-4" />
+              <span className="text-xs sm:text-sm font-medium">Ticket Confirmed</span>
             </div>
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Cancellation Confirmation Modal */}
-      {showCancelConfirm && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4"
-          onClick={(e) => e.target === e.currentTarget && setShowCancelConfirm(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-gray-200 dark:border-gray-700"
-          >
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
-              </div>
-              
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                Cancel Booking?
-              </h3>
-              
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                Are you sure you want to cancel your booking for {booking.scheduleDate}? This action cannot be undone.
-              </p>
-              
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowCancelConfirm(false)}
-                  disabled={isCancelling}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 disabled:opacity-50"
-                >
-                  Keep Booking
-                </button>
-                
-                <button
-                  onClick={handleCancelBooking}
-                  disabled={isCancelling}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-red-600 rounded-lg hover:bg-red-700 hover:border-red-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCancelling ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Cancelling...</span>
-                    </div>
-                  ) : (
-                    'Yes, Cancel'
-                  )}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
     </AnimatePresence>
   );
 };
@@ -2123,12 +1980,6 @@ export default function SchedulesPage() {
       <BoardingPass
         isOpen={showBoardingPass}
         onClose={() => setShowBoardingPass(false)}
-        onCancellation={() => {
-          // Refresh the booking status and calendar after cancellation
-          if (student?.student_id) {
-            loadExistingBookings(student.student_id);
-          }
-        }}
         booking={selectedBooking}
       />
 
