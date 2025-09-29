@@ -263,7 +263,7 @@ export default function GrievancesPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
       <GrievanceAccessControl
         isActive={paymentStatus?.isActive ?? true}
         nextDueAmount={nextDueAmount ?? undefined}

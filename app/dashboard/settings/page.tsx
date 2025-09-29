@@ -410,7 +410,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6">
+    <div className="space-y-8 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6 pb-24 lg:pb-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

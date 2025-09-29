@@ -186,7 +186,7 @@ export default function BugReportsPage() {
   };
 
   return (
-    <div className="space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6">
+    <div className="space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6 pb-24 lg:pb-6">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-green-100 space-y-4 lg:space-y-0">
         <div className="min-w-0 flex-1">

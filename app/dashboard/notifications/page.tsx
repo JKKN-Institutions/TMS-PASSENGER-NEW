@@ -468,7 +468,7 @@ const NotificationsPage = () => {
   // Show loading state while student is being initialized
   if (!student) {
     return (
-      <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
+      <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
         <div className="animate-pulse">
           <div className="h-8 bg-gradient-to-r from-green-200 to-yellow-200 rounded-xl w-1/4 mb-6"></div>
           <div className="space-y-4">
@@ -482,7 +482,7 @@ const NotificationsPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
               {/* Header */}
         <div className="mb-4 sm:mb-6 lg:mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
