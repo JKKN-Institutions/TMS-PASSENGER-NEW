@@ -30,6 +30,7 @@ import {
   getBookingWindowInfo
 } from '@/lib/date-utils';
 import toast from 'react-hot-toast';
+import { ScheduleLoading } from '@/components/loading-screen';
 
 interface StudentAllocation {
   id: string;
@@ -107,7 +108,7 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
       lines.push(
         <div
           key={i}
-          className="bg-gray-800 dark:bg-gray-200"
+          className="bg-black"
           style={{ 
             width: `${lineWidth}px`, 
             height: '100%',
@@ -1626,15 +1627,7 @@ export default function SchedulesPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-6 flex items-center justify-center">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
-          <h2 className="text-xl font-bold text-green-900 mb-2">Loading Schedule</h2>
-          <p className="text-green-700">Fetching your transport schedule...</p>
-        </div>
-      </div>
-    );
+    return <ScheduleLoading />;
   }
 
   if (!studentAllocation) {

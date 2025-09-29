@@ -17,6 +17,7 @@ import {
 import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
 import dynamic from 'next/dynamic';
+import { LiveTrackLoading } from '@/components/loading-screen';
 
 // Dynamically import the map component to avoid SSR issues
 const LiveTrackingMap = dynamic(() => import('@/components/live-tracking-map'), {
@@ -201,15 +202,7 @@ export default function LiveTrackPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
-          <p className="text-green-700 font-bold text-lg">Loading Live Tracking...</p>
-          <p className="text-green-600 text-sm mt-2">Connecting to GPS system</p>
-        </div>
-      </div>
-    );
+    return <LiveTrackLoading />;
   }
 
   if (error) {

@@ -32,6 +32,7 @@ import {
   SwipeHandler 
 } from '@/components/modern-ui-components';
 import toast from 'react-hot-toast';
+import { DashboardLoading } from '@/components/loading-screen';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
@@ -195,28 +196,7 @@ export default function DashboardPage() {
 
   // Enhanced Loading state with overlay
   if (authLoading || isLoading) {
-    return (
-      <>
-        <LoadingOverlay 
-          isVisible={true} 
-          message="Loading your transport dashboard..."
-        />
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-          <div className="container-modern py-8">
-            <div className="space-y-6">
-              {/* Skeleton loading for dashboard cards */}
-              {[...Array(3)].map((_, index) => (
-                <Card key={index} className="modern-card" padding="lg">
-                  <div className="skeleton h-6 w-32 mb-4" />
-                  <div className="skeleton h-4 w-full mb-2" />
-                  <div className="skeleton h-4 w-3/4" />
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </>
-    );
+    return <DashboardLoading />;
   }
 
   // Render staff dashboard for staff users

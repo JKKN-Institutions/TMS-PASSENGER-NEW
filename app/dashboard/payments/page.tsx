@@ -5,6 +5,7 @@ import { sessionManager } from '@/lib/session';
 import EnhancedPaymentInterface from '@/components/enhanced-payment-interface';
 import PaymentHistoryViewer from '@/components/payment-history-viewer';
 import toast from 'react-hot-toast';
+import { PaymentLoading } from '@/components/loading-screen';
 
 export default function PaymentsPage() {
   const [student, setStudent] = useState<{ id: string; name: string } | null>(null);
@@ -53,14 +54,7 @@ export default function PaymentsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
-          <p className="text-green-700 font-medium">Loading payment information...</p>
-        </div>
-      </div>
-    );
+    return <PaymentLoading />;
   }
 
   if (!student) {

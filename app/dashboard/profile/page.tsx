@@ -28,6 +28,7 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { EnhancedInput, validators } from '@/components/enhanced-form-components';
+import { ProfileLoading } from '@/components/loading-screen';
 
 // Stable input component to prevent focus loss
 const StableInput = React.memo(({ 
@@ -446,14 +447,7 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600"></div>
-          <p className="text-green-700 font-medium">Loading your profile...</p>
-        </div>
-      </div>
-    );
+    return <ProfileLoading />;
   }
 
   if (!profile) {

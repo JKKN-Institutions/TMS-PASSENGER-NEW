@@ -24,6 +24,7 @@ import { RouteAccessControl } from '@/components/account-access-control';
 import { Card, Button, Badge, Spinner, Alert, Avatar } from '@/components/modern-ui-components';
 
 import toast from 'react-hot-toast';
+import { RouteLoading } from '@/components/loading-screen';
 
 interface RouteInfo {
   id: string;
@@ -141,17 +142,7 @@ export default function RoutesPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
-          <Spinner size="lg" color="green" />
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Route Information</h2>
-            <p className="text-gray-600">Please wait while we fetch your route details...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <RouteLoading />;
   }
 
   if (error || !route) {
