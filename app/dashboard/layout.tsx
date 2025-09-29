@@ -164,32 +164,13 @@ function DashboardContent({
           <nav className="flex-1 px-6 py-6 space-y-8 overflow-y-auto">
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">MAIN MENU</p>
-              {navigation.map((item) => {
-                const isDisabled = item.disabled;
-                const baseClasses = `sidebar-nav-item ${item.current ? 'sidebar-nav-item-active' : ''} mb-1`;
-                const disabledClasses = isDisabled 
-                  ? 'opacity-50 cursor-not-allowed pointer-events-none' 
-                  : '';
-                
-                if (isDisabled) {
-                  return (
-                    <div
-                      key={item.name}
-                      className={`${baseClasses} ${disabledClasses}`}
-                      title={`${item.name} - Available after enrollment`}
-                    >
-                      <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <span className="font-medium">{item.name}</span>
-                      <span className="ml-auto text-xs text-gray-400">🔒</span>
-                    </div>
-                  );
-                }
-                
+              {navigationItems.map((item) => {
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={baseClasses}
+                    className={`sidebar-nav-item mb-1 ${isActive ? 'sidebar-nav-item-active' : ''}`}
                   >
                     <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
                     <span className="font-medium">{item.name}</span>
