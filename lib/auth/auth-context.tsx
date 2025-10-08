@@ -151,60 +151,72 @@ export function AuthProvider({
           setSession(authState.session as AuthSession);
           setUserType(normalizedUserType);
 
-          // For passenger users, check if user object needs enhancement (missing studentId)
-          if (normalizedUserType === 'passenger' && authState.user && 'studentId' in authState.user && !authState.user.studentId && authState.user.email) {
-            console.log('🔧 Passenger user object missing enhanced data, attempting to enhance...');
-            try {
-              const integrationResult = await ParentAppIntegrationService.findOrCreateStudentFromParentApp(authState.user as ParentAppUser);
-              
-              if (integrationResult && integrationResult.student) {
-                const { student, isNewStudent } = integrationResult;
-                console.log('✅ Enhanced user object during initialization:', {
-                  studentId: student.id,
-                  email: student.email,
-                  rollNumber: student.roll_number
-                });
-
-                const enhancedUser = {
-                  ...authState.user,
-                  studentId: student.id,
-                  rollNumber: student.roll_number,
-                  isNewStudent,
-                  departmentId: student.department_id,
-                  programId: student.program_id,
-                  profileCompletionPercentage: student.profile_completion_percentage
-                } as ParentAppUser;
-
-                // Store the enhanced user
-                parentAuthService.updateUser(enhancedUser);
-                setUser(enhancedUser);
+          // For passenger users, enhance with local database data
+          if (normalizedUserType === 'passenger' && authState.user && authState.user.email) {
+            // Check if user already has studentId (already enhanced)
+            const hasStudentId = 'studentId' in authState.user && authState.user.studentId;
+            
+            if (!hasStudentId) {
+              console.log('🔧 Passenger user needs database enhancement, fetching local student record...');
+              try {
+                const integrationResult = await ParentAppIntegrationService.findOrCreateStudentFromParentApp(authState.user as ParentAppUser);
                 
-                // Also store in sessionManager format for compatibility
-                if (authState.session && enhancedUser.studentId) {
-                  const sessionData = {
-                    user: {
-                      id: enhancedUser.id,
-                      email: enhancedUser.email,
-                      user_metadata: {
-                        student_id: enhancedUser.studentId,
-                        student_name: enhancedUser.full_name,
-                        roll_number: enhancedUser.rollNumber
+                if (integrationResult && integrationResult.student) {
+                  const { student, isNewStudent } = integrationResult;
+                  console.log('✅ Enhanced user object during initialization:', {
+                    studentId: student.id,
+                    email: student.email,
+                    rollNumber: student.roll_number,
+                    isNewStudent
+                  });
+
+                  const enhancedUser = {
+                    ...authState.user,
+                    studentId: student.id,
+                    rollNumber: student.roll_number,
+                    isNewStudent,
+                    departmentId: student.department_id,
+                    programId: student.program_id,
+                    profileCompletionPercentage: student.profile_completion_percentage,
+                    transportEnrolled: student.transport_enrolled,
+                    enrollmentStatus: student.enrollment_status
+                  } as ParentAppUser;
+
+                  // Store the enhanced user in localStorage and parent auth service
+                  parentAuthService.updateUser(enhancedUser);
+                  setUser(enhancedUser);
+                  
+                  // Also store in sessionManager format for compatibility
+                  if (authState.session) {
+                    const sessionData = {
+                      user: {
+                        id: enhancedUser.id,
+                        email: enhancedUser.email,
+                        user_metadata: {
+                          student_id: enhancedUser.studentId,
+                          student_name: enhancedUser.full_name,
+                          roll_number: enhancedUser.rollNumber
+                        }
+                      },
+                      session: {
+                        access_token: parentAuthService.getAccessToken() || '',
+                        expires_at: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
+                        refresh_token: parentAuthService.getRefreshToken() || ''
                       }
-                    },
-                    session: {
-                      access_token: parentAuthService.getAccessToken() || '',
-                      expires_at: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
-                      refresh_token: parentAuthService.getRefreshToken() || ''
-                    }
-                  };
-                  sessionManager.setSession(sessionData as any);
-                  console.log('✅ Session stored in sessionManager during initialization for student:', enhancedUser.studentId);
+                    };
+                    sessionManager.setSession(sessionData as any);
+                    console.log('✅ Session stored in sessionManager during initialization for student:', enhancedUser.studentId);
+                  }
+                } else {
+                  console.warn('⚠️ Could not fetch student record, user will have limited functionality');
                 }
-              }
-                          } catch (error) {
+              } catch (error) {
                 console.warn('⚠️ Error enhancing user object:', error);
               }
+            } else {
+              console.log('✅ User already enhanced with studentId:', (authState.user as any).studentId);
             }
+          }
 
             // For staff users, ensure they have appropriate permissions
             if (normalizedUserType === 'staff' && authState.user) {

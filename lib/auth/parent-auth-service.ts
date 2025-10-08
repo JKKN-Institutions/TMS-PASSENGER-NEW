@@ -13,13 +13,18 @@ export interface ParentAppUser {
   profile_completed?: boolean;
   avatar_url?: string;
   last_login?: string;
-  // Enhanced student-related fields (added during authentication)
+  // Student-specific fields (added after database enhancement)
   studentId?: string;
   rollNumber?: string;
   isNewStudent?: boolean;
   departmentId?: string;
   programId?: string;
   profileCompletionPercentage?: number;
+  transportEnrolled?: boolean;
+  enrollmentStatus?: string;
+  // Staff-specific fields (added after staff check)
+  staff_id?: string;
+  staff_name?: string;
 }
 
 export interface AuthSession {
