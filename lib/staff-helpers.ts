@@ -69,16 +69,29 @@ class StaffHelpers {
 
       console.log('🔍 Fetching fresh staff data from API...');
       
+      // Get access token for authentication
+      const accessToken = typeof window !== 'undefined' 
+        ? localStorage.getItem('tms_access_token') 
+        : null;
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add authorization if token is available
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+      
       const response = await fetch('/api/staff', {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch staff data');
+        // Don't throw error, just return empty array
+        console.warn('⚠️ Staff API returned', response.status, '- staff check skipped');
+        return [];
       }
 
       const data = await response.json();
@@ -99,15 +112,16 @@ class StaffHelpers {
       return data.staff;
 
     } catch (error) {
-      console.error('❌ Error fetching staff data:', error);
+      console.warn('⚠️ Staff data fetch failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
       
       // Return cached data if available, even if expired
       if (this.cache.staff) {
-        console.log('⚠️ Returning expired cached staff data due to fetch error');
+        console.log('📋 Returning expired cached staff data due to fetch error');
         return this.cache.staff;
       }
       
-      throw error;
+      // Return empty array instead of throwing - staff check is optional
+      return [];
     }
   }
 

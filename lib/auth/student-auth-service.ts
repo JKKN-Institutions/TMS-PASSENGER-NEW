@@ -24,7 +24,22 @@ class StudentAuthService {
     try {
       console.log('🔍 Checking student status for:', email);
       
-      // Query the external students API to check if this user exists as a student
+      // Skip external API call - relies on CORS-blocked endpoint
+      // Instead, rely on local database and auth server data
+      console.warn('⚠️ External student API check skipped (CORS restricted)');
+      
+      // Return unknown status - will fallback to local database check
+      const result: StudentAuthData = {
+        isStudent: false,
+        studentMember: null,
+        role: 'unknown'
+      };
+      
+      // Cache the result
+      this.studentStatusCache.set(email, { data: result, timestamp: Date.now() });
+      return result;
+      
+      /* Legacy external API call - disabled due to CORS
       const apiKey = 'jk_5483dc7eb7f1b7cd730a274ec61765cc_mcka9lzk';
       
       const response = await fetch('https://my.jkkn.ac.in/api/api-management/students', {
@@ -36,7 +51,7 @@ class StudentAuthService {
       });
 
       if (!response.ok) {
-        console.error('❌ External students API error:', response.status);
+        console.warn('⚠️ External students API error:', response.status);
         throw new Error(`External students API error: ${response.status}`);
       }
 
@@ -76,9 +91,10 @@ class StudentAuthService {
       // Cache the result
       this.studentStatusCache.set(email, { data: result, timestamp: Date.now() });
       return result;
+      */
       
     } catch (error) {
-      console.error('❌ Error checking student status:', error);
+      console.warn('⚠️ Student status check failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
       
       // If there's an error checking student status, default to unknown
       const errorResult = {

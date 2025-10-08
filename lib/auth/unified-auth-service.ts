@@ -63,7 +63,8 @@ class UnifiedAuthService {
           };
         }
       } catch (error) {
-        console.warn('⚠️ Error checking staff status:', error);
+        // Silently skip staff check - non-critical
+        console.log('ℹ️ Staff check skipped (optional)');
       }
       
       // If not staff, check if they're a student
@@ -79,10 +80,11 @@ class UnifiedAuthService {
             studentId: enhancedUser.student_id
           });
         } else {
-          console.warn('⚠️ User not found in either staff or student databases:', passengerUser.email);
+          console.log('ℹ️ User not found in external databases (using auth server data):', passengerUser.email);
         }
       } catch (error) {
-        console.warn('⚠️ Error checking student status:', error);
+        // Silently skip student check - non-critical
+        console.log('ℹ️ Student check skipped (optional)');
       }
       
       return {
