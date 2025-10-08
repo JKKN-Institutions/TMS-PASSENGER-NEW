@@ -109,12 +109,17 @@ function CallbackContent() {
         const isDriver = data.user?.role === 'driver';
         const targetPath = isDriver ? '/driver' : '/dashboard';
         
-        // Redirect to appropriate dashboard
-        console.log('🔄 Redirecting to', targetPath, '...');
+        console.log('🔄 Preparing redirect to', targetPath, '...');
         console.log('✅ ═══════════════════════════════════════════════════════');
         console.log('📍 OAuth Flow Complete!');
         console.log('✅ ═══════════════════════════════════════════════════════\n');
-        router.push(targetPath);
+        
+        // Small delay to ensure cookies are set before redirecting
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Force full page reload to ensure auth state is properly initialized
+        console.log('🔄 Redirecting now...');
+        window.location.href = targetPath;
       } catch (err) {
         console.log('❌ Callback handler error');
         console.error('💥 Error:', err);
