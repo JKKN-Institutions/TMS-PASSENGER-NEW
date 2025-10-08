@@ -78,12 +78,28 @@ function CallbackContent() {
         console.log('✅ Tokens received successfully!');
         console.log('📋 User:', data.user?.email);
 
-        // Save tokens
-        console.log('\n💾 Saving tokens to localStorage...');
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
+        // Save tokens with correct keys that the app expects
+        console.log('\n💾 Saving tokens to localStorage and cookies...');
+        
+        // Calculate expiry times
+        const tokenExpiresAt = Date.now() + ((data.expires_in || 3600) * 1000);
+        const refreshExpiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 days
+        
+        // Store in localStorage
+        localStorage.setItem('tms_access_token', data.access_token);
+        localStorage.setItem('tms_refresh_token', data.refresh_token);
         localStorage.setItem('tms_user', JSON.stringify(data.user));
-        console.log('✅ Tokens saved');
+        localStorage.setItem('tms_token_expires', tokenExpiresAt.toString());
+        localStorage.setItem('tms_refresh_expires', refreshExpiresAt.toString());
+        
+        // Store in cookies for server-side access
+        const isSecure = window.location.protocol === 'https:';
+        const cookieOptions = `path=/; SameSite=Lax${isSecure ? '; Secure' : ''}`;
+        
+        document.cookie = `tms_access_token=${data.access_token}; ${cookieOptions}; max-age=${data.expires_in || 3600}`;
+        document.cookie = `tms_refresh_token=${data.refresh_token}; ${cookieOptions}; max-age=${30 * 24 * 60 * 60}`;
+        
+        console.log('✅ Tokens saved to localStorage and cookies');
 
         // Clear state
         localStorage.removeItem('oauth_state');

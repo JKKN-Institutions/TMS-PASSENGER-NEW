@@ -102,7 +102,17 @@ POST https://auth.jkkn.ai/api/auth/token
   "user": { ... }
 }
 
-// App stores tokens in localStorage
+// App stores tokens in localStorage with correct keys:
+localStorage.setItem('tms_access_token', data.access_token);
+localStorage.setItem('tms_refresh_token', data.refresh_token);
+localStorage.setItem('tms_user', JSON.stringify(data.user));
+localStorage.setItem('tms_token_expires', tokenExpiresAt.toString());
+localStorage.setItem('tms_refresh_expires', refreshExpiresAt.toString());
+
+// Also stores in cookies for server-side access:
+document.cookie = `tms_access_token=${data.access_token}; ...`;
+document.cookie = `tms_refresh_token=${data.refresh_token}; ...`;
+
 // Redirects to /dashboard or /driver based on user role
 ```
 
