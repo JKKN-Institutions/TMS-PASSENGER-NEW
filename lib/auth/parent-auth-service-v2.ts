@@ -41,24 +41,9 @@ class ParentAuthServiceV2 {
   private api: AxiosInstance;
   private refreshPromise: Promise<boolean> | null = null;
 
-  // Multiple authorization endpoints to try
-  private authEndpoints = [
-    '/api/auth/child-app/authorize',
-    '/auth/child-app/consent',
-    '/api/oauth/authorize',
-    '/oauth/authorize'
-  ];
-
-  // Multiple token endpoints to try
-  private tokenEndpoints = [
-    '/api/auth/child-app/token',
-    '/auth/child-app/token',
-    '/api/oauth/token',
-    '/oauth/token'
-  ];
-
   constructor() {
-    const baseURL = process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in';
+    // Use new centralized auth server URL
+    const baseURL = process.env.NEXT_PUBLIC_AUTH_SERVER_URL || 'https://auth.jkkn.ai';
     
     this.api = axios.create({
       baseURL,
@@ -66,7 +51,6 @@ class ParentAuthServiceV2 {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-API-Key': process.env.NEXT_PUBLIC_API_KEY || 'app_e20655605d48ebce_cfa1ffe34268949a',
         'User-Agent': 'TMS-Passenger-App/1.0'
       }
     });
@@ -180,47 +164,43 @@ class ParentAuthServiceV2 {
   }
 
   /**
-   * Get authorization URL with fallback endpoints
+   * Get authorization URL for new centralized auth server
    */
   getAuthorizationUrl(redirectUrl?: string): string {
-    const state = this.generateState();
+    const authServerUrl = process.env.NEXT_PUBLIC_AUTH_SERVER_URL || 'https://auth.jkkn.ai';
     const appId = process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674';
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY || 'app_e20655605d48ebce_cfa1ffe34268949a';
     const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || 'http://localhost:3003/auth/callback';
+    const scope = 'read write profile';
+    const state = Math.random().toString(36).substring(7);
 
-    // Store state and redirect URL in session storage
+    console.log('\n🚀 ═══════════════════════════════════════════════════════');
+    console.log('📍 TMS-PASSENGER: Initiating OAuth Flow');
+    console.log('🚀 ═══════════════════════════════════════════════════════');
+    console.log('📋 Configuration:');
+    console.log('  - Auth Server:', authServerUrl);
+    console.log('  - App ID:', appId);
+    console.log('  - Redirect URI:', redirectUri);
+    console.log('  - Scope:', scope);
+    console.log('  - State:', state);
+
+    // Save state for validation
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('oauth_state', state);
+      localStorage.setItem('oauth_state', state);
+      console.log('💾 State saved to localStorage');
+      
       if (redirectUrl) {
         sessionStorage.setItem('oauth_redirect', redirectUrl);
       }
     }
 
-    // Try the primary endpoint first
-    const primaryEndpoint = this.authEndpoints[0];
-    const authUrl = new URL(primaryEndpoint, this.api.defaults.baseURL);
-    
-    // Add parameters in the order expected by the parent app
-    const params = new URLSearchParams();
-    params.append('response_type', 'code');
-    params.append('app_id', appId);
-    params.append('api_key', apiKey);
-    params.append('redirect_uri', redirectUri);
-    params.append('scope', 'read write profile');
-    params.append('state', state);
+    // Build authorization URL (client_id parameter for new auth server)
+    const authUrl = `${authServerUrl}/api/auth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}`;
 
-    authUrl.search = params.toString();
+    console.log('\n🔗 Redirecting to auth server...');
+    console.log('📍 URL:', authUrl);
+    console.log('═══════════════════════════════════════════════════════\n');
 
-    console.log('🔗 Generated Authorization URL:', {
-      url: authUrl.toString(),
-      endpoint: primaryEndpoint,
-      appId,
-      apiKey: apiKey.substring(0, 10) + '...',
-      redirectUri,
-      state: state.substring(0, 20) + '...'
-    });
-
-    return authUrl.toString();
+    return authUrl;
   }
 
   /**

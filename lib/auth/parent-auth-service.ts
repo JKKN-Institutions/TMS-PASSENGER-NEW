@@ -52,11 +52,10 @@ class ParentAuthService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in',
+      baseURL: process.env.NEXT_PUBLIC_AUTH_SERVER_URL || 'https://auth.jkkn.ai',
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '' // Changed to lowercase
+        'Content-Type': 'application/json'
       }
     });
 
@@ -92,81 +91,43 @@ class ParentAuthService {
   }
 
   /**
-   * Initiate OAuth login flow
+   * Initiate OAuth login flow with new centralized auth server
    */
   login(redirectUrl?: string): void {
-    console.log('🔗 [PARENT AUTH] Step 4: Starting OAuth URL generation');
+    console.log('\n🚀 ═══════════════════════════════════════════════════════');
+    console.log('📍 TMS-PASSENGER: Initiating OAuth Flow');
+    console.log('🚀 ═══════════════════════════════════════════════════════');
     
-    const state = this.generateState();
-    sessionStorage.setItem('oauth_state', state);
-    console.log('🔗 [PARENT AUTH] Step 5: OAuth state generated and stored:', state.substring(0, 10) + '...');
+    const authServerUrl = process.env.NEXT_PUBLIC_AUTH_SERVER_URL || 'https://auth.jkkn.ai';
+    const appId = process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674';
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || 'http://localhost:3003/auth/callback';
+    const scope = 'read write profile';
+    const state = Math.random().toString(36).substring(7);
+
+    console.log('📋 Configuration:');
+    console.log('  - Auth Server:', authServerUrl);
+    console.log('  - App ID:', appId);
+    console.log('  - Redirect URI:', redirectUri);
+    console.log('  - Scope:', scope);
+    console.log('  - State:', state);
+
+    // Save state for validation
+    localStorage.setItem('oauth_state', state);
+    console.log('💾 State saved to localStorage');
 
     if (redirectUrl) {
       sessionStorage.setItem('post_login_redirect', redirectUrl);
-      console.log('🔗 [PARENT AUTH] Step 6: Post-login redirect URL stored:', redirectUrl);
+      console.log('💾 Post-login redirect URL stored:', redirectUrl);
     }
 
-    // Use the child app authorization endpoint
-    const authUrl = new URL(
-      '/api/auth/child-app/authorize',
-      process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in'
-    );
-    
-    console.log('🔗 [PARENT AUTH] Step 7: Building OAuth URL with parameters');
-    
-    // Enhanced parameter configuration for better compatibility
-    const appId = process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674';
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY || 'app_e20655605d48ebce_cfa1ffe34268949a';
-    
-    // Get OAuth role to determine user type
-    const oauthRole = typeof window !== 'undefined' ? sessionStorage.getItem('tms_oauth_role') : null;
-    const userType = oauthRole || 'passenger';
-    
-    // Use unified callback URL for both passenger and driver
-    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || 'http://localhost:3003/auth/callback';
-    
-    console.log('🔗 [PARENT AUTH] Unified callback URL configuration:', {
-      userType,
-      oauthRole,
-      redirectUri,
-      isDriverOAuth: userType === 'driver'
-    });
-    
-    // Add parameters in specific order (some OAuth servers are sensitive to parameter order)
-    authUrl.searchParams.append('response_type', 'code');
-    authUrl.searchParams.append('client_id', appId); // Try both client_id and app_id
-    authUrl.searchParams.append('app_id', appId);
-    authUrl.searchParams.append('redirect_uri', redirectUri);
-    authUrl.searchParams.append('scope', 'read write profile');
-    authUrl.searchParams.append('state', state);
-    authUrl.searchParams.append('user_type', userType); // Add user type parameter
-    authUrl.searchParams.append('oauth_role', userType); // Alternative parameter name
-    authUrl.searchParams.append('api_key', apiKey); // Move api_key to end
+    // Build authorization URL (client_id parameter for new auth server)
+    const authUrl = `${authServerUrl}/api/auth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}`;
 
-    console.log('🔗 [PARENT AUTH] Step 8: OAuth URL generated successfully');
-    console.log('🔗 [PARENT AUTH] Full OAuth URL:', authUrl.toString());
-    console.log('🔗 [PARENT AUTH] OAuth Parameters:', {
-      response_type: 'code',
-      app_id: process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674',
-      api_key: (process.env.NEXT_PUBLIC_API_KEY || 'app_e20655605d48ebce_cfa1ffe34268949a').substring(0, 15) + '...',
-      redirect_uri: redirectUri,
-      scope: 'read write profile',
-      user_type: userType,
-      oauth_role: userType,
-      state: state.substring(0, 10) + '...'
-    });
+    console.log('\n🔗 Redirecting to auth server...');
+    console.log('📍 URL:', authUrl);
+    console.log('═══════════════════════════════════════════════════════\n');
     
-    console.log('🔗 [PARENT AUTH] Environment Variables Check:', {
-      PARENT_APP_URL: process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in',
-      APP_ID: process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674',
-      REDIRECT_URI: redirectUri,
-      API_KEY_SET: !!(process.env.NEXT_PUBLIC_API_KEY)
-    });
-
-    console.log('🔗 [PARENT AUTH] Step 9: Redirecting to parent app OAuth...');
-    console.log('🔗 [PARENT AUTH] Target URL:', authUrl.toString().substring(0, 100) + '...');
-    
-    window.location.href = authUrl.toString();
+    window.location.href = authUrl;
   }
 
   async handleCallback(

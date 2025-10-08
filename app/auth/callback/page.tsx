@@ -2,360 +2,164 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth/auth-context';
-
-// Global flag to prevent concurrent token exchanges
-let globalTokenExchangeInProgress = false;
 
 function CallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { handleAuthCallback, user, isAuthenticated } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  const [processing, setProcessing] = useState(true);
-  const [callbackProcessed, setCallbackProcessed] = useState(false);
 
   useEffect(() => {
-    // Prevent multiple callback processing attempts
-    if (callbackProcessed) {
-      return;
-    }
-
     const handleCallback = async () => {
+      console.log('\n🔄 ═══════════════════════════════════════════════════════');
+      console.log('📍 TMS-PASSENGER: Callback Handler');
+      console.log('🔄 ═══════════════════════════════════════════════════════');
+
+      const code = searchParams.get('code');
+      const state = searchParams.get('state');
+      const error = searchParams.get('error');
+      const errorDescription = searchParams.get('error_description');
+      const savedState = localStorage.getItem('oauth_state');
+
+      console.log('📋 Callback parameters:', {
+        code: code ? code.substring(0, 8) + '...' : 'None',
+        state: state,
+        error: error,
+        errorDescription: errorDescription
+      });
+      console.log('📋 Saved state from localStorage:', savedState);
+
+      // Check for OAuth errors from auth server
+      if (error) {
+        const errorMessage = errorDescription || 'Authorization failed';
+        console.log('❌ OAuth error received from auth server');
+        console.error('💥 Error:', error, errorDescription);
+        setError(errorMessage);
+        return;
+      }
+
+      // Validate state
+      console.log('\n🔍 Validating state parameter...');
+      if (state !== savedState) {
+        console.log('❌ State validation failed - possible CSRF attack!');
+        console.log('  Expected:', savedState);
+        console.log('  Received:', state);
+        setError('Invalid state parameter - possible CSRF attack');
+        return;
+      }
+      console.log('✅ State validated');
+
+      if (!code) {
+        console.log('❌ No authorization code received');
+        setError('No authorization code received');
+        return;
+      }
+
+      console.log('✅ Authorization code received');
+
       try {
-        console.log('🔄 [CALLBACK] Step 10: OAuth callback page loaded');
-        console.log('🔄 [CALLBACK] Current URL:', typeof window !== 'undefined' ? window.location.href : 'unknown');
-        setCallbackProcessed(true);
-        
-        // Import debug service and log that callback page was reached
-        const { oauthDebugService } = await import('@/lib/auth/oauth-debug-service');
-        oauthDebugService.logStep(5, 'Consent Granted', 'completed', {
-          callbackPageReached: true,
-          timestamp: new Date().toISOString()
-        });
-        
-        // Wait a moment for auth context to initialize
-        await new Promise(resolve => setTimeout(resolve, 100));
-      
-        // If user is already authenticated, redirect immediately
-        if (isAuthenticated && user) {
-          console.log('✅ User already authenticated, redirecting...', {
-            userEmail: user.email,
-            userId: user.id,
-            studentId: (user as any).studentId,
-            rollNumber: (user as any).rollNumber
-          });
-          setProcessing(false);
-          
-          // Check if this was a driver OAuth attempt
-          const isDriverOAuth = sessionStorage.getItem('tms_oauth_role') === 'driver';
-          console.log('🔄 OAuth callback success - determining redirect:', {
-            isDriverOAuth,
-            userType: isDriverOAuth ? 'driver' : 'passenger',
-            targetPath: isDriverOAuth ? '/driver' : '/dashboard'
-          });
-          
-          if (isDriverOAuth) {
-            sessionStorage.removeItem('tms_oauth_role');
-            console.log('✅ Driver OAuth completed - redirecting to driver dashboard');
-          }
-          
-          // Check for post-login redirect
-          const redirectUrl = sessionStorage.getItem('post_login_redirect');
-          if (redirectUrl) {
-            sessionStorage.removeItem('post_login_redirect');
-            console.log('🔄 Using stored redirect URL:', redirectUrl);
-            // Use window.location.href to prevent React Router issues
-            window.location.href = redirectUrl;
-          } else {
-            const targetPath = isDriverOAuth ? '/driver' : '/dashboard';
-            console.log('🔄 Redirecting to default path:', targetPath);
-            // Use window.location.href to prevent React Router issues
-            window.location.href = targetPath;
-          }
-          return;
-        }
-
-        // Check again after a longer delay to ensure auth context is fully loaded
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        if (isAuthenticated && user) {
-          console.log('✅ User authenticated after delay, redirecting...', {
-            userEmail: user.email,
-            studentId: (user as any).studentId,
-            rollNumber: (user as any).rollNumber
-          });
-          setProcessing(false);
-          
-          // Check if this was a driver OAuth attempt
-          const isDriverOAuth = sessionStorage.getItem('tms_oauth_role') === 'driver';
-          console.log('🔄 OAuth callback success - determining redirect:', {
-            isDriverOAuth,
-            userType: isDriverOAuth ? 'driver' : 'passenger',
-            targetPath: isDriverOAuth ? '/driver' : '/dashboard'
-          });
-          
-          if (isDriverOAuth) {
-            sessionStorage.removeItem('tms_oauth_role');
-            console.log('✅ Driver OAuth completed - redirecting to driver dashboard');
-          }
-          
-          // Check for post-login redirect
-          const redirectUrl = sessionStorage.getItem('post_login_redirect');
-          if (redirectUrl) {
-            sessionStorage.removeItem('post_login_redirect');
-            console.log('🔄 Using stored redirect URL:', redirectUrl);
-            // Use window.location.href to prevent React Router issues
-            window.location.href = redirectUrl;
-          } else {
-            const targetPath = isDriverOAuth ? '/driver' : '/dashboard';
-            console.log('🔄 Redirecting to default path:', targetPath);
-            // Use window.location.href to prevent React Router issues
-            window.location.href = targetPath;
-          }
-          return;
-        }
-
-        const code = searchParams?.get('code');
-        const state = searchParams?.get('state');
-        const error = searchParams?.get('error');
-        const errorDescription = searchParams?.get('error_description');
-        const token = searchParams?.get('token'); // Check if token is passed directly
-        const access_token = searchParams?.get('access_token'); // Alternative token parameter
-        const recovery = searchParams?.get('recovery'); // Recovery flag for auto-workaround
-
-        const allParamsObject = Object.fromEntries(searchParams?.entries() || []);
-        console.log('🔄 [CALLBACK] Step 11: Parsing URL parameters');
-        console.log('🔄 [CALLBACK] Parameters received:', {
-          hasCode: !!code,
-          hasState: !!state,
-          hasError: !!error,
-          hasToken: !!token,
-          hasAccessToken: !!access_token,
-          hasRecovery: !!recovery,
-          codeValue: code ? `${code.substring(0, 10)}...` : 'none',
-          stateValue: state ? `${state.substring(0, 10)}...` : 'none',
-          errorValue: error || 'none',
-          recoveryValue: recovery || 'none',
-          allParams: allParamsObject,
-          isDriverOAuth: sessionStorage.getItem('tms_oauth_role') === 'driver'
+        // Exchange code for tokens
+        console.log('\n🔄 Exchanging code for tokens...');
+        const response = await fetch('/api/auth/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
         });
 
-        // Check if this is a driver OAuth attempt
-        const isDriverOAuth = sessionStorage.getItem('tms_oauth_role') === 'driver';
-        if (isDriverOAuth) {
-          console.log('🚗 [CALLBACK] Processing driver OAuth callback');
-        } else {
-          console.log('👤 [CALLBACK] Processing passenger OAuth callback');
+        console.log('📥 Token response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.log('❌ Token exchange failed');
+          console.error('💥 Error:', errorData);
+          throw new Error(errorData.error_description || 'Token exchange failed');
         }
 
-        // Handle OAuth errors
-        if (error) {
-          console.error('❌ OAuth error received:', { error, errorDescription });
-          setError(`OAuth error: ${error}${errorDescription ? ` - ${errorDescription}` : ''}`);
-          setProcessing(false);
-          return;
-        }
+        const data = await response.json();
+        console.log('✅ Tokens received successfully!');
+        console.log('📋 User:', data.user?.email);
 
-        // Handle direct token (if provided)
-        if (token || access_token) {
-          console.log('🔄 [CALLBACK] Direct token provided, processing...');
-          const actualToken = token || access_token;
-          
-          if (globalTokenExchangeInProgress) {
-            console.log('⚠️ Token exchange already in progress, waiting...');
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-          
-          globalTokenExchangeInProgress = true;
-          
-          try {
-            const success = await handleAuthCallback(actualToken!, undefined);
-            
-            if (success) {
-              console.log('✅ Direct token authentication successful');
-              
-              // Check if this was a driver OAuth attempt
-              const isDriverOAuth = sessionStorage.getItem('tms_oauth_role') === 'driver';
-              console.log('🔄 OAuth callback success - determining redirect:', {
-                isDriverOAuth,
-                userType: isDriverOAuth ? 'driver' : 'passenger',
-                targetPath: isDriverOAuth ? '/driver' : '/dashboard'
-              });
-              
-              if (isDriverOAuth) {
-                sessionStorage.removeItem('tms_oauth_role');
-                console.log('✅ Driver OAuth completed - redirecting to driver dashboard');
-              }
-              
-              // Check for post-login redirect
-              const redirectUrl = sessionStorage.getItem('post_login_redirect');
-              if (redirectUrl) {
-                sessionStorage.removeItem('post_login_redirect');
-                console.log('🔄 Using stored redirect URL:', redirectUrl);
-                // Use window.location.href to prevent React Router issues
-                window.location.href = redirectUrl;
-              } else {
-                const targetPath = isDriverOAuth ? '/driver' : '/dashboard';
-                console.log('🔄 Redirecting to default path:', targetPath);
-                // Use window.location.href to prevent React Router issues
-                window.location.href = targetPath;
-              }
-            } else {
-              console.error('❌ Direct token authentication failed');
-              setError('Authentication failed');
-              setProcessing(false);
-            }
-          } finally {
-            globalTokenExchangeInProgress = false;
-          }
-          return;
-        }
+        // Save tokens
+        console.log('\n💾 Saving tokens to localStorage...');
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        localStorage.setItem('tms_user', JSON.stringify(data.user));
+        console.log('✅ Tokens saved');
 
-        // Handle OAuth code exchange
-        if (!code) {
-          console.error('❌ No authorization code received');
-          setError('No authorization code received');
-          setProcessing(false);
-          return;
-        }
+        // Clear state
+        localStorage.removeItem('oauth_state');
+        console.log('🧹 OAuth state cleared');
 
-        if (globalTokenExchangeInProgress) {
-          console.log('⚠️ Token exchange already in progress, waiting...');
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
+        // Determine redirect path based on user role
+        const isDriver = data.user?.role === 'driver';
+        const targetPath = isDriver ? '/driver' : '/dashboard';
         
-        globalTokenExchangeInProgress = true;
-
-        try {
-          console.log('🔄 [CALLBACK] Step 12: Starting token exchange');
-          
-          // Use the unified token exchange endpoint for both user types
-          const tokenExchangeUrl = '/api/auth/token';
-          
-          console.log('🔄 [CALLBACK] Using token exchange URL:', tokenExchangeUrl);
-          
-          const response = await fetch(tokenExchangeUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              code,
-              state,
-              recovery
-            }),
-          });
-
-          console.log('🔄 [CALLBACK] Step 13: Token exchange response received', {
-            status: response.status,
-            statusText: response.statusText,
-            ok: response.ok
-          });
-
-          if (!response.ok) {
-            const errorData = await response.text();
-            console.error('❌ Token exchange failed:', {
-              status: response.status,
-              statusText: response.statusText,
-              error: errorData
-            });
-            throw new Error(`Token exchange failed: ${response.status} ${response.statusText}`);
-          }
-
-          const tokenData = await response.json();
-          console.log('🔄 [CALLBACK] Step 14: Token data received successfully');
-          console.log('🔄 [CALLBACK] Token data keys:', Object.keys(tokenData));
-
-          const success = await handleAuthCallback(
-            tokenData.access_token,
-            tokenData.refresh_token
-          );
-
-          if (success) {
-            console.log('✅ OAuth callback success');
-            
-            // Check if this was a driver OAuth attempt
-            const isDriverOAuth = sessionStorage.getItem('tms_oauth_role') === 'driver';
-            console.log('🔄 OAuth callback success - determining redirect:', {
-              isDriverOAuth,
-              userType: isDriverOAuth ? 'driver' : 'passenger',
-              targetPath: isDriverOAuth ? '/driver' : '/dashboard'
-            });
-            
-            if (isDriverOAuth) {
-              sessionStorage.removeItem('tms_oauth_role');
-              console.log('✅ Driver OAuth completed - redirecting to driver dashboard');
-            }
-            
-            // Check for post-login redirect
-            const redirectUrl = sessionStorage.getItem('post_login_redirect');
-            if (redirectUrl) {
-              sessionStorage.removeItem('post_login_redirect');
-              console.log('🔄 Using stored redirect URL:', redirectUrl);
-              // Use window.location.href to prevent React Router issues
-              window.location.href = redirectUrl;
-            } else {
-              const targetPath = isDriverOAuth ? '/driver' : '/dashboard';
-              console.log('🔄 Redirecting to default path:', targetPath);
-              // Use window.location.href to prevent React Router issues
-              window.location.href = targetPath;
-            }
-          } else {
-            console.error('❌ Authentication callback failed');
-            setError('Authentication failed');
-            setProcessing(false);
-          }
-        } finally {
-          // Always clear the global flag when done
-          globalTokenExchangeInProgress = false;
-        }
+        // Redirect to appropriate dashboard
+        console.log('🔄 Redirecting to', targetPath, '...');
+        console.log('✅ ═══════════════════════════════════════════════════════');
+        console.log('📍 OAuth Flow Complete!');
+        console.log('✅ ═══════════════════════════════════════════════════════\n');
+        router.push(targetPath);
       } catch (err) {
-        console.error('Callback error:', err);
+        console.log('❌ Callback handler error');
+        console.error('💥 Error:', err);
         setError(err instanceof Error ? err.message : 'Authentication failed');
-        setProcessing(false);
-      } finally {
-        // Ensure flag is cleared even on outer catch
-        globalTokenExchangeInProgress = false;
       }
     };
 
     handleCallback();
-  }, [searchParams, router, handleAuthCallback, callbackProcessed, isAuthenticated, user]);
-
-  if (processing) {
-    return (
-      <div className='flex flex-col items-center justify-center min-h-screen bg-background'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4'></div>
-        <p className='text-muted-foreground'>Processing authentication...</p>
-        <p className='text-sm text-muted-foreground mt-2'>
-          Please wait, you will be redirected shortly.
-        </p>
-      </div>
-    );
-  }
+  }, [searchParams, router]);
 
   if (error) {
     return (
-      <div className='flex flex-col items-center justify-center min-h-screen bg-background'>
-        <div className='text-center max-w-md mx-auto p-6'>
-          <div className='text-red-500 text-6xl mb-4'>❌</div>
-          <h1 className='text-2xl font-bold text-foreground mb-4'>Authentication Error</h1>
-          <p className='text-muted-foreground mb-6'>{error}</p>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-red-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="text-center max-w-md bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border border-red-200 dark:border-red-800">
+          <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+            Authentication Error
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <button
+            onClick={() => router.push('/')}
+            className="w-full bg-gradient-to-r from-green-500 to-yellow-600 hover:from-green-600 hover:to-yellow-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+          >
+            Return to Home
+          </button>
         </div>
       </div>
     );
   }
 
-  return null;
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      <div className="text-center max-w-md bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+        <div className="w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+          Authenticating...
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Please wait while we complete your login.
+        </p>
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse delay-75"></div>
+          <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse delay-150"></div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function CallbackPage() {
   return (
     <Suspense fallback={
-      <div className='flex flex-col items-center justify-center min-h-screen bg-background'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4'></div>
-        <p className='text-muted-foreground'>Loading...</p>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     }>
       <CallbackContent />

@@ -1,144 +1,106 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// In-memory cache to prevent duplicate token exchanges for the same code
-const activeTokenExchanges = new Map<string, Promise<any>>();
+export async function POST(req: NextRequest) {
+  console.log('\n🔄 ═══════════════════════════════════════════════════════');
+  console.log('📍 TMS-PASSENGER: Token Exchange Request');
+  console.log('🔄 ═══════════════════════════════════════════════════════');
 
-export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { code, state } = body;
+    const { code } = await req.json();
 
-    console.log('Token exchange request:', { 
-      hasCode: !!code, 
-      hasState: !!state,
-      codeLength: code?.length || 0 
-    });
+    console.log('📋 Received authorization code:', code?.substring(0, 8) + '...');
 
     if (!code) {
+      console.log('❌ No authorization code provided');
       return NextResponse.json(
-        { error: 'Missing authorization code' },
+        { error: 'invalid_request', error_description: 'Authorization code is required' },
         { status: 400 }
       );
     }
 
-    // Check if this code is already being processed
-    if (activeTokenExchanges.has(code)) {
-      console.log('⏳ Code already being processed, waiting for existing request...');
-      try {
-        // Wait for the existing request to complete and get the token data
-        const tokenData = await activeTokenExchanges.get(code)!;
-        console.log('✅ Using cached token data for duplicate request');
-        
-        // Create a fresh response with the cached data
-        return NextResponse.json({
-          access_token: tokenData.access_token,
-          refresh_token: tokenData.refresh_token,
-          token_type: tokenData.token_type || 'Bearer',
-          expires_in: tokenData.expires_in || 3600,
-          user: tokenData.user
-        });
-      } catch (error) {
-        // If the existing request failed, we'll try again below
-        console.log('⚠️ Existing request failed, proceeding with new attempt');
-        activeTokenExchanges.delete(code);
-      }
+    const authServerUrl = process.env.NEXT_PUBLIC_AUTH_SERVER_URL;
+    const appId = process.env.NEXT_PUBLIC_APP_ID;
+    const apiKey = process.env.API_KEY;
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
+
+    console.log('🔍 Environment configuration:');
+    console.log('  - Auth Server URL:', authServerUrl);
+    console.log('  - App ID:', appId);
+    console.log('  - Redirect URI:', redirectUri);
+    console.log('  - API Key:', apiKey ? '***' + apiKey.substring(apiKey.length - 4) : 'NOT SET');
+
+    // Validate environment variables
+    if (!authServerUrl || !appId || !apiKey || !redirectUri) {
+      console.error('Missing environment variables:', {
+        authServerUrl: !!authServerUrl,
+        appId: !!appId,
+        apiKey: !!apiKey,
+        redirectUri: !!redirectUri
+      });
+      return NextResponse.json(
+        { error: 'server_error', error_description: 'Server configuration error' },
+        { status: 500 }
+      );
     }
 
-    // Create and cache the token exchange promise
-    console.log('🔄 Starting new token exchange with parent app...');
-    
-    const tokenExchangePromise = (async () => {
-      try {
-        const tokenResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in'}/api/auth/child-app/token`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-API-Key': process.env.NEXT_PUBLIC_API_KEY || 'app_e20655605d48ebce_cfa1ffe34268949a'
-            },
-            body: JSON.stringify({
-              grant_type: 'authorization_code',
-              code,
-              app_id: process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674',
-              redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI || 'http://localhost:3003/auth/callback',
-              state
-            })
-          }
-        );
-
-        const responseText = await tokenResponse.text();
-        
-        if (!tokenResponse.ok) {
-          console.error('Token exchange failed:', {
-            status: tokenResponse.status,
-            statusText: tokenResponse.statusText,
-            response: responseText
-          });
-
-          // Throw error to be caught by outer catch block
-          throw new Error(`Token exchange failed: ${responseText} (${tokenResponse.status})`);
-        }
-
-        let tokenData;
-        try {
-          tokenData = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('Failed to parse token response:', responseText);
-          throw new Error('Invalid response format from parent app');
-        }
-
-        console.log('Token exchange successful:', {
-          hasAccessToken: !!tokenData.access_token,
-          hasUser: !!tokenData.user,
-          userEmail: tokenData.user?.email
-        });
-
-        // Return the raw token data for caching
-        return {
-          access_token: tokenData.access_token,
-          refresh_token: tokenData.refresh_token,
-          token_type: tokenData.token_type || 'Bearer',
-          expires_in: tokenData.expires_in || 3600,
-          user: tokenData.user
-        };
-
-      } catch (error) {
-        console.error('Error in token exchange promise:', error);
-        throw error; // Re-throw to be caught by outer try-catch
-      } finally {
-        // Always clean up the cache entry when done
-        activeTokenExchanges.delete(code);
-      }
-    })();
-
-    // Cache the promise before starting execution
-    activeTokenExchanges.set(code, tokenExchangePromise);
-
-    // Get the token data and create a fresh response
-    const tokenData = await tokenExchangePromise;
-    return NextResponse.json({
-      access_token: tokenData.access_token,
-      refresh_token: tokenData.refresh_token,
-      token_type: tokenData.token_type || 'Bearer',
-      expires_in: tokenData.expires_in || 3600,
-      user: tokenData.user
+    // Exchange code for tokens
+    console.log('\n🔄 Sending token exchange request to auth server...');
+    console.log('📤 Request:', {
+      endpoint: `${authServerUrl}/api/auth/token`,
+      grant_type: 'authorization_code',
+      app_id: appId,
+      code: code.substring(0, 8) + '...',
+      redirect_uri: redirectUri
     });
 
+    const response = await fetch(`${authServerUrl}/api/auth/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'authorization_code',
+        code,
+        app_id: appId,
+        api_key: apiKey,
+        redirect_uri: redirectUri
+      })
+    });
+
+    console.log('📥 Response status:', response.status, response.statusText);
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.log('❌ Token exchange failed!');
+      console.error('💥 Error details:', error);
+      return NextResponse.json(error, { status: response.status });
+    }
+
+    const data = await response.json();
+    console.log('✅ Token exchange successful!');
+    console.log('👤 User:', data.user?.email);
+    console.log('🎫 Token Type:', data.token_type);
+    console.log('⏱️  Expires In:', data.expires_in + 's');
+    console.log('📋 Scope:', data.scope);
+    console.log('\n✅ ═══════════════════════════════════════════════════════');
+    console.log('📍 TMS-PASSENGER: Authentication Complete');
+    console.log('✅ ═══════════════════════════════════════════════════════\n');
+
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Token exchange error:', error);
-    
-    // Clean up cache entry if it was created
-    if (code) {
-      activeTokenExchanges.delete(code);
-    }
-    
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      {
+        error: 'server_error',
+        error_description: error instanceof Error ? error.message : 'Token exchange failed'
       },
       { status: 500 }
     );
   }
+}
+
+// Only allow POST requests
+export async function GET() {
+  return NextResponse.json(
+    { error: 'method_not_allowed', error_description: 'Use POST method' },
+    { status: 405 }
+  );
 }
