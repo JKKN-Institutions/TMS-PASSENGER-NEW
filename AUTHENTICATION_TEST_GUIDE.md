@@ -374,3 +374,4 @@ Check AuthContext state:
 7. ✅ Test on different browsers
 8. ✅ Test on production environment
 
+

@@ -735,34 +735,60 @@ export function AuthProvider({
           allUserData: authUser
         });
 
-        // For the specific user arthanareswaran22@jkkn.ac.in, allow access regardless of role
-        // This is a temporary fix while we determine the correct role from parent app
-        const isTargetDriverUser = authUser.email === 'arthanareswaran22@jkkn.ac.in';
+        // Check if user exists in local drivers table
+        let hasDriverRole = false;
+        let localDriverData = null;
         
-        // Validate that the user has driver role or is the target user
-        const hasDriverRole = 
-          isTargetDriverUser || // Allow specific user for testing
-          authUser.role === 'driver' || 
-          authUser.role === 'transport_staff' ||
-          authUser.role === 'staff' ||
-          authUser.role === 'employee' ||
-          authUser.role === 'transport_employee' ||
-          authUser.role === 'transport' ||
-          authUser.role === 'admin' || // Add admin role
-          authUser.role === 'faculty' || // Add faculty role
-          authUser.role === 'teacher' || // Add teacher role
-          (authUser.permissions && authUser.permissions.transport_access) ||
-          (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('driver')) ||
-          (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('transport')) ||
-          (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('admin')) ||
-          (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('faculty'));
+        try {
+          console.log('🔍 [AUTH CONTEXT] Checking local drivers table for:', authUser.email);
+          const driverCheckResponse = await fetch(`/api/check-driver?email=${encodeURIComponent(authUser.email)}`);
+          if (driverCheckResponse.ok) {
+            const driverCheckData = await driverCheckResponse.json();
+            hasDriverRole = driverCheckData.isDriver && driverCheckData.isActive;
+            localDriverData = driverCheckData.driver;
+            
+            console.log('✅ [AUTH CONTEXT] Local driver check result:', {
+              isDriver: driverCheckData.isDriver,
+              isActive: driverCheckData.isActive,
+              hasDriverRole,
+              driverName: localDriverData?.name
+            });
+          }
+        } catch (error) {
+          console.warn('⚠️ [AUTH CONTEXT] Failed to check local drivers table:', error);
+        }
+        
+        // If not found in local drivers table, check parent app role
+        if (!hasDriverRole) {
+          hasDriverRole = 
+            authUser.role === 'driver' || 
+            authUser.role === 'transport_staff' ||
+            authUser.role === 'staff' ||
+            authUser.role === 'employee' ||
+            authUser.role === 'transport_employee' ||
+            authUser.role === 'transport' ||
+            authUser.role === 'admin' ||
+            authUser.role === 'faculty' ||
+            authUser.role === 'teacher' ||
+            (authUser.permissions && authUser.permissions.transport_access) ||
+            (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('driver')) ||
+            (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('transport')) ||
+            (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('admin')) ||
+            (typeof authUser.role === 'string' && authUser.role.toLowerCase().includes('faculty'));
+          
+          console.log('🔍 [AUTH CONTEXT] Parent app role check result:', {
+            hasDriverRole,
+            role: authUser.role
+          });
+        }
 
         if (!hasDriverRole) {
           console.error('❌ User does not have driver role - showing all details for debugging:', {
             email: authUser.email,
             role: authUser.role,
             roleType: typeof authUser.role,
-            isTargetUser: isTargetDriverUser,
+            checkedLocalDriversTable: true,
+            localDriverFound: !!localDriverData,
             checkedRoles: ['driver', 'transport_staff', 'staff', 'employee', 'transport_employee', 'transport', 'admin', 'faculty', 'teacher'],
             permissions: authUser.permissions,
             fullUserData: JSON.stringify(authUser, null, 2)
@@ -770,28 +796,27 @@ export function AuthProvider({
           
           oauthDebugService.logStep(9, 'Role Validation', 'failed', {
             userRole: authUser.role,
-            isTargetUser: isTargetDriverUser,
+            checkedLocalDriversTable: true,
+            localDriverFound: !!localDriverData,
             checkedRoles: ['driver', 'transport_staff', 'staff', 'employee', 'transport_employee', 'transport', 'admin', 'faculty', 'teacher'],
             permissions: authUser.permissions
-          }, `User role "${authUser.role}" does not have driver privileges`);
+          }, `User role "${authUser.role}" does not have driver privileges and was not found in local drivers table`);
           
-          oauthDebugService.endSession('failure', `Access denied: User role "${authUser.role}" not authorized for driver access`);
-          setError(`Access denied: Only users with driver privileges can access the driver dashboard. Current role: "${authUser.role}". Contact admin if you should have driver access.`);
+          oauthDebugService.endSession('failure', `Access denied: User not authorized for driver access`);
+          setError(`Access denied: Only registered drivers can access the driver dashboard. Contact admin if you should have driver access.`);
           return false;
-        }
-
-        if (isTargetDriverUser) {
-          console.log('✅ Target driver user detected - allowing access:', authUser.email);
         }
 
         console.log('✅ Driver role validated for OAuth user:', {
           email: authUser.email,
-          role: authUser.role
+          role: authUser.role,
+          validatedViaLocalDatabase: !!localDriverData
         });
 
         oauthDebugService.logStep(9, 'Role Validation', 'completed', {
           userRole: authUser.role,
-          hasDriverRole: true
+          hasDriverRole: true,
+          validatedViaLocalDatabase: !!localDriverData
         });
 
         oauthDebugService.logStep(10, 'Session Created', 'in-progress', {
@@ -799,22 +824,28 @@ export function AuthProvider({
           userEmail: authUser.email
         });
 
-        // Create driver session for OAuth user
+        // Create driver session for OAuth user using local driver data if available
+        const driverId = localDriverData?.id || authUser.id;
+        const driverName = localDriverData?.name || authUser.full_name || 'Driver';
+        const driverPhone = localDriverData?.phone || authUser.phone_number;
+        
         const driverAuthData = {
           user: {
-            id: authUser.id,
+            id: driverId,
             email: authUser.email,
-            driver_name: authUser.full_name || 'Driver',
-            phone: authUser.phone_number,
+            driver_name: driverName,
+            phone: driverPhone,
             rating: 0,
-            role: 'driver' as const
+            role: 'driver' as const,
+            assigned_route_id: localDriverData?.assigned_route_id
           },
           driver: {
-            id: authUser.id,
-            name: authUser.full_name,
+            id: driverId,
+            name: driverName,
             email: authUser.email,
-            phone: authUser.phone_number,
-            rating: 0
+            phone: driverPhone,
+            rating: 0,
+            assigned_route_id: localDriverData?.assigned_route_id
           },
           session: {
             access_token: token,
@@ -822,6 +853,13 @@ export function AuthProvider({
             expires_at: Date.now() + (24 * 60 * 60 * 1000)
           }
         };
+
+        console.log('💾 [AUTH CONTEXT] Creating driver session with data:', {
+          driverId,
+          driverName,
+          email: authUser.email,
+          usedLocalData: !!localDriverData
+        });
 
         // Store driver auth data
         driverAuthService.storeAuthData(driverAuthData);
