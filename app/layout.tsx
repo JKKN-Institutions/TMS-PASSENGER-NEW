@@ -42,14 +42,14 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased h-full bg-gray-50 overflow-x-hidden`}
+        className={`${inter.variable} font-sans antialiased h-full overflow-x-hidden`}
       >
         <AuthProvider
           autoValidate={true}
           autoRefresh={true}
           refreshInterval={10 * 60 * 1000} // 10 minutes
         >
-          <ThemeProvider defaultTheme="system" storageKey="tms-passenger-theme">
+          <ThemeProvider defaultTheme="light" storageKey="tms-passenger-theme">
             <AutoLoginWrapper>
               <div id="root" className="h-full overflow-x-hidden">
                 {children}
