@@ -28,7 +28,39 @@ Implemented a **local driver verification system** that checks the TMS database'
 
 ### Changes Made
 
-#### 1. Updated OAuth Callback (`TMS-PASSENGER/app/auth/callback/page.tsx`)
+#### 1. **CRITICAL FIX**: Enhanced Unified Auth Service Auto-Login (`TMS-PASSENGER/lib/auth/unified-auth-service.ts`)
+**Lines 477-538**: Added automatic driver detection and session conversion during auto-login
+```typescript
+// When a valid passenger session is found, check if user is actually a driver
+if (passengerUser.email) {
+  const driverCheckResponse = await fetch(`/api/check-driver?email=${encodeURIComponent(passengerUser.email)}`);
+  if (driverCheckResponse.ok) {
+    const driverCheckData = await driverCheckResponse.json();
+    if (driverCheckData.isDriver && driverCheckData.isActive) {
+      // User is a driver! Convert passenger session to driver session
+      // 1. Get current OAuth tokens from passenger session
+      // 2. Clear passenger session
+      // 3. Create driver session with local driver data
+      // 4. Return as authenticated driver
+      
+      driverAuthService.storeAuthData(driverAuthData);
+      return {
+        user: driverAuthData.user,
+        session: driverAuthData.session,
+        isAuthenticated: true,
+        userType: 'driver'
+      };
+    }
+  }
+}
+```
+
+**Impact**: This is the MOST IMPORTANT fix. It ensures that even if a user has a cached passenger session, the system will:
+- Check the local drivers table on every page load
+- Automatically convert their session to a driver session if they're found in drivers table
+- Redirect them to `/driver` dashboard instead of `/dashboard`
+
+#### 2. Updated OAuth Callback (`TMS-PASSENGER/app/auth/callback/page.tsx`)
 **Lines 108-133**: Added logic to check the local drivers table after OAuth token exchange
 ```typescript
 // First check if role from parent app indicates driver
@@ -126,6 +158,36 @@ const driverAuthData = {
 - ✅ Maintains backward compatibility with existing driver role checks
 
 ## Testing
+
+### For Users with Existing Passenger Session (Your Case)
+
+If you have an **existing passenger session** cached in localStorage:
+
+**Option 1: Simply Refresh the Page** (Recommended)
+1. Just refresh the page (F5 or Ctrl+R)
+2. The system will automatically detect you're a driver
+3. It will convert your session from passenger → driver
+4. You'll be redirected to `/driver` dashboard
+5. **Expected logs in console**:
+   ```
+   🔍 Unified auto-login: Checking if passenger is actually a driver: ramachjandran16@jkkn.ac.in
+   🚨 Unified auto-login: User is actually a DRIVER! Converting passenger session to driver session.
+   🚨 Driver data: {id: '...', name: 'C.RAMACHJANDRAN', email: '...', ...}
+   💾 Unified auto-login: Storing driver session data
+   ```
+
+**Option 2: Clear Browser Data and Re-Login**
+1. Open browser DevTools (F12)
+2. Go to Application tab → Storage → Clear site data
+3. Refresh the page
+4. You'll be logged out
+5. Go to `/login`
+6. Select "Driver" role
+7. Click "Sign in with MYJKKN"
+8. Complete OAuth flow
+9. **Expected**: Redirect to `/driver` dashboard
+
+### For Fresh Login (New Session)
 To test this fix with `ramachjandran16@jkkn.ac.in`:
 1. Go to `/login` in TMS-PASSENGER app
 2. Select "Driver" role
