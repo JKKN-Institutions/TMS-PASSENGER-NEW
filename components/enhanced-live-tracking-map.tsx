@@ -207,8 +207,14 @@ export default function EnhancedLiveTrackingMap({
       routeLineRef.current = null;
     }
 
-    // Create route line with all stops
+    // Create route line with all stops (filter out stops with invalid coordinates)
     const routeCoordinates: [number, number][] = stops
+      .filter(stop => 
+        stop.latitude != null && 
+        stop.longitude != null && 
+        !isNaN(stop.latitude) && 
+        !isNaN(stop.longitude)
+      )
       .sort((a, b) => a.sequence_order - b.sequence_order)
       .map(stop => [stop.latitude, stop.longitude]);
 
@@ -239,95 +245,102 @@ export default function EnhancedLiveTrackingMap({
       animateDash();
     }
 
-    // Add stop markers
-    stops.forEach((stop, index) => {
-      const isPassed = index < currentStopIndex;
-      const isCurrent = index === currentStopIndex;
-      const isUpcoming = index > currentStopIndex;
+    // Add stop markers (only for stops with valid coordinates)
+    stops
+      .filter(stop => 
+        stop.latitude != null && 
+        stop.longitude != null && 
+        !isNaN(stop.latitude) && 
+        !isNaN(stop.longitude)
+      )
+      .forEach((stop, index) => {
+        const isPassed = index < currentStopIndex;
+        const isCurrent = index === currentStopIndex;
+        const isUpcoming = index > currentStopIndex;
 
-      const stopIcon = L.divIcon({
-        className: 'custom-stop-marker',
-        html: `
-          <div style="position: relative;">
-            <div style="
-              background: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#e5e7eb'};
-              color: ${isPassed || isCurrent ? 'white' : '#6b7280'};
-              border-radius: 50%;
-              width: ${isCurrent ? '40px' : '32px'};
-              height: ${isCurrent ? '40px' : '32px'};
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 700;
-              font-size: ${isCurrent ? '16px' : '14px'};
-              border: 3px solid white;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-              transition: all 0.3s ease;
-              ${isCurrent ? 'animation: pulse 2s infinite;' : ''}
-            ">
-              ${isPassed ? '✓' : index + 1}
+        const stopIcon = L.divIcon({
+          className: 'custom-stop-marker',
+          html: `
+            <div style="position: relative;">
+              <div style="
+                background: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#e5e7eb'};
+                color: ${isPassed || isCurrent ? 'white' : '#6b7280'};
+                border-radius: 50%;
+                width: ${isCurrent ? '40px' : '32px'};
+                height: ${isCurrent ? '40px' : '32px'};
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: ${isCurrent ? '16px' : '14px'};
+                border: 3px solid white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+                ${isCurrent ? 'animation: pulse 2s infinite;' : ''}
+              ">
+                ${isPassed ? '✓' : index + 1}
+              </div>
+              <div style="
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: 8px;
+                background: white;
+                padding: 6px 10px;
+                border-radius: 8px;
+                font-size: 11px;
+                font-weight: 600;
+                color: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#6b7280'};
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                white-space: nowrap;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              ">
+                ${stop.stop_name}
+              </div>
             </div>
+          `,
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
+          popupAnchor: [0, -25]
+        });
+
+        const marker = L.marker([stop.latitude, stop.longitude], {
+          icon: stopIcon,
+          zIndexOffset: isPassed ? 100 : isCurrent ? 500 : 50
+        }).addTo(map);
+
+        // Add popup for stop
+        marker.bindPopup(`
+          <div style="min-width: 200px; padding: 4px;">
             <div style="
-              position: absolute;
-              top: 100%;
-              left: 50%;
-              transform: translateX(-50%);
-              margin-top: 8px;
-              background: white;
-              padding: 6px 10px;
-              border-radius: 8px;
-              font-size: 11px;
-              font-weight: 600;
-              color: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#6b7280'};
-              box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-              white-space: nowrap;
-              max-width: 150px;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              background: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#6b7280'};
+              color: white;
+              padding: 12px;
+              margin: -4px -4px 8px -4px;
+              border-radius: 6px 6px 0 0;
             ">
-              ${stop.stop_name}
+              <h4 style="margin: 0; font-weight: 700; font-size: 15px;">
+                ${isPassed ? '✓ ' : ''}Stop ${index + 1}${isCurrent ? ' (Current)' : ''}
+              </h4>
             </div>
-          </div>
-        `,
-        iconSize: [40, 40],
-        iconAnchor: [20, 20],
-        popupAnchor: [0, -25]
-      });
-
-      const marker = L.marker([stop.latitude, stop.longitude], {
-        icon: stopIcon,
-        zIndexOffset: isPassed ? 100 : isCurrent ? 500 : 50
-      }).addTo(map);
-
-      // Add popup for stop
-      marker.bindPopup(`
-        <div style="min-width: 200px; padding: 4px;">
-          <div style="
-            background: ${isPassed ? '#10b981' : isCurrent ? '#f59e0b' : '#6b7280'};
-            color: white;
-            padding: 12px;
-            margin: -4px -4px 8px -4px;
-            border-radius: 6px 6px 0 0;
-          ">
-            <h4 style="margin: 0; font-weight: 700; font-size: 15px;">
-              ${isPassed ? '✓ ' : ''}Stop ${index + 1}${isCurrent ? ' (Current)' : ''}
-            </h4>
-          </div>
-          <div style="padding: 0 4px 4px 4px;">
-            <p style="margin: 4px 0; font-weight: 600; color: #111827;">${stop.stop_name}</p>
-            ${stop.estimated_arrival ? `
-              <p style="margin: 4px 0; font-size: 12px; color: #6b7280;">
-                🕐 ${stop.estimated_arrival}
+            <div style="padding: 0 4px 4px 4px;">
+              <p style="margin: 4px 0; font-weight: 600; color: #111827;">${stop.stop_name}</p>
+              ${stop.estimated_arrival ? `
+                <p style="margin: 4px 0; font-size: 12px; color: #6b7280;">
+                  🕐 ${stop.estimated_arrival}
+                </p>
+              ` : ''}
+              <p style="margin: 4px 0; font-size: 10px; color: #9ca3af; font-family: monospace;">
+                ${stop.latitude.toFixed(6)}, ${stop.longitude.toFixed(6)}
               </p>
-            ` : ''}
-            <p style="margin: 4px 0; font-size: 10px; color: #9ca3af; font-family: monospace;">
-              ${stop.latitude.toFixed(6)}, ${stop.longitude.toFixed(6)}
-            </p>
+            </div>
           </div>
-        </div>
-      `);
+        `);
 
-      stopMarkersRef.current.push(marker);
+        stopMarkersRef.current.push(marker);
     });
 
     // Fit bounds to show all stops and bus
