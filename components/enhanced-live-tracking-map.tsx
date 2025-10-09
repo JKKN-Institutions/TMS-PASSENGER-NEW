@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapPin, Navigation2 } from 'lucide-react';
+import { MapPin, Navigation2, Maximize2, Minimize2 } from 'lucide-react';
 
 interface Stop {
   id: string;
@@ -26,6 +26,14 @@ interface EnhancedLiveTrackingMapProps {
   stops?: Stop[];
   currentStopIndex?: number;
 }
+
+// JKKN College Location
+const COLLEGE_LOCATION = {
+  latitude: 11.442548,
+  longitude: 77.729224,
+  name: 'JKKN College',
+  address: 'Salem-Coimbatore Highway (NH-544), Kumarapalayam'
+};
 
 // Fix for default markers in Leaflet
 if (typeof window !== 'undefined') {
@@ -51,9 +59,11 @@ export default function EnhancedLiveTrackingMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const busMarkerRef = useRef<L.Marker | null>(null);
+  const collegeMarkerRef = useRef<L.Marker | null>(null);
   const stopMarkersRef = useRef<L.Marker[]>([]);
   const routeLineRef = useRef<L.Polyline | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Initialize map
   useEffect(() => {
@@ -176,6 +186,92 @@ export default function EnhancedLiveTrackingMap({
         className: 'custom-popup'
       });
 
+      // Add JKKN College marker
+      const collegeIcon = L.divIcon({
+        className: 'custom-college-marker',
+        html: `
+          <div style="position: relative;">
+            <div style="
+              background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+              color: white;
+              border-radius: 12px;
+              width: 48px;
+              height: 48px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 24px;
+              border: 3px solid white;
+              box-shadow: 0 4px 16px rgba(37, 99, 235, 0.5);
+              animation: college-pulse 3s infinite;
+            ">
+              🎓
+            </div>
+            <div style="
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              margin-top: 6px;
+              background: white;
+              padding: 4px 10px;
+              border-radius: 8px;
+              font-size: 10px;
+              font-weight: 700;
+              color: #2563eb;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+              white-space: nowrap;
+            ">
+              JKKN College
+            </div>
+          </div>
+        `,
+        iconSize: [48, 48],
+        iconAnchor: [24, 24],
+        popupAnchor: [0, -30]
+      });
+
+      const collegeMarker = L.marker(
+        [COLLEGE_LOCATION.latitude, COLLEGE_LOCATION.longitude], 
+        { 
+          icon: collegeIcon,
+          zIndexOffset: 800
+        }
+      ).addTo(map);
+
+      collegeMarkerRef.current = collegeMarker;
+
+      // Enhanced popup for college
+      collegeMarker.bindPopup(`
+        <div style="min-width: 260px; padding: 8px;">
+          <div style="
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 16px;
+            margin: -8px -8px 12px -8px;
+            border-radius: 8px 8px 0 0;
+          ">
+            <h3 style="margin: 0 0 6px 0; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+              🎓 ${COLLEGE_LOCATION.name}
+            </h3>
+            <div style="font-size: 11px; opacity: 0.95; line-height: 1.4;">
+              ${COLLEGE_LOCATION.address}
+            </div>
+          </div>
+          <div style="padding: 0 4px;">
+            <div style="margin: 8px 0; padding: 8px; background: #eff6ff; border-radius: 8px;">
+              <div style="font-size: 11px; color: #1e40af; font-weight: 600; margin-bottom: 4px;">📍 Destination</div>
+              <div style="font-size: 10px; color: #1e3a8a; font-family: monospace;">
+                ${COLLEGE_LOCATION.latitude.toFixed(6)}, ${COLLEGE_LOCATION.longitude.toFixed(6)}
+              </div>
+            </div>
+          </div>
+        </div>
+      `, {
+        maxWidth: 300,
+        className: 'custom-popup'
+      });
+
       setMapReady(true);
 
       // Cleanup function
@@ -184,6 +280,7 @@ export default function EnhancedLiveTrackingMap({
           mapInstanceRef.current.remove();
           mapInstanceRef.current = null;
           busMarkerRef.current = null;
+          collegeMarkerRef.current = null;
           stopMarkersRef.current = [];
           routeLineRef.current = null;
         }
@@ -343,15 +440,16 @@ export default function EnhancedLiveTrackingMap({
         stopMarkersRef.current.push(marker);
     });
 
-    // Fit bounds to show all stops and bus
+    // Fit bounds to show all stops, bus, and college
     try {
       const allPoints: [number, number][] = [
         [latitude, longitude],
+        [COLLEGE_LOCATION.latitude, COLLEGE_LOCATION.longitude],
         ...routeCoordinates
       ];
       const bounds = L.latLngBounds(allPoints);
       map.fitBounds(bounds, { 
-        padding: [50, 50],
+        padding: [60, 60],
         maxZoom: 15
       });
     } catch (error) {
@@ -464,13 +562,73 @@ export default function EnhancedLiveTrackingMap({
     `);
   }, [mapReady, latitude, longitude, routeName, driverName, vehicleNumber, heading, speed]);
 
+  // Fullscreen toggle
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+    
+    // Invalidate map size after transition to ensure proper rendering
+    setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 300);
+  };
+
+  // ESC key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // Update map size when fullscreen changes
+  useEffect(() => {
+    if (mapInstanceRef.current && mapReady) {
+      setTimeout(() => {
+        mapInstanceRef.current?.invalidateSize();
+      }, 350);
+    }
+  }, [isFullscreen, mapReady]);
+
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+    <div 
+      className={`relative w-full h-full rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
+        isFullscreen 
+          ? 'fixed inset-0 z-[9999] rounded-none' 
+          : ''
+      }`}
+    >
       <div 
         ref={mapRef} 
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 1 }}
       />
+      
+      {/* Fullscreen Toggle Button */}
+      <button
+        onClick={toggleFullscreen}
+        className="absolute top-4 right-4 z-[1000] bg-white hover:bg-gray-50 text-gray-700 p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group"
+        title={isFullscreen ? 'Exit fullscreen (ESC)' : 'Enter fullscreen'}
+      >
+        {isFullscreen ? (
+          <Minimize2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        ) : (
+          <Maximize2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        )}
+      </button>
+
+      {isFullscreen && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
+          <p className="text-sm font-semibold text-gray-700">
+            🗺️ Fullscreen Mode - Press <kbd className="px-2 py-1 bg-gray-200 rounded text-xs font-mono">ESC</kbd> to exit
+          </p>
+        </div>
+      )}
       
       {/* Map overlay styles */}
       <style jsx global>{`
@@ -482,6 +640,17 @@ export default function EnhancedLiveTrackingMap({
           50% {
             transform: scale(1.1);
             opacity: 0.8;
+          }
+        }
+
+        @keyframes college-pulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.5);
+          }
+          50% {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px rgba(37, 99, 235, 0.7);
           }
         }
         
@@ -497,6 +666,26 @@ export default function EnhancedLiveTrackingMap({
         
         .leaflet-container {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Ensure zoom controls are visible and accessible */
+        .leaflet-control-zoom {
+          border: 2px solid white !important;
+          border-radius: 8px !important;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+        }
+
+        .leaflet-control-zoom a {
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
+          font-size: 20px !important;
+          font-weight: bold !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+          background: #f3f4f6 !important;
         }
       `}</style>
     </div>
