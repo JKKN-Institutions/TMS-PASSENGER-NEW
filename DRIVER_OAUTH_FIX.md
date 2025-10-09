@@ -3,7 +3,17 @@
 ## Problem
 When logging in with `ramachjandran16@jkkn.ac.in` (a driver account) through the parent MyJKKN app OAuth flow, the user was being redirected to the **student dashboard** instead of the **driver dashboard**.
 
-## Root Cause
+## Root Causes
+
+### Primary Issue: Cached Passenger Session
+The user had an **existing passenger session** stored in `localStorage` from a previous login. On page load:
+1. The unified auth service found the cached passenger session
+2. Validated it as still active
+3. Authenticated the user as "passenger" 
+4. **NEVER checked** if they should be a driver
+5. Redirected to `/dashboard` instead of `/driver`
+
+### Secondary Issue: Duplicate Database Records
 The email `ramachjandran16@jkkn.ac.in` exists in **both** the `drivers` and `students` tables in the database:
 - **Driver**: C.RAMACHJANDRAN (ID: daf7b12f-59fd-4c7d-9aea-aefa6fbbd6f5) - Active
 - **Student**: RAMACHJANDRAN16 (ID: 2a7f2c5e-eda3-4b9c-84ce-fdbb3d3de59d) - Active

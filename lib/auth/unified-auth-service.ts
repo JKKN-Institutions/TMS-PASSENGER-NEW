@@ -472,8 +472,72 @@ class UnifiedAuthService {
       try {
         const isValid = await parentAuthService.validateSession();
         if (isValid) {
-                        console.log('✅ Unified auto-login: Passenger session valid');
-              return await this.getCurrentAuthState();
+          console.log('✅ Unified auto-login: Passenger session valid');
+          
+          // CRITICAL: Check if this user is actually a driver in local database
+          if (passengerUser.email) {
+            try {
+              console.log('🔍 Unified auto-login: Checking if passenger is actually a driver:', passengerUser.email);
+              const driverCheckResponse = await fetch(`/api/check-driver?email=${encodeURIComponent(passengerUser.email)}`);
+              if (driverCheckResponse.ok) {
+                const driverCheckData = await driverCheckResponse.json();
+                if (driverCheckData.isDriver && driverCheckData.isActive) {
+                  console.log('🚨 Unified auto-login: User is actually a DRIVER! Converting passenger session to driver session.');
+                  console.log('🚨 Driver data:', driverCheckData.driver);
+                  
+                  // Get current tokens from passenger session
+                  const accessToken = parentAuthService.getAccessToken();
+                  const refreshToken = parentAuthService.getRefreshToken();
+                  
+                  // Clear passenger session
+                  parentAuthService.clearSession();
+                  
+                  // Create driver session using local driver data
+                  const driverAuthData = {
+                    user: {
+                      id: driverCheckData.driver.id,
+                      email: driverCheckData.driver.email,
+                      driver_name: driverCheckData.driver.name,
+                      phone: driverCheckData.driver.phone,
+                      rating: 0,
+                      role: 'driver' as const,
+                      assigned_route_id: driverCheckData.driver.assigned_route_id
+                    },
+                    driver: {
+                      id: driverCheckData.driver.id,
+                      name: driverCheckData.driver.name,
+                      email: driverCheckData.driver.email,
+                      phone: driverCheckData.driver.phone,
+                      rating: 0,
+                      assigned_route_id: driverCheckData.driver.assigned_route_id
+                    },
+                    session: {
+                      access_token: accessToken || '',
+                      refresh_token: refreshToken || '',
+                      expires_at: Date.now() + (24 * 60 * 60 * 1000)
+                    }
+                  };
+                  
+                  console.log('💾 Unified auto-login: Storing driver session data');
+                  driverAuthService.storeAuthData(driverAuthData);
+                  
+                  // Return driver auth state
+                  return {
+                    user: driverAuthData.user,
+                    session: driverAuthData.session,
+                    isAuthenticated: true,
+                    userType: 'driver' as const
+                  };
+                } else {
+                  console.log('✅ Unified auto-login: User is confirmed as passenger (not in drivers table)');
+                }
+              }
+            } catch (driverCheckError) {
+              console.warn('⚠️ Unified auto-login: Failed to check driver status, continuing as passenger:', driverCheckError);
+            }
+          }
+          
+          return await this.getCurrentAuthState();
         } else {
           console.log('❌ Unified auto-login: Passenger session invalid');
           
