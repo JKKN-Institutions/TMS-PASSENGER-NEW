@@ -270,3 +270,4 @@ If students report issues:
 4. Verify VAPID keys are configured
 5. Test with browser console debugging
 
+
