@@ -25,6 +25,7 @@ interface EnhancedLiveTrackingMapProps {
   speed?: number | null;
   stops?: Stop[];
   currentStopIndex?: number;
+  isOnline?: boolean;
 }
 
 // JKKN College Location
@@ -54,7 +55,8 @@ export default function EnhancedLiveTrackingMap({
   heading,
   speed,
   stops = [],
-  currentStopIndex = 0
+  currentStopIndex = 0,
+  isOnline = true
 }: EnhancedLiveTrackingMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -91,11 +93,14 @@ export default function EnhancedLiveTrackingMap({
 
       // Create animated bus marker with rotation
       const rotation = heading || 0;
+      const labelText = isOnline ? (speed ? `${speed} km/h` : 'Moving') : 'Offline';
+      const pulseHtml = isOnline ? `<div class="absolute -inset-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse"></div>` : '';
+
       const busIcon = L.divIcon({
         className: 'custom-bus-marker',
         html: `
           <div class="relative">
-            <div class="absolute -inset-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse"></div>
+            ${pulseHtml}
             <div class="relative" style="
               background: linear-gradient(135deg, #10b981 0%, #059669 100%);
               color: white;
@@ -127,7 +132,7 @@ export default function EnhancedLiveTrackingMap({
               box-shadow: 0 2px 8px rgba(0,0,0,0.15);
               white-space: nowrap;
             ">
-              ${speed ? `${speed} km/h` : 'Moving'}
+              ${labelText}
             </div>
           </div>
         `,
@@ -467,19 +472,23 @@ export default function EnhancedLiveTrackingMap({
 
     // Smoothly animate to new position
     busMarker.setLatLng(newLatLng);
-    map.panTo(newLatLng, {
-      animate: true,
-      duration: 1,
-      easeLinearity: 0.5
-    });
+    if (isOnline) {
+      map.panTo(newLatLng, {
+        animate: true,
+        duration: 1,
+        easeLinearity: 0.5
+      });
+    }
 
     // Update bus icon with rotation
     const rotation = heading || 0;
+    const labelText = isOnline ? (speed ? `${speed} km/h` : 'Moving') : 'Offline';
+    const pulseHtml = isOnline ? `<div class="absolute -inset-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse"></div>` : '';
     const busIcon = L.divIcon({
       className: 'custom-bus-marker',
       html: `
         <div class="relative">
-          <div class="absolute -inset-4 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-20 animate-pulse"></div>
+          ${pulseHtml}
           <div class="relative" style="
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
@@ -511,7 +520,7 @@ export default function EnhancedLiveTrackingMap({
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             white-space: nowrap;
           ">
-            ${speed ? `${speed} km/h` : 'Moving'}
+            ${labelText}
           </div>
         </div>
       `,
@@ -560,7 +569,7 @@ export default function EnhancedLiveTrackingMap({
         </div>
       </div>
     `);
-  }, [mapReady, latitude, longitude, routeName, driverName, vehicleNumber, heading, speed]);
+  }, [mapReady, latitude, longitude, routeName, driverName, vehicleNumber, heading, speed, isOnline]);
 
   // Fullscreen toggle
   const toggleFullscreen = () => {

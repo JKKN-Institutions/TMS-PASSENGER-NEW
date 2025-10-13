@@ -412,6 +412,7 @@ export default function LiveTrackPage() {
                   speed={gps.currentLocation.speed}
                   stops={route.stops || []}
                   currentStopIndex={currentStopIndex}
+                  isOnline={isOnline}
                 />
               ) : (
                 <div className="h-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl flex items-center justify-center p-8">
