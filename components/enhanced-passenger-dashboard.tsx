@@ -130,24 +130,36 @@ const QuickActionCardContent = ({ title, description, icon: Icon, badge }: {
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
 }) => (
-  <div className="modern-card p-6 h-full group-hover:shadow-lg transition-all duration-200">
+  <div className="modern-card p-6 h-full group-hover:shadow-lg 
+    dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]
+    dark:hover:border-[var(--neon-green)] dark:hover:shadow-[0_8px_30px_var(--neon-green-glow)]
+    transition-all duration-200">
     <div className="flex items-center justify-between mb-4">
-      <div className="p-3 bg-green-50 rounded-xl group-hover:bg-green-100 transition-colors">
-        <Icon className="h-6 w-6 text-green-600" />
+      <div className="p-3 bg-green-50 dark:bg-[var(--dark-bg-tertiary)] 
+        rounded-xl group-hover:bg-green-100 dark:group-hover:bg-[rgba(0,255,136,0.2)]
+        dark:shadow-[0_0_15px_rgba(0,255,136,0.2)]
+        transition-colors icon-glow">
+        <Icon className="h-6 w-6 text-green-600 dark:text-[var(--neon-green)]" />
       </div>
       {badge && badge > 0 && (
-        <div className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+        <div className="bg-red-500 dark:bg-[var(--neon-orange)] 
+          text-white dark:text-[var(--dark-bg-primary)]
+          text-xs px-2 py-1 rounded-full font-semibold
+          dark:shadow-[0_0_10px_var(--neon-orange-glow)]">
           {badge}
         </div>
       )}
     </div>
     <div className="space-y-2">
-      <h3 className="font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
+      <h3 className="font-semibold text-gray-900 dark:text-[var(--text-primary)] 
+        group-hover:text-green-700 dark:group-hover:text-[var(--neon-green)] 
+        transition-colors">
         {title}
       </h3>
-      <p className="text-sm text-gray-500">{description}</p>
+      <p className="text-sm text-gray-500 dark:text-[var(--text-secondary)]">{description}</p>
     </div>
-    <div className="flex items-center text-green-600 mt-4 group-hover:translate-x-1 transition-transform">
+    <div className="flex items-center text-green-600 dark:text-[var(--neon-green)] 
+      mt-4 group-hover:translate-x-1 transition-transform">
       <span className="text-sm font-medium mr-2">View Details</span>
       <ChevronRight className="h-4 w-4" />
     </div>
@@ -186,27 +198,31 @@ const UpcomingBookingCard = ({ booking, delay = 0 }: {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay * 0.1 }}
-      className="modern-card p-4 hover:shadow-md transition-all duration-200"
+      className="modern-card p-4 hover:shadow-md 
+        dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]
+        dark:hover:border-[var(--neon-blue)] dark:hover:shadow-[0_4px_20px_var(--neon-blue-glow)]
+        transition-all duration-200"
     >
       <div className="flex items-center space-x-4">
-        <div className="p-3 bg-blue-50 rounded-xl">
-          <Bus className="h-6 w-6 text-blue-600" />
+        <div className="p-3 bg-blue-50 dark:bg-[var(--dark-bg-tertiary)] 
+          rounded-xl icon-glow">
+          <Bus className="h-6 w-6 text-blue-600 dark:text-[var(--neon-blue)]" />
         </div>
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-900">{routeName}</h4>
-          <p className="text-sm text-gray-600">
+          <h4 className="font-semibold text-gray-900 dark:text-[var(--text-primary)]">{routeName}</h4>
+          <p className="text-sm text-gray-600 dark:text-[var(--text-secondary)]">
             {tripDate} • {departureTime}
           </p>
         </div>
         <div className="text-right">
           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-            booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-gray-100 text-gray-800'
+            booking.status === 'confirmed' ? 'bg-green-100 text-green-800 dark:bg-[rgba(0,255,136,0.2)] dark:text-[var(--neon-green)]' :
+            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-[rgba(255,255,0,0.2)] dark:text-[var(--neon-yellow)]' :
+            'bg-gray-100 text-gray-800 dark:bg-[var(--dark-bg-elevated)] dark:text-[var(--text-secondary)]'
           }`}>
             {booking.status || 'confirmed'}
           </span>
-          <p className="text-xs text-gray-500 mt-1">{booking.seatNumber || booking.seat_number || 'N/A'}</p>
+          <p className="text-xs text-gray-500 dark:text-[var(--text-tertiary)] mt-1">{booking.seatNumber || booking.seat_number || 'N/A'}</p>
         </div>
       </div>
     </motion.div>
@@ -221,22 +237,26 @@ const RecentPaymentCard = ({ payment, delay = 0 }: {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: delay * 0.1 }}
-    className="modern-card p-4 hover:shadow-md transition-all duration-200"
+    className="modern-card p-4 hover:shadow-md 
+      dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]
+      dark:hover:border-[var(--neon-green)] dark:hover:shadow-[0_4px_20px_var(--neon-green-glow)]
+      transition-all duration-200"
   >
     <div className="flex items-center space-x-4">
-      <div className="p-3 bg-green-50 rounded-xl">
-        <CreditCard className="h-6 w-6 text-green-600" />
+      <div className="p-3 bg-green-50 dark:bg-[var(--dark-bg-tertiary)] 
+        rounded-xl icon-glow">
+        <CreditCard className="h-6 w-6 text-green-600 dark:text-[var(--neon-green)]" />
       </div>
       <div className="flex-1">
-        <h4 className="font-semibold text-gray-900">{payment.description}</h4>
-        <p className="text-sm text-gray-600">{new Date(payment.createdAt).toLocaleDateString()}</p>
+        <h4 className="font-semibold text-gray-900 dark:text-[var(--text-primary)]">{payment.description}</h4>
+        <p className="text-sm text-gray-600 dark:text-[var(--text-secondary)]">{new Date(payment.createdAt).toLocaleDateString()}</p>
       </div>
       <div className="text-right">
-        <p className="font-semibold text-gray-900">₹{payment.amount}</p>
+        <p className="font-semibold text-gray-900 dark:text-[var(--text-primary)]">₹{payment.amount}</p>
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-          payment.status === 'completed' ? 'bg-green-100 text-green-800' :
-          payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-          'bg-red-100 text-red-800'
+          payment.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-[rgba(0,255,136,0.2)] dark:text-[var(--neon-green)]' :
+          payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-[rgba(255,255,0,0.2)] dark:text-[var(--neon-yellow)]' :
+          'bg-red-100 text-red-800 dark:bg-[rgba(255,102,0,0.2)] dark:text-[var(--neon-orange)]'
         }`}>
           {payment.status}
         </span>
@@ -367,8 +387,8 @@ export default function EnhancedPassengerDashboard({
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
       >
         <div className="min-w-0 flex-1">
-          <h1 className="text-heading-1 mb-2">Dashboard</h1>
-          <p className="text-body">Plan, prioritize, and accomplish your transport tasks with ease.</p>
+          <h1 className="text-heading-1 mb-2 dark:text-[var(--text-primary)]">Dashboard</h1>
+          <p className="text-body dark:text-[var(--text-secondary)]">Plan, prioritize, and accomplish your transport tasks with ease.</p>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
           <button className="btn-secondary flex items-center space-x-1 sm:space-x-2">
@@ -409,16 +429,18 @@ export default function EnhancedPassengerDashboard({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="modern-card p-8"
+            className="modern-card p-8 
+              dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
               <div className="flex items-center space-x-3">
-                <div className="p-3 bg-green-50 rounded-xl flex-shrink-0">
-                  <Zap className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-50 dark:bg-[var(--dark-bg-tertiary)] 
+                  rounded-xl flex-shrink-0 icon-glow">
+                  <Zap className="w-6 h-6 text-green-600 dark:text-[var(--neon-yellow)]" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-heading-3">Quick Actions</h2>
-                  <p className="text-body">Access your most-used transport features</p>
+                  <h2 className="text-heading-3 dark:text-[var(--text-primary)]">Quick Actions</h2>
+                  <p className="text-body dark:text-[var(--text-secondary)]">Access your most-used transport features</p>
                 </div>
               </div>
               <button 
@@ -453,20 +475,23 @@ export default function EnhancedPassengerDashboard({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="modern-card p-8"
+            className="modern-card p-8 
+              dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]"
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <div className="p-3 bg-blue-50 rounded-xl">
-                  <Calendar className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-blue-50 dark:bg-[var(--dark-bg-tertiary)] 
+                  rounded-xl icon-glow">
+                  <Calendar className="w-6 h-6 text-blue-600 dark:text-[var(--neon-blue)]" />
                 </div>
                 <div>
-                  <h2 className="text-heading-3">Upcoming Bookings</h2>
-                  <p className="text-body">Your scheduled trips</p>
+                  <h2 className="text-heading-3 dark:text-[var(--text-primary)]">Upcoming Bookings</h2>
+                  <p className="text-body dark:text-[var(--text-secondary)]">Your scheduled trips</p>
                 </div>
               </div>
               
-              <Link href="/dashboard/schedules" className="text-blue-600 hover:text-blue-700 transition-colors">
+              <Link href="/dashboard/schedules" className="text-blue-600 dark:text-[var(--neon-blue)] 
+                hover:text-blue-700 dark:hover:text-[var(--neon-blue)] transition-colors">
                 <Eye className="w-5 h-5" />
               </Link>
             </div>
@@ -500,14 +525,16 @@ export default function EnhancedPassengerDashboard({
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
-            className="modern-card p-6"
+            className="modern-card p-6 
+              dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]"
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-heading-3 mb-1">Recent Payments</h3>
-                <p className="text-body text-sm">Your transaction history</p>
+                <h3 className="text-heading-3 mb-1 dark:text-[var(--text-primary)]">Recent Payments</h3>
+                <p className="text-body text-sm dark:text-[var(--text-secondary)]">Your transaction history</p>
               </div>
-              <Link href="/dashboard/payments" className="text-green-600 hover:text-green-700 transition-colors">
+              <Link href="/dashboard/payments" className="text-green-600 dark:text-[var(--neon-green)] 
+                hover:text-green-700 dark:hover:text-[var(--neon-green)] transition-colors">
                 <Eye className="w-5 h-5" />
               </Link>
             </div>

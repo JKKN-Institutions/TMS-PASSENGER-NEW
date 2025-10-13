@@ -82,49 +82,63 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
         <motion.div
           variants={badgeVariants}
           animate="active"
-          className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-yellow-50 border-2 border-green-200 p-4 sm:p-6 shadow-lg w-full ${className}`}
+          className={`relative overflow-hidden rounded-xl 
+            bg-gradient-to-br from-green-50 to-yellow-50 
+            dark:from-[var(--dark-bg-secondary)] dark:to-[var(--dark-bg-tertiary)]
+            border-2 border-green-200 dark:border-[var(--neon-green)]
+            p-4 sm:p-6 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_40px_rgba(0,255,136,0.15)]
+            w-full ${className}`}
         >
           {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-yellow-400/10"></div>
-          <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-yellow-200/20 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
-          <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-green-200/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-yellow-400/10
+            dark:from-[rgba(0,255,136,0.1)] dark:to-[rgba(255,255,0,0.1)]"></div>
+          <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 
+            bg-yellow-200/20 dark:bg-[rgba(255,255,0,0.2)]
+            rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 
+            bg-green-200/20 dark:bg-[rgba(0,255,136,0.2)]
+            rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
           
           {/* Content */}
           <div className="relative z-10">
             {/* Header with Icon */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-green-500 to-yellow-500 rounded-lg flex-shrink-0 shadow-md">
-                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-sm" />
+                <div className="p-2 bg-gradient-to-r from-green-500 to-yellow-500 
+                  dark:from-[var(--neon-green)] dark:to-[var(--neon-yellow)]
+                  rounded-lg flex-shrink-0 shadow-md icon-glow">
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white dark:text-[var(--dark-bg-primary)] drop-shadow-sm" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base sm:text-lg font-bold text-green-800 truncate">Account Active</h3>
-                  <p className="text-xs sm:text-sm text-green-600 truncate">Transport services enabled</p>
+                  <h3 className="text-base sm:text-lg font-bold text-green-800 dark:text-[var(--neon-green)] 
+                    dark:drop-shadow-[0_0_10px_var(--neon-green-glow)] truncate">Account Active</h3>
+                  <p className="text-xs sm:text-sm text-green-600 dark:text-[var(--text-secondary)] truncate">Transport services enabled</p>
                 </div>
               </div>
-              <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 flex-shrink-0" />
+              <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 dark:text-[var(--neon-green)] 
+                dark:drop-shadow-[0_0_15px_var(--neon-green-glow)] flex-shrink-0" />
             </div>
 
             {/* Payment Details */}
             <div className="space-y-2 sm:space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xs sm:text-sm font-medium text-green-700">Last Paid Term:</span>
-                <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{lastPaidTerm.termName}</span>
+                <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Last Paid Term:</span>
+                <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{lastPaidTerm.termName}</span>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xs sm:text-sm font-medium text-green-700">Academic Year:</span>
-                <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{lastPaidTerm.academicYear}</span>
+                <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Academic Year:</span>
+                <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{lastPaidTerm.academicYear}</span>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xs sm:text-sm font-medium text-green-700">Amount Paid:</span>
-                <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{formatCurrency(lastPaidTerm.amount)}</span>
+                <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Amount Paid:</span>
+                <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{formatCurrency(lastPaidTerm.amount)}</span>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-xs sm:text-sm font-medium text-green-700">Valid Until:</span>
-                <span className={`text-xs sm:text-sm font-bold ${isNearExpiry ? 'text-orange-600' : 'text-green-800'} truncate`}>
+                <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Valid Until:</span>
+                <span className={`text-xs sm:text-sm font-bold ${isNearExpiry ? 'text-orange-600 dark:text-[var(--neon-orange)]' : 'text-green-800 dark:text-[var(--text-primary)]'} truncate`}>
                   {formatDate(lastPaidTerm.validUntil)}
                 </span>
               </div>
@@ -132,17 +146,25 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
 
             {/* Status Badge */}
             <div className="mt-4 flex items-center justify-center">
-              <div className="px-3 sm:px-4 py-2 bg-green-500 text-white rounded-full text-xs sm:text-sm font-medium text-center">
+              <div className="px-3 sm:px-4 py-2 
+                bg-green-500 dark:bg-gradient-to-r dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)]
+                text-white dark:text-[var(--dark-bg-primary)]
+                rounded-full text-xs sm:text-sm font-medium text-center
+                dark:shadow-[0_4px_20px_var(--neon-green-glow)]">
                 ✓ All Services Available
               </div>
             </div>
 
             {/* Expiry Warning */}
             {isNearExpiry && (
-              <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="mt-4 p-3 
+                bg-orange-50 dark:bg-[rgba(255,102,0,0.1)]
+                border border-orange-200 dark:border-[var(--neon-orange)]
+                rounded-lg dark:shadow-[0_0_15px_rgba(255,102,0,0.2)]">
                 <div className="flex items-center space-x-2">
-                  <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-orange-700">
+                  <AlertTriangle className="w-4 h-4 text-orange-500 dark:text-[var(--neon-orange)] 
+                    flex-shrink-0 dark:drop-shadow-[0_0_10px_var(--neon-orange-glow)]" />
+                  <span className="text-xs sm:text-sm text-orange-700 dark:text-[var(--neon-orange)]">
                     Expires in {daysUntilExpiry} days
                   </span>
                 </div>
@@ -181,50 +203,68 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
       <motion.div
         variants={badgeVariants}
         animate="active"
-        className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-emerald-100 border-2 border-green-200 p-4 sm:p-6 shadow-lg w-full ${className}`}
+        className={`relative overflow-hidden rounded-xl 
+          bg-gradient-to-br from-green-50 to-emerald-100 
+          dark:from-[var(--dark-bg-secondary)] dark:to-[var(--dark-bg-tertiary)]
+          border-2 border-green-200 dark:border-[var(--neon-green)]
+          p-4 sm:p-6 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_40px_rgba(0,255,136,0.15)]
+          w-full ${className}`}
       >
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-600/10"></div>
-        <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-green-200/20 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
-        <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-emerald-200/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-600/10 
+          dark:from-[rgba(0,255,136,0.1)] dark:to-[rgba(0,255,136,0.2)]"></div>
+        <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 
+          bg-green-200/20 dark:bg-[rgba(0,255,136,0.2)] 
+          rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
+        <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 
+          bg-emerald-200/20 dark:bg-[rgba(0,212,255,0.2)]
+          rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
         
         {/* Content */}
         <div className="relative z-10">
           {/* Header with Icon */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-green-500 rounded-lg flex-shrink-0">
-                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              <div className="p-2 bg-green-500 dark:bg-gradient-to-r dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)] 
+                rounded-lg flex-shrink-0 icon-glow">
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white dark:text-[var(--dark-bg-primary)]" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base sm:text-lg font-bold text-green-800 truncate">Active Term Period</h3>
-                <p className="text-xs sm:text-sm text-green-600 truncate">Current academic term</p>
+                <h3 className="text-base sm:text-lg font-bold text-green-800 dark:text-[var(--neon-green)] 
+                  dark:drop-shadow-[0_0_10px_var(--neon-green-glow)] truncate">Active Term Period</h3>
+                <p className="text-xs sm:text-sm text-green-600 dark:text-[var(--text-secondary)] truncate">Current academic term</p>
               </div>
             </div>
-            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 flex-shrink-0" />
+            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 dark:text-[var(--neon-green)] 
+              flex-shrink-0 dark:drop-shadow-[0_0_15px_var(--neon-green-glow)]" />
           </div>
 
           {/* Term Details */}
           <div className="space-y-2 sm:space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs sm:text-sm font-medium text-green-700">Current Term:</span>
-              <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{currentTerm}</span>
+              <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Current Term:</span>
+              <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{currentTerm}</span>
             </div>
             
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs sm:text-sm font-medium text-green-700">Period:</span>
-              <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{termPeriod}</span>
+              <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">Period:</span>
+              <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{termPeriod}</span>
             </div>
             
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs sm:text-sm font-medium text-green-700">End Date:</span>
-              <span className="text-xs sm:text-sm font-bold text-green-800 truncate">{termEndDate}</span>
+              <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-[var(--text-secondary)]">End Date:</span>
+              <span className="text-xs sm:text-sm font-bold text-green-800 dark:text-[var(--text-primary)] truncate">{termEndDate}</span>
             </div>
           </div>
 
           {/* Status Badge */}
           <div className="mt-4 flex items-center justify-center">
-            <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-full text-xs sm:text-sm font-medium text-center shadow-md">
+            <div className="px-3 sm:px-4 py-2 
+              bg-gradient-to-r from-green-500 to-yellow-500 
+              dark:from-[var(--neon-green)] dark:to-[var(--neon-yellow)]
+              text-white dark:text-[var(--dark-bg-primary)]
+              rounded-full text-xs sm:text-sm font-medium text-center shadow-md 
+              dark:shadow-[0_4px_20px_var(--neon-green-glow)]">
               ✓ Term Active
             </div>
           </div>
@@ -238,49 +278,65 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({
     <motion.div
       variants={badgeVariants}
       animate="inactive"
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-orange-100 border-2 border-red-200 p-4 sm:p-6 shadow-lg w-full ${className}`}
+      className={`relative overflow-hidden rounded-xl 
+        bg-gradient-to-br from-red-50 to-orange-100 
+        dark:from-[var(--dark-bg-secondary)] dark:to-[var(--dark-bg-tertiary)]
+        border-2 border-red-200 dark:border-[var(--neon-orange)]
+        p-4 sm:p-6 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_40px_rgba(255,102,0,0.15)]
+        w-full ${className}`}
     >
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-400/10 to-orange-600/10"></div>
-      <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-red-200/20 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
-      <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-orange-200/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-red-400/10 to-orange-600/10
+        dark:from-[rgba(255,102,0,0.1)] dark:to-[rgba(255,102,0,0.2)]"></div>
+      <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 
+        bg-red-200/20 dark:bg-[rgba(255,102,0,0.2)]
+        rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
+      <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 
+        bg-orange-200/20 dark:bg-[rgba(255,102,0,0.3)]
+        rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
       
       {/* Content */}
       <div className="relative z-10">
         {/* Header with Icon */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-red-500 rounded-lg flex-shrink-0">
-              <ShieldAlert className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className="p-2 bg-red-500 dark:bg-[var(--neon-orange)] rounded-lg flex-shrink-0 icon-glow">
+              <ShieldAlert className="w-5 h-5 sm:w-6 sm:h-6 text-white dark:text-[var(--dark-bg-primary)]" />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="text-base sm:text-lg font-bold text-red-800 truncate">Account Inactive</h3>
-              <p className="text-xs sm:text-sm text-red-600 truncate">Payment required for transport services</p>
+              <h3 className="text-base sm:text-lg font-bold text-red-800 dark:text-[var(--neon-orange)] 
+                dark:drop-shadow-[0_0_10px_var(--neon-orange-glow)] truncate">Account Inactive</h3>
+              <p className="text-xs sm:text-sm text-red-600 dark:text-[var(--text-secondary)] truncate">Payment required for transport services</p>
             </div>
           </div>
-          <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 flex-shrink-0" />
+          <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 dark:text-[var(--neon-orange)] 
+            flex-shrink-0 dark:drop-shadow-[0_0_15px_var(--neon-orange-glow)]" />
         </div>
 
         {/* Payment Required Info */}
         <div className="space-y-2 sm:space-y-3">
           {nextDueAmount && (
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs sm:text-sm font-medium text-red-700">Next Due Amount:</span>
-              <span className="text-xs sm:text-sm font-bold text-red-800 truncate">{formatCurrency(nextDueAmount)}</span>
+              <span className="text-xs sm:text-sm font-medium text-red-700 dark:text-[var(--text-secondary)]">Next Due Amount:</span>
+              <span className="text-xs sm:text-sm font-bold text-red-800 dark:text-[var(--text-primary)] truncate">{formatCurrency(nextDueAmount)}</span>
             </div>
           )}
           
           {nextDueDate && (
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs sm:text-sm font-medium text-red-700">Due Date:</span>
-              <span className="text-xs sm:text-sm font-bold text-red-800 truncate">{formatDate(nextDueDate)}</span>
+              <span className="text-xs sm:text-sm font-medium text-red-700 dark:text-[var(--text-secondary)]">Due Date:</span>
+              <span className="text-xs sm:text-sm font-bold text-red-800 dark:text-[var(--text-primary)] truncate">{formatDate(nextDueDate)}</span>
             </div>
           )}
         </div>
 
         {/* Action Button */}
         <div className="mt-4 flex items-center justify-center">
-          <div className="px-3 sm:px-4 py-2 bg-red-500 text-white rounded-full text-xs sm:text-sm font-medium text-center">
+          <div className="px-3 sm:px-4 py-2 
+            bg-red-500 dark:bg-[var(--neon-orange)]
+            text-white dark:text-[var(--dark-bg-primary)]
+            rounded-full text-xs sm:text-sm font-medium text-center
+            dark:shadow-[0_4px_20px_var(--neon-orange-glow)]">
             ⚠ Payment Required
           </div>
         </div>
