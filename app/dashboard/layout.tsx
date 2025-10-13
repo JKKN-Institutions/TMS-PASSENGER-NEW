@@ -469,9 +469,21 @@ function DashboardContent({
           </div>
         </div>
 
-        {/* Page content with Dark Theme */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[var(--dark-bg-primary)] min-w-0 main-content">
-          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-24 lg:pb-6">
+        {/* Enhanced Page content with Modern Background */}
+        <main className="flex-1 overflow-y-auto min-w-0 main-content
+          bg-gradient-to-br from-green-50/30 via-yellow-50/20 to-blue-50/30
+          relative">
+          {/* Decorative Background Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Top right circle */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-200/20 to-yellow-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            {/* Bottom left circle */}
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-200/20 to-green-200/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            {/* Center accent */}
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-yellow-100/10 to-green-100/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          
+          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-24 lg:pb-6 relative z-10">
             {children}
           </div>
         </main>

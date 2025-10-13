@@ -207,17 +207,15 @@ export default function DashboardPage() {
   // Enhanced Error state with recovery actions
   if (error || !dashboardData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="container-modern py-8">
-          <ErrorState
-            title="Failed to Load Dashboard"
-            message={error || 'Something went wrong. Please try refreshing the page.'}
-            action={{
-              label: refreshing ? 'Retrying...' : 'Try Again',
-              onClick: handleRefresh
-            }}
-          />
-        </div>
+      <div className="min-h-full py-8 sm:py-12">
+        <ErrorState
+          title="Failed to Load Dashboard"
+          message={error || 'Something went wrong. Please try refreshing the page.'}
+          action={{
+            label: refreshing ? 'Retrying...' : 'Try Again',
+            onClick: handleRefresh
+          }}
+        />
       </div>
     );
   }
@@ -259,8 +257,7 @@ export default function DashboardPage() {
   
   if (shouldShowEnrollmentDashboard) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="container-modern py-12 px-4">
+      <div className="min-h-full py-8 sm:py-12 px-4">
           {/* Simplified Welcome Section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -352,21 +349,21 @@ export default function DashboardPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
               onClick={() => setShowEnrollmentForm(false)}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">Transport Enrollment</h2>
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Transport Enrollment</h2>
                     <button
                       onClick={() => setShowEnrollmentForm(false)}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200"
                     >
                       <X className="w-6 h-6 text-gray-500" />
                     </button>
@@ -400,9 +397,9 @@ export default function DashboardPage() {
   return (
     <SwipeHandler
       onSwipeDown={handleRefresh}
-      className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100"
+      className="min-h-full"
     >
-      <div className="container-modern py-8 space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         {/* Payment Status Components - ONLY for students with route allocation */}
         {hasRouteAllocation && paymentStatus && (
           <>

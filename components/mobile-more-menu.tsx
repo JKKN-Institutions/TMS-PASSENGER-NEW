@@ -16,8 +16,6 @@ import {
   BarChart3,
   HelpCircle,
   Shield,
-  Moon,
-  Sun,
   Home,
   Bus,
   Calendar,
@@ -25,7 +23,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/auth/auth-context';
-import { useTheme } from '@/components/theme-provider';
 import { useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import toast from 'react-hot-toast';
 
@@ -48,7 +45,6 @@ interface MobileMoreMenuProps {
 export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { theme, setTheme, actualTheme } = useTheme();
   const enrollmentStatus = useEnrollmentStatus();
   const isEnrolled = enrollmentStatus?.isEnrolled || false;
 
@@ -61,10 +57,6 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
       console.error('Logout failed:', error);
       toast.error('Failed to logout');
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(actualTheme === 'dark' ? 'light' : 'dark');
   };
 
   const mainMenuItems: MenuItem[] = [
@@ -133,12 +125,6 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
       href: '/dashboard/settings',
       icon: Settings,
       description: 'App preferences and settings'
-    },
-    {
-      name: actualTheme === 'dark' ? 'Light Mode' : 'Dark Mode',
-      icon: actualTheme === 'dark' ? Sun : Moon,
-      action: toggleTheme,
-      description: 'Toggle theme'
     },
     {
       name: 'Help & Support',
