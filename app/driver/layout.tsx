@@ -23,6 +23,7 @@ import DriverRouteGuard from '@/components/driver-route-guard';
 import { LanguageProvider, useLanguage } from '@/lib/i18n/language-context';
 import LanguageSwitcher from '@/components/language-switcher';
 import BugReportWrapper from '@/components/bug-report-wrapper';
+import DriverMobileBottomNavbar from '@/components/driver-mobile-bottom-navbar';
 
 // Inner layout component that uses language context
 function DriverLayoutInner({
@@ -185,6 +186,9 @@ function DriverLayoutInner({
         </div>
       </div>
       
+    {/* Driver mobile bottom nav + FAB */}
+    <DriverMobileBottomNavbar />
+
       {/* Floating bug report button for driver */}
       <BugReportWrapper />
     </DriverRouteGuard>
