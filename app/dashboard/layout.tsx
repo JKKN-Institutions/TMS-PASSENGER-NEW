@@ -24,8 +24,6 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
 import { RequireAuth } from '@/components/protected-route';
 import NotificationCenter from '@/components/notification-center';
-import { ThemeToggle } from '@/components/modern-ui-components';
-import { useTheme } from '@/components/theme-provider';
 import { EnrollmentProvider, useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import BugReportWrapper from '@/components/bug-report-wrapper';
 import MobileBottomNavbar from '@/components/mobile-bottom-navbar';
@@ -47,7 +45,6 @@ function DashboardContent({
   const pathname = usePathname();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, logout } = useAuth();
-  const { theme, setTheme, actualTheme } = useTheme();
   const enrollmentStatus = useEnrollmentStatus();
 
   // Memoize navigation items to prevent unnecessary re-renders
@@ -439,15 +436,6 @@ function DashboardContent({
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Theme Toggle */}
-            <div className="hidden sm:block">
-              <ThemeToggle
-                isDark={actualTheme === 'dark'}
-                onToggle={(isDark) => setTheme(isDark ? 'dark' : 'light')}
-                className="p-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-              />
-            </div>
-            
             {/* Notification Center */}
             {user?.id && (
               <div className="relative">
