@@ -189,8 +189,10 @@ function DriverLayoutInner({
     {/* Driver mobile bottom nav + FAB */}
     <DriverMobileBottomNavbar />
 
-      {/* Floating bug report button for driver */}
-      <BugReportWrapper />
+      {/* Floating bug report button for driver (hidden on mobile; FAB handles) */}
+      <div className="hidden lg:block">
+        <BugReportWrapper />
+      </div>
     </DriverRouteGuard>
   );
 }
