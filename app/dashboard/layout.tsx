@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -10,14 +10,15 @@ import {
   MessageSquare, 
   Bell, 
   User, 
-  LogOut, 
-  X,
+  LogOut,
   Bus,
   MapPin,
   Settings,
   BarChart3,
   Navigation,
-  Bug
+  Bug,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
@@ -44,6 +45,7 @@ function DashboardContent({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const { theme, setTheme, actualTheme } = useTheme();
   const enrollmentStatus = useEnrollmentStatus();
@@ -142,42 +144,88 @@ function DashboardContent({
 
   return (
     <div className="h-screen bg-gray-50 overflow-hidden flex">
-      {/* Desktop sidebar */}
-      <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
-              <Bus className="h-6 w-6 text-white" />
+      {/* Enhanced Collapsible Desktop Sidebar */}
+      <div 
+        className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-gradient-to-b from-white via-white to-gray-50 border-r border-gray-200/80 shadow-xl transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'lg:w-20' : 'lg:w-80'
+        }`}
+      >
+        {/* Modern Header with Gradient */}
+        <div className="relative">
+          <div className={`flex items-center justify-between p-6 border-b border-gray-100/80 bg-gradient-to-r from-green-50/50 to-yellow-50/50 backdrop-blur-sm ${
+            sidebarCollapsed ? 'flex-col space-y-3 py-4' : ''
+          }`}>
+            <div className={`flex items-center ${sidebarCollapsed ? 'flex-col' : 'space-x-3'}`}>
+              <div className="w-12 h-12 bg-gradient-to-br from-green-600 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-200">
+                <Bus className="h-7 w-7 text-white drop-shadow-md" />
+              </div>
+              {!sidebarCollapsed && (
+                <div className="animate-fadeIn">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent">
+                    TMS Student
+                  </h1>
+                  <p className="text-xs text-gray-500 font-medium">Transport Management</p>
+                </div>
+              )}
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900">TMS Student</h1>
-              <p className="text-sm text-gray-500">Transport Management System</p>
-            </div>
+            
+            {/* Collapse Toggle Button */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className={`p-2.5 rounded-xl bg-white hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-200 group ${
+                sidebarCollapsed ? 'mt-0' : ''
+              }`}
+              title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {sidebarCollapsed ? (
+                <ChevronRight className="h-4 w-4 text-gray-600 group-hover:text-green-600 transition-colors" />
+              ) : (
+                <ChevronLeft className="h-4 w-4 text-gray-600 group-hover:text-green-600 transition-colors" />
+              )}
+            </button>
           </div>
         </div>
         
-        {/* Navigation */}
-        <nav className="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
-          <div className="mb-8">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">MENU</p>
+        {/* Enhanced Navigation with Modern Design */}
+        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+          {!sidebarCollapsed && (
+            <div className="mb-6">
+              <p className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                Navigation
+              </p>
+            </div>
+          )}
+          
+          <div className="space-y-1">
             {navigation.map((item) => {
               const isDisabled = item.disabled;
-              const baseClasses = `sidebar-nav-item ${item.current ? 'active' : ''} mb-1`;
-              const disabledClasses = isDisabled 
-                ? 'opacity-50 cursor-not-allowed pointer-events-none' 
-                : '';
+              const isActive = item.current;
               
               if (isDisabled) {
                 return (
                   <div
                     key={item.name}
-                    className={`${baseClasses} ${disabledClasses}`}
+                    className={`group relative flex items-center ${
+                      sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
+                    } rounded-xl opacity-50 cursor-not-allowed`}
                     title={`${item.name} - Available after enrollment`}
                   >
-                    <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                    <span className="font-medium">{item.name}</span>
-                    <span className="ml-auto text-xs text-gray-400">🔒</span>
+                    <div className={`flex items-center ${sidebarCollapsed ? '' : 'flex-1'}`}>
+                      <item.icon className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                      {!sidebarCollapsed && (
+                        <span className="ml-3 text-sm font-medium text-gray-400">
+                          {item.name}
+                        </span>
+                      )}
+                    </div>
+                    {!sidebarCollapsed && (
+                      <span className="text-xs">🔒</span>
+                    )}
+                    {sidebarCollapsed && (
+                      <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50">
+                        {item.name} 🔒
+                      </div>
+                    )}
                   </div>
                 );
               }
@@ -186,69 +234,137 @@ function DashboardContent({
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={baseClasses}
+                  className={`group relative flex items-center ${
+                    sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
+                  } rounded-xl transition-all duration-200 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-green-500 to-yellow-500 shadow-lg shadow-green-200/50 scale-[1.02]'
+                      : 'hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 hover:shadow-md'
+                  }`}
                 >
-                  <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                  <span className="font-medium">{item.name}</span>
+                  <div className={`flex items-center ${sidebarCollapsed ? '' : 'flex-1'}`}>
+                    <item.icon className={`h-5 w-5 flex-shrink-0 transition-colors duration-200 ${
+                      isActive 
+                        ? 'text-white drop-shadow-sm' 
+                        : 'text-gray-600 group-hover:text-green-600'
+                    }`} />
+                    {!sidebarCollapsed && (
+                      <span className={`ml-3 text-sm font-semibold transition-colors duration-200 ${
+                        isActive 
+                          ? 'text-white drop-shadow-sm' 
+                          : 'text-gray-700 group-hover:text-green-700'
+                      }`}>
+                        {item.name}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Tooltip for collapsed state */}
+                  {sidebarCollapsed && (
+                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl">
+                      {item.name}
+                    </div>
+                  )}
+                  
+                  {/* Active indicator */}
+                  {isActive && !sidebarCollapsed && (
+                    <div className="w-1.5 h-1.5 bg-white rounded-full shadow-sm" />
+                  )}
                 </Link>
               );
             })}
           </div>
 
-          <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
+          {/* Settings Section */}
+          <div className={`pt-6 mt-6 border-t border-gray-200/50 ${sidebarCollapsed ? '' : 'space-y-1'}`}>
+            {!sidebarCollapsed && (
+              <p className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                Settings
+              </p>
+            )}
             <Link
               href="/dashboard/settings"
-              className="sidebar-nav-item mb-1"
+              className={`group relative flex items-center ${
+                sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
+              } rounded-xl transition-all duration-200 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 hover:shadow-md`}
             >
-              <Settings className="h-5 w-5 mr-3 flex-shrink-0" />
-              <span className="font-medium">Settings</span>
+              <Settings className="h-5 w-5 text-gray-600 group-hover:text-green-600 flex-shrink-0 transition-colors" />
+              {!sidebarCollapsed && (
+                <span className="ml-3 text-sm font-semibold text-gray-700 group-hover:text-green-700 transition-colors">
+                  Settings
+                </span>
+              )}
+              {sidebarCollapsed && (
+                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl">
+                  Settings
+                </div>
+              )}
             </Link>
           </div>
         </nav>
         
-        {/* User Profile */}
-        <div className="border-t border-gray-100 p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="relative">
-              <img
-                src="/api/placeholder/40/40"
-                alt={user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
-                className="h-10 w-10 rounded-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <div className="hidden h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">
-                    {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
-                  </span>
+        {/* Enhanced User Profile Section */}
+        <div className={`border-t border-gray-200/80 bg-gradient-to-r from-gray-50/50 to-gray-100/50 ${
+          sidebarCollapsed ? 'p-4' : 'p-6'
+        }`}>
+          {sidebarCollapsed ? (
+            <div className="group relative">
+              <div className="flex justify-center mb-3">
+                <div className="relative">
+                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-green-600 to-yellow-500 flex items-center justify-center shadow-lg cursor-pointer transform hover:scale-105 transition-transform">
+                    <span className="text-sm font-bold text-white drop-shadow-sm">
+                      {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white shadow-sm"></div>
+                </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
+              <button
+                onClick={handleLogout}
+                className="w-full p-2.5 flex justify-center items-center rounded-xl bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 transition-all duration-200 shadow-sm hover:shadow-md group"
+              >
+                <LogOut className="h-4 w-4 text-red-600" />
+              </button>
+              <div className="absolute left-full ml-2 bottom-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl">
                 {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                {user?.email || 'student@email.com'}
-              </p>
+              </div>
             </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <LogOut className="h-4 w-4 mr-3" />
-            Logout
-          </button>
+          ) : (
+            <>
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="relative">
+                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-green-600 to-yellow-500 flex items-center justify-center shadow-lg">
+                    <span className="text-sm font-bold text-white drop-shadow-sm">
+                      {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white shadow-sm"></div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-gray-900 truncate">
+                    {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate font-medium">
+                    {user?.email || 'student@email.com'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 text-red-600 transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-80 flex flex-col h-full flex-1 min-w-0">
+      <div className={`flex flex-col h-full flex-1 min-w-0 transition-all duration-300 ease-in-out ${
+        sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-80'
+      }`}>
         {/* Enhanced Top bar */}
         <div className="bg-white/95 backdrop-blur-xl border-b border-green-100 shadow-sm flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
           <div className="flex items-center space-x-3">
