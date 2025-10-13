@@ -11,7 +11,6 @@ import {
   Bell, 
   User, 
   LogOut, 
-  Menu, 
   X,
   Bus,
   MapPin,
@@ -45,7 +44,6 @@ function DashboardContent({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
   const { theme, setTheme, actualTheme } = useTheme();
   const enrollmentStatus = useEnrollmentStatus();
@@ -144,121 +142,6 @@ function DashboardContent({
 
   return (
     <div className="h-screen bg-gray-50 overflow-hidden flex">
-      {/* Enhanced Mobile sidebar */}
-      <div className={`fixed inset-0 z-[90] lg:hidden sidebar-overlay ${sidebarOpen ? '' : 'pointer-events-none'}`}>
-        <div
-          className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ease-out ${
-            sidebarOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-          onClick={() => setSidebarOpen(false)}
-        />
-        <div
-          className={`fixed inset-y-0 left-0 flex w-80 flex-col bg-white shadow-2xl transition-all duration-300 ease-out transform z-[100] ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
-                <Bus className="h-6 w-6 text-white" />
-              </div>
-                             <div>
-                 <h1 className="text-lg font-bold text-gray-900">TMS Student</h1>
-                 <p className="text-sm text-gray-500">Transport Management</p>
-               </div>
-            </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-            >
-              <X className="h-5 w-5 text-gray-400" />
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
-            <div className="mb-8">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">MENU</p>
-              {navigation.map((item) => {
-                const isDisabled = item.disabled;
-                const baseClasses = `sidebar-nav-item ${item.current ? 'active' : ''} mb-1`;
-                const disabledClasses = isDisabled 
-                  ? 'opacity-50 cursor-not-allowed pointer-events-none' 
-                  : '';
-                
-                if (isDisabled) {
-                  return (
-                    <div
-                      key={item.name}
-                      className={`${baseClasses} ${disabledClasses}`}
-                      title={`${item.name} - Available after enrollment`}
-                    >
-                      <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <span className="font-medium">{item.name}</span>
-                      <span className="ml-auto text-xs text-gray-400">🔒</span>
-                    </div>
-                  );
-                }
-                
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className={baseClasses}
-                  >
-                    <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">GENERAL</p>
-              <Link
-                href="/dashboard/settings"
-                onClick={() => setSidebarOpen(false)}
-                className="sidebar-nav-item mb-1"
-              >
-                <Settings className="h-5 w-5 mr-3 flex-shrink-0" />
-                <span className="font-medium">Settings</span>
-              </Link>
-            </div>
-          </nav>
-
-          {/* User Profile */}
-          <div className="border-t border-gray-100 p-6">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="relative">
-                <div className="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">
-                    {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">
-                  {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {user?.email || 'student@email.com'}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <LogOut className="h-4 w-4 mr-3" />
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-gray-200">
         {/* Header */}
@@ -369,18 +252,12 @@ function DashboardContent({
         {/* Enhanced Top bar */}
         <div className="bg-white/95 backdrop-blur-xl border-b border-green-100 shadow-sm flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-2 text-gray-500 hover:text-green-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 lg:hidden shadow-sm hover:shadow-md"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            
+            {/* Logo for mobile - hamburger menu removed, using More menu in bottom nav instead */}
             <div className="flex items-center lg:hidden">
               <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-yellow-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
                 <Bus className="h-5 w-5 text-white drop-shadow-sm" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">TMS</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">TMS Student</span>
             </div>
           </div>
 

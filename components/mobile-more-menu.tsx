@@ -17,11 +17,16 @@ import {
   HelpCircle,
   Shield,
   Moon,
-  Sun
+  Sun,
+  Home,
+  Bus,
+  Calendar,
+  CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useTheme } from '@/components/theme-provider';
+import { useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import toast from 'react-hot-toast';
 
 interface MenuItem {
@@ -44,6 +49,8 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { theme, setTheme, actualTheme } = useTheme();
+  const enrollmentStatus = useEnrollmentStatus();
+  const isEnrolled = enrollmentStatus?.isEnrolled || false;
 
   const handleLogout = async () => {
     try {
@@ -62,16 +69,37 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
 
   const mainMenuItems: MenuItem[] = [
     {
-      name: 'Profile',
-      href: '/dashboard/profile',
-      icon: User,
-      description: 'View and edit your profile'
+      name: 'Home',
+      href: '/dashboard',
+      icon: Home,
+      description: 'Dashboard overview'
     },
     {
-      name: 'Notifications',
-      href: '/dashboard/notifications',
-      icon: Bell,
-      description: 'View all notifications'
+      name: 'My Routes',
+      href: '/dashboard/routes',
+      icon: Bus,
+      description: 'View your assigned routes',
+      requiresEnrollment: true
+    },
+    {
+      name: 'Schedules',
+      href: '/dashboard/schedules',
+      icon: Calendar,
+      description: 'View transport schedules',
+      requiresEnrollment: true
+    },
+    {
+      name: 'Live Track',
+      href: '/dashboard/live-track',
+      icon: MapPin,
+      description: 'Track your bus in real-time',
+      requiresEnrollment: true
+    },
+    {
+      name: 'Payments',
+      href: '/dashboard/payments',
+      icon: CreditCard,
+      description: 'Manage payments'
     },
     {
       name: 'Grievances',
@@ -80,11 +108,16 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
       description: 'Submit and track grievances'
     },
     {
-      name: 'Live Track',
-      href: '/dashboard/live-track',
-      icon: MapPin,
-      description: 'Track your bus in real-time',
-      requiresEnrollment: true
+      name: 'Notifications',
+      href: '/dashboard/notifications',
+      icon: Bell,
+      description: 'View all notifications'
+    },
+    {
+      name: 'Profile',
+      href: '/dashboard/profile',
+      icon: User,
+      description: 'View and edit your profile'
     },
     {
       name: 'Bug Reports',
@@ -192,9 +225,37 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                 <div className="space-y-1">
                   {mainMenuItems.map((item) => {
                     const isActive = item.href && pathname === item.href;
-                    const isDisabled = item.disabled;
+                    const isDisabled = item.disabled || (item.requiresEnrollment && !isEnrolled);
 
                     if (item.href) {
+                      if (isDisabled) {
+                        return (
+                          <div
+                            key={item.name}
+                            className="flex items-center justify-between p-4 rounded-2xl opacity-50 cursor-not-allowed"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className="p-2.5 rounded-xl bg-gray-100">
+                                <item.icon className="h-5 w-5 text-gray-400" />
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-400">
+                                  {item.name}
+                                </p>
+                                {item.description && (
+                                  <p className="text-xs text-gray-400 mt-0.5">
+                                    {item.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <span className="text-xs text-gray-400">🔒</span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      
                       return (
                         <Link
                           key={item.name}
@@ -204,7 +265,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                             isActive
                               ? 'bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200'
                               : 'hover:bg-gray-50'
-                          } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          }`}
                         >
                           <div className="flex items-center space-x-3">
                             <div className={`p-2.5 rounded-xl ${
