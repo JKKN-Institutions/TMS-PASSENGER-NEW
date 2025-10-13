@@ -29,6 +29,7 @@ import { sessionManager } from '@/lib/session';
 import { studentHelpers } from '@/lib/supabase';
 import { Card, Button, Input, Select, Badge, Alert } from '@/components/modern-ui-components';
 import toast from 'react-hot-toast';
+import PageWrapper from '@/components/page-wrapper';
 
 interface StudentProfile {
   id: string;
@@ -172,12 +173,12 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      <PageWrapper className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
           <p className="text-green-700 font-medium">Loading settings...</p>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
@@ -410,12 +411,12 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6 pb-24 lg:pb-6">
+    <PageWrapper className="space-y-8 p-6 pb-24 lg:pb-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100"
+        className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-green-200"
       >
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent mb-2">Settings</h1>
@@ -467,6 +468,6 @@ export default function SettingsPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 } 

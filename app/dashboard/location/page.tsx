@@ -6,6 +6,7 @@ import LocationTracker from '@/components/location-tracker';
 import LocationSettings from '@/components/location-settings';
 import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
+import PageWrapper from '@/components/page-wrapper';
 
 interface LocationSettings {
   locationSharingEnabled: boolean;
@@ -100,29 +101,29 @@ const LocationPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center pb-24 lg:pb-6">
+      <PageWrapper className="flex items-center justify-center min-h-[80vh] pb-24 lg:pb-6">
         <div className="flex items-center space-x-2">
           <div className="w-6 h-6 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
           <span className="text-gray-600">Loading location settings...</span>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   if (!studentId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center pb-24 lg:pb-6">
+      <PageWrapper className="flex items-center justify-center min-h-[80vh] pb-24 lg:pb-6">
         <div className="text-center">
           <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
           <p className="text-gray-600">Please log in to access location settings.</p>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 lg:pb-6">
+    <PageWrapper className="pb-24 lg:pb-6">
       <div className="max-w-4xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
@@ -272,7 +273,7 @@ const LocationPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

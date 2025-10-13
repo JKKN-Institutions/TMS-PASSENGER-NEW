@@ -27,6 +27,7 @@ import {
 import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
 import dynamic from 'next/dynamic';
+import PageWrapper from '@/components/page-wrapper';
 
 // Dynamically import the enhanced map component
 const EnhancedLiveTrackingMap = dynamic(() => import('@/components/enhanced-live-tracking-map'), {
@@ -249,7 +250,7 @@ export default function LiveTrackPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
+      <PageWrapper className="flex items-center justify-center min-h-[80vh]">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -271,13 +272,13 @@ export default function LiveTrackPage() {
           <p className="text-gray-700 font-semibold text-xl mb-2">Tracking your bus...</p>
           <p className="text-gray-500 text-sm">Getting real-time location</p>
         </motion.div>
-      </div>
+      </PageWrapper>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+      <PageWrapper className="flex items-center justify-center min-h-[80vh] p-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -295,13 +296,13 @@ export default function LiveTrackPage() {
             </button>
           </div>
         </motion.div>
-      </div>
+      </PageWrapper>
     );
   }
 
   if (!trackingData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center p-4">
+      <PageWrapper className="flex items-center justify-center min-h-[80vh] p-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -319,7 +320,7 @@ export default function LiveTrackPage() {
             </button>
           </div>
         </motion.div>
-      </div>
+      </PageWrapper>
     );
   }
 
@@ -329,7 +330,7 @@ export default function LiveTrackPage() {
   const isOnline = gpsStatus === 'online';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <PageWrapper className="bg-gray-50">
       {/* Modern Header with Gradient */}
       <div className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -665,6 +666,6 @@ export default function LiveTrackPage() {
           </div>
         </motion.div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

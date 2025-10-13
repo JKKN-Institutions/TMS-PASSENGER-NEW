@@ -21,6 +21,7 @@ import {
 import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
 import { pushNotificationService } from '@/lib/push-notifications';
+import PageWrapper from '@/components/page-wrapper';
 
 interface Notification {
   id: string;
@@ -468,23 +469,23 @@ const NotificationsPage = () => {
   // Show loading state while student is being initialized
   if (!student) {
     return (
-      <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
+      <PageWrapper className="max-w-7xl mx-auto p-6 pb-24 lg:pb-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gradient-to-r from-green-200 to-yellow-200 rounded-xl w-1/4 mb-6"></div>
+          <div className="h-8 bg-white/60 backdrop-blur-sm rounded-xl w-1/4 mb-6"></div>
           <div className="space-y-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl h-32 shadow-md"></div>
+              <div key={i} className="bg-white/60 backdrop-blur-sm rounded-xl h-32 shadow-lg"></div>
             ))}
           </div>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
+    <PageWrapper className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 min-w-0 pb-24 lg:pb-6">
               {/* Header */}
-        <div className="mb-4 sm:mb-6 lg:mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
+        <div className="mb-4 sm:mb-6 lg:mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-green-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Notifications</h1>
@@ -521,7 +522,7 @@ const NotificationsPage = () => {
         
         {/* Stats */}
         <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-xl border border-green-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center">
               <div className="p-2 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full mr-3 shadow-md">
                 <Bell className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600 flex-shrink-0" />
@@ -532,7 +533,7 @@ const NotificationsPage = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-xl border border-green-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center">
               <div className="p-2 bg-gradient-to-br from-blue-100 to-green-100 rounded-full mr-3 shadow-md">
                 <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-blue-500 rounded-full flex-shrink-0"></div>
@@ -543,7 +544,7 @@ const NotificationsPage = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-xl border border-green-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center">
               <div className="p-2 bg-gradient-to-br from-green-100 to-blue-100 rounded-full mr-3 shadow-md">
                 <Bus className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600 flex-shrink-0" />
@@ -556,7 +557,7 @@ const NotificationsPage = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 shadow-xl border border-green-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center">
               <div className="p-2 bg-gradient-to-br from-yellow-100 to-green-100 rounded-full mr-3 shadow-md">
                 <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-600 flex-shrink-0" />
@@ -753,7 +754,7 @@ const NotificationsPage = () => {
       </div>
 
       {/* Notifications List */}
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200">
         {loading ? (
           <div className="p-16 text-center">
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
@@ -785,8 +786,8 @@ const NotificationsPage = () => {
                   whileHover={{ scale: 1.01, y: -2 }}
                   className={`relative p-4 sm:p-5 lg:p-6 rounded-xl mx-4 mb-4 shadow-sm hover:shadow-lg transition-all duration-300 border ${
                     !notification.read 
-                      ? 'bg-gradient-to-r from-blue-50 via-green-50 to-yellow-50 border-green-300 shadow-md' 
-                      : 'bg-white/90 backdrop-blur-sm border-gray-200 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50'
+                      ? 'bg-white/90 backdrop-blur-sm border-green-300 shadow-lg' 
+                      : 'bg-white/80 backdrop-blur-sm border-gray-200 hover:border-green-200 hover:shadow-md'
                   }`}
                 >
                   <div className="flex items-start space-x-3 sm:space-x-4">
@@ -915,7 +916,7 @@ const NotificationsPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </PageWrapper>
   );
 };
 

@@ -22,7 +22,6 @@ import { studentHelpers } from '@/lib/supabase';
 import { sessionManager } from '@/lib/session';
 import { RouteAccessControl } from '@/components/account-access-control';
 import { Card, Button, Badge, Spinner, Alert, Avatar } from '@/components/modern-ui-components';
-
 import toast from 'react-hot-toast';
 import { RouteLoading } from '@/components/loading-screen';
 
@@ -147,9 +146,10 @@ export default function RoutesPage() {
 
   if (error || !route) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
+      <>
+        <div className="space-y-6 py-4 sm:py-6">
+          <div className="flex items-center justify-between">
+            <div>
             <h1 className="text-heading-1 mb-2">My Transport Route</h1>
             <p className="text-body">Your allocated transport route and boarding information</p>
           </div>
@@ -165,7 +165,8 @@ export default function RoutesPage() {
         <Alert variant="warning" title="No Route Allocation">
           {error || 'You have not been allocated a transport route yet. Please contact the administration to request route allocation.'}
         </Alert>
-      </div>
+        </div>
+      </>
     );
   }
 
@@ -192,8 +193,9 @@ export default function RoutesPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <RouteAccessControl
+    <>
+      <div className="space-y-8">
+        <RouteAccessControl
         isActive={paymentStatus?.isActive ?? true}
         nextDueAmount={nextDueAmount ?? undefined}
       >
@@ -541,8 +543,7 @@ export default function RoutesPage() {
         </div>
       </div>
       </RouteAccessControl>
-
-
-    </div>
+      </div>
+      </>
   );
 } 

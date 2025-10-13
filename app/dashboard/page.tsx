@@ -232,7 +232,7 @@ export default function DashboardPage() {
     option.is_available && option.is_recommended
   )?.amount;
 
-  console.log('🔍 Dashboard Route Allocation Check:', {
+  console.log('Dashboard Route Allocation Check:', {
     hasRouteAllocation,
     hasActiveRoute: transportStatus.hasActiveRoute,
     allocatedRouteId: (profile as any)?.allocated_route_id,
@@ -247,7 +247,7 @@ export default function DashboardPage() {
   const isEnrolledFromContext = enrollmentStatus?.isEnrolled || false;
   const shouldShowEnrollmentDashboard = !hasRouteAllocation && !isEnrolledFromContext && !profile?.transport_enrolled;
   
-  console.log('🔍 Dashboard Display Logic:', {
+  console.log('Dashboard Display Logic:', {
     shouldShowEnrollmentDashboard,
     hasRouteAllocation,
     isEnrolledFromContext,
@@ -257,9 +257,10 @@ export default function DashboardPage() {
   
   if (shouldShowEnrollmentDashboard) {
     return (
-      <div className="min-h-full py-8 sm:py-12 px-4">
+      <>
+        <div className="min-h-full py-8 sm:py-12 px-4">
           {/* Simplified Welcome Section */}
-          <motion.div
+        <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
@@ -383,12 +384,12 @@ export default function DashboardPage() {
             </motion.div>
           )}
         </div>
-      </div>
+      </>
     );
   }
 
   // Log the route allocation status for debugging
-  console.log('🔍 Dashboard Payment Logic:');
+  console.log('Dashboard Payment Logic:');
   console.log('  - hasRouteAllocation:', hasRouteAllocation);
   console.log('  - paymentStatus?.isActive:', paymentStatus?.isActive);
   console.log('  - Should show payment restrictions:', hasRouteAllocation);

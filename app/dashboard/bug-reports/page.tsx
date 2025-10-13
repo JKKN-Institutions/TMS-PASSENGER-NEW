@@ -30,6 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
 import BugBountyTracker from '@/components/bug-bounty-tracker';
+import PageWrapper from '@/components/page-wrapper';
 
 interface BugReport {
   id: string;
@@ -186,9 +187,9 @@ export default function BugReportsPage() {
   };
 
   return (
-    <div className="space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen p-6 pb-24 lg:pb-6">
+    <PageWrapper className="space-y-6 p-6 pb-24 lg:pb-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-green-100 space-y-4 lg:space-y-0">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-xl border border-green-200 space-y-4 lg:space-y-0">
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent flex items-center space-x-3">
             <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md flex-shrink-0">
@@ -566,7 +567,7 @@ export default function BugReportsPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </PageWrapper>
   );
 }
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { sessionManager } from '@/lib/session';
 import EnhancedPaymentInterface from '@/components/enhanced-payment-interface';
 import PaymentHistoryViewer from '@/components/payment-history-viewer';
+import PageWrapper from '@/components/page-wrapper';
 import toast from 'react-hot-toast';
 import { PaymentLoading } from '@/components/loading-screen';
 
@@ -59,8 +60,8 @@ export default function PaymentsPage() {
 
   if (!student) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
+      <PageWrapper className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200/50">
           <div className="w-16 h-16 bg-gradient-to-r from-red-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -69,15 +70,15 @@ export default function PaymentsPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-2">Authentication Required</h2>
           <p className="text-gray-600">Please login to access payments</p>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 p-2 sm:p-4 lg:p-6 pb-24 lg:pb-6 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 w-full min-w-0">
+    <PageWrapper>
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 py-4 sm:py-6">
         {/* Enhanced Header */}
-        <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-2xl border border-green-300">
+        <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-green-400/30">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="min-w-0 flex-1">
               <div className="flex items-center space-x-3 mb-2">
@@ -103,7 +104,7 @@ export default function PaymentsPage() {
         </div>
 
         {/* Enhanced Tab Navigation */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50">
           <div className="border-b border-green-100">
             <nav className="flex space-x-1 sm:space-x-2 p-2 overflow-x-auto scrollbar-hide">
               {[
@@ -149,6 +150,6 @@ export default function PaymentsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 } 

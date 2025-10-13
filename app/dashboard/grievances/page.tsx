@@ -22,6 +22,7 @@ import { Grievance, Route, Student } from '@/types';
 import { formatDate, getStatusColor, getStatusText, capitalizeFirst, getErrorMessage } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import GrievanceGroupChatModal from '@/components/grievance-group-chat-modal-fixed';
+import PageWrapper from '@/components/page-wrapper';
 
 export default function GrievancesPage() {
   const [grievances, setGrievances] = useState<Grievance[]>([]);
@@ -249,21 +250,21 @@ export default function GrievancesPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6">
+      <PageWrapper className="p-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gradient-to-r from-green-200 to-yellow-200 rounded-xl w-1/4 mb-6"></div>
+          <div className="h-8 bg-white/60 backdrop-blur-sm rounded-xl w-1/4 mb-6"></div>
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 h-32 bg-gradient-to-r from-green-100 to-yellow-100 shadow-md"></div>
+              <div key={i} className="bg-white/60 backdrop-blur-sm rounded-xl p-6 h-32 shadow-lg"></div>
             ))}
           </div>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen pb-24 lg:pb-6">
+    <PageWrapper className="p-6 space-y-6 pb-24 lg:pb-6">
       <GrievanceAccessControl
         isActive={paymentStatus?.isActive ?? true}
         nextDueAmount={nextDueAmount ?? undefined}
@@ -291,7 +292,7 @@ export default function GrievancesPage() {
           { label: 'In Progress', value: grievances.filter(g => g.status === 'in_progress').length, color: 'yellow' },
           { label: 'Resolved', value: grievances.filter(g => g.status === 'resolved').length, color: 'green' }
         ].map((stat) => (
-          <div key={stat.label} className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <div key={stat.label} className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700">{stat.label}</p>
@@ -318,7 +319,7 @@ export default function GrievancesPage() {
 
 
       {/* Filters */}
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
@@ -383,7 +384,7 @@ export default function GrievancesPage() {
       <div className="space-y-4">
         {filteredGrievances.length > 0 ? (
           filteredGrievances.map((grievance) => (
-            <div key={grievance.id} className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
+            <div key={grievance.id} className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl shadow-md">
@@ -514,7 +515,7 @@ export default function GrievancesPage() {
       {/* Grievance Modal */}
       {showGrievanceModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-green-100">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-green-200">
             <div className="flex items-center justify-between p-6 border-b border-green-100 bg-gradient-to-r from-green-50 to-yellow-50">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Submit Grievance</h2>
               <button
@@ -654,7 +655,7 @@ export default function GrievancesPage() {
       {/* Simple Progress Tracker Modal */}
       {showProgressTracker && selectedGrievanceId && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-2xl border border-green-100">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-2xl border border-green-200">
             <div className="flex items-center justify-between p-6 border-b border-green-100 bg-gradient-to-r from-green-50 to-yellow-50">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Progress Tracker</h2>
               <button onClick={handleCloseProgressTracker} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-white/50 rounded-xl transition-all duration-200">
@@ -733,6 +734,6 @@ export default function GrievancesPage() {
           grievance={selectedGrievanceForChat}
         />
       )}
-    </div>
+    </PageWrapper>
   );
 } 
