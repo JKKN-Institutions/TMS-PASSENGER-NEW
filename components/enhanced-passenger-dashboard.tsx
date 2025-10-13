@@ -65,15 +65,25 @@ const StatCard = ({ title, value, icon: Icon, change, delay = 0 }: {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: delay * 0.1 }}
-    className="modern-card p-6 group cursor-pointer"
+    className="modern-card p-6 group cursor-pointer 
+      dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]
+      dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)]
+      dark:hover:border-[var(--neon-green)] dark:hover:shadow-[0_8px_30px_var(--neon-green-glow)]"
   >
     <div className="flex items-center justify-between mb-4">
-      <div className="p-3 bg-gray-100 rounded-xl group-hover:bg-green-100 transition-colors">
-        <Icon className="h-6 w-6 text-gray-600 group-hover:text-green-600 transition-colors" />
+      <div className="p-3 bg-gray-100 dark:bg-[var(--dark-bg-tertiary)] rounded-xl 
+        group-hover:bg-green-100 dark:group-hover:bg-[rgba(0,255,136,0.2)]
+        dark:shadow-[0_0_15px_rgba(0,255,136,0.2)]
+        transition-all duration-300 icon-glow">
+        <Icon className="h-6 w-6 text-gray-600 dark:text-[var(--text-secondary)] 
+          group-hover:text-green-600 dark:group-hover:text-[var(--neon-green)] 
+          transition-colors" />
       </div>
       {change && (
         <div className={`flex items-center space-x-1 text-sm font-medium ${
-          change.direction === 'up' ? 'text-green-600' : 'text-red-500'
+          change.direction === 'up' 
+            ? 'text-green-600 dark:text-[var(--neon-green)]' 
+            : 'text-red-500 dark:text-[var(--neon-orange)]'
         }`}>
           <TrendingUp className={`h-4 w-4 ${change.direction === 'down' ? 'rotate-180' : ''}`} />
           <span>{change.value}%</span>
@@ -81,8 +91,8 @@ const StatCard = ({ title, value, icon: Icon, change, delay = 0 }: {
       )}
     </div>
     <div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-1">{value}</h3>
-      <p className="text-sm text-gray-500 font-medium">{title}</p>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-[var(--text-primary)] mb-1">{value}</h3>
+      <p className="text-sm text-gray-500 dark:text-[var(--text-secondary)] font-medium">{title}</p>
     </div>
   </motion.div>
 );

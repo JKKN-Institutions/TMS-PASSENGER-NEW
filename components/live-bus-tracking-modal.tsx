@@ -271,16 +271,16 @@ export default function LiveBusTrackingModal({ isOpen, onClose, routeId }: LiveB
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="modal-overlay fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-90 flex items-center justify-center z-50 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+          className="modal-content bg-white dark:bg-[var(--dark-bg-secondary)] dark:border-2 dark:border-[var(--dark-bg-elevated)] rounded-xl shadow-xl dark:shadow-[0_20px_60px_rgba(0,0,0,0.8)] max-w-md w-full p-6"
         >
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading Bus Location</h3>
-            <p className="text-gray-600">Fetching real-time tracking data...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-[var(--neon-blue)] mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-[var(--text-primary)] mb-2">Loading Bus Location</h3>
+            <p className="text-gray-600 dark:text-[var(--text-secondary)]">Fetching real-time tracking data...</p>
           </div>
         </motion.div>
       </div>
@@ -289,14 +289,14 @@ export default function LiveBusTrackingModal({ isOpen, onClose, routeId }: LiveB
 
   if (error && !trackingData && !progressData) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="modal-overlay fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-90 flex items-center justify-center z-50 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+          className="modal-content bg-white dark:bg-[var(--dark-bg-secondary)] dark:border-2 dark:border-[var(--dark-bg-elevated)] rounded-xl shadow-xl dark:shadow-[0_20px_60px_rgba(0,0,0,0.8)] max-w-md w-full p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Tracking Error</h3>
+            <h3 className="modal-title text-lg font-semibold text-gray-900 dark:text-[var(--neon-orange)]">Tracking Error</h3>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
               <X className="w-6 h-6" />
             </button>
@@ -323,29 +323,29 @@ export default function LiveBusTrackingModal({ isOpen, onClose, routeId }: LiveB
   const isGPSEnabled = trackingData?.gps?.enabled || progressData?.liveTrackingEnabled || false;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="modal-overlay fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-90 flex items-center justify-center z-50 p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        className="modal-content bg-white dark:bg-[var(--dark-bg-secondary)] dark:border-2 dark:border-[var(--dark-bg-elevated)] rounded-xl shadow-xl dark:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(0,255,136,0.15)] max-w-4xl w-full max-h-[90vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div className="modal-header flex items-center justify-between p-6 border-b border-gray-200 dark:border-[var(--dark-bg-elevated)] bg-gradient-to-r from-blue-600 to-blue-700 dark:from-[rgba(0,255,136,0.2)] dark:to-[rgba(0,212,255,0.2)]">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white bg-opacity-20 rounded-lg">
-              <Bus className="w-6 h-6 text-white" />
+            <div className="p-2 bg-white bg-opacity-20 dark:bg-[var(--dark-bg-tertiary)] rounded-lg icon-glow">
+              <Bus className="w-6 h-6 text-white dark:text-[var(--neon-green)]" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Live Bus Tracking</h2>
-              <p className="text-blue-100 text-sm">
+              <h2 className="modal-title text-xl font-bold text-white dark:text-[var(--neon-green)]">Live Bus Tracking</h2>
+              <p className="text-blue-100 dark:text-[var(--text-secondary)] text-sm">
                 {routeInfo ? `Route ${routeInfo.routeNumber} - ${routeInfo.routeName}` : 'Loading...'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-white hover:text-blue-200 transition-colors"
+            className="modal-close text-white dark:text-[var(--text-secondary)] hover:text-blue-200 dark:hover:text-[var(--neon-orange)] transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -635,8 +635,8 @@ export default function LiveBusTrackingModal({ isOpen, onClose, routeId }: LiveB
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t border-gray-200 bg-gray-50">
-          <div className="text-sm text-gray-600">
+        <div className="modal-footer flex justify-between items-center p-6 border-t border-gray-200 dark:border-[var(--dark-bg-elevated)] bg-gray-50 dark:bg-[var(--dark-bg-tertiary)]">
+          <div className="text-sm text-gray-600 dark:text-[var(--text-secondary)]">
             {lastUpdate && (
               <span>Last updated: {lastUpdate.toLocaleTimeString()}</span>
             )}
