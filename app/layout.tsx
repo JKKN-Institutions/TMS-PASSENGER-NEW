@@ -21,8 +21,11 @@ export const metadata: Metadata = {
   keywords: ["transport", "student", "booking", "management", "bus"],
   authors: [{ name: "JKKN College" }],
   icons: {
-    icon: "/favicon.ico",
-    apple: "/icons/icon-192x192.png",
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
   appleWebApp: {
@@ -53,7 +56,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#10b981" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <script src="/sw-register.js" defer></script>
       </head>
       <body

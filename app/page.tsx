@@ -55,12 +55,16 @@ export default function Home() {
 
   // Loading state while authentication is being determined
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center">
       <div className="text-center space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+        <img 
+          src="/app-logo.png" 
+          alt="JKKN TMS Logo" 
+          className="h-20 w-20 mx-auto drop-shadow-lg animate-pulse"
+        />
         <div>
-          <p className="text-gray-600 text-lg">MYJKKN TMS</p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-700 text-lg font-semibold">MYJKKN TMS</p>
+          <p className="text-gray-600 text-sm">
             {isLoading ? 'Checking authentication...' : 'Redirecting...'}
           </p>
         </div>

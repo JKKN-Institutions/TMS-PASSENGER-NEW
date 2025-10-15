@@ -121,8 +121,12 @@ const PWAInstallPrompt: React.FC = () => {
                 </button>
                 
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                    <Smartphone className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
+                    <img 
+                      src="/app-logo.png" 
+                      alt="JKKN TMS" 
+                      className="w-full h-full"
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold mb-1">Install JKKN TMS</h3>

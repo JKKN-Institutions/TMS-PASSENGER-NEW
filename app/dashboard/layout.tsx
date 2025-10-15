@@ -161,12 +161,12 @@ function DashboardContent({
             sidebarCollapsed ? 'flex-col space-y-3 py-4' : ''
           }`}>
             <div className={`flex items-center ${sidebarCollapsed ? 'flex-col' : 'space-x-3'}`}>
-              <div className="w-12 h-12 bg-gradient-to-br from-green-600 via-green-500 to-yellow-500 
-                dark:bg-gradient-to-br dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)]
-                rounded-2xl flex items-center justify-center shadow-lg 
-                dark:shadow-[0_0_30px_var(--neon-green-glow)]
-                transform hover:scale-105 transition-all duration-200 icon-glow">
-                <Bus className="h-7 w-7 text-white drop-shadow-md" />
+              <div className="w-12 h-12 flex items-center justify-center transform hover:scale-105 transition-all duration-200">
+                <img 
+                  src="/app-logo.png" 
+                  alt="JKKN TMS Logo" 
+                  className="h-12 w-12 drop-shadow-lg"
+                />
               </div>
               {!sidebarCollapsed && (
                 <div className="animate-fadeIn">
