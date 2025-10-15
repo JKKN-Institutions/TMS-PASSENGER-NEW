@@ -179,3 +179,4 @@ If you want to re-enable dark mode in the future:
 **Linter Errors**: 0  
 **Functional Impact**: None (theme toggle removed only)
 
+

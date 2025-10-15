@@ -7,6 +7,7 @@ import AutoLoginWrapper from "@/components/auto-login-wrapper";
 import AutoPushPermission from "@/components/auto-push-permission";
 import BugReportWrapper from "@/components/bug-report-wrapper";
 import DeploymentVersionCheck from "@/components/deployment-version-check";
+import PWAInstallPrompt from "@/components/pwa-install-prompt";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,6 +22,16 @@ export const metadata: Metadata = {
   authors: [{ name: "JKKN College" }],
   icons: {
     icon: "/favicon.ico",
+    apple: "/icons/icon-192x192.png",
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "JKKN TMS",
+  },
+  formatDetection: {
+    telephone: false,
   },
 };
 
@@ -40,6 +51,10 @@ export default function RootLayout({
     <html lang="en" className="h-full overflow-x-hidden">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="theme-color" content="#10b981" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <script src="/sw-register.js" defer></script>
       </head>
       <body
         className={`${inter.variable} font-sans antialiased h-full overflow-x-hidden`}
@@ -53,6 +68,8 @@ export default function RootLayout({
             <AutoLoginWrapper>
               <div id="root" className="h-full overflow-x-hidden">
                 {children}
+                {/* PWA Install Prompt */}
+                <PWAInstallPrompt />
                 {/* Auto push permission prompt */}
                 <AutoPushPermission delay={5000} oncePerSession={true} />
                 {/* Floating bug report button */}
