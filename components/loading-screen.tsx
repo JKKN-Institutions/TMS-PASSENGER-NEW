@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Bus, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { THEME } from '@/lib/theme-constants';
 
 interface LoadingScreenProps {
   message?: string;
@@ -24,8 +25,8 @@ export default function LoadingScreen({
   };
 
   const containerClasses = fullScreen 
-    ? "fixed inset-0 bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center z-50"
-    : `flex items-center justify-center ${sizeClasses[size]} bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 rounded-2xl`;
+    ? `fixed inset-0 ${THEME.gradients.background} flex items-center justify-center z-50`
+    : `flex items-center justify-center ${sizeClasses[size]} ${THEME.gradients.background} rounded-2xl`;
 
   if (variant === 'minimal') {
     return (
@@ -55,8 +56,12 @@ export default function LoadingScreen({
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 rounded-full border-4 border-green-200 border-t-green-600"
               />
-              <div className="absolute inset-2 bg-gradient-to-r from-green-600 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                <Bus className="h-8 w-8 text-white drop-shadow-sm" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <img 
+                  src="/app-logo.png" 
+                  alt="Loading" 
+                  className="w-16 h-16 drop-shadow-lg"
+                />
               </div>
             </div>
             
@@ -96,7 +101,7 @@ export default function LoadingScreen({
   return (
     <div className={containerClasses}>
       <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm mx-auto">
-        {/* Animated Spinner */}
+        {/* Animated Logo with Spinner */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -109,8 +114,12 @@ export default function LoadingScreen({
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="absolute inset-0 rounded-full border-4 border-green-200 border-t-green-600"
             />
-            <div className="absolute inset-2 bg-gradient-to-r from-green-600 to-yellow-500 rounded-full flex items-center justify-center">
-              <Bus className="h-6 w-6 text-white drop-shadow-sm" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img 
+                src="/app-logo.png" 
+                alt="Loading" 
+                className="w-12 h-12 drop-shadow-md"
+              />
             </div>
           </div>
         </motion.div>

@@ -171,9 +171,14 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto"></div>
-          <p className="text-green-700 font-medium">Loading...</p>
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+          <div className="relative mx-auto w-16 h-16 mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img src="/app-logo.png" alt="Loading" className="w-12 h-12 drop-shadow-md" />
+            </div>
+          </div>
+          <p className="text-gray-800 text-lg font-semibold">Loading...</p>
         </div>
       </div>
     );
@@ -182,9 +187,14 @@ export default function LoginPage() {
   if (isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto"></div>
-          <p className="text-green-700 font-medium">Redirecting...</p>
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+          <div className="relative mx-auto w-16 h-16 mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img src="/app-logo.png" alt="Loading" className="w-12 h-12 drop-shadow-md" />
+            </div>
+          </div>
+          <p className="text-gray-800 text-lg font-semibold">Redirecting...</p>
         </div>
       </div>
     );

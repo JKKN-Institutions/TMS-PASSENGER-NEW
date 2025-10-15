@@ -48,9 +48,21 @@ function DriverLayoutInner({
   // Show loading while checking auth
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mb-6"></div>
-        <p className="text-gray-600 text-lg font-medium">Loading driver dashboard...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+          <div className="relative mx-auto w-16 h-16 mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img 
+                src="/app-logo.png" 
+                alt="Loading" 
+                className="w-12 h-12 drop-shadow-md"
+              />
+            </div>
+          </div>
+          <p className="text-gray-800 text-lg font-semibold mb-2">Driver Dashboard</p>
+          <p className="text-gray-600 text-sm">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
