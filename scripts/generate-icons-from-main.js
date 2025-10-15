@@ -84,3 +84,4 @@ const generateIcons = async () => {
 
 generateIcons();
 
+
