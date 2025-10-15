@@ -411,9 +411,11 @@ function DashboardContent({
           <div className="flex items-center space-x-3">
             {/* Logo for mobile - hamburger menu removed, using More menu in bottom nav instead */}
             <div className="flex items-center lg:hidden">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-yellow-500 dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)] rounded-lg flex items-center justify-center mr-3 shadow-md dark:shadow-[0_0_20px_var(--neon-green-glow)] icon-glow">
-                <Bus className="h-5 w-5 text-white drop-shadow-sm" />
-              </div>
+              <img 
+                src="/app-logo.png" 
+                alt="JKKN TMS" 
+                className="w-10 h-10 mr-3 drop-shadow-md"
+              />
               <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 dark:from-[var(--neon-green)] dark:to-[var(--neon-yellow)] bg-clip-text text-transparent gradient-text">TMS Student</span>
             </div>
           </div>

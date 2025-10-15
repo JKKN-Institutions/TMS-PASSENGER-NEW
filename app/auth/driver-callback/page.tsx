@@ -28,13 +28,31 @@ export default function DriverCallbackPage() {
     window.location.href = unifiedCallbackUrl.toString();
   }, [router]);
 
-return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-background'>
-      <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mb-4'></div>
-      <p className='text-muted-foreground'>Redirecting to unified authentication...</p>
-      <p className='text-sm text-muted-foreground mt-2'>
-        Please wait, you will be redirected shortly.
-      </p>
-  </div>
-);
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      <div className="text-center bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-green-200 max-w-md">
+        {/* Animated Logo */}
+        <div className="relative w-20 h-20 mx-auto mb-6">
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-green-200 border-t-green-600"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src="/app-logo.png" alt="JKKN TMS" className="w-14 h-14 drop-shadow-lg" />
+          </div>
+        </div>
+        
+        <h2 className="text-xl font-bold bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent mb-3">
+          Driver Authentication
+        </h2>
+        <p className="text-gray-700 mb-2">Redirecting to secure login...</p>
+        <p className="text-sm text-gray-500">
+          Please wait, you'll be redirected shortly.
+        </p>
+        
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+          <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+        </div>
+      </div>
+    </div>
+  );
 }
