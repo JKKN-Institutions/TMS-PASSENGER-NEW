@@ -21,38 +21,63 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'light',
+  defaultTheme = 'system',
   storageKey = 'theme',
   attribute = 'data-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [actualTheme, setActualTheme] = useState<'light' | 'dark'>('light');
   
   useEffect(() => {
-    // Always use light theme
-    setTheme('light');
+    // Get stored theme or use default
+    const storedTheme = localStorage.getItem(storageKey) as Theme;
+    if (storedTheme) {
+      setTheme(storedTheme);
+    }
   }, [storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement;
     
-    // Always set light theme
-    root.setAttribute(attribute, 'light');
-    setActualTheme('light');
-    
-    // Update meta theme-color
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', '#ffffff');
+    const updateTheme = (newTheme: 'light' | 'dark') => {
+      root.setAttribute(attribute, newTheme);
+      setActualTheme(newTheme);
+      
+      // Update meta theme-color
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', newTheme === 'dark' ? '#0f172a' : '#ffffff');
+      }
+    };
+
+    const getSystemTheme = (): 'light' | 'dark' => {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    if (theme === 'system') {
+      const systemTheme = getSystemTheme();
+      updateTheme(systemTheme);
+      
+      // Listen for system theme changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        updateTheme(e.matches ? 'dark' : 'light');
+      };
+      
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } else {
+      updateTheme(theme);
     }
-  }, [attribute]);
+  }, [theme, attribute]);
 
   const value = {
-    theme: 'light' as Theme,
+    theme,
     setTheme: (theme: Theme) => {
-      // Do nothing - theme is locked to light mode
+      localStorage.setItem(storageKey, theme);
+      setTheme(theme);
     },
-    actualTheme: 'light' as 'light' | 'dark',
+    actualTheme,
   };
 
   return (

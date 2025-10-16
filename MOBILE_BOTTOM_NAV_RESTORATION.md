@@ -365,3 +365,5 @@ The mobile bottom navbar has been **successfully restored** to its original desi
 
 **Result**: Users can now access Profile, Settings, Grievances, Bug Reports, and all other pages through the More menu, while keeping the bottom nav focused on the 4 most essential actions! 🎉
 
+
+

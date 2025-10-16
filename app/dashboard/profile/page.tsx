@@ -28,7 +28,6 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { EnhancedInput, validators } from '@/components/enhanced-form-components';
-import PageWrapper from '@/components/page-wrapper';
 import { ProfileLoading } from '@/components/loading-screen';
 
 // Stable input component to prevent focus loss
@@ -453,10 +452,10 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <PageWrapper className="p-6 text-center flex items-center justify-center">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200">
-          <div className="p-4 bg-gradient-to-br from-red-100 to-orange-100 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-            <AlertTriangle className="h-8 w-8 text-red-600" />
+      <div className="p-6 text-center bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen flex items-center justify-center">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-green-100">
+          <div className="p-4 bg-gradient-to-br from-red-100 to-orange-100 rounded-full w-16 h-16 mx-auto mb-6">
+            <AlertTriangle className="h-8 w-8 text-red-600 mx-auto mt-4" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">Failed to Load Profile</h2>
           <p className="text-gray-600 mb-6">Please refresh the page or try again later.</p>
@@ -467,7 +466,7 @@ export default function ProfilePage() {
             Retry
           </button>
         </div>
-      </PageWrapper>
+      </div>
     );
   }
 
@@ -480,9 +479,9 @@ export default function ProfilePage() {
   );
 
   return (
-    <PageWrapper className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-green-200 space-y-4 lg:space-y-0">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100 space-y-4 lg:space-y-0">
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">My Profile</h1>
           <p className="text-gray-700 font-medium mt-1">Manage your personal information and preferences</p>
@@ -524,7 +523,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Completion */}
-      <div className="bg-white/80 backdrop-blur-sm border border-green-200 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300">
+      <div className="bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 rounded-2xl p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
@@ -548,7 +547,7 @@ export default function ProfilePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
               <User className="h-5 w-5 text-green-600" />
@@ -588,7 +587,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Emergency Contact Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-red-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-red-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-xl shadow-md">
               <Shield className="h-5 w-5 text-red-600" />
@@ -635,7 +634,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Academic Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl shadow-md">
               <GraduationCap className="h-5 w-5 text-green-600" />
@@ -651,7 +650,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Family Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-purple-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-purple-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl shadow-md">
               <Users className="h-5 w-5 text-purple-600" />
@@ -689,7 +688,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Address Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-orange-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-orange-100 to-yellow-100 rounded-xl shadow-md">
               <Home className="h-5 w-5 text-orange-600" />
@@ -745,7 +744,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Transport Information */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-blue-200 p-6 hover:shadow-2xl transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-gradient-to-r from-blue-100 to-green-100 rounded-xl shadow-md">
               <Bus className="h-5 w-5 text-blue-600" />
@@ -795,7 +794,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile History */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-all duration-300">
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
         <div className="flex items-center space-x-3 mb-4">
           <div className="p-2 bg-gradient-to-r from-gray-100 to-slate-100 rounded-xl shadow-md">
             <Calendar className="h-5 w-5 text-gray-600" />
@@ -813,6 +812,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-    </PageWrapper>
+    </div>
   );
 }

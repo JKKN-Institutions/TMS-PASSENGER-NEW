@@ -5,8 +5,9 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { useLanguage } from '@/lib/i18n/language-context';
 import { driverHelpers } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import { MapPin, Navigation, Clock, Users, Car, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import { MapPin, Navigation, Clock, Users, Car, TrendingUp, AlertCircle, CheckCircle, MapPinned, Play, Square } from 'lucide-react';
 import Link from 'next/link';
+import DriverLocationTracker from '@/components/driver-location-tracker';
 
 export default function DriverHomePage() {
   const { user, isAuthenticated, userType, isLoading } = useAuth();
@@ -16,6 +17,9 @@ export default function DriverHomePage() {
   const [routesLoading, setRoutesLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [routes, setRoutes] = useState<any[]>([]);
+  const [locationSharingEnabled, setLocationSharingEnabled] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<any | null>(null);
+  const [allStops, setAllStops] = useState<any[]>([]);
 
   useEffect(() => {
     const init = async () => {
@@ -52,6 +56,27 @@ export default function DriverHomePage() {
         const assignedRoutes = await driverHelpers.getAssignedRoutes(driverId, user?.email);
         setRoutes(assignedRoutes);
         console.log('✅ Routes loaded:', assignedRoutes);
+        
+        // Load all stops from assigned routes
+        if (assignedRoutes.length > 0) {
+          // Set the first route as selected by default
+          setSelectedRoute(assignedRoutes[0]);
+          
+          // Collect all stops from all routes
+          const stops: any[] = [];
+          for (const route of assignedRoutes) {
+            if (route.route_stops && route.route_stops.length > 0) {
+              const routeStops = route.route_stops.map((stop: any) => ({
+                ...stop,
+                route_id: route.id,
+                route_name: route.route_name,
+                route_number: route.route_number
+              }));
+              stops.push(...routeStops);
+            }
+          }
+          setAllStops(stops);
+        }
       } catch (err: any) {
         console.error('❌ Error loading driver data:', err);
         
@@ -114,18 +139,26 @@ export default function DriverHomePage() {
   const currentDriver = user;
   const activeRoutes = routes.filter(route => route.status === 'active');
   const totalPassengers = routes.reduce((sum, route) => sum + (route.current_passengers || 0), 0);
+  
+  // Get driver ID for location tracking
+  const driverId = (user as any)?.driver_id || user?.id;
+  
+  // Get stops for the selected route, sorted by sequence order
+  const currentStops = selectedRoute?.route_stops 
+    ? [...selectedRoute.route_stops].sort((a: any, b: any) => a.sequence_order - b.sequence_order)
+    : [];
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-6 pb-8">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-8 text-white">
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-6 md:p-8 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {t('dashboard.welcome', { name: currentDriver?.email?.split('@')[0] || 'Driver' })}
             </h1>
-            <p className="text-green-100 text-lg">
-              Ready to start your journey? Check your routes and begin tracking.
+            <p className="text-green-100 text-base md:text-lg">
+              Ready to start your journey? Enable location sharing and begin tracking.
             </p>
           </div>
           <div className="hidden md:block">
@@ -136,52 +169,245 @@ export default function DriverHomePage() {
         </div>
       </div>
 
+      {/* Location Sharing Toggle - TOP PRIORITY */}
+      <div className="bg-white rounded-xl shadow-lg border-2 border-green-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 px-6 py-4 border-b border-green-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                locationSharingEnabled 
+                  ? 'bg-green-500 shadow-lg shadow-green-200' 
+                  : 'bg-gray-400'
+              }`}>
+                <MapPinned className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Live Location Sharing</h2>
+                <p className="text-sm text-gray-600">
+                  {locationSharingEnabled 
+                    ? 'Location is being shared with passengers' 
+                    : 'Start sharing your live location'}
+                </p>
+              </div>
+            </div>
+            
+            {/* Toggle Button */}
+            <button
+              onClick={() => setLocationSharingEnabled(!locationSharingEnabled)}
+              className={`px-6 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-all transform hover:scale-105 ${
+                locationSharingEnabled
+                  ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-200'
+                  : 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-200'
+              }`}
+            >
+              {locationSharingEnabled ? (
+                <>
+                  <Square className="w-5 h-5" />
+                  <span>Stop Sharing</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  <span>Start Sharing</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+        
+        {/* Location Tracker Component */}
+        {locationSharingEnabled && driverId && (
+          <div className="p-6 bg-gray-50">
+            <DriverLocationTracker 
+              driverId={driverId}
+              driverName={currentDriver?.email?.split('@')[0] || 'Driver'}
+              driverEmail={user?.email}
+              isEnabled={locationSharingEnabled}
+              updateInterval={30000}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Route Stops - Vertical Stepper Design */}
+      {selectedRoute && currentStops.length > 0 && (
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Route Stops</h2>
+                <p className="text-sm text-gray-600">
+                  Route {selectedRoute.route_number}: {selectedRoute.route_name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                  {currentStops.length} Stops
+                </div>
+              </div>
+            </div>
+            
+            {/* Route Selector if multiple routes */}
+            {routes.length > 1 && (
+              <div className="mt-4">
+                <select 
+                  value={selectedRoute.id}
+                  onChange={(e) => {
+                    const route = routes.find(r => r.id === e.target.value);
+                    setSelectedRoute(route || null);
+                  }}
+                  className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {routes.map((route) => (
+                    <option key={route.id} value={route.id}>
+                      Route {route.route_number} - {route.route_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+          
+          <div className="p-6">
+            {/* Vertical Stepper */}
+            <div className="relative">
+              {currentStops.map((stop: any, index: number) => {
+                const isFirst = index === 0;
+                const isLast = index === currentStops.length - 1;
+                const isMajor = stop.is_major_stop;
+                
+                return (
+                  <div key={stop.id} className="relative flex items-start mb-6 last:mb-0">
+                    {/* Vertical Line */}
+                    {!isLast && (
+                      <div className={`absolute left-[19px] top-10 bottom-0 w-1 ${
+                        isMajor ? 'bg-blue-300' : 'bg-gray-300'
+                      }`} style={{ height: 'calc(100% + 24px)' }} />
+                    )}
+                    
+                    {/* Stop Circle/Marker */}
+                    <div className="relative z-10 flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-4 transition-all ${
+                        isFirst
+                          ? 'bg-green-500 border-green-200 text-white shadow-lg shadow-green-200'
+                          : isLast
+                          ? 'bg-red-500 border-red-200 text-white shadow-lg shadow-red-200'
+                          : isMajor
+                          ? 'bg-blue-500 border-blue-200 text-white shadow-lg shadow-blue-200'
+                          : 'bg-white border-gray-300 text-gray-700 shadow'
+                      }`}>
+                        {isFirst ? (
+                          <Navigation className="w-5 h-5" />
+                        ) : isLast ? (
+                          <MapPin className="w-5 h-5" />
+                        ) : (
+                          <span>{stop.sequence_order}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Stop Details */}
+                    <div className="ml-4 flex-1">
+                      <div className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
+                        isFirst
+                          ? 'bg-green-50 border-green-200'
+                          : isLast
+                          ? 'bg-red-50 border-red-200'
+                          : isMajor
+                          ? 'bg-blue-50 border-blue-200'
+                          : 'bg-gray-50 border-gray-200'
+                      }`}>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h3 className={`font-bold text-lg ${
+                                isFirst
+                                  ? 'text-green-900'
+                                  : isLast
+                                  ? 'text-red-900'
+                                  : isMajor
+                                  ? 'text-blue-900'
+                                  : 'text-gray-900'
+                              }`}>
+                                {stop.stop_name}
+                              </h3>
+                              {isFirst && (
+                                <span className="px-2 py-1 bg-green-200 text-green-800 text-xs rounded-full font-semibold">
+                                  START
+                                </span>
+                              )}
+                              {isLast && (
+                                <span className="px-2 py-1 bg-red-200 text-red-800 text-xs rounded-full font-semibold">
+                                  END
+                                </span>
+                              )}
+                              {isMajor && !isFirst && !isLast && (
+                                <span className="px-2 py-1 bg-blue-200 text-blue-800 text-xs rounded-full font-semibold">
+                                  MAJOR STOP
+                                </span>
+                              )}
+                            </div>
+                            
+                            <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
+                              <div className="flex items-center">
+                                <Clock className="w-4 h-4 mr-1" />
+                                <span className="font-medium">{stop.stop_time}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <MapPin className="w-4 h-4 mr-1" />
+                                <span>Stop #{stop.sequence_order}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Active Routes</p>
-              <p className="text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex flex-col">
+            <p className="text-xs font-medium text-gray-600 mb-1">Active Routes</p>
+            <p className="text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
+            <div className="mt-2">
+              <TrendingUp className="w-5 h-5 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Passengers</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPassengers}</p>
-            </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex flex-col">
+            <p className="text-xs font-medium text-gray-600 mb-1">Passengers</p>
+            <p className="text-2xl font-bold text-gray-900">{totalPassengers}</p>
+            <div className="mt-2">
+              <Users className="w-5 h-5 text-blue-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Routes</p>
-              <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
-            </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-purple-600" />
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex flex-col">
+            <p className="text-xs font-medium text-gray-600 mb-1">Total Routes</p>
+            <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
+            <div className="mt-2">
+              <MapPin className="w-5 h-5 text-purple-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Status</p>
-              <p className="text-2xl font-bold text-green-600">Active</p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex flex-col">
+            <p className="text-xs font-medium text-gray-600 mb-1">Status</p>
+            <p className="text-2xl font-bold text-green-600">Active</p>
+            <div className="mt-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
             </div>
           </div>
         </div>
@@ -189,38 +415,24 @@ export default function DriverHomePage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link href="/driver/live-tracking" className="block group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 group-hover:border-green-300 group-hover:bg-green-50">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                  <Navigation className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-green-800 transition-colors">Live Tracking</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-green-700">Start real-time location tracking</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link href="/driver/routes" className="block group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 group-hover:border-purple-300 group-hover:bg-purple-50">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-purple-300 group-hover:bg-purple-50">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
                   <MapPin className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 group-hover:text-purple-800 transition-colors">My Routes</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-purple-700">View assigned routes</p>
+                  <p className="text-sm text-gray-600 group-hover:text-purple-700">View all assigned routes</p>
                 </div>
               </div>
             </div>
           </Link>
 
           <Link href="/driver/bookings" className="block group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300 group-hover:bg-blue-50">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300 group-hover:bg-blue-50">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                   <Users className="w-6 h-6 text-blue-600" />
