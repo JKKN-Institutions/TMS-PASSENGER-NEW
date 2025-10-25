@@ -101,67 +101,92 @@ export default function StaffStudentsPage() {
       setLoading(true);
       setError(null);
 
-      const { data: studentsData, error: studentsError } = await supabase
-        .from('students')
-        .select(`
-          id,
-          student_name,
-          roll_number,
-          email,
-          mobile,
-          academic_year,
-          semester,
-          department_id,
-          program_id,
-          departments (
-            id,
-            department_name
-          ),
-          programs (
-            id,
-            program_name,
-            degree_name
-          )
-        `)
-        .order('student_name', { ascending: true });
-
-      if (studentsError) throw studentsError;
-
-      // Fetch route allocations
-      const studentIds = studentsData?.map(s => s.id) || [];
-      let routeAllocationsMap: Record<string, any> = {};
-
-      if (studentIds.length > 0) {
-        const { data: allocations } = await supabase
-          .from('student_route_allocations')
-          .select(`
-            student_id,
-            routes (
-              route_number,
-              route_name
-            ),
-            route_stops (
-              stop_name
-            )
-          `)
-          .in('student_id', studentIds)
-          .eq('is_active', true);
-
-        routeAllocationsMap = (allocations || []).reduce((acc, a) => {
-          if (a.student_id) {
-            acc[a.student_id] = {
-              route: a.routes,
-              boardingStop: a.route_stops
-            };
-          }
-          return acc;
-        }, {} as Record<string, any>);
+      if (!user?.email) {
+        setError('User email not found');
+        return;
       }
 
-      const studentsWithRoutes = (studentsData || []).map(student => ({
-        ...student,
-        routeAllocation: routeAllocationsMap[student.id]
-      }));
+      // First, get staff's assigned routes
+      const { data: assignments, error: assignmentsError } = await supabase
+        .from('staff_route_assignments')
+        .select('route_id')
+        .eq('staff_email', user.email.toLowerCase().trim())
+        .eq('is_active', true);
+
+      if (assignmentsError) throw assignmentsError;
+
+      if (!assignments || assignments.length === 0) {
+        // No routes assigned, show empty state
+        setStudents([]);
+        setFilteredStudents([]);
+        setLoading(false);
+        return;
+      }
+
+      // Get route IDs
+      const routeIds = assignments.map(a => a.route_id);
+
+      // Fetch students who are on these routes
+      const { data: routeAllocations, error: allocationsError } = await supabase
+        .from('student_route_allocations')
+        .select(`
+          student_id,
+          route_id,
+          boarding_stop_id,
+          students (
+            id,
+            student_name,
+            roll_number,
+            email,
+            mobile,
+            academic_year,
+            semester,
+            department_id,
+            program_id,
+            departments (
+              id,
+              department_name
+            ),
+            programs (
+              id,
+              program_name,
+              degree_name
+            )
+          ),
+          routes (
+            route_number,
+            route_name
+          ),
+          route_stops (
+            stop_name
+          )
+        `)
+        .in('route_id', routeIds)
+        .eq('is_active', true);
+
+      if (allocationsError) throw allocationsError;
+
+      // Create unique students list (student might be on multiple routes)
+      const studentsMap: Record<string, any> = {};
+
+      (routeAllocations || []).forEach(allocation => {
+        const student = allocation.students;
+        if (student && student.id) {
+          if (!studentsMap[student.id]) {
+            studentsMap[student.id] = {
+              ...student,
+              routeAllocation: {
+                route: allocation.routes,
+                boardingStop: allocation.route_stops
+              }
+            };
+          }
+        }
+      });
+
+      const studentsWithRoutes = Object.values(studentsMap).sort((a: any, b: any) =>
+        a.student_name.localeCompare(b.student_name)
+      );
 
       setStudents(studentsWithRoutes);
       setFilteredStudents(studentsWithRoutes);
@@ -205,7 +230,7 @@ export default function StaffStudentsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading students...</p>
         </div>
       </div>
@@ -221,7 +246,7 @@ export default function StaffStudentsPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadStudents}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
           </button>
@@ -233,14 +258,14 @@ export default function StaffStudentsPage() {
   const uniqueYears = Array.from(new Set(students.map(s => s.academic_year))).sort();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Students Directory</h1>
-              <p className="text-purple-100 text-lg">View and manage student records</p>
+              <p className="text-green-100 text-lg">View and manage student records</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -254,10 +279,10 @@ export default function StaffStudentsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-purple-600 text-sm font-medium">Students</span>
+              <span className="text-green-600 text-sm font-medium">Students</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{students.length}</h3>
             <p className="text-gray-500 text-sm mt-1">Total students</p>
@@ -299,7 +324,7 @@ export default function StaffStudentsPage() {
                   placeholder="Search by name, roll number, email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -309,7 +334,7 @@ export default function StaffStudentsPage() {
               <select
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Departments</option>
                 {departments.map(dept => (
@@ -323,7 +348,7 @@ export default function StaffStudentsPage() {
               <select
                 value={yearFilter}
                 onChange={(e) => setYearFilter(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Years</option>
                 {uniqueYears.map(year => (
@@ -360,8 +385,8 @@ export default function StaffStudentsPage() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <User className="w-6 h-6 text-purple-600" />
+                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <User className="w-6 h-6 text-green-600" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-gray-900 text-lg truncate">
@@ -374,7 +399,7 @@ export default function StaffStudentsPage() {
                                 {student.departments.department_name}
                               </span>
                             )}
-                            <span className="bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                            <span className="bg-green-50 text-green-700 px-2 py-1 rounded">
                               Year {student.academic_year}, Sem {student.semester}
                             </span>
                             {student.routeAllocation && (

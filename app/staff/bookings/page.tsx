@@ -69,6 +69,31 @@ export default function StaffBookingsPage() {
       setLoading(true);
       setError(null);
 
+      if (!user?.email) {
+        setError('User email not found');
+        return;
+      }
+
+      // First, get staff's assigned routes
+      const { data: assignments, error: assignmentsError } = await supabase
+        .from('staff_route_assignments')
+        .select('route_id')
+        .eq('staff_email', user.email.toLowerCase().trim())
+        .eq('is_active', true);
+
+      if (assignmentsError) throw assignmentsError;
+
+      if (!assignments || assignments.length === 0) {
+        setBookings([]);
+        setFilteredBookings([]);
+        setLoading(false);
+        return;
+      }
+
+      // Get route IDs
+      const routeIds = assignments.map(a => a.route_id);
+
+      // Fetch bookings only for assigned routes and selected date
       const { data: bookingsData, error: bookingsError } = await supabase
         .from('bookings')
         .select(`
@@ -89,6 +114,7 @@ export default function StaffBookingsPage() {
             route_name
           )
         `)
+        .in('route_id', routeIds)
         .eq('booking_date', selectedDate)
         .order('booking_date', { ascending: false });
 
@@ -118,7 +144,7 @@ export default function StaffBookingsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading bookings...</p>
         </div>
       </div>
@@ -134,7 +160,7 @@ export default function StaffBookingsPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadBookings}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
           </button>
@@ -148,14 +174,14 @@ export default function StaffBookingsPage() {
   const paidCount = bookings.filter(b => b.payment_status === 'paid').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Bookings Management</h1>
-              <p className="text-purple-100 text-lg mb-3">View and manage transport bookings</p>
+              <p className="text-green-100 text-lg mb-3">View and manage transport bookings</p>
               <div className="flex items-center gap-2 text-sm bg-white bg-opacity-20 rounded-lg px-4 py-2 w-fit">
                 <Calendar className="w-4 h-4" />
                 <span>Showing bookings for:</span>
@@ -181,10 +207,10 @@ export default function StaffBookingsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-purple-600 text-sm font-medium">Total</span>
+              <span className="text-green-600 text-sm font-medium">Total</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{bookings.length}</h3>
             <p className="text-gray-500 text-sm mt-1">All bookings</p>
@@ -241,7 +267,7 @@ export default function StaffBookingsPage() {
               </button>
               <button
                 onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
-                className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                className="px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 Today
               </button>
@@ -264,14 +290,14 @@ export default function StaffBookingsPage() {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
 
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="confirmed">Confirmed</option>

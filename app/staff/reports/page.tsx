@@ -89,7 +89,7 @@ export default function StaffReportsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading reports...</p>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function StaffReportsPage() {
 
   const getColorClasses = (color: string) => {
     const colors = {
-      purple: 'bg-purple-100 text-purple-600 border-purple-200',
+      purple: 'bg-green-100 text-green-600 border-green-200',
       blue: 'bg-blue-100 text-blue-600 border-blue-200',
       green: 'bg-green-100 text-green-600 border-green-200',
       orange: 'bg-orange-100 text-orange-600 border-orange-200'
@@ -107,14 +107,14 @@ export default function StaffReportsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Reports & Analytics</h1>
-              <p className="text-purple-100 text-lg">Generate comprehensive transport reports</p>
+              <p className="text-green-100 text-lg">Generate comprehensive transport reports</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -138,8 +138,8 @@ export default function StaffReportsPage() {
                   onClick={() => setSelectedReport(report.id)}
                   className={`p-6 rounded-xl border-2 text-left transition-all ${
                     isSelected
-                      ? 'border-purple-600 bg-purple-50'
-                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -170,7 +170,7 @@ export default function StaffReportsPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function StaffReportsPage() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function StaffReportsPage() {
             <button
               onClick={generateReport}
               disabled={loading || !selectedReport}
-              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {loading ? (
                 <>
@@ -234,8 +234,8 @@ export default function StaffReportsPage() {
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Statistics</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <p className="text-3xl font-bold text-purple-600">-</p>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <p className="text-3xl font-bold text-green-600">-</p>
               <p className="text-sm text-gray-600 mt-1">Total Routes</p>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">

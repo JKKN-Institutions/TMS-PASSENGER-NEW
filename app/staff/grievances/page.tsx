@@ -73,6 +73,47 @@ export default function StaffGrievancesPage() {
       setLoading(true);
       setError(null);
 
+      if (!user?.email) {
+        setError('User email not found');
+        return;
+      }
+
+      // First, get staff's assigned routes
+      const { data: assignments, error: assignmentsError } = await supabase
+        .from('staff_route_assignments')
+        .select('route_id')
+        .eq('staff_email', user.email.toLowerCase().trim())
+        .eq('is_active', true);
+
+      if (assignmentsError) throw assignmentsError;
+
+      if (!assignments || assignments.length === 0) {
+        setGrievances([]);
+        setFilteredGrievances([]);
+        setLoading(false);
+        return;
+      }
+
+      // Get route IDs
+      const routeIds = assignments.map(a => a.route_id);
+
+      // Get students on these routes
+      const { data: routeAllocations } = await supabase
+        .from('student_route_allocations')
+        .select('student_id')
+        .in('route_id', routeIds)
+        .eq('is_active', true);
+
+      const studentIds = [...new Set(routeAllocations?.map(a => a.student_id) || [])];
+
+      if (studentIds.length === 0) {
+        setGrievances([]);
+        setFilteredGrievances([]);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch grievances only for these students
       const { data: grievancesData, error: grievancesError } = await supabase
         .from('grievances')
         .select(`
@@ -91,6 +132,7 @@ export default function StaffGrievancesPage() {
             email
           )
         `)
+        .in('student_id', studentIds)
         .order('created_at', { ascending: false });
 
       if (grievancesError) throw grievancesError;
@@ -173,7 +215,7 @@ export default function StaffGrievancesPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading grievances...</p>
         </div>
       </div>
@@ -189,7 +231,7 @@ export default function StaffGrievancesPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadGrievances}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
           </button>
@@ -203,14 +245,14 @@ export default function StaffGrievancesPage() {
   const resolvedCount = grievances.filter(g => g.status === 'resolved').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Grievances Management</h1>
-              <p className="text-purple-100 text-lg">Handle student complaints and issues</p>
+              <p className="text-green-100 text-lg">Handle student complaints and issues</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -224,10 +266,10 @@ export default function StaffGrievancesPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <FileText className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <FileText className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-purple-600 text-sm font-medium">Total</span>
+              <span className="text-green-600 text-sm font-medium">Total</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{grievances.length}</h3>
             <p className="text-gray-500 text-sm mt-1">All grievances</p>
@@ -278,7 +320,7 @@ export default function StaffGrievancesPage() {
                   placeholder="Search grievances..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -288,7 +330,7 @@ export default function StaffGrievancesPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -302,7 +344,7 @@ export default function StaffGrievancesPage() {
               <select
                 value={priorityFilter}
                 onChange={(e) => setPriorityFilter(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Priority</option>
                 <option value="high">High Priority</option>

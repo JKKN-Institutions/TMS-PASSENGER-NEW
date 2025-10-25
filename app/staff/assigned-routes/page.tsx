@@ -199,9 +199,9 @@ export default function StaffAssignedRoutesPage() {
 
   if (isLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-yellow-100">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading assigned routes...</p>
         </div>
       </div>
@@ -210,14 +210,14 @@ export default function StaffAssignedRoutesPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 p-4">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-yellow-100 p-4">
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
           </button>
@@ -227,12 +227,12 @@ export default function StaffAssignedRoutesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-yellow-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <RouteIcon className="w-8 h-8 text-purple-600" />
+            <RouteIcon className="w-8 h-8 text-green-600" />
             My Assigned Routes
           </h1>
           <p className="text-gray-600 mt-2">
@@ -250,7 +250,7 @@ export default function StaffAssignedRoutesPage() {
                   {routesWithPassengers.length}
                 </p>
               </div>
-              <RouteIcon className="w-12 h-12 text-purple-600 opacity-20" />
+              <RouteIcon className="w-12 h-12 text-green-600 opacity-20" />
             </div>
           </div>
 
@@ -304,8 +304,8 @@ export default function StaffAssignedRoutesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <RouteIcon className="w-6 h-6 text-purple-600" />
+                          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <RouteIcon className="w-6 h-6 text-green-600" />
                           </div>
                           <div>
                             <h3 className="text-xl font-bold text-gray-900">
@@ -381,7 +381,7 @@ export default function StaffAssignedRoutesPage() {
                       <div className="ml-4 flex items-center gap-2">
                         <Link
                           href={`/staff/routes/${routeData.route.id}`}
-                          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                           onClick={(e) => e.stopPropagation()}
                         >
                           View Details
@@ -414,7 +414,7 @@ export default function StaffAssignedRoutesPage() {
                           {groupedPassengers.map(([stopName, passengers]) => (
                             <div key={stopName}>
                               <div className="flex items-center gap-2 mb-3">
-                                <MapPin className="w-5 h-5 text-purple-600" />
+                                <MapPin className="w-5 h-5 text-green-600" />
                                 <h5 className="font-semibold text-gray-900">
                                   {stopName}
                                   {passengers[0]?.boardingStop && (

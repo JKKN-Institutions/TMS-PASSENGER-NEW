@@ -34,10 +34,10 @@ export default function StaffLayout({
   // Show loading while checking auth
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-purple-200 max-w-sm">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
           <div className="relative mx-auto w-16 h-16 mb-6">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
           </div>
           <p className="text-gray-800 text-lg font-semibold mb-2">Staff Dashboard</p>
           <p className="text-gray-600 text-sm">Loading your dashboard...</p>
@@ -92,12 +92,12 @@ export default function StaffLayout({
           fixed lg:static inset-y-0 left-0 z-50
           transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0 transition-transform duration-300 ease-in-out
-          w-64 bg-gradient-to-b from-purple-600 to-indigo-600 text-white
+          w-64 bg-gradient-to-b from-green-600 to-yellow-600 text-white
           flex flex-col shadow-xl
         `}
       >
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-purple-500">
+        <div className="p-6 border-b border-green-500">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function StaffLayout({
               </div>
               <div>
                 <h2 className="text-lg font-bold">Staff Portal</h2>
-                <p className="text-xs text-purple-200">TMS Admin</p>
+                <p className="text-xs text-green-200">TMS Admin</p>
               </div>
             </div>
             <button
@@ -118,14 +118,14 @@ export default function StaffLayout({
         </div>
 
         {/* User Info */}
-        <div className="p-4 border-b border-purple-500">
+        <div className="p-4 border-b border-green-500">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
               <User className="w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate">{staffName}</p>
-              <p className="text-xs text-purple-200 truncate">{user?.email}</p>
+              <p className="text-xs text-green-200 truncate">{user?.email}</p>
             </div>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function StaffLayout({
                   transition-all duration-200
                   ${item.current
                     ? 'bg-white bg-opacity-20 text-white font-semibold shadow-lg'
-                    : 'text-purple-100 hover:bg-white hover:bg-opacity-10 hover:text-white'
+                    : 'text-green-100 hover:bg-white hover:bg-opacity-10 hover:text-white'
                   }
                 `}
               >
@@ -156,11 +156,11 @@ export default function StaffLayout({
         </nav>
 
         {/* Logout Button */}
-        <div className="p-4 border-t border-purple-500">
+        <div className="p-4 border-t border-green-500">
           <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg
-              text-purple-100 hover:bg-white hover:bg-opacity-10 hover:text-white
+              text-green-100 hover:bg-white hover:bg-opacity-10 hover:text-white
               transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
@@ -181,7 +181,7 @@ export default function StaffLayout({
               <Menu className="w-6 h-6 text-gray-600" />
             </button>
             <div className="flex items-center space-x-2">
-              <Briefcase className="w-5 h-5 text-purple-600" />
+              <Briefcase className="w-5 h-5 text-green-600" />
               <h1 className="text-lg font-bold text-gray-800">Staff Portal</h1>
             </div>
             <div className="w-10" /> {/* Spacer for alignment */}

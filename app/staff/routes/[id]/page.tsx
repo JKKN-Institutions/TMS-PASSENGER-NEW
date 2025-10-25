@@ -212,7 +212,7 @@ export default function RouteDetailPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading route details...</p>
         </div>
       </div>
@@ -228,7 +228,7 @@ export default function RouteDetailPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <Link
             href="/staff/assigned-routes"
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-block"
           >
             Back to Routes
           </Link>
@@ -241,7 +241,7 @@ export default function RouteDetailPage() {
   const filteredCount = getFilteredPassengers().length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -258,7 +258,7 @@ export default function RouteDetailPage() {
         </div>
 
         {/* Route Info Card */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-6 text-white shadow-xl">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center text-2xl font-bold">
@@ -266,7 +266,7 @@ export default function RouteDetailPage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold mb-1">{routeData.route.route_name}</h2>
-                <div className="flex items-center gap-2 text-purple-100">
+                <div className="flex items-center gap-2 text-green-100">
                   <MapPin className="w-4 h-4" />
                   <span>{routeData.route.start_location} → {routeData.route.end_location}</span>
                 </div>
@@ -283,7 +283,7 @@ export default function RouteDetailPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-purple-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
                 <Clock className="w-4 h-4" />
                 <span>Timing</span>
               </div>
@@ -291,7 +291,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-purple-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
                 <Users className="w-4 h-4" />
                 <span>Capacity</span>
               </div>
@@ -299,7 +299,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-purple-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
                 <Navigation className="w-4 h-4" />
                 <span>Distance</span>
               </div>
@@ -307,7 +307,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-purple-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
                 <Calendar className="w-4 h-4" />
                 <span>Fare</span>
               </div>
@@ -389,7 +389,7 @@ export default function RouteDetailPage() {
             <select
               value={filterStop}
               onChange={(e) => setFilterStop(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="all">All Stops</option>
               {getUniqueStops().map(stop => (
@@ -400,7 +400,7 @@ export default function RouteDetailPage() {
             <select
               value={filterDepartment}
               onChange={(e) => setFilterDepartment(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="all">All Departments</option>
               {getUniqueDepartments().map(dept => (
@@ -412,7 +412,7 @@ export default function RouteDetailPage() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
 
             <button
@@ -433,10 +433,10 @@ export default function RouteDetailPage() {
         <div className="space-y-6">
           {groupedPassengers.map(([stopName, passengers]) => (
             <div key={stopName} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-4 border-b border-gray-200">
+              <div className="bg-gradient-to-r from-green-100 to-yellow-100 p-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-purple-600" />
+                    <MapPin className="w-5 h-5 text-green-600" />
                     <div>
                       <h3 className="font-semibold text-gray-900">{stopName}</h3>
                       {passengers[0]?.boardingStop && (
@@ -444,7 +444,7 @@ export default function RouteDetailPage() {
                       )}
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium">
                     {passengers.length} passenger{passengers.length !== 1 ? 's' : ''}
                   </span>
                 </div>

@@ -78,6 +78,32 @@ export default function StaffRoutesPage() {
       setLoading(true);
       setError(null);
 
+      if (!user?.email) {
+        setError('User email not found');
+        return;
+      }
+
+      // First, get staff's assigned routes
+      const { data: assignments, error: assignmentsError } = await supabase
+        .from('staff_route_assignments')
+        .select('route_id')
+        .eq('staff_email', user.email.toLowerCase().trim())
+        .eq('is_active', true);
+
+      if (assignmentsError) throw assignmentsError;
+
+      if (!assignments || assignments.length === 0) {
+        // No routes assigned, show empty state
+        setRoutes([]);
+        setFilteredRoutes([]);
+        setLoading(false);
+        return;
+      }
+
+      // Get route IDs
+      const routeIds = assignments.map(a => a.route_id);
+
+      // Fetch only assigned routes
       const { data: routesData, error: routesError } = await supabase
         .from('routes')
         .select(`
@@ -96,6 +122,7 @@ export default function StaffRoutesPage() {
           driver_id,
           vehicle_id
         `)
+        .in('id', routeIds)
         .order('route_number', { ascending: true });
 
       if (routesError) throw routesError;
@@ -174,7 +201,7 @@ export default function StaffRoutesPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading routes...</p>
         </div>
       </div>
@@ -190,7 +217,7 @@ export default function StaffRoutesPage() {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={loadRoutes}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
           </button>
@@ -204,14 +231,14 @@ export default function StaffRoutesPage() {
   const totalPassengers = routes.reduce((sum, r) => sum + r.current_passengers, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">All Routes</h1>
-              <p className="text-purple-100 text-lg">Browse and view all transport routes</p>
+              <p className="text-green-100 text-lg">Browse and view all transport routes</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -225,10 +252,10 @@ export default function StaffRoutesPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Bus className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Bus className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-purple-600 text-sm font-medium">Routes</span>
+              <span className="text-green-600 text-sm font-medium">Routes</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{routes.length}</h3>
             <p className="text-gray-500 text-sm mt-1">Total routes</p>
@@ -279,7 +306,7 @@ export default function StaffRoutesPage() {
                   placeholder="Search routes by number, name, or location..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -288,7 +315,7 @@ export default function StaffRoutesPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -322,7 +349,7 @@ export default function StaffRoutesPage() {
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 bg-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                      <div className="w-14 h-14 bg-green-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
                         {route.route_number}
                       </div>
                       <div>
@@ -369,7 +396,7 @@ export default function StaffRoutesPage() {
                           {route.current_passengers}/{route.total_capacity} passengers
                         </span>
                       </div>
-                      <div className="text-purple-600 font-semibold">₹{route.fare}</div>
+                      <div className="text-green-600 font-semibold">₹{route.fare}</div>
                     </div>
                   </div>
 
@@ -392,7 +419,7 @@ export default function StaffRoutesPage() {
 
                   <Link
                     href={`/staff/routes/${route.id}`}
-                    className="block w-full text-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                    className="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                   >
                     View Details
                   </Link>

@@ -117,7 +117,7 @@ export default function StaffDashboardPage() {
 
   if (isLoading || loading) return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600 mb-6"></div>
+      <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mb-6"></div>
       <p className="text-gray-600 text-lg font-medium">Loading Staff Dashboard...</p>
     </div>
   );
@@ -142,15 +142,15 @@ export default function StaffDashboardPage() {
   const department = (user as any)?.department || 'Transport Management';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Welcome back, {staffName}!</h1>
-              <p className="text-purple-100 text-lg">{department}</p>
-              <p className="text-purple-200 text-sm mt-1">Manage your assigned routes and passengers efficiently</p>
+              <p className="text-green-100 text-lg">{department}</p>
+              <p className="text-green-200 text-sm mt-1">Manage your assigned routes and passengers efficiently</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -165,10 +165,10 @@ export default function StaffDashboardPage() {
           {/* Assigned Routes */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <RouteIcon className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <RouteIcon className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-purple-600 text-sm font-medium">Routes</span>
+              <span className="text-green-600 text-sm font-medium">Routes</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{stats.totalRoutes}</h3>
             <p className="text-gray-500 text-sm mt-1">Assigned to you</p>
@@ -177,10 +177,10 @@ export default function StaffDashboardPage() {
           {/* Total Passengers */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-yellow-600" />
               </div>
-              <span className="text-blue-600 text-sm font-medium">Passengers</span>
+              <span className="text-yellow-600 text-sm font-medium">Passengers</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{stats.totalPassengers}</h3>
             <p className="text-gray-500 text-sm mt-1">Total passengers</p>
@@ -218,7 +218,7 @@ export default function StaffDashboardPage() {
               <h2 className="text-xl font-bold text-gray-800">Your Assigned Routes</h2>
               <Link
                 href="/staff/assigned-routes"
-                className="flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium text-sm"
+                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm"
               >
                 View All
                 <ArrowRight className="w-4 h-4" />
@@ -228,10 +228,10 @@ export default function StaffDashboardPage() {
               {recentRoutes.map((route, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200 hover:shadow-md transition-shadow"
+                  className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg border border-green-200 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold">
                       {route.route_number}
                     </div>
                     <div>
@@ -250,7 +250,7 @@ export default function StaffDashboardPage() {
                   </div>
                   <Link
                     href={`/staff/routes/${route.route_id}`}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                   >
                     View Details
                   </Link>
@@ -266,9 +266,9 @@ export default function StaffDashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/staff/assigned-routes"
-              className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200"
+              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
             >
-              <RouteIcon className="w-6 h-6 text-purple-600 mr-3" />
+              <RouteIcon className="w-6 h-6 text-green-600 mr-3" />
               <div>
                 <h3 className="font-semibold text-gray-800">Assigned Routes</h3>
                 <p className="text-sm text-gray-600">View routes and passengers</p>
@@ -277,9 +277,9 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/routes"
-              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
+              className="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors border border-yellow-200"
             >
-              <Bus className="w-6 h-6 text-green-600 mr-3" />
+              <Bus className="w-6 h-6 text-yellow-600 mr-3" />
               <div>
                 <h3 className="font-semibold text-gray-800">All Routes</h3>
                 <p className="text-sm text-gray-600">Browse all transport routes</p>
@@ -310,9 +310,9 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/bookings"
-              className="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200"
+              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
             >
-              <Calendar className="w-6 h-6 text-indigo-600 mr-3" />
+              <Calendar className="w-6 h-6 text-green-600 mr-3" />
               <div>
                 <h3 className="font-semibold text-gray-800">Bookings</h3>
                 <p className="text-sm text-gray-600">View booking requests</p>
