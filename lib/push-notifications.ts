@@ -60,6 +60,12 @@ class PushNotificationService {
 
   // Initialize push notification service
   private async init() {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      console.log('⚠️ Not in browser environment, skipping push notification initialization');
+      return;
+    }
+
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
         // Register service worker
@@ -71,10 +77,10 @@ class PushNotificationService {
 
         // Wait for service worker to be ready
         await navigator.serviceWorker.ready;
-        
+
         // Get existing subscription
         this.subscription = await this.registration.pushManager.getSubscription();
-        
+
         if (this.subscription) {
           console.log('📱 Existing push subscription found');
         }

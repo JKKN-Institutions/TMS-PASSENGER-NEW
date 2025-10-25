@@ -14,6 +14,7 @@ import parentAuthService, {
 import { ParentAppIntegrationService } from './parent-app-integration';
 import unifiedAuthService, { UnifiedUser } from './unified-auth-service';
 import driverAuthService from './driver-auth-service';
+import staffLoginService from './staff-login-service';
 import { sessionManager } from '../session';
 import { AutoLoginService } from './auto-login-service';
 import { staffAuthService } from './staff-auth-service';
@@ -130,8 +131,59 @@ export function AuthProvider({
               localStorage.removeItem('tms_driver_data');
             }
           }
+
+          // Check for staff authentication data in localStorage
+          const staffUser = localStorage.getItem('tms_staff_user');
+          const staffSession = localStorage.getItem('tms_staff_session');
+
+          if (staffUser && staffSession) {
+            try {
+              const userData = JSON.parse(staffUser);
+              const sessionData = JSON.parse(staffSession);
+              const expiresAt = sessionData.expires_at;
+
+              // Check if token is expired
+              if (Date.now() < expiresAt) {
+                console.log('✅ Staff authentication found in localStorage:', userData);
+
+                // Set staff user in auth context
+                const staffUserData: UnifiedUser = {
+                  ...userData,
+                  role: 'staff',
+                  staff_id: userData.user_metadata?.staff_id || userData.id
+                };
+
+                setUser(staffUserData);
+                setUserType('staff');
+                setIsLoading(false);
+
+                // Set cookies when loading from localStorage
+                if (typeof window !== 'undefined') {
+                  const maxAge = 24 * 60 * 60; // 24 hours
+                  const isSecure = window.location.protocol === 'https:';
+                  const cookieOptions = `path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`;
+
+                  document.cookie = `tms_staff_token=${encodeURIComponent(sessionData.access_token || 'staff-direct-token')}; ${cookieOptions}`;
+
+                  console.log('✅ Staff cookies refreshed from localStorage auth');
+                }
+
+                return; // Skip unified auth check since we have valid staff auth
+              } else {
+                console.log('❌ Staff token expired, clearing localStorage');
+                localStorage.removeItem('tms_staff_user');
+                localStorage.removeItem('tms_staff_session');
+                localStorage.removeItem('tms_staff_data');
+              }
+            } catch (error) {
+              console.error('❌ Error parsing staff data from localStorage:', error);
+              localStorage.removeItem('tms_staff_user');
+              localStorage.removeItem('tms_staff_session');
+              localStorage.removeItem('tms_staff_data');
+            }
+          }
         }
-        
+
         // Get current auth state from unified service
         const authState = await unifiedAuthService.attemptAutoLogin();
 

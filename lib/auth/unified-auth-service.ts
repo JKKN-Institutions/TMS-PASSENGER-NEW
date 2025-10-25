@@ -1,14 +1,15 @@
 import parentAuthService, { ParentAppUser, AuthSession } from './parent-auth-service';
 import driverAuthService, { DriverUser, DriverSession, DriverAuthData } from './driver-auth-service';
+import staffLoginService, { StaffUser, StaffSession, StaffAuthData } from './staff-login-service';
 import { staffAuthService } from './staff-auth-service';
 import { studentAuthService } from './student-auth-service';
 import { sessionManager } from '../session';
 
-export type UnifiedUser = ParentAppUser | DriverUser;
+export type UnifiedUser = ParentAppUser | DriverUser | StaffUser;
 
 export interface UnifiedAuthState {
   user: UnifiedUser | null;
-  session: AuthSession | DriverSession | null;
+  session: AuthSession | DriverSession | StaffSession | null;
   isAuthenticated: boolean;
   userType: 'passenger' | 'driver' | 'staff' | 'student' | null;
 }
@@ -29,13 +30,26 @@ class UnifiedAuthService {
     // Check for driver authentication first
     const driverUser = driverAuthService.getUser();
     const driverSession = driverAuthService.getSession();
-    
+
     if (driverUser && driverSession && driverAuthService.isAuthenticated()) {
       return {
         user: driverUser,
         session: driverSession,
         isAuthenticated: true,
         userType: 'driver'
+      };
+    }
+
+    // Check for staff authentication
+    const staffUser = staffLoginService.getUser();
+    const staffSession = staffLoginService.getSession();
+
+    if (staffUser && staffSession && staffLoginService.isAuthenticated()) {
+      return {
+        user: staffUser,
+        session: staffSession,
+        isAuthenticated: true,
+        userType: 'staff'
       };
     }
 
@@ -137,14 +151,14 @@ class UnifiedAuthService {
    */
   isStaff(user: UnifiedUser): boolean {
     // Check for explicit staff role
-    if ('role' in user && user.role === 'staff') {
+    if ('role' in user && (user.role === 'staff' || user.role === 'super_admin' || user.role === 'superadmin')) {
       return true;
     }
 
     // Check for staff-related roles
     if ('role' in user) {
       const role = user.role.toLowerCase();
-      if (role.includes('staff') || role.includes('admin') || role.includes('faculty') || role.includes('teacher')) {
+      if (role.includes('staff') || role.includes('admin') || role.includes('super') || role.includes('faculty') || role.includes('teacher')) {
         return true;
       }
     }
@@ -167,7 +181,7 @@ class UnifiedAuthService {
     if (this.isDriver(user)) {
       return '/driver';
     } else if (this.isStaff(user)) {
-      return '/dashboard'; // Staff users go to the same dashboard as passengers
+      return '/staff'; // Staff users go to staff dashboard
     } else {
       return '/dashboard';
     }
@@ -228,7 +242,7 @@ class UnifiedAuthService {
   async loginDriverDirect(email: string, password: string): Promise<LoginResult> {
     try {
       const authData = await driverAuthService.directLogin(email, password);
-      
+
       if (authData) {
         // Also store in sessionManager for compatibility
         const sessionData = {
@@ -264,7 +278,57 @@ class UnifiedAuthService {
     } catch (error) {
       return {
         success: false,
-        userType: 'driver', 
+        userType: 'driver',
+        redirectPath: '/login',
+        error: error instanceof Error ? error.message : 'Direct login failed'
+      };
+    }
+  }
+
+  /**
+   * Direct login staff with email/password (with parent app integration)
+   */
+  async loginStaffDirect(email: string, password: string): Promise<LoginResult> {
+    try {
+      const authData = await staffLoginService.directLogin(email, password);
+
+      if (authData) {
+        // Also store in sessionManager for compatibility
+        const sessionData = {
+          user: {
+            id: authData.user.id,
+            email: authData.user.email,
+            user_metadata: {
+              staff_id: authData.staff.id,
+              staff_name: authData.staff.name || authData.user.staff_name,
+              department: authData.staff.department
+            }
+          },
+          session: {
+            access_token: authData.session.access_token,
+            expires_at: authData.session.expires_at,
+            refresh_token: authData.session.refresh_token
+          }
+        };
+        sessionManager.setSession(sessionData);
+
+        return {
+          success: true,
+          userType: 'staff',
+          redirectPath: '/staff'
+        };
+      }
+
+      return {
+        success: false,
+        userType: 'staff',
+        redirectPath: '/login',
+        error: 'Direct login failed'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        userType: 'staff',
         redirectPath: '/login',
         error: error instanceof Error ? error.message : 'Direct login failed'
       };
@@ -313,13 +377,15 @@ class UnifiedAuthService {
    */
   async validateSession(): Promise<boolean> {
     const authState = await this.getCurrentAuthState();
-    
+
     if (!authState.isAuthenticated) {
       return false;
     }
 
     if (authState.userType === 'driver') {
       return await driverAuthService.validateSession();
+    } else if (authState.userType === 'staff') {
+      return await staffLoginService.validateSession();
     } else if (authState.userType === 'passenger' || authState.userType === 'student') {
       return await parentAuthService.validateSession();
     }
@@ -328,17 +394,19 @@ class UnifiedAuthService {
   }
 
   /**
-   * Refresh current session based on user type  
+   * Refresh current session based on user type
    */
   async refreshSession(): Promise<boolean> {
     const authState = await this.getCurrentAuthState();
-    
+
     if (!authState.isAuthenticated) {
       return false;
     }
 
     if (authState.userType === 'driver') {
       return await driverAuthService.refreshSession();
+    } else if (authState.userType === 'staff') {
+      return await staffLoginService.refreshSession();
     } else if (authState.userType === 'passenger') {
       return await parentAuthService.refreshToken();
     }
@@ -411,9 +479,11 @@ class UnifiedAuthService {
    */
   async logout(redirectToParent?: boolean): Promise<void> {
     const authState = await this.getCurrentAuthState();
-    
+
     if (authState.userType === 'driver') {
       driverAuthService.logout();
+    } else if (authState.userType === 'staff') {
+      staffLoginService.logout();
     } else if (authState.userType === 'passenger') {
       parentAuthService.logout(redirectToParent);
     }
@@ -427,9 +497,11 @@ class UnifiedAuthService {
    */
   async getAccessToken(): Promise<string | null> {
     const authState = await this.getCurrentAuthState();
-    
+
     if (authState.userType === 'driver') {
       return driverAuthService.getAccessToken();
+    } else if (authState.userType === 'staff') {
+      return staffLoginService.getAccessToken();
     } else if (authState.userType === 'passenger') {
       return parentAuthService.getAccessToken();
     }

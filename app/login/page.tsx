@@ -268,9 +268,24 @@ export default function LoginPage() {
                     </div>
                     <div className="ml-4 text-left flex-1">
                       <h4 className="text-lg font-semibold text-gray-900 group-hover:text-yellow-700 transition-colors">Driver</h4>
-                      <p className="text-sm text-gray-600">Bus drivers and transport staff</p>
+                      <p className="text-sm text-gray-600">Bus drivers</p>
                     </div>
                     <div className="w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  </button>
+
+                  {/* Staff Option */}
+                  <button
+                    onClick={() => router.push('/staff-login')}
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-purple-400 focus:outline-none focus:ring-3 focus:ring-purple-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 group-hover:from-purple-200 group-hover:to-indigo-200 transition-all duration-300 shadow-md">
+                      <GraduationCap className="h-7 w-7 text-purple-600" />
+                    </div>
+                    <div className="ml-4 text-left flex-1">
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-purple-700 transition-colors">Staff</h4>
+                      <p className="text-sm text-gray-600">Administrative staff</p>
+                    </div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </button>
                 </div>
               </>
