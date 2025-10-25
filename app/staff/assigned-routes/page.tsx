@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   Route as RouteIcon,
   Users,
@@ -377,13 +378,22 @@ export default function StaffAssignedRoutesPage() {
                         )}
                       </div>
 
-                      <button className="ml-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                        {isExpanded ? (
-                          <ChevronUp className="w-6 h-6 text-gray-600" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-600" />
-                        )}
-                      </button>
+                      <div className="ml-4 flex items-center gap-2">
+                        <Link
+                          href={`/staff/routes/${routeData.route.id}`}
+                          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View Details
+                        </Link>
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          {isExpanded ? (
+                            <ChevronUp className="w-6 h-6 text-gray-600" />
+                          ) : (
+                            <ChevronDown className="w-6 h-6 text-gray-600" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
 

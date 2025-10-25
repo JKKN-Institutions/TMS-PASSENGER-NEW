@@ -92,7 +92,7 @@ function BookingsContent() {
     }
 
     load(routeId || undefined);
-  }, [routeId, router, isAuthenticated, userType, user, authLoading]);
+  }, [routeId, router, isAuthenticated, userType, user, authLoading, date]);
 
   const total = useMemo(() => bookings.length, [bookings]);
   const confirmedBookings = useMemo(() => bookings.filter(b => b.status === 'confirmed').length, [bookings]);
@@ -159,9 +159,21 @@ function BookingsContent() {
             <h1 className="text-3xl font-bold mb-2">
               Passenger Bookings {routeId ? '' : '(Sample: Route 29)'}
             </h1>
-            <p className="text-blue-100 text-lg">
+            <p className="text-blue-100 text-lg mb-3">
               Manage and view all passenger bookings for your routes
             </p>
+            <div className="flex items-center gap-2 text-sm bg-white bg-opacity-20 rounded-lg px-4 py-2 w-fit">
+              <Calendar className="w-4 h-4" />
+              <span>Showing bookings for:</span>
+              <span className="font-semibold">
+                {new Date(date).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </span>
+            </div>
           </div>
           <div className="hidden md:block">
             <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -224,12 +236,12 @@ function BookingsContent() {
 
       {/* Controls */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div className="flex items-center">
             <Calendar className="w-6 h-6 text-blue-600 mr-3" />
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Date Selection</h2>
-              <p className="text-sm text-gray-600">Choose a date to view bookings</p>
+              <p className="text-sm text-gray-600">Bookings automatically update when date changes</p>
             </div>
           </div>
           <div className="text-right">
@@ -238,23 +250,62 @@ function BookingsContent() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center">
-            <Calendar className="w-5 h-5 text-gray-400 mr-3" />
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
+        <div className="space-y-4">
+          {/* Quick Date Navigation */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">Quick select:</span>
+            <button
+              onClick={() => {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                setDate(yesterday.toISOString().split('T')[0]);
+              }}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Yesterday
+            </button>
+            <button
+              onClick={() => setDate(new Date().toISOString().split('T')[0])}
+              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Today
+            </button>
+            <button
+              onClick={() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                setDate(tomorrow.toISOString().split('T')[0]);
+              }}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Tomorrow
+            </button>
           </div>
-          <button
-            onClick={() => load(routeId || undefined)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center"
-          >
-            <TrendingUp className="w-4 h-4 mr-2" />
-            Load Bookings
-          </button>
+
+          {/* Date Picker and Controls */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex items-center flex-1">
+              <Calendar className="w-5 h-5 text-gray-400 mr-3" />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full sm:w-auto border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600 bg-blue-50 px-4 py-2 rounded-lg">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+              <span>Auto-refresh enabled</span>
+            </div>
+            <button
+              onClick={() => load(routeId || undefined)}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              {loading ? 'Loading...' : 'Refresh Now'}
+            </button>
+          </div>
         </div>
       </div>
 

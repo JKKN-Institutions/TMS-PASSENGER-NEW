@@ -26,6 +26,7 @@ interface RouteStats {
 }
 
 interface RecentRoute {
+  route_id: string;
   route_number: string;
   route_name: string;
   passenger_count: number;
@@ -97,8 +98,9 @@ export default function StaffDashboardPage() {
           totalCapacity
         });
 
-        // Set recent routes (first 3)
+        // Set recent routes (first 3) with route IDs
         const recent = routes.slice(0, 3).map((r: any) => ({
+          route_id: r.route?.id || '',
           route_number: r.route?.route_number || 'N/A',
           route_name: r.route?.route_name || 'Unknown Route',
           passenger_count: r.passengerCount || 0,
@@ -247,7 +249,7 @@ export default function StaffDashboardPage() {
                     </div>
                   </div>
                   <Link
-                    href="/staff/assigned-routes"
+                    href={`/staff/routes/${route.route_id}`}
                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
                   >
                     View Details
