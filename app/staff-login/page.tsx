@@ -23,7 +23,8 @@ export default function StaffLoginPage() {
     // Store that this is a staff OAuth attempt for callback processing
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('tms_oauth_role', 'staff');
-      console.log('👔 [STAFF OAUTH] Step 2: Staff OAuth flag set in sessionStorage');
+      const verified = sessionStorage.getItem('tms_oauth_role');
+      console.log('👔 [STAFF OAUTH] Step 2: Staff OAuth flag set in sessionStorage:', verified);
     }
 
     console.log('👔 [STAFF OAUTH] Step 3: Calling parent auth service login');

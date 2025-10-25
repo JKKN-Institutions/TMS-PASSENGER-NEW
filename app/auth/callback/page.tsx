@@ -111,15 +111,31 @@ function CallbackContent() {
         // Check sessionStorage for OAuth role flag
         const oauthRole = sessionStorage.getItem('tms_oauth_role');
         console.log('🔍 OAuth role from sessionStorage:', oauthRole);
+        console.log('🔍 User data from parent app:', {
+          role: data.user?.role,
+          is_staff: data.user?.is_staff,
+          is_super_admin: data.user?.is_super_admin,
+          permissions: data.user?.permissions,
+          fullUser: data.user
+        });
 
         // First check if role from parent app indicates driver or staff
         let isDriver = data.user?.role === 'driver' || oauthRole === 'driver';
-        let isStaff = data.user?.role === 'staff' ||
+
+        // Enhanced staff role detection
+        let isStaff = oauthRole === 'staff' || // Check OAuth flag first
+                      data.user?.role === 'staff' ||
                       data.user?.role === 'super_admin' ||
                       data.user?.role === 'superadmin' ||
-                      data.user?.is_staff ||
-                      data.user?.is_super_admin ||
-                      oauthRole === 'staff';
+                      data.user?.is_staff === true ||
+                      data.user?.is_super_admin === true ||
+                      (typeof data.user?.role === 'string' && (
+                        data.user.role.toLowerCase().includes('admin') ||
+                        data.user.role.toLowerCase().includes('staff') ||
+                        data.user.role.toLowerCase().includes('super')
+                      ));
+
+        console.log('🔍 Role detection results:', { isDriver, isStaff, oauthRole });
 
         // If not marked as driver by parent app, check local drivers table
         if (!isDriver && !isStaff && data.user?.email) {
