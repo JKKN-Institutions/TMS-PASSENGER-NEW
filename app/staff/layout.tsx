@@ -15,7 +15,8 @@ import {
   X,
   Home,
   LogOut,
-  Briefcase
+  Briefcase,
+  Route as RouteIcon
 } from 'lucide-react';
 
 export default function StaffLayout({
@@ -53,6 +54,7 @@ export default function StaffLayout({
 
   const navigation = [
     { name: 'Dashboard', href: '/staff', icon: Home, current: pathname === '/staff' },
+    { name: 'Assigned Routes', href: '/staff/assigned-routes', icon: RouteIcon, current: pathname === '/staff/assigned-routes' },
     { name: 'Students', href: '/staff/students', icon: Users, current: pathname === '/staff/students' },
     { name: 'Routes', href: '/staff/routes', icon: Bus, current: pathname === '/staff/routes' },
     { name: 'Grievances', href: '/staff/grievances', icon: FileText, current: pathname === '/staff/grievances' },
