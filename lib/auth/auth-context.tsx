@@ -199,12 +199,80 @@ export function AuthProvider({
         });
 
         if (authState.isAuthenticated && authState.user) {
+          // Check if user has staff/super_admin role from parent app data
+          // This must be done BEFORE setting userType to avoid OAuth staff users being treated as passengers
+          let finalUserType = normalizedUserType;
+
+          if (normalizedUserType === 'passenger' && authState.user) {
+            const user = authState.user as any;
+
+            // Check for staff/super_admin role indicators from parent app
+            const hasStaffRole =
+              user.role === 'staff' ||
+              user.role === 'super_admin' ||
+              user.role === 'superadmin' ||
+              user.role === 'transport_staff' ||
+              user.role === 'admin' ||
+              user.role === 'transport_admin' ||
+              user.role === 'faculty' ||
+              user.role === 'employee' ||
+              user.role === 'transport_manager' ||
+              user.is_staff === true ||
+              user.is_super_admin === true ||
+              (user.permissions && (
+                user.permissions.transport_access ||
+                user.permissions.admin_access ||
+                user.permissions.staff_access
+              )) ||
+              (typeof user.role === 'string' && (
+                user.role.toLowerCase().includes('staff') ||
+                user.role.toLowerCase().includes('admin') ||
+                user.role.toLowerCase().includes('super') ||
+                user.role.toLowerCase().includes('faculty') ||
+                user.role.toLowerCase().includes('teacher') ||
+                user.role.toLowerCase().includes('manager')
+              ));
+
+            if (hasStaffRole) {
+              console.log('✅ User has staff/admin role from parent app, treating as staff:', {
+                role: user.role,
+                is_super_admin: user.is_super_admin,
+                is_staff: user.is_staff
+              });
+              finalUserType = 'staff';
+
+              // Store staff authentication data for staff layout/pages
+              const staffUser = {
+                id: user.id,
+                email: user.email,
+                staff_name: user.full_name || user.email?.split('@')[0] || 'Staff Member',
+                department: user.department || 'Transport Management',
+                role: 'staff' as const
+              };
+
+              const staffSession = {
+                access_token: parentAuthService.getAccessToken() || '',
+                refresh_token: parentAuthService.getRefreshToken() || '',
+                expires_at: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+              };
+
+              localStorage.setItem('tms_staff_user', JSON.stringify(staffUser));
+              localStorage.setItem('tms_staff_session', JSON.stringify(staffSession));
+
+              // Set cookies for server-side access
+              document.cookie = `tms_staff_token=${staffSession.access_token}; path=/; max-age=${24 * 3600}`;
+              document.cookie = `tms_staff_refresh=${staffSession.refresh_token}; path=/; max-age=${30 * 24 * 3600}`;
+
+              console.log('✅ Staff authentication data stored in localStorage and cookies');
+            }
+          }
+
           setUser(authState.user);
           setSession(authState.session as AuthSession);
-          setUserType(normalizedUserType);
+          setUserType(finalUserType);
 
           // For passenger users, enhance with local database data
-          if (normalizedUserType === 'passenger' && authState.user && authState.user.email) {
+          if (finalUserType === 'passenger' && authState.user && authState.user.email) {
             // Check if user already has studentId (already enhanced)
             const hasStudentId = 'studentId' in authState.user && authState.user.studentId;
             
