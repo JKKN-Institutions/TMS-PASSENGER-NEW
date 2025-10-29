@@ -13,7 +13,9 @@ import {
   Clock,
   User,
   MapPin,
-  TrendingUp
+  TrendingUp,
+  BadgeCheck,
+  ShieldCheck
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 
@@ -25,9 +27,12 @@ const supabase = createClient(
 interface Booking {
   id: string;
   booking_date: string;
+  booking_reference: string;
   status: string;
   payment_status: string;
   seat_number?: string;
+  verified_at?: string;
+  verified_by?: string;
   student?: {
     student_name: string;
     roll_number: string;
@@ -98,9 +103,12 @@ export default function StaffBookingsPage() {
         .select(`
           id,
           booking_date,
+          booking_reference,
           status,
           payment_status,
           seat_number,
+          verified_at,
+          verified_by,
           student_id,
           route_id,
           students (
@@ -170,6 +178,7 @@ export default function StaffBookingsPage() {
   const confirmedCount = bookings.filter(b => b.status === 'confirmed').length;
   const pendingCount = bookings.filter(b => b.status === 'pending').length;
   const paidCount = bookings.filter(b => b.payment_status === 'paid').length;
+  const verifiedCount = bookings.filter(b => b.verified_at).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
@@ -202,49 +211,60 @@ export default function StaffBookingsPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-green-600 text-sm font-medium">Total</span>
+              <span className="text-green-600 text-xs font-medium uppercase">Total</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{bookings.length}</h3>
             <p className="text-gray-500 text-sm mt-1">All bookings</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
-              <span className="text-green-600 text-sm font-medium">Confirmed</span>
+              <span className="text-green-600 text-xs font-medium uppercase">Confirmed</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{confirmedCount}</h3>
-            <p className="text-gray-500 text-sm mt-1">Confirmed bookings</p>
+            <p className="text-gray-500 text-sm mt-1">Confirmed</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
-              <span className="text-yellow-600 text-sm font-medium">Pending</span>
+              <span className="text-yellow-600 text-xs font-medium uppercase">Pending</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{pendingCount}</h3>
-            <p className="text-gray-500 text-sm mt-1">Pending bookings</p>
+            <p className="text-gray-500 text-sm mt-1">Pending</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
-              <span className="text-blue-600 text-sm font-medium">Paid</span>
+              <span className="text-blue-600 text-xs font-medium uppercase">Paid</span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{paidCount}</h3>
-            <p className="text-gray-500 text-sm mt-1">Paid bookings</p>
+            <p className="text-gray-500 text-sm mt-1">Paid</p>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow col-span-2 md:col-span-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-purple-600" />
+              </div>
+              <span className="text-purple-600 text-xs font-medium uppercase">Verified</span>
+            </div>
+            <h3 className="text-3xl font-bold text-gray-800">{verifiedCount}</h3>
+            <p className="text-gray-500 text-sm mt-1">Scanned tickets</p>
           </div>
         </div>
 
@@ -320,7 +340,9 @@ export default function StaffBookingsPage() {
         ) : (
           <div className="bg-white rounded-xl shadow-lg border border-gray-100 divide-y divide-gray-100">
             {filteredBookings.map((booking) => (
-              <div key={booking.id} className="p-6 hover:bg-gray-50 transition-colors">
+              <div key={booking.id} className={`p-6 hover:bg-gray-50 transition-colors ${
+                booking.verified_at ? 'bg-purple-50 bg-opacity-30' : ''
+              }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -331,6 +353,12 @@ export default function StaffBookingsPage() {
                       <span className="text-sm text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
                         {booking.student?.roll_number}
                       </span>
+                      {booking.verified_at && (
+                        <div className="flex items-center gap-1.5 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 px-3 py-1 rounded-full">
+                          <BadgeCheck className="w-4 h-4" strokeWidth={2.5} />
+                          <span className="text-xs font-bold">VERIFIED</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
@@ -340,8 +368,13 @@ export default function StaffBookingsPage() {
                           <span>{booking.route.route_number} - {booking.route.route_name}</span>
                         </div>
                       )}
+                      {booking.booking_reference && (
+                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono">
+                          {booking.booking_reference}
+                        </span>
+                      )}
                       {booking.seat_number && (
-                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
                           Seat: {booking.seat_number}
                         </span>
                       )}
@@ -359,6 +392,21 @@ export default function StaffBookingsPage() {
                         Payment: {booking.payment_status}
                       </span>
                     </div>
+
+                    {booking.verified_at && (
+                      <div className="mt-3 flex items-center gap-2 text-xs text-purple-700">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>
+                          Verified {new Date(booking.verified_at).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                          {booking.verified_by && ` by ${booking.verified_by}`}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
