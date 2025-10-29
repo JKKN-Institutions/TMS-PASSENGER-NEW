@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -12,7 +12,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    // Create Supabase client with service role key for admin access
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
 
     // Find booking by ticket code
     const { data: booking, error: bookingError } = await supabase
@@ -72,22 +81,15 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Get staff information from session
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Staff login required.' },
-        { status: 401 }
-      );
-    }
+    // Get staff email from request headers or body
+    const staffEmail = request.headers.get('x-staff-email') || 'staff@system';
 
     // Update booking to mark as verified
     const { data: updatedBooking, error: updateError } = await supabase
       .from('bookings')
       .update({
         verified_at: new Date().toISOString(),
-        verified_by: user.email,
+        verified_by: staffEmail,
       })
       .eq('id', booking.id)
       .select()
@@ -104,7 +106,7 @@ export async function POST(request: NextRequest) {
     console.log('✅ Ticket verified successfully:', {
       bookingId: booking.id,
       ticketCode,
-      verifiedBy: user.email,
+      verifiedBy: staffEmail,
     });
 
     return NextResponse.json({
