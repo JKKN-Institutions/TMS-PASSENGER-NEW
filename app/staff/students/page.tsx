@@ -97,105 +97,57 @@ export default function StaffStudentsPage() {
   };
 
   const loadStudents = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  	try {
+  	  setLoading(true);
+  	  setError(null);
 
-      if (!user?.email) {
-        setError('User email not found');
-        return;
-      }
+  	  if (!user?.email) {
+  	    setError('User email not found');
+  	    return;
+  	  }
 
-      // First, get staff's assigned routes
-      const { data: assignments, error: assignmentsError } = await supabase
-        .from('staff_route_assignments')
-        .select('route_id')
-        .eq('staff_email', user.email.toLowerCase().trim())
-        .eq('is_active', true);
+  	  // Fetch via secured server API which enforces route-based filtering
+  	  const response = await fetch(`/api/staff/assigned-routes?email=${encodeURIComponent(user.email)}`);
+  	  const data = await response.json();
 
-      if (assignmentsError) throw assignmentsError;
+  	  if (!data.success) {
+  	    throw new Error(data.error || 'Failed to load assigned routes');
+  	  }
 
-      if (!assignments || assignments.length === 0) {
-        // No routes assigned, show empty state
-        setStudents([]);
-        setFilteredStudents([]);
-        setLoading(false);
-        return;
-      }
+  	  const routesWithPassengers = Array.isArray(data.routesWithPassengers) ? data.routesWithPassengers : [];
 
-      // Get route IDs
-      const routeIds = assignments.map(a => a.route_id);
+  	  // Build unique students list from passengers across assigned routes
+  	  const studentsMap: Record<string, any> = {};
+  	  routesWithPassengers.forEach((r: any) => {
+  	    (r.passengers || []).forEach((p: any) => {
+  	      const student = p.student;
+  	      if (student && student.id && !studentsMap[student.id]) {
+  	        studentsMap[student.id] = {
+  	          ...student,
+  	          routeAllocation: {
+  	            route: {
+  	              route_number: r.route?.route_number,
+  	              route_name: r.route?.route_name
+  	            },
+  	            boardingStop: p.boardingStop ? { stop_name: p.boardingStop.stop_name } : undefined
+  	          }
+  	        };
+  	      }
+  	    });
+  	  });
 
-      // Fetch students who are on these routes
-      const { data: routeAllocations, error: allocationsError } = await supabase
-        .from('student_route_allocations')
-        .select(`
-          student_id,
-          route_id,
-          boarding_stop_id,
-          students (
-            id,
-            student_name,
-            roll_number,
-            email,
-            mobile,
-            academic_year,
-            semester,
-            department_id,
-            program_id,
-            departments (
-              id,
-              department_name
-            ),
-            programs (
-              id,
-              program_name,
-              degree_name
-            )
-          ),
-          routes (
-            route_number,
-            route_name
-          ),
-          route_stops (
-            stop_name
-          )
-        `)
-        .in('route_id', routeIds)
-        .eq('is_active', true);
+  	  const studentsWithRoutes = Object.values(studentsMap).sort((a: any, b: any) =>
+  	    a.student_name.localeCompare(b.student_name)
+  	  );
 
-      if (allocationsError) throw allocationsError;
-
-      // Create unique students list (student might be on multiple routes)
-      const studentsMap: Record<string, any> = {};
-
-      (routeAllocations || []).forEach(allocation => {
-        const student = allocation.students;
-        if (student && student.id) {
-          if (!studentsMap[student.id]) {
-            studentsMap[student.id] = {
-              ...student,
-              routeAllocation: {
-                route: allocation.routes,
-                boardingStop: allocation.route_stops
-              }
-            };
-          }
-        }
-      });
-
-      const studentsWithRoutes = Object.values(studentsMap).sort((a: any, b: any) =>
-        a.student_name.localeCompare(b.student_name)
-      );
-
-      setStudents(studentsWithRoutes);
-      setFilteredStudents(studentsWithRoutes);
-    } catch (err: any) {
-      console.error('Error loading students:', err);
-      setError(err.message || 'Failed to load students');
-    } finally {
-      setLoading(false);
-    }
+  	  setStudents(studentsWithRoutes);
+  	  setFilteredStudents(studentsWithRoutes);
+  	} catch (err: any) {
+  	  console.error('Error loading students:', err);
+  	  setError(err.message || 'Failed to load students');
+  	} finally {
+  	  setLoading(false);
+  	}
   };
 
   const filterStudents = () => {
