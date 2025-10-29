@@ -287,7 +287,7 @@ export default function RouteDetailPage() {
                 <Clock className="w-4 h-4" />
                 <span>Timing</span>
               </div>
-              <p className="text-lg font-semibold">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
+              <p className="text-lg font-semibold text-white">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
@@ -295,7 +295,7 @@ export default function RouteDetailPage() {
                 <Users className="w-4 h-4" />
                 <span>Capacity</span>
               </div>
-              <p className="text-lg font-semibold">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
+              <p className="text-lg font-semibold text-white">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
@@ -303,7 +303,7 @@ export default function RouteDetailPage() {
                 <Navigation className="w-4 h-4" />
                 <span>Distance</span>
               </div>
-              <p className="text-lg font-semibold">{routeData.route.distance} km</p>
+              <p className="text-lg font-semibold text-white">{routeData.route.distance} km</p>
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
@@ -311,7 +311,7 @@ export default function RouteDetailPage() {
                 <Calendar className="w-4 h-4" />
                 <span>Fare</span>
               </div>
-              <p className="text-lg font-semibold">₹{routeData.route.fare}</p>
+              <p className="text-lg font-semibold text-white">₹{routeData.route.fare}</p>
             </div>
           </div>
         </div>

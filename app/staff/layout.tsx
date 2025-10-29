@@ -391,8 +391,9 @@ export default function StaffLayout({
         {/* Floating Action Button - Scan Ticket */}
         <button
           onClick={() => setScannerOpen(true)}
-          className="fixed bottom-24 right-6 lg:bottom-8 lg:right-8 z-30 w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+          className="fixed bottom-32 right-6 lg:bottom-24 lg:right-8 z-30 w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
           aria-label="Scan Ticket"
+          title="Scan Ticket"
         >
           <ScanLine className="w-8 h-8 group-hover:rotate-12 transition-transform" strokeWidth={2.5} />
 
