@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "D:\\other matters\\jicate\\TMS-ADMIN\\TMS-PASSENGER"
+      ]
+    },
+    "supabase": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@supabase/mcp-server-supabase@0.5.8",
+        "--project-ref=gsvbrytleqdxpdfbykqh"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_757671402a35f3e4b0bef1aece8f2fd6b0bbeea2"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    }
+  }
+}

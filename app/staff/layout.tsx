@@ -105,7 +105,7 @@ export default function StaffLayout({
               </div>
               <div>
                 <h2 className="text-lg font-bold">Staff Portal</h2>
-                <p className="text-xs text-green-200">TMS Admin</p>
+                <p className="text-xs text-white opacity-90">TMS Admin</p>
               </div>
             </div>
             <button
@@ -125,7 +125,7 @@ export default function StaffLayout({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate">{staffName}</p>
-              <p className="text-xs text-green-200 truncate">{user?.email}</p>
+              <p className="text-xs text-white opacity-90 truncate">{user?.email}</p>
             </div>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function StaffLayout({
                   transition-all duration-200
                   ${item.current
                     ? 'bg-white bg-opacity-20 text-white font-semibold shadow-lg'
-                    : 'text-green-100 hover:bg-white hover:bg-opacity-10 hover:text-white'
+                    : 'text-white opacity-95 hover:bg-white hover:bg-opacity-10 hover:text-white'
                   }
                 `}
               >
@@ -160,7 +160,7 @@ export default function StaffLayout({
           <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg
-              text-green-100 hover:bg-white hover:bg-opacity-10 hover:text-white
+              text-white opacity-95 hover:bg-white hover:bg-opacity-10 hover:text-white
               transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />

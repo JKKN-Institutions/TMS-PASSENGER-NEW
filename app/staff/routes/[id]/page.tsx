@@ -266,7 +266,7 @@ export default function RouteDetailPage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold mb-1">{routeData.route.route_name}</h2>
-                <div className="flex items-center gap-2 text-green-100">
+                <div className="flex items-center gap-2 text-white opacity-95">
                   <MapPin className="w-4 h-4" />
                   <span>{routeData.route.start_location} → {routeData.route.end_location}</span>
                 </div>
@@ -283,7 +283,7 @@ export default function RouteDetailPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
                 <Clock className="w-4 h-4" />
                 <span>Timing</span>
               </div>
@@ -291,7 +291,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
                 <Users className="w-4 h-4" />
                 <span>Capacity</span>
               </div>
@@ -299,7 +299,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
                 <Navigation className="w-4 h-4" />
                 <span>Distance</span>
               </div>
@@ -307,7 +307,7 @@ export default function RouteDetailPage() {
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-green-200 text-sm mb-1">
+              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
                 <Calendar className="w-4 h-4" />
                 <span>Fare</span>
               </div>

@@ -149,8 +149,8 @@ export default function StaffDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">Welcome back, {staffName}!</h1>
-              <p className="text-green-100 text-lg">{department}</p>
-              <p className="text-green-200 text-sm mt-1">Manage your assigned routes and passengers efficiently</p>
+              <p className="text-white text-lg opacity-95">{department}</p>
+              <p className="text-white text-sm mt-1 opacity-90">Manage your assigned routes and passengers efficiently</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -163,62 +163,62 @@ export default function StaffDashboardPage() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Assigned Routes */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <RouteIcon className="w-6 h-6 text-green-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center shadow-sm">
+                <RouteIcon className="w-7 h-7 text-green-600" />
               </div>
-              <span className="text-green-600 text-sm font-medium">Routes</span>
+              <span className="text-green-700 text-sm font-semibold uppercase tracking-wide">Routes</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.totalRoutes}</h3>
-            <p className="text-gray-500 text-sm mt-1">Assigned to you</p>
+            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalRoutes}</h3>
+            <p className="text-gray-600 text-sm mt-2 font-medium">Assigned to you</p>
           </div>
 
           {/* Total Passengers */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-yellow-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-xl flex items-center justify-center shadow-sm">
+                <Users className="w-7 h-7 text-yellow-600" />
               </div>
-              <span className="text-yellow-600 text-sm font-medium">Passengers</span>
+              <span className="text-yellow-700 text-sm font-semibold uppercase tracking-wide">Passengers</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.totalPassengers}</h3>
-            <p className="text-gray-500 text-sm mt-1">Total passengers</p>
+            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalPassengers}</h3>
+            <p className="text-gray-600 text-sm mt-2 font-medium">Total passengers</p>
           </div>
 
           {/* Active Routes */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Bus className="w-6 h-6 text-green-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center shadow-sm">
+                <Bus className="w-7 h-7 text-green-600" />
               </div>
-              <span className="text-green-600 text-sm font-medium">Active</span>
+              <span className="text-green-700 text-sm font-semibold uppercase tracking-wide">Active</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.activeRoutes}</h3>
-            <p className="text-gray-500 text-sm mt-1">Active routes</p>
+            <h3 className="text-4xl font-extrabold text-gray-900">{stats.activeRoutes}</h3>
+            <p className="text-gray-600 text-sm mt-2 font-medium">Active routes</p>
           </div>
 
           {/* Total Capacity */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-orange-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl flex items-center justify-center shadow-sm">
+                <Calendar className="w-7 h-7 text-orange-600" />
               </div>
-              <span className="text-orange-600 text-sm font-medium">Capacity</span>
+              <span className="text-orange-700 text-sm font-semibold uppercase tracking-wide">Capacity</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.totalCapacity}</h3>
-            <p className="text-gray-500 text-sm mt-1">Total seats</p>
+            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalCapacity}</h3>
+            <p className="text-gray-600 text-sm mt-2 font-medium">Total seats</p>
           </div>
         </div>
 
         {/* Recent Routes */}
         {recentRoutes.length > 0 && (
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-800">Your Assigned Routes</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Your Assigned Routes</h2>
               <Link
                 href="/staff/assigned-routes"
-                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm"
+                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-colors"
               >
                 View All
                 <ArrowRight className="w-4 h-4" />
@@ -228,29 +228,29 @@ export default function StaffDashboardPage() {
               {recentRoutes.map((route, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg border border-green-200 hover:shadow-md transition-shadow"
+                  className="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-200 hover:shadow-lg transition-all hover:border-green-300 duration-200"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-600 to-green-500 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
                       {route.route_number}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">{route.route_name}</h3>
-                      <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4" />
-                          <span>{route.passenger_count} passengers</span>
+                      <h3 className="font-bold text-gray-900 text-lg">{route.route_name}</h3>
+                      <div className="flex items-center gap-4 mt-1.5 text-sm text-gray-700">
+                        <div className="flex items-center gap-1.5">
+                          <Users className="w-4 h-4 text-green-600" />
+                          <span className="font-medium">{route.passenger_count} passengers</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{route.departure_time}</span>
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-4 h-4 text-yellow-600" />
+                          <span className="font-medium">{route.departure_time}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   <Link
                     href={`/staff/routes/${route.route_id}`}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl hover:from-green-700 hover:to-green-600 transition-all text-sm font-semibold shadow-md hover:shadow-lg"
                   >
                     View Details
                   </Link>
@@ -261,72 +261,84 @@ export default function StaffDashboardPage() {
         )}
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/staff/assigned-routes"
-              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
+              className="flex items-center p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl hover:shadow-md transition-all border border-green-200 hover:border-green-300 group"
             >
-              <RouteIcon className="w-6 h-6 text-green-600 mr-3" />
+              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <RouteIcon className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Assigned Routes</h3>
-                <p className="text-sm text-gray-600">View routes and passengers</p>
+                <h3 className="font-bold text-gray-900 text-base">Assigned Routes</h3>
+                <p className="text-sm text-gray-700 mt-0.5">View routes and passengers</p>
               </div>
             </Link>
 
             <Link
               href="/staff/routes"
-              className="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors border border-yellow-200"
+              className="flex items-center p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl hover:shadow-md transition-all border border-yellow-200 hover:border-yellow-300 group"
             >
-              <Bus className="w-6 h-6 text-yellow-600 mr-3" />
+              <div className="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <Bus className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">All Routes</h3>
-                <p className="text-sm text-gray-600">Browse all transport routes</p>
+                <h3 className="font-bold text-gray-900 text-base">All Routes</h3>
+                <p className="text-sm text-gray-700 mt-0.5">Browse all transport routes</p>
               </div>
             </Link>
 
             <Link
               href="/staff/students"
-              className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200"
+              className="flex items-center p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl hover:shadow-md transition-all border border-blue-200 hover:border-blue-300 group"
             >
-              <Users className="w-6 h-6 text-blue-600 mr-3" />
+              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <Users className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Students</h3>
-                <p className="text-sm text-gray-600">View student records</p>
+                <h3 className="font-bold text-gray-900 text-base">Students</h3>
+                <p className="text-sm text-gray-700 mt-0.5">View student records</p>
               </div>
             </Link>
 
             <Link
               href="/staff/grievances"
-              className="flex items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors border border-orange-200"
+              className="flex items-center p-5 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl hover:shadow-md transition-all border border-orange-200 hover:border-orange-300 group"
             >
-              <FileText className="w-6 h-6 text-orange-600 mr-3" />
+              <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Grievances</h3>
-                <p className="text-sm text-gray-600">Handle complaints</p>
+                <h3 className="font-bold text-gray-900 text-base">Grievances</h3>
+                <p className="text-sm text-gray-700 mt-0.5">Handle complaints</p>
               </div>
             </Link>
 
             <Link
               href="/staff/bookings"
-              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
+              className="flex items-center p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl hover:shadow-md transition-all border border-green-200 hover:border-green-300 group"
             >
-              <Calendar className="w-6 h-6 text-green-600 mr-3" />
+              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Bookings</h3>
-                <p className="text-sm text-gray-600">View booking requests</p>
+                <h3 className="font-bold text-gray-900 text-base">Bookings</h3>
+                <p className="text-sm text-gray-700 mt-0.5">View booking requests</p>
               </div>
             </Link>
 
             <Link
               href="/staff/reports"
-              className="flex items-center p-4 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors border border-teal-200"
+              className="flex items-center p-5 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl hover:shadow-md transition-all border border-teal-200 hover:border-teal-300 group"
             >
-              <TrendingUp className="w-6 h-6 text-teal-600 mr-3" />
+              <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Reports</h3>
-                <p className="text-sm text-gray-600">Generate reports</p>
+                <h3 className="font-bold text-gray-900 text-base">Reports</h3>
+                <p className="text-sm text-gray-700 mt-0.5">Generate reports</p>
               </div>
             </Link>
           </div>

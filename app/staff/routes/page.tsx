@@ -238,7 +238,7 @@ export default function StaffRoutesPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">All Routes</h1>
-              <p className="text-green-100 text-lg">Browse and view all transport routes</p>
+              <p className="text-white opacity-95 text-lg">Browse and view all transport routes</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
