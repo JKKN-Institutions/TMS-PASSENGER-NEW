@@ -25,7 +25,6 @@ const supabase = createClient(
 interface Booking {
   id: string;
   booking_date: string;
-  booking_type: string;
   status: string;
   payment_status: string;
   seat_number?: string;
@@ -99,7 +98,6 @@ export default function StaffBookingsPage() {
         .select(`
           id,
           booking_date,
-          booking_type,
           status,
           payment_status,
           seat_number,

@@ -27,7 +27,7 @@ const supabase = createClient(
 
 interface Grievance {
   id: string;
-  title: string;
+  subject: string;
   description: string;
   status: string;
   priority: string;
@@ -118,7 +118,7 @@ export default function StaffGrievancesPage() {
         .from('grievances')
         .select(`
           id,
-          title,
+          subject,
           description,
           status,
           priority,
@@ -154,7 +154,7 @@ export default function StaffGrievancesPage() {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         g =>
-          g.title.toLowerCase().includes(query) ||
+          g.subject.toLowerCase().includes(query) ||
           g.description.toLowerCase().includes(query) ||
           g.student?.student_name.toLowerCase().includes(query) ||
           g.student?.roll_number.toLowerCase().includes(query)
@@ -382,7 +382,7 @@ export default function StaffGrievancesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <h3 className="font-semibold text-gray-900 text-lg">{grievance.title}</h3>
+                          <h3 className="font-semibold text-gray-900 text-lg">{grievance.subject}</h3>
                           <div className="flex items-center gap-2">
                             {getStatusIcon(grievance.status)}
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(grievance.status)}`}>
