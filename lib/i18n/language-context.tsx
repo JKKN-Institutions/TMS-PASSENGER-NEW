@@ -749,6 +749,56 @@ const translations: Record<string, Record<Language, string>> = {
   'driver.stops_count': {
     en: 'Stops',
     ta: 'நிறுத்தங்கள்'
+  },
+
+  // Bookings Module
+  'bookings.total_bookings': {
+    en: 'Total Bookings',
+    ta: 'மொத்த பதிவுகள்'
+  },
+  'bookings.confirmed': {
+    en: 'Confirmed',
+    ta: 'உறுதி செய்யப்பட்டது'
+  },
+  'bookings.pending': {
+    en: 'Pending',
+    ta: 'நிலுவையில்'
+  },
+  'bookings.cancelled': {
+    en: 'Cancelled',
+    ta: 'ரத்து செய்யப்பட்டது'
+  },
+  'bookings.paid': {
+    en: 'Paid',
+    ta: 'செலுத்தப்பட்டது'
+  },
+  'bookings.verified': {
+    en: 'Verified',
+    ta: 'சரிபார்க்கப்பட்டது'
+  },
+  'bookings.roll': {
+    en: 'Roll',
+    ta: 'வகுப்பு எண்'
+  },
+  'bookings.seat': {
+    en: 'Seat',
+    ta: 'இருக்கை'
+  },
+  'bookings.all_status': {
+    en: 'All Status',
+    ta: 'அனைத்து நிலை'
+  },
+  'bookings.verified_at': {
+    en: 'Verified at',
+    ta: 'சரிபார்க்கப்பட்ட நேரம்'
+  },
+  'common.by': {
+    en: 'by',
+    ta: 'மூலம்'
+  },
+  'common.refresh': {
+    en: 'Refresh Now',
+    ta: 'புதுப்பிக்கவும்'
   }
 };
 
