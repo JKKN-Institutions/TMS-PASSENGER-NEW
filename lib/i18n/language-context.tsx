@@ -715,6 +715,40 @@ const translations: Record<string, Record<Language, string>> = {
   'error.login_required': {
     en: 'Please log in to access this feature',
     ta: 'இந்த அம்சத்தை அணுக உள்நுழையவும்'
+  },
+
+  // Driver Page Specific
+  'driver.journey_start': {
+    en: 'Ready to start your journey? Enable location sharing and begin tracking.',
+    ta: 'உங்கள் பயணத்தைத் தொடங்க தயாரா? இருப்பிட பகிர்வை இயக்கி கண்காணிப்பைத் தொடங்கவும்.'
+  },
+  'driver.location_sharing_title': {
+    en: 'Live Location Sharing',
+    ta: 'நேரடி இருப்பிட பகிர்வு'
+  },
+  'driver.location_sharing_active': {
+    en: 'Location is being shared with passengers',
+    ta: 'இருப்பிடம் பயணிகளுடன் பகிரப்படுகிறது'
+  },
+  'driver.location_sharing_inactive': {
+    en: 'Start sharing your live location',
+    ta: 'உங்கள் நேரடி இருப்பிடத்தைப் பகிரத் தொடங்குங்கள்'
+  },
+  'driver.stop_sharing': {
+    en: 'Stop Sharing',
+    ta: 'பகிர்வை நிறுத்து'
+  },
+  'driver.start_sharing': {
+    en: 'Start Sharing',
+    ta: 'பகிர்வைத் தொடங்கு'
+  },
+  'driver.route_stops': {
+    en: 'Route Stops',
+    ta: 'வழித்தடை நிறுத்தங்கள்'
+  },
+  'driver.stops_count': {
+    en: 'Stops',
+    ta: 'நிறுத்தங்கள்'
   }
 };
 

@@ -130,7 +130,7 @@ export default function DriverHomePage() {
           onClick={() => window.location.reload()} 
           className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
         >
-          Retry
+          {t('common.retry')}
         </button>
       </div>
     </div>
@@ -151,19 +151,19 @@ export default function DriverHomePage() {
   return (
     <div className="space-y-6 pb-8">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-6 md:p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-4 md:p-6 lg:p-8 text-white">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">
               {t('dashboard.welcome', { name: currentDriver?.email?.split('@')[0] || 'Driver' })}
             </h1>
-            <p className="text-green-100 text-base md:text-lg">
-              Ready to start your journey? Enable location sharing and begin tracking.
+            <p className="text-green-100 text-sm sm:text-base md:text-lg">
+              {t('driver.journey_start')}
             </p>
           </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Car className="w-10 h-10" />
+          <div className="hidden sm:block flex-shrink-0">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Car className="w-8 h-8 md:w-10 md:h-10" />
             </div>
           </div>
         </div>
@@ -171,30 +171,30 @@ export default function DriverHomePage() {
 
       {/* Location Sharing Toggle - TOP PRIORITY */}
       <div className="bg-white rounded-xl shadow-lg border-2 border-green-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 px-6 py-4 border-b border-green-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                locationSharingEnabled 
-                  ? 'bg-green-500 shadow-lg shadow-green-200' 
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 px-4 md:px-6 py-4 border-b border-green-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3 min-w-0 flex-1">
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
+                locationSharingEnabled
+                  ? 'bg-green-500 shadow-lg shadow-green-200'
                   : 'bg-gray-400'
               }`}>
-                <MapPinned className="w-6 h-6 text-white" />
+                <MapPinned className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Live Location Sharing</h2>
-                <p className="text-sm text-gray-600">
-                  {locationSharingEnabled 
-                    ? 'Location is being shared with passengers' 
-                    : 'Start sharing your live location'}
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.location_sharing_title')}</h2>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+                  {locationSharingEnabled
+                    ? t('driver.location_sharing_active')
+                    : t('driver.location_sharing_inactive')}
                 </p>
               </div>
             </div>
-            
+
             {/* Toggle Button */}
             <button
               onClick={() => setLocationSharingEnabled(!locationSharingEnabled)}
-              className={`px-6 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-all transform hover:scale-105 ${
+              className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all transform hover:scale-105 flex-shrink-0 ${
                 locationSharingEnabled
                   ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-200'
                   : 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-200'
@@ -202,23 +202,23 @@ export default function DriverHomePage() {
             >
               {locationSharingEnabled ? (
                 <>
-                  <Square className="w-5 h-5" />
-                  <span>Stop Sharing</span>
+                  <Square className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{t('driver.stop_sharing')}</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-5 h-5" />
-                  <span>Start Sharing</span>
+                  <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{t('driver.start_sharing')}</span>
                 </>
               )}
             </button>
           </div>
         </div>
-        
+
         {/* Location Tracker Component */}
         {locationSharingEnabled && driverId && (
-          <div className="p-6 bg-gray-50">
-            <DriverLocationTracker 
+          <div className="p-4 md:p-6 bg-gray-50">
+            <DriverLocationTracker
               driverId={driverId}
               driverName={currentDriver?.email?.split('@')[0] || 'Driver'}
               driverEmail={user?.email}
@@ -232,43 +232,43 @@ export default function DriverHomePage() {
       {/* Route Stops - Vertical Stepper Design */}
       {selectedRoute && currentStops.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Route Stops</h2>
-                <p className="text-sm text-gray-600">
-                  Route {selectedRoute.route_number}: {selectedRoute.route_name}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-4 md:px-6 py-4 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.route_stops')}</h2>
+                <p className="text-xs sm:text-sm text-gray-600 truncate">
+                  {t('common.route')} {selectedRoute.route_number}: {selectedRoute.route_name}
                 </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {currentStops.length} Stops
+              <div className="flex items-center space-x-2 flex-shrink-0">
+                <div className="px-2.5 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
+                  {currentStops.length} {t('driver.stops_count')}
                 </div>
               </div>
             </div>
-            
+
             {/* Route Selector if multiple routes */}
             {routes.length > 1 && (
               <div className="mt-4">
-                <select 
+                <select
                   value={selectedRoute.id}
                   onChange={(e) => {
                     const route = routes.find(r => r.id === e.target.value);
                     setSelectedRoute(route || null);
                   }}
-                  className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   {routes.map((route) => (
                     <option key={route.id} value={route.id}>
-                      Route {route.route_number} - {route.route_name}
+                      {t('common.route')} {route.route_number} - {route.route_name}
                     </option>
                   ))}
                 </select>
               </div>
             )}
           </div>
-          
-          <div className="p-6">
+
+          <div className="p-4 md:p-6">
             {/* Vertical Stepper */}
             <div className="relative">
               {currentStops.map((stop: any, index: number) => {

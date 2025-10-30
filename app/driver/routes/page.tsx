@@ -112,58 +112,58 @@ export default function DriverRoutesPage() {
   const inactiveRoutes = routes.filter(route => route.status !== 'active');
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{t('routes.my_routes')}</h1>
-            <p className="text-blue-100 text-lg">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 md:p-6 lg:p-8 text-white">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">{t('routes.my_routes')}</h1>
+            <p className="text-blue-100 text-sm sm:text-base md:text-lg">
               {t('routes.manage_description')}
             </p>
           </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Route className="w-10 h-10" />
+          <div className="hidden sm:block flex-shrink-0">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Route className="w-8 h-8 md:w-10 md:h-10" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('routes.total_routes')}</p>
-              <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">{t('routes.total_routes')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">{routes.length}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Route className="w-6 h-6 text-blue-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Route className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('routes.active_routes')}</p>
-              <p className="text-2xl font-bold text-green-600">{activeRoutes.length}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">{t('routes.active_routes')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">{activeRoutes.length}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200 sm:col-span-2 md:col-span-1">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('routes.inactive_routes')}</p>
-              <p className="text-2xl font-bold text-gray-600">{inactiveRoutes.length}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">{t('routes.inactive_routes')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-600">{inactiveRoutes.length}</p>
             </div>
-            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-gray-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
             </div>
           </div>
         </div>
@@ -194,78 +194,78 @@ export default function DriverRoutesPage() {
           <div className="space-y-6">
             {routes.map((route) => (
               <div key={route.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200">
-                <div className="p-6">
+                <div className="p-4 md:p-6">
                   {/* Route Header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4 md:mb-6">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center mb-3">
-                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                          <MapPin className="w-6 h-6 text-blue-600" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                          <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                         </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900">{route.route_name}</h3>
-                          <p className="text-sm text-gray-500">Route {route.route_number}</p>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{route.route_name}</h3>
+                          <p className="text-xs sm:text-sm text-gray-500">{t('common.route')} {route.route_number}</p>
                         </div>
                       </div>
-                      <div className="text-lg text-gray-700 ml-16 font-medium">
+                      <div className="text-sm sm:text-base md:text-lg text-gray-700 sm:ml-14 md:ml-16 font-medium break-words">
                         {route.start_location} → {route.end_location}
                       </div>
                     </div>
-                    
-                    <div className="flex flex-col items-end space-y-3">
-                      <div className={`px-4 py-2 rounded-full text-sm font-medium ${
-                        route.status === 'active' 
-                          ? 'bg-green-100 text-green-800 border border-green-200' 
+
+                    <div className="flex sm:flex-col items-center sm:items-end gap-3 flex-shrink-0">
+                      <div className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${
+                        route.status === 'active'
+                          ? 'bg-green-100 text-green-800 border border-green-200'
                           : 'bg-gray-100 text-gray-800 border border-gray-200'
                       }`}>
                         {route.status}
                       </div>
-                      
-                      <Link 
+
+                      <Link
                         href={`/driver/bookings?routeId=${route.id}`}
-                        className="flex items-center text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors"
+                        className="flex items-center text-blue-600 text-xs sm:text-sm font-medium hover:text-blue-800 transition-colors whitespace-nowrap"
                       >
-                        <Users className="w-4 h-4 mr-2" />
+                        <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                         {t('routes.view_bookings')}
                       </Link>
                     </div>
                   </div>
 
                   {/* Route Details */}
-                  <div className="ml-16 space-y-4">
+                  <div className="sm:ml-14 md:ml-16 space-y-3 md:space-y-4">
                     {/* Vehicle Information */}
                     {route.vehicles && (
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Car className="w-4 h-4 mr-3 text-gray-400" />
+                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                        <Car className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-gray-400 flex-shrink-0" />
                         <span className="font-medium">{t('routes.vehicle')}:</span>
-                        <span className="ml-2">{route.vehicles.registration_number} ({route.vehicles.model})</span>
+                        <span className="ml-1 sm:ml-2 truncate">{route.vehicles.registration_number} ({route.vehicles.model})</span>
                       </div>
                     )}
 
                     {/* Passenger Count */}
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Users className="w-4 h-4 mr-3 text-gray-400" />
+                    <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                      <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-gray-400 flex-shrink-0" />
                       <span className="font-medium">{t('routes.passengers')}:</span>
-                      <span className="ml-2">{route.current_passengers || 0} / {route.total_capacity}</span>
+                      <span className="ml-1 sm:ml-2">{route.current_passengers || 0} / {route.total_capacity}</span>
                     </div>
 
                     {/* Route Stops */}
                     {Array.isArray(route.route_stops) && route.route_stops.length > 0 && (
                       <div>
-                        <div className="flex items-center mb-3">
-                          <Clock className="w-4 h-4 text-gray-400 mr-2" />
-                          <span className="text-sm font-medium text-gray-700">{t('routes.route_stops')}</span>
+                        <div className="flex items-center mb-2 sm:mb-3">
+                          <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 mr-2 flex-shrink-0" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-700">{t('routes.route_stops')}</span>
                         </div>
                         <div className="space-y-2">
                           {route.route_stops
                             .sort((a: any, b: any) => a.sequence_order - b.sequence_order)
                             .map((stop: any, index: number) => (
-                              <div key={stop.id} className="flex items-center text-sm text-gray-600">
-                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-xs font-medium text-blue-600">
+                              <div key={stop.id} className="flex items-center text-xs sm:text-sm text-gray-600 gap-2 sm:gap-3">
+                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium text-blue-600 flex-shrink-0">
                                   {stop.sequence_order}
                                 </div>
-                                <span className="flex-1 font-medium">{stop.stop_name}</span>
-                                <span className="text-gray-500 text-xs bg-gray-100 px-2 py-1 rounded">
+                                <span className="flex-1 font-medium min-w-0 truncate">{stop.stop_name}</span>
+                                <span className="text-gray-500 text-xs bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap flex-shrink-0">
                                   {stop.stop_time}
                                 </span>
                               </div>
@@ -276,22 +276,22 @@ export default function DriverRoutesPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex space-x-3 mt-6 ml-16">
-                    <Link 
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 md:mt-6 sm:ml-14 md:ml-16">
+                    <Link
                       href={`/driver/bookings?routeId=${route.id}`}
-                      className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      className="px-4 sm:px-6 py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors text-center"
                     >
                       {t('routes.view_bookings')}
                     </Link>
-                    <Link 
+                    <Link
                       href={`/driver/routes/${route.id}`}
-                      className="px-6 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                      className="px-4 sm:px-6 py-2 bg-gray-100 text-gray-700 text-xs sm:text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors text-center"
                     >
                       {t('routes.route_details')}
                     </Link>
-                    <Link 
+                    <Link
                       href="/driver/live-tracking"
-                      className="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                      className="px-4 sm:px-6 py-2 bg-green-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-green-700 transition-colors text-center"
                     >
                       {t('routes.start_tracking')}
                     </Link>
