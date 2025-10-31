@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useRouter } from 'next/navigation';
 import {
@@ -15,14 +15,10 @@ import {
   MapPin,
   TrendingUp,
   BadgeCheck,
-  ShieldCheck
+  ShieldCheck,
+  Route as RouteIcon
 } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { staffHelpers } from '@/lib/staff-helpers';
 
 interface Booking {
   id: string;
@@ -52,8 +48,11 @@ export default function StaffBookingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
+  const [grouped, setGrouped] = useState<Record<string, Booking[]>>({});
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [staffRoutes, setStaffRoutes] = useState<any[]>([]);
+  const [selectedRouteId, setSelectedRouteId] = useState<string>('');
 
   useEffect(() => {
     if (isLoading) return;
@@ -70,72 +69,76 @@ export default function StaffBookingsPage() {
     filterBookings();
   }, [statusFilter, bookings]);
 
-  const loadBookings = async () => {
+  const loadBookings = async (targetRouteId?: string) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
+      // First, fetch staff's assigned routes if not already loaded
+      if (staffRoutes.length === 0 && user?.id) {
+        const routesData = await staffHelpers.getAssignedRoutes(user.id, user.email);
+        setStaffRoutes(routesData);
 
-      if (!user?.email) {
-        setError('User email not found');
-        return;
+        // If no specific route is targeted, use the first route
+        if (!targetRouteId && routesData.length > 0) {
+          targetRouteId = routesData[0].id;
+          setSelectedRouteId(targetRouteId);
+        }
       }
 
-      // First, get staff's assigned routes
-      const { data: assignments, error: assignmentsError } = await supabase
-        .from('staff_route_assignments')
-        .select('route_id')
-        .eq('staff_email', user.email.toLowerCase().trim())
-        .eq('is_active', true);
+      // If we have a target route or selected route, fetch bookings
+      const effectiveRouteId = targetRouteId || selectedRouteId || (staffRoutes.length > 0 ? staffRoutes[0].id : '');
 
-      if (assignmentsError) throw assignmentsError;
-
-      if (!assignments || assignments.length === 0) {
+      if (!effectiveRouteId) {
         setBookings([]);
         setFilteredBookings([]);
+        setError('No routes assigned to this staff member');
         setLoading(false);
         return;
       }
 
-      // Get route IDs
-      const routeIds = assignments.map(a => a.route_id);
+      const params: any = {};
+      params.routeId = effectiveRouteId;
+      params.date = selectedDate;
+      const data = await staffHelpers.getRouteBookings(params);
+      setBookings(data);
+      setFilteredBookings(data);
 
-      // Fetch bookings only for assigned routes and selected date
-      const { data: bookingsData, error: bookingsError } = await supabase
-        .from('bookings')
-        .select(`
-          id,
-          booking_date,
-          trip_date,
-          boarding_stop,
-          booking_reference,
-          status,
-          payment_status,
-          seat_number,
-          verified_at,
-          verified_by,
-          student_id,
-          route_id,
-          students (
-            student_name,
-            roll_number
-          ),
-          routes (
-            route_number,
-            route_name
-          )
-        `)
-        .in('route_id', routeIds)
-        .eq('trip_date', selectedDate)
-        .in('status', ['confirmed', 'completed'])
-        .order('boarding_stop', { ascending: true });
-
-      if (bookingsError) throw bookingsError;
-
-      setBookings(bookingsData || []);
-      setFilteredBookings(bookingsData || []);
+      // Group bookings by stop
+      const byStop: Record<string, Booking[]> = {};
+      (data || []).forEach((b: Booking) => {
+        const key = b.boarding_stop || 'Unknown Stop';
+        if (!byStop[key]) byStop[key] = [];
+        byStop[key].push(b);
+      });
+      setGrouped(byStop);
     } catch (err: any) {
-      console.error('Error loading bookings:', err);
-      setError(err.message || 'Failed to load bookings');
+      console.error('❌ Error fetching bookings:', err);
+
+      // Handle specific error types gracefully
+      let errorMessage = 'Failed to load bookings';
+
+      if (err.message) {
+        if (err.message.includes('network') || err.message.includes('fetch')) {
+          errorMessage = 'Network error. Please check your internet connection and refresh the page.';
+        } else if (err.message.includes('timeout')) {
+          errorMessage = 'Request timed out. Please refresh the page and try again.';
+        } else if (err.message.includes('unauthorized') || err.message.includes('401')) {
+          errorMessage = 'Session expired. Please log in again.';
+        } else if (err.message.includes('forbidden') || err.message.includes('403')) {
+          errorMessage = 'Access denied. Contact administrator for assistance.';
+        } else if (err.message.includes('not found') || err.message.includes('404')) {
+          errorMessage = 'No bookings found for the selected date.';
+        } else if (err.message.includes('server') || err.message.includes('500')) {
+          errorMessage = 'Server error. Please try again later or contact support.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
+      setError(errorMessage);
+
+      // Auto-clear error after 10 seconds
+      setTimeout(() => setError(null), 10000);
     } finally {
       setLoading(false);
     }
@@ -273,6 +276,30 @@ export default function StaffBookingsPage() {
           </div>
         </div>
 
+        {/* Route Selector */}
+        {staffRoutes.length > 1 && (
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center gap-3 mb-3">
+              <RouteIcon className="w-5 h-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Select Route</h3>
+            </div>
+            <select
+              value={selectedRouteId}
+              onChange={(e) => {
+                setSelectedRouteId(e.target.value);
+                loadBookings(e.target.value);
+              }}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              {staffRoutes.map((route) => (
+                <option key={route.id} value={route.id}>
+                  Route {route.route_number} - {route.route_name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Date Selector */}
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <div className="space-y-4">
@@ -335,19 +362,37 @@ export default function StaffBookingsPage() {
           </div>
         </div>
 
-        {/* Bookings List */}
-        {filteredBookings.length === 0 ? (
+        {/* Bookings List - Grouped by Stop */}
+        {Object.keys(grouped).length === 0 ? (
           <div className="bg-white rounded-xl p-12 text-center shadow-lg border border-gray-100">
             <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No bookings found</h3>
             <p className="text-gray-600">No bookings found for the selected date</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 divide-y divide-gray-100">
-            {filteredBookings.map((booking) => (
-              <div key={booking.id} className={`p-6 hover:bg-gray-50 transition-colors ${
-                booking.verified_at ? 'bg-purple-50 bg-opacity-30' : ''
-              }`}>
+          <div className="space-y-6">
+            {Object.entries(grouped).map(([stop, stopBookings]) => (
+              <div key={stop} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-gray-50 to-green-50 px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <MapPin className="w-5 h-5 text-green-600 mr-3" />
+                      <span className="font-semibold text-gray-900 text-lg">{stop}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <User className="w-5 h-5 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-600 font-medium">
+                        {stopBookings.length} booking{stopBookings.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="divide-y divide-gray-100">
+                  {stopBookings.map((booking) => (
+                    <div key={booking.id} className={`p-6 hover:bg-gray-50 transition-colors ${
+                      booking.verified_at ? 'bg-purple-50 bg-opacity-30' : ''
+                    }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -412,7 +457,10 @@ export default function StaffBookingsPage() {
                         </span>
                       </div>
                     )}
+                    </div>
                   </div>
+                </div>
+              ))}
                 </div>
               </div>
             ))}

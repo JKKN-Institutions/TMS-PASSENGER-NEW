@@ -19,7 +19,8 @@ import {
   Route as RouteIcon,
   MoreHorizontal,
   ChevronDown,
-  ScanLine
+  ScanLine,
+  UserCheck
 } from 'lucide-react';
 import TicketScanner from './components/TicketScanner';
 import './sidebar-styles.css';
@@ -61,6 +62,7 @@ export default function StaffLayout({
 
   const navigation = [
     { name: 'Dashboard', href: '/staff', icon: Home, current: pathname === '/staff' },
+    { name: 'Attendance', href: '/staff/attendance', icon: UserCheck, current: pathname === '/staff/attendance' },
     { name: 'Assigned Routes', href: '/staff/assigned-routes', icon: RouteIcon, current: pathname === '/staff/assigned-routes' },
     { name: 'Students', href: '/staff/students', icon: Users, current: pathname === '/staff/students' },
     { name: 'Routes', href: '/staff/routes', icon: Bus, current: pathname === '/staff/routes' },
@@ -73,7 +75,7 @@ export default function StaffLayout({
   // Bottom navbar items (first 4 main items + More)
   const bottomNavItems = [
     { name: 'Home', href: '/staff', icon: Home, current: pathname === '/staff' },
-    { name: 'Routes', href: '/staff/assigned-routes', icon: RouteIcon, current: pathname === '/staff/assigned-routes' },
+    { name: 'Attendance', href: '/staff/attendance', icon: UserCheck, current: pathname === '/staff/attendance' },
     { name: 'Students', href: '/staff/students', icon: Users, current: pathname === '/staff/students' },
     { name: 'Bookings', href: '/staff/bookings', icon: Calendar, current: pathname === '/staff/bookings' },
   ];
@@ -81,6 +83,7 @@ export default function StaffLayout({
   // More menu items (remaining items)
   const moreMenuItems = [
     { name: 'Scan Ticket', icon: ScanLine, action: () => setScannerOpen(true) },
+    { name: 'Assigned Routes', href: '/staff/assigned-routes', icon: RouteIcon, current: pathname === '/staff/assigned-routes' },
     { name: 'All Routes', href: '/staff/routes', icon: Bus, current: pathname === '/staff/routes' },
     { name: 'Grievances', href: '/staff/grievances', icon: FileText, current: pathname === '/staff/grievances' },
     { name: 'Reports', href: '/staff/reports', icon: TrendingUp, current: pathname === '/staff/reports' },

@@ -284,6 +284,116 @@ class StaffHelpers {
     this.clearCache();
     return await this.getAllStaff();
   }
+
+  /**
+   * Get routes assigned to staff member
+   */
+  async getAssignedRoutes(staffId: string, email?: string) {
+    const searchParams = new URLSearchParams();
+    searchParams.set('staffId', staffId);
+    if (email) {
+      searchParams.set('email', email);
+    }
+    const res = await fetch(`/api/staff/routes?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json.routes || [];
+  }
+
+  /**
+   * Get bookings for a route and date, useful for stop-wise view
+   */
+  async getRouteBookings(params: { routeId?: string; routeNumber?: string; date?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params.routeId) searchParams.set('routeId', params.routeId);
+    if (params.routeNumber) searchParams.set('routeNumber', params.routeNumber);
+    if (params.date) searchParams.set('date', params.date);
+    const res = await fetch(`/api/staff/bookings?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json.bookings || [];
+  }
+
+  /**
+   * Scan a ticket and record attendance
+   */
+  async scanTicket(ticketCode: string, staffEmail: string, scanLocation?: string) {
+    const res = await fetch('/api/staff/scan-ticket', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticketCode, staffEmail, scanLocation })
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to scan ticket');
+    return json;
+  }
+
+  /**
+   * Get attendance records for a route and date
+   */
+  async getAttendance(params: { routeId?: string; date?: string; staffEmail: string }) {
+    const searchParams = new URLSearchParams();
+    if (params.routeId) searchParams.set('routeId', params.routeId);
+    if (params.date) searchParams.set('date', params.date);
+    searchParams.set('staffEmail', params.staffEmail);
+
+    const res = await fetch(`/api/staff/attendance?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json;
+  }
+
+  /**
+   * Get attendance overview with booking details
+   */
+  async getAttendanceOverview(params: { routeId: string; date: string; staffEmail: string }) {
+    const searchParams = new URLSearchParams();
+    searchParams.set('routeId', params.routeId);
+    searchParams.set('date', params.date);
+    searchParams.set('staffEmail', params.staffEmail);
+
+    const res = await fetch(`/api/staff/attendance-overview?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json;
+  }
+
+  /**
+   * Mark a student's presence status (present/absent)
+   */
+  async markPresence(bookingId: string, status: 'present' | 'absent', staffEmail: string, notes?: string) {
+    const res = await fetch('/api/staff/mark-presence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId, status, staffEmail, notes })
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to mark presence');
+    return json;
+  }
+
+  /**
+   * Bulk mark attendance
+   */
+  async bulkMarkAttendance(params: {
+    action: 'mark_all_absent' | 'mark_selected_present' | 'mark_selected_absent';
+    routeId: string;
+    date: string;
+    staffEmail: string;
+    bookingIds?: string[];
+  }) {
+    const res = await fetch('/api/staff/bulk-mark-attendance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params)
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to bulk mark attendance');
+    return json;
+  }
 }
 
 // Export singleton instance
