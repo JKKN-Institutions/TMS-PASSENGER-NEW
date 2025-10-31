@@ -132,12 +132,12 @@ export default function StaffLayout({
         {/* Sidebar Header */}
         <div className="relative p-6 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-dark rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/20 backdrop-blur-sm">
-              <Briefcase className="w-6 h-6 text-gray-900" strokeWidth={2.5} />
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/20 backdrop-blur-sm">
+              <Briefcase className="w-6 h-6 text-white" strokeWidth={2.5} />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold font-poppins text-white sidebar-text-adaptive tracking-tight">Staff Portal</h2>
-              <p className="text-xs text-white/90 font-medium font-inter">Transport Management System</p>
+              <h2 className="text-xl font-extrabold text-white sidebar-text-adaptive tracking-tight">Staff Portal</h2>
+              <p className="text-xs text-emerald-100 font-medium">Transport Management System</p>
             </div>
           </div>
         </div>
@@ -147,14 +147,14 @@ export default function StaffLayout({
           <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-white/10 hover:from-white/15 hover:to-white/10 transition-all duration-300">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-secondary via-secondary to-secondary-dark rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/20">
-                  <User className="w-7 h-7 text-gray-900" strokeWidth={2.5} />
+                <div className="w-14 h-14 bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/20">
+                  <User className="w-7 h-7 text-white" strokeWidth={2.5} />
                 </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-success rounded-full border-2 border-white shadow-lg"></div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white shadow-lg"></div>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold font-inter text-white truncate drop-shadow-md">{staffName}</p>
-                <p className="text-xs font-inter text-white/80 truncate">{user?.email}</p>
+                <p className="text-sm font-bold text-white truncate drop-shadow-md">{staffName}</p>
+                <p className="text-xs text-emerald-100 truncate opacity-90">{user?.email}</p>
               </div>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function StaffLayout({
                 >
                   {/* Active indicator */}
                   {item.current && (
-                    <div className="active-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-secondary to-secondary-dark rounded-r-full shadow-lg"></div>
+                    <div className="active-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-yellow-400 to-amber-500 rounded-r-full shadow-lg"></div>
                   )}
 
                   {/* Icon container */}
@@ -191,15 +191,15 @@ export default function StaffLayout({
                     flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
                     transition-all duration-300
                     ${item.current
-                      ? 'bg-gradient-to-br from-secondary to-secondary-dark shadow-lg scale-110'
+                      ? 'bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg scale-110'
                       : 'bg-white/10 group-hover:bg-white/20 group-hover:scale-110 group-hover:shadow-md'
                     }
                   `}>
-                    <Icon className={`w-5 h-5 ${item.current ? 'text-gray-900' : ''}`} strokeWidth={item.current ? 2.5 : 2} />
+                    <Icon className="w-5 h-5" strokeWidth={item.current ? 2.5 : 2} />
                   </div>
 
                   {/* Text */}
-                  <span className={`text-sm font-medium font-inter tracking-wide ${item.current ? 'sidebar-text-adaptive' : ''}`}>
+                  <span className={`text-sm tracking-wide ${item.current ? 'sidebar-text-adaptive' : ''}`}>
                     {item.name}
                   </span>
 

@@ -89,27 +89,27 @@ export default function StaffLoginPage() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-background to-yellow-50">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/30 border-t-primary mx-auto mb-6"></div>
-          <p className="text-gray-600 text-lg font-medium font-inter">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-600 mx-auto mb-6"></div>
+          <p className="text-gray-600 text-lg font-medium">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-background to-yellow-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-primary/20">
-            <Briefcase className="h-8 w-8 text-white" strokeWidth={2.5} />
+          <div className="mx-auto h-16 w-16 bg-purple-600 rounded-full flex items-center justify-center shadow-lg">
+            <Briefcase className="h-8 w-8 text-white" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold font-poppins text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Staff Login
           </h2>
-          <p className="mt-2 text-sm font-inter text-gray-600">
+          <p className="mt-2 text-sm text-gray-600">
             {showDirectLogin ? 'Direct authentication for staff members' : 'Sign in with your MYJKKN account'}
           </p>
         </div>
@@ -124,14 +124,14 @@ export default function StaffLoginPage() {
           </div>
         )}
 
-        <div className="bg-white py-8 px-6 shadow-2xl rounded-2xl border border-green-100">
+        <div className="bg-white py-8 px-6 shadow-2xl rounded-2xl border border-purple-100">
           {!showDirectLogin ? (
             /* OAuth Login - Default */
             <div className="space-y-6">
               <button
                 onClick={handleOAuthLogin}
                 disabled={loading}
-                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
+                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-3 focus:ring-purple-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
               >
                 {loading ? (
                   <div className="flex items-center">
@@ -154,7 +154,7 @@ export default function StaffLoginPage() {
               <div className="text-center border-t border-gray-100 pt-6">
                 <button
                   onClick={() => setShowDirectLogin(true)}
-                  className="text-sm font-medium text-primary hover:text-primary-dark underline transition-colors duration-200"
+                  className="text-sm font-medium text-purple-600 hover:text-purple-700 underline transition-colors duration-200"
                 >
                   Try direct login with email & password
                 </button>
@@ -165,7 +165,7 @@ export default function StaffLoginPage() {
                 <button
                   type="button"
                   onClick={() => router.push('/login')}
-                  className="text-sm text-gray-600 hover:text-primary underline transition-colors"
+                  className="text-sm text-gray-600 hover:text-purple-700 underline"
                 >
                   ← Back to main login
                 </button>
@@ -178,10 +178,10 @@ export default function StaffLoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowDirectLogin(false)}
-                  className="flex items-center text-gray-600 hover:text-primary transition-colors duration-200 group"
+                  className="flex items-center text-gray-500 hover:text-purple-600 transition-colors duration-200 group"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                  <span className="font-medium">Back to OAuth Login</span>
+                  Back to OAuth Login
                 </button>
               </div>
 
@@ -203,7 +203,7 @@ export default function StaffLoginPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors font-inter"
+                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       placeholder="Enter your email"
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function StaffLoginPage() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors font-inter"
+                      className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       placeholder="Enter your password"
                     />
                     <button
@@ -249,7 +249,7 @@ export default function StaffLoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? (
                     <div className="flex items-center">
@@ -267,7 +267,7 @@ export default function StaffLoginPage() {
                 <button
                   type="button"
                   onClick={() => router.push('/login')}
-                  className="text-sm text-primary hover:text-primary-dark font-medium underline transition-colors"
+                  className="text-sm text-purple-600 hover:text-purple-700 underline"
                 >
                   ← Back to main login
                 </button>
