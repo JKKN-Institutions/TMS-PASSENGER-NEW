@@ -46,6 +46,25 @@ export async function GET(request: NextRequest) {
       statuses: ['confirmed', 'completed']
     });
 
+    // First, check raw count of bookings
+    const { count: totalCount } = await supabase
+      .from('bookings')
+      .select('*', { count: 'exact', head: true })
+      .eq('route_id', resolvedRouteId)
+      .eq('trip_date', date);
+
+    console.log(`📊 Total bookings count for route ${resolvedRouteId} on ${date}: ${totalCount}`);
+
+    // Check count with status filter
+    const { count: filteredCount } = await supabase
+      .from('bookings')
+      .select('*', { count: 'exact', head: true })
+      .eq('route_id', resolvedRouteId)
+      .eq('trip_date', date)
+      .in('status', ['confirmed', 'completed']);
+
+    console.log(`📊 Filtered bookings count (confirmed/completed): ${filteredCount}`);
+
     // Fetch bookings for the route and date
     const { data: bookings, error } = await supabase
       .from('bookings')
@@ -60,9 +79,7 @@ export async function GET(request: NextRequest) {
         status,
         payment_status,
         amount,
-        booking_reference,
-        verified_at,
-        verified_by,
+        qr_code,
         students (
           student_name,
           roll_number,
@@ -101,9 +118,18 @@ export async function GET(request: NextRequest) {
       console.log('📊 Student emails:', bookings.map((b: any) => b.students?.email).filter(Boolean));
     }
 
+    // Map bookings to add booking_reference for backward compatibility
+    // Until migration is run, use qr_code as booking_reference or generate a temporary one
+    const mappedBookings = (bookings || []).map((booking: any) => ({
+      ...booking,
+      booking_reference: booking.booking_reference || booking.qr_code || `TEMP-${booking.id.substring(0, 8)}`
+    }));
+
+    console.log(`✅ Mapped ${mappedBookings.length} bookings with booking references`);
+
     // Group bookings by stop
     const stopWise: Record<string, any[]> = {};
-    (bookings || []).forEach((booking: any) => {
+    mappedBookings.forEach((booking: any) => {
       const stop = booking.boarding_stop || 'Unknown Stop';
       if (!stopWise[stop]) {
         stopWise[stop] = [];
@@ -111,10 +137,10 @@ export async function GET(request: NextRequest) {
       stopWise[stop].push(booking);
     });
 
-    console.log('Bookings found for route:', resolvedRouteId, 'Date:', date, 'Count:', bookings?.length || 0);
+    console.log('Bookings found for route:', resolvedRouteId, 'Date:', date, 'Count:', mappedBookings.length || 0);
     return NextResponse.json({
       success: true,
-      bookings: bookings || [],
+      bookings: mappedBookings,
       stopWise,
       date,
       routeId: resolvedRouteId
