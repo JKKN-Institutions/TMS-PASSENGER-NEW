@@ -117,8 +117,8 @@ export default function StaffDashboardPage() {
 
   if (isLoading || loading) return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mb-6"></div>
-      <p className="text-gray-600 text-lg font-medium">Loading Staff Dashboard...</p>
+      <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/30 border-t-primary mb-6"></div>
+      <p className="text-gray-600 font-inter text-lg font-medium">Loading Staff Dashboard...</p>
     </div>
   );
 
@@ -142,19 +142,19 @@ export default function StaffDashboardPage() {
   const department = (user as any)?.department || 'Transport Management';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-background to-yellow-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, {staffName}!</h1>
-              <p className="text-white text-lg opacity-95">{department}</p>
-              <p className="text-white text-sm mt-1 opacity-90">Manage your assigned routes and passengers efficiently</p>
+              <h1 className="text-3xl font-bold font-poppins mb-2">Welcome back, {staffName}!</h1>
+              <p className="text-white font-inter text-lg opacity-95">{department}</p>
+              <p className="text-white font-inter text-sm mt-1 opacity-90">Manage your assigned routes and passengers efficiently</p>
             </div>
             <div className="hidden md:block">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <UserCheck className="w-10 h-10 text-white" />
+                <UserCheck className="w-10 h-10 text-white" strokeWidth={2.5} />
               </div>
             </div>
           </div>
@@ -165,49 +165,49 @@ export default function StaffDashboardPage() {
           {/* Assigned Routes */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center shadow-sm">
-                <RouteIcon className="w-7 h-7 text-green-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-primary-lighter to-primary/10 rounded-xl flex items-center justify-center shadow-sm">
+                <RouteIcon className="w-7 h-7 text-primary" strokeWidth={2.5} />
               </div>
-              <span className="text-green-700 text-sm font-semibold uppercase tracking-wide">Routes</span>
+              <span className="text-primary-dark font-semibold font-inter text-sm uppercase tracking-wide">Routes</span>
             </div>
-            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalRoutes}</h3>
-            <p className="text-gray-600 text-sm mt-2 font-medium">Assigned to you</p>
+            <h3 className="text-4xl font-extrabold font-poppins text-gray-900">{stats.totalRoutes}</h3>
+            <p className="text-gray-600 font-inter text-sm mt-2 font-medium">Assigned to you</p>
           </div>
 
           {/* Total Passengers */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-xl flex items-center justify-center shadow-sm">
-                <Users className="w-7 h-7 text-yellow-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-secondary-light to-secondary/10 rounded-xl flex items-center justify-center shadow-sm">
+                <Users className="w-7 h-7 text-secondary-darker" strokeWidth={2.5} />
               </div>
-              <span className="text-yellow-700 text-sm font-semibold uppercase tracking-wide">Passengers</span>
+              <span className="text-secondary-darker font-semibold font-inter text-sm uppercase tracking-wide">Passengers</span>
             </div>
-            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalPassengers}</h3>
-            <p className="text-gray-600 text-sm mt-2 font-medium">Total passengers</p>
+            <h3 className="text-4xl font-extrabold font-poppins text-gray-900">{stats.totalPassengers}</h3>
+            <p className="text-gray-600 font-inter text-sm mt-2 font-medium">Total passengers</p>
           </div>
 
           {/* Active Routes */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center shadow-sm">
-                <Bus className="w-7 h-7 text-green-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-success-light to-success/10 rounded-xl flex items-center justify-center shadow-sm">
+                <Bus className="w-7 h-7 text-success" strokeWidth={2.5} />
               </div>
-              <span className="text-green-700 text-sm font-semibold uppercase tracking-wide">Active</span>
+              <span className="text-success-dark font-semibold font-inter text-sm uppercase tracking-wide">Active</span>
             </div>
-            <h3 className="text-4xl font-extrabold text-gray-900">{stats.activeRoutes}</h3>
-            <p className="text-gray-600 text-sm mt-2 font-medium">Active routes</p>
+            <h3 className="text-4xl font-extrabold font-poppins text-gray-900">{stats.activeRoutes}</h3>
+            <p className="text-gray-600 font-inter text-sm mt-2 font-medium">Active routes</p>
           </div>
 
           {/* Total Capacity */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl flex items-center justify-center shadow-sm">
-                <Calendar className="w-7 h-7 text-orange-600" />
+              <div className="w-14 h-14 bg-gradient-to-br from-primary-lighter to-primary/10 rounded-xl flex items-center justify-center shadow-sm">
+                <Calendar className="w-7 h-7 text-primary" strokeWidth={2.5} />
               </div>
-              <span className="text-orange-700 text-sm font-semibold uppercase tracking-wide">Capacity</span>
+              <span className="text-primary-dark font-semibold font-inter text-sm uppercase tracking-wide">Capacity</span>
             </div>
-            <h3 className="text-4xl font-extrabold text-gray-900">{stats.totalCapacity}</h3>
-            <p className="text-gray-600 text-sm mt-2 font-medium">Total seats</p>
+            <h3 className="text-4xl font-extrabold font-poppins text-gray-900">{stats.totalCapacity}</h3>
+            <p className="text-gray-600 font-inter text-sm mt-2 font-medium">Total seats</p>
           </div>
         </div>
 
@@ -215,10 +215,10 @@ export default function StaffDashboardPage() {
         {recentRoutes.length > 0 && (
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Your Assigned Routes</h2>
+              <h2 className="text-2xl font-bold font-poppins text-gray-900">Your Assigned Routes</h2>
               <Link
                 href="/staff/assigned-routes"
-                className="flex items-center gap-2 text-green-600 hover:text-green-700 focus:text-green-800 focus:underline focus:outline-none active:text-green-900 font-semibold text-sm transition-colors"
+                className="flex items-center gap-2 text-primary hover:text-primary-dark focus:text-primary-600 focus:underline focus:outline-none active:text-primary-900 font-semibold font-inter text-sm transition-colors"
               >
                 View All
                 <ArrowRight className="w-4 h-4" />
@@ -228,29 +228,29 @@ export default function StaffDashboardPage() {
               {recentRoutes.map((route, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-5 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-200 hover:shadow-lg hover:bg-gradient-to-r hover:from-green-100 hover:to-yellow-100 transition-all hover:border-green-400 duration-200"
+                  className="flex items-center justify-between p-5 bg-gradient-to-r from-primary-lighter to-secondary-light rounded-xl border border-primary/30 hover:shadow-lg hover:border-primary transition-all duration-200"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-green-600 to-green-500 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center text-white font-bold font-poppins text-lg shadow-md">
                       {route.route_number}
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg group-hover:text-gray-900">{route.route_name}</h3>
+                      <h3 className="font-bold font-poppins text-gray-900 text-lg">{route.route_name}</h3>
                       <div className="flex items-center gap-4 mt-1.5 text-sm text-gray-800">
                         <div className="flex items-center gap-1.5">
-                          <Users className="w-4 h-4 text-green-600" />
-                          <span className="font-semibold">{route.passenger_count} passengers</span>
+                          <Users className="w-4 h-4 text-primary" strokeWidth={2.5} />
+                          <span className="font-semibold font-inter">{route.passenger_count} passengers</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Clock className="w-4 h-4 text-yellow-600" />
-                          <span className="font-semibold">{route.departure_time}</span>
+                          <Clock className="w-4 h-4 text-secondary-darker" strokeWidth={2.5} />
+                          <span className="font-semibold font-inter">{route.departure_time}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                   <Link
                     href={`/staff/routes/${route.route_id}`}
-                    className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl hover:from-green-700 hover:to-green-600 focus:from-green-800 focus:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 active:from-green-900 active:to-green-800 active:scale-95 transition-all text-sm font-semibold shadow-md hover:shadow-xl hover:scale-105"
+                    className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:from-primary-dark hover:to-primary-600 focus:from-primary-600 focus:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 transition-all text-sm font-semibold font-inter shadow-md hover:shadow-xl hover:scale-105"
                   >
                     View Details
                   </Link>
@@ -262,83 +262,83 @@ export default function StaffDashboardPage() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+          <h2 className="text-2xl font-bold font-poppins text-gray-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/staff/assigned-routes"
-              className="flex items-center p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-100 transition-all border border-green-200 hover:border-green-400 focus:border-green-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-primary-lighter to-primary/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-100 transition-all border border-primary/30 hover:border-primary focus:border-primary group"
             >
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <RouteIcon className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <RouteIcon className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-green-700">Assigned Routes</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">View routes and passengers</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-primary-dark">Assigned Routes</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">View routes and passengers</p>
               </div>
             </Link>
 
             <Link
               href="/staff/routes"
-              className="flex items-center p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 active:scale-100 transition-all border border-yellow-200 hover:border-yellow-400 focus:border-yellow-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-secondary-light to-secondary/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 active:scale-100 transition-all border border-secondary/40 hover:border-secondary-dark focus:border-secondary-darker group"
             >
-              <div className="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <Bus className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-secondary-darker rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <Bus className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-yellow-700">All Routes</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">Browse all transport routes</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-secondary-darker">All Routes</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">Browse all transport routes</p>
               </div>
             </Link>
 
             <Link
               href="/staff/students"
-              className="flex items-center p-5 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-100 transition-all border border-blue-200 hover:border-blue-400 focus:border-blue-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-primary-lighter to-primary/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-100 transition-all border border-primary/30 hover:border-primary focus:border-primary group"
             >
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <Users className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <Users className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-blue-700">Students</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">View student records</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-primary-dark">Students</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">View student records</p>
               </div>
             </Link>
 
             <Link
               href="/staff/grievances"
-              className="flex items-center p-5 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 active:scale-100 transition-all border border-orange-200 hover:border-orange-400 focus:border-orange-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-secondary-light to-secondary/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 active:scale-100 transition-all border border-secondary/40 hover:border-secondary-dark focus:border-secondary-darker group"
             >
-              <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <FileText className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-secondary-darker rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <FileText className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-orange-700">Grievances</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">Handle complaints</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-secondary-darker">Grievances</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">Handle complaints</p>
               </div>
             </Link>
 
             <Link
               href="/staff/bookings"
-              className="flex items-center p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-100 transition-all border border-green-200 hover:border-green-400 focus:border-green-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-success-light to-success/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 active:scale-100 transition-all border border-success/30 hover:border-success focus:border-success-dark group"
             >
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <Calendar className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-success rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <Calendar className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-green-700">Bookings</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">View booking requests</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-success-dark">Bookings</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">View booking requests</p>
               </div>
             </Link>
 
             <Link
               href="/staff/reports"
-              className="flex items-center p-5 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 active:scale-100 transition-all border border-teal-200 hover:border-teal-400 focus:border-teal-500 group"
+              className="flex items-center p-5 bg-gradient-to-br from-primary-lighter to-primary/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-100 transition-all border border-primary/30 hover:border-primary focus:border-primary group"
             >
-              <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
-                <TrendingUp className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <TrendingUp className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-teal-700">Reports</h3>
-                <p className="text-sm text-gray-700 mt-0.5 font-medium">Generate reports</p>
+                <h3 className="font-bold font-poppins text-gray-900 text-base group-hover:text-primary-dark">Reports</h3>
+                <p className="text-sm font-inter text-gray-700 mt-0.5 font-medium">Generate reports</p>
               </div>
             </Link>
           </div>
