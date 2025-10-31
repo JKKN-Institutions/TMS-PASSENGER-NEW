@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
     const staffEmail = searchParams.get('staffEmail');
 
+    console.log('📋 Attendance overview request:', { routeId, date, staffEmail });
+
     if (!routeId || !staffEmail) {
       return NextResponse.json(
         { error: 'Route ID and staff email are required' },
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Verify staff assignment
-    const { data: assignment } = await supabase
+    const { data: assignment, error: assignmentError } = await supabase
       .from('staff_route_assignments')
       .select('id')
       .eq('route_id', routeId)
@@ -29,12 +31,15 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .single();
 
-    if (!assignment) {
+    if (assignmentError || !assignment) {
+      console.error('❌ Staff not assigned to route:', { routeId, staffEmail, assignmentError });
       return NextResponse.json(
         { error: 'Not authorized for this route' },
         { status: 403 }
       );
     }
+
+    console.log('✅ Staff assignment verified');
 
     // Get all bookings for the route and date
     const { data: bookings, error: bookingsError } = await supabase
@@ -55,13 +60,40 @@ export async function GET(request: NextRequest) {
       .eq('trip_date', date)
       .in('status', ['confirmed', 'completed']);
 
+    console.log(`📊 Found ${bookings?.length || 0} bookings for route ${routeId} on ${date}`);
+
     if (bookingsError) {
-      console.error('Error fetching bookings:', bookingsError);
+      console.error('❌ Error fetching bookings:', bookingsError);
       return NextResponse.json(
-        { error: 'Failed to fetch bookings' },
+        { error: 'Failed to fetch bookings', details: bookingsError.message },
         { status: 500 }
       );
     }
+
+    if (!bookings || bookings.length === 0) {
+      console.log('⚠️ No bookings found for route', routeId, 'on date', date);
+      return NextResponse.json({
+        success: true,
+        date,
+        routeId,
+        stats: {
+          total_bookings: 0,
+          present: 0,
+          absent: 0,
+          not_marked: 0,
+          attendance_rate: 0
+        },
+        students: [],
+        byStop: {}
+      });
+    }
+
+    console.log('📊 Booking details:', bookings.map(b => ({
+      id: b.id,
+      student_name: b.students?.student_name,
+      email: b.students?.email,
+      stop: b.boarding_stop
+    })));
 
     // Get attendance records
     const { data: attendance, error: attendanceError } = await supabase
@@ -70,10 +102,12 @@ export async function GET(request: NextRequest) {
       .eq('route_id', routeId)
       .eq('trip_date', date);
 
+    console.log(`📊 Found ${attendance?.length || 0} attendance records`);
+
     if (attendanceError) {
-      console.error('Error fetching attendance:', attendanceError);
+      console.error('❌ Error fetching attendance:', attendanceError);
       return NextResponse.json(
-        { error: 'Failed to fetch attendance' },
+        { error: 'Failed to fetch attendance', details: attendanceError.message },
         { status: 500 }
       );
     }

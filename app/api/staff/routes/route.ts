@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     // Get route IDs
     const routeIds = assignments.map(a => a.route_id);
 
-    // Fetch full route details
+    // Fetch full route details with simplified query
     const { data: routes, error } = await supabase
       .from('routes')
       .select(`
@@ -70,21 +70,63 @@ export async function GET(request: NextRequest) {
         status,
         total_capacity,
         current_passengers,
-        vehicle_id,
-        vehicles!vehicle_id (
-          id,
-          registration_number,
-          model,
-          capacity
-        ),
-        route_stops (id, stop_name, stop_name_ta, stop_time, sequence_order, is_major_stop)
+        vehicle_id
       `)
       .in('id', routeIds)
       .order('route_number');
 
     if (error) {
       console.error('Staff routes fetch error:', error);
-      return NextResponse.json({ error: 'Failed to fetch routes' }, { status: 500 });
+      console.error('Route IDs:', routeIds);
+      console.error('Error details:', JSON.stringify(error));
+      return NextResponse.json({
+        error: 'Failed to fetch routes',
+        details: error.message,
+        routeIds: routeIds
+      }, { status: 500 });
+    }
+
+    // Fetch vehicles separately if needed
+    if (routes && routes.length > 0) {
+      const vehicleIds = routes.map(r => r.vehicle_id).filter(Boolean);
+      if (vehicleIds.length > 0) {
+        const { data: vehicles } = await supabase
+          .from('vehicles')
+          .select('id, registration_number, model, capacity')
+          .in('id', vehicleIds);
+
+        // Attach vehicles to routes
+        if (vehicles) {
+          const vehicleMap = new Map(vehicles.map(v => [v.id, v]));
+          routes.forEach(route => {
+            if (route.vehicle_id) {
+              route.vehicle = vehicleMap.get(route.vehicle_id);
+            }
+          });
+        }
+      }
+
+      // Fetch route stops separately
+      const { data: stops } = await supabase
+        .from('route_stops')
+        .select('*')
+        .in('route_id', routeIds)
+        .order('sequence_order');
+
+      // Attach stops to routes
+      if (stops) {
+        const stopsByRoute = new Map();
+        stops.forEach(stop => {
+          if (!stopsByRoute.has(stop.route_id)) {
+            stopsByRoute.set(stop.route_id, []);
+          }
+          stopsByRoute.get(stop.route_id).push(stop);
+        });
+
+        routes.forEach(route => {
+          route.route_stops = stopsByRoute.get(route.id) || [];
+        });
+      }
     }
 
     console.log('Routes found for staff:', effectiveEmail, 'Count:', routes?.length || 0);

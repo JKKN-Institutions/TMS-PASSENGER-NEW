@@ -40,6 +40,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Route not found' }, { status: 404 });
     }
 
+    console.log('📋 Fetching bookings with params:', {
+      resolvedRouteId,
+      date,
+      statuses: ['confirmed', 'completed']
+    });
+
     // Fetch bookings for the route and date
     const { data: bookings, error } = await supabase
       .from('bookings')
@@ -81,8 +87,18 @@ export async function GET(request: NextRequest) {
       .order('boarding_stop', { ascending: true });
 
     if (error) {
-      console.error('Staff bookings fetch error:', error);
-      return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
+      console.error('❌ Staff bookings fetch error:', error);
+      console.error('Query params:', { resolvedRouteId, date });
+      return NextResponse.json({
+        error: 'Failed to fetch bookings',
+        details: error.message,
+        params: { resolvedRouteId, date }
+      }, { status: 500 });
+    }
+
+    console.log(`✅ Found ${bookings?.length || 0} bookings for route ${resolvedRouteId} on ${date}`);
+    if (bookings && bookings.length > 0) {
+      console.log('📊 Student emails:', bookings.map((b: any) => b.students?.email).filter(Boolean));
     }
 
     // Group bookings by stop
