@@ -70,7 +70,8 @@ function DriverLayoutInner({
     { name: t('nav.dashboard'), href: '/driver', icon: Home, current: pathname === '/driver' },
     { name: t('nav.location'), href: '/driver/live-tracking', icon: Navigation, current: pathname === '/driver/live-tracking' },
     { name: t('nav.routes'), href: '/driver/routes', icon: Route, current: pathname === '/driver/routes' },
-    { name: t('nav.schedules'), href: '/driver/bookings', icon: Users, current: pathname === '/driver/bookings' },
+    { name: t('nav.schedules'), href: '/driver/bookings', icon: Calendar, current: pathname === '/driver/bookings' },
+    { name: t('nav.passengers'), href: '/driver/passengers', icon: Users, current: pathname === '/driver/passengers' },
     { name: t('nav.profile'), href: '/driver/profile', icon: User, current: pathname === '/driver/profile' },
   ];
 

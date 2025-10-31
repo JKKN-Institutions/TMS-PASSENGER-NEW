@@ -2272,6 +2272,18 @@ export const driverHelpers = {
     if (!res.ok) throw new Error(await res.text());
     const json = await res.json();
     return json.bookings || [];
+  },
+
+  // Get all passengers for driver's routes
+  async getPassengers(params: { driverId?: string; email?: string; routeId?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params.driverId) searchParams.set('driverId', params.driverId);
+    if (params.email) searchParams.set('email', params.email);
+    if (params.routeId) searchParams.set('routeId', params.routeId);
+    const res = await fetch(`/api/driver/passengers?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json;
   }
 };
 

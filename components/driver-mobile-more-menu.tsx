@@ -32,6 +32,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
     { labelKey: 'more_menu.live_tracking', href: '/driver/live-tracking', icon: Navigation },
     { labelKey: 'more_menu.routes', href: '/driver/routes', icon: RouteIcon },
     { labelKey: 'more_menu.bookings', href: '/driver/bookings', icon: Users },
+    { labelKey: 'more_menu.passengers', href: '/driver/passengers', icon: Users },
     { labelKey: 'more_menu.profile', href: '/driver/profile', icon: User },
   ];
 
