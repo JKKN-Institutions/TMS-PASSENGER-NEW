@@ -14,6 +14,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth/auth-context';
+import { useLanguage } from '@/lib/i18n/language-context';
 
 interface DriverMobileMoreMenuProps {
   isOpen: boolean;
@@ -24,13 +25,14 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
+  const { t } = useLanguage();
 
   const items = [
-    { label: 'Dashboard', href: '/driver', icon: Home },
-    { label: 'Live Tracking', href: '/driver/live-tracking', icon: Navigation },
-    { label: 'Routes', href: '/driver/routes', icon: RouteIcon },
-    { label: 'Bookings', href: '/driver/bookings', icon: Users },
-    { label: 'Profile', href: '/driver/profile', icon: User },
+    { labelKey: 'more_menu.dashboard', href: '/driver', icon: Home },
+    { labelKey: 'more_menu.live_tracking', href: '/driver/live-tracking', icon: Navigation },
+    { labelKey: 'more_menu.routes', href: '/driver/routes', icon: RouteIcon },
+    { labelKey: 'more_menu.bookings', href: '/driver/bookings', icon: Users },
+    { labelKey: 'more_menu.profile', href: '/driver/profile', icon: User },
   ];
 
   const handleNav = (href: string) => {
@@ -70,8 +72,8 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Driver Menu</h3>
-                <p className="text-sm text-gray-600">Quick navigation</p>
+                <h3 className="text-lg font-semibold text-gray-900">{t('more_menu.driver_menu')}</h3>
+                <p className="text-sm text-gray-600">{t('more_menu.quick_navigation')}</p>
               </div>
               <button onClick={onClose} className="p-2 rounded-xl text-gray-500 hover:bg-gray-100">
                 <X className="h-5 w-5" />
@@ -80,7 +82,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
 
             {/* List */}
             <div className="p-2">
-              {items.map(({ label, href, icon: Icon }) => {
+              {items.map(({ labelKey, href, icon: Icon }) => {
                 const active = pathname.startsWith(href);
                 return (
                   <button
@@ -96,7 +98,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
                       <div className="p-2 rounded-xl bg-gray-100">
                         <Icon className={`h-5 w-5 ${active ? 'text-green-600' : 'text-gray-600'}`} />
                       </div>
-                      <span className={`text-sm font-medium ${active ? 'text-green-800' : 'text-gray-800'}`}>{label}</span>
+                      <span className={`text-sm font-medium ${active ? 'text-green-800' : 'text-gray-800'}`}>{t(labelKey)}</span>
                     </div>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                   </button>
@@ -109,7 +111,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
                 onClick={handleLogout}
                 className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md"
               >
-                <span className="text-sm font-semibold">Logout</span>
+                <span className="text-sm font-semibold">{t('more_menu.logout')}</span>
                 <LogOut className="h-4 w-4" />
               </button>
             </div>

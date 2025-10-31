@@ -27,6 +27,8 @@ const supabase = createClient(
 interface Booking {
   id: string;
   booking_date: string;
+  trip_date?: string;
+  boarding_stop?: string;
   booking_reference: string;
   status: string;
   payment_status: string;
@@ -103,6 +105,8 @@ export default function StaffBookingsPage() {
         .select(`
           id,
           booking_date,
+          trip_date,
+          boarding_stop,
           booking_reference,
           status,
           payment_status,
@@ -121,8 +125,9 @@ export default function StaffBookingsPage() {
           )
         `)
         .in('route_id', routeIds)
-        .eq('booking_date', selectedDate)
-        .order('booking_date', { ascending: false });
+        .eq('trip_date', selectedDate)
+        .in('status', ['confirmed', 'completed'])
+        .order('boarding_stop', { ascending: true });
 
       if (bookingsError) throw bookingsError;
 

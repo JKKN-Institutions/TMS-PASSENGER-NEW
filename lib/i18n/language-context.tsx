@@ -1199,6 +1199,184 @@ const translations: Record<string, Record<Language, string>> = {
   'login.success_redirecting': {
     en: 'Redirecting to driver dashboard...',
     ta: 'ஓட்டுநர் முகப்புக்கு திருப்பிவிடப்படுகிறது...'
+  },
+
+  // Additional Live Tracking Translations
+  'tracking.live_location_tracking_header': {
+    en: 'Live Location Tracking',
+    ta: 'நேரடி இட கண்காணிப்பு'
+  },
+  'tracking.share_realtime_description': {
+    en: 'Share your real-time location with passengers and administrators',
+    ta: 'பயணிகள் மற்றும் நிர்வாகிகளுடன் உங்கள் நேரடி இருப்பிடத்தைப் பகிரவும்'
+  },
+  'tracking.inactive_status': {
+    en: 'Inactive',
+    ta: 'செயலற்றது'
+  },
+  'tracking.active_status': {
+    en: 'Active',
+    ta: 'செயலில்'
+  },
+  'tracking.pause': {
+    en: 'Stop Tracking',
+    ta: 'கண்காணிப்பை நிறுத்து'
+  },
+  'tracking.play': {
+    en: 'Start Tracking',
+    ta: 'கண்காணிப்பைத் தொடங்கு'
+  },
+  'tracking.current_location_header': {
+    en: 'Current Location',
+    ta: 'தற்போதைய இடம்'
+  },
+  'tracking.location_tracker_header': {
+    en: 'Location Tracker',
+    ta: 'இட கண்காணிப்பாளர்'
+  },
+  'tracking.realtime_gps_system': {
+    en: 'Real-time GPS location sharing system',
+    ta: 'நேரடி GPS இட பகிர்வு அமைப்பு'
+  },
+
+  // Additional Bookings Translations
+  'bookings.passenger_bookings_header': {
+    en: 'Passenger Bookings',
+    ta: 'பயணிகள் முன்பதிவுகள்'
+  },
+  'bookings.route_info': {
+    en: 'Route {{routeNumber}} - {{routeName}}',
+    ta: 'பாதை {{routeNumber}} - {{routeName}}'
+  },
+  'bookings.manage_all_passengers': {
+    en: 'Manage and view all passenger bookings for your routes',
+    ta: 'உங்கள் பாதைகளுக்கான அனைத்து பயணிகள் முன்பதிவுகளையும் நிர்வகித்து பார்க்கவும்'
+  },
+  'bookings.date_selection_header': {
+    en: 'Date Selection',
+    ta: 'தேதி தேர்வு'
+  },
+  'bookings.bookings_auto_update': {
+    en: 'Bookings automatically update when date changes',
+    ta: 'தேதி மாறும்போது முன்பதிவுகள் தானாகவே புதுப்பிக்கப்படும்'
+  },
+  'bookings.total_bookings_count': {
+    en: 'Total Bookings',
+    ta: 'மொத்த முன்பதிவுகள்'
+  },
+  'bookings.error_loading_bookings': {
+    en: 'Error Loading Bookings',
+    ta: 'முன்பதிவுகள் ஏற்றுவதில் பிழை'
+  },
+  'bookings.retry_button': {
+    en: 'Retry',
+    ta: 'மீண்டும் முயற்சிக்கவும்'
+  },
+  'bookings.loading_bookings': {
+    en: 'Loading bookings...',
+    ta: 'முன்பதிவுகள் ஏற்றப்படுகின்றன...'
+  },
+  'bookings.no_bookings_available': {
+    en: 'No Bookings Found',
+    ta: 'முன்பதிவுகள் எதுவும் கிடைக்கவில்லை'
+  },
+  'bookings.no_bookings_message': {
+    en: 'No bookings available for the selected date. Try selecting a different date or check your route assignments.',
+    ta: 'தேர்ந்தெடுக்கப்பட்ட தேதிக்கு முன்பதிவுகள் இல்லை. வேறு தேதியைத் தேர்ந்தெடுக்க முயற்சிக்கவும் அல்லது உங்கள் பாதை ஒதுக்கீடுகளைச் சரிபார்க்கவும்'
+  },
+  'bookings.booking_count': {
+    en: '{{count}} booking',
+    ta: '{{count}} முன்பதிவு'
+  },
+  'bookings.bookings_count_plural': {
+    en: '{{count}} bookings',
+    ta: '{{count}} முன்பதிவுகள்'
+  },
+
+  // Mobile Bottom Navigation
+  'mobile_nav.home': {
+    en: 'Home',
+    ta: 'முகப்பு'
+  },
+  'mobile_nav.live': {
+    en: 'Live',
+    ta: 'நேரடி'
+  },
+  'mobile_nav.routes': {
+    en: 'Routes',
+    ta: 'பாதைகள்'
+  },
+  'mobile_nav.bookings': {
+    en: 'Bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'mobile_nav.more': {
+    en: 'More',
+    ta: 'மேலும்'
+  },
+
+  // FAB Quick Actions
+  'fab.quick_actions': {
+    en: 'Quick Actions',
+    ta: 'விரைவு செயல்கள்'
+  },
+  'fab.start_tracking': {
+    en: 'Start Tracking',
+    ta: 'கண்காணிப்பைத் தொடங்கு'
+  },
+  'fab.share_location': {
+    en: 'Share Location',
+    ta: 'இருப்பிடத்தைப் பகிர்'
+  },
+  'fab.report_issue': {
+    en: 'Report Issue',
+    ta: 'சிக்கலைப் புகாரளி'
+  },
+  'fab.open_actions': {
+    en: 'Open quick actions',
+    ta: 'விரைவு செயல்களை திற'
+  },
+  'fab.close_actions': {
+    en: 'Close quick actions',
+    ta: 'விரைவு செயல்களை மூடு'
+  },
+
+  // More Menu
+  'more_menu.driver_menu': {
+    en: 'Driver Menu',
+    ta: 'ஓட்டுநர் மெனு'
+  },
+  'more_menu.quick_navigation': {
+    en: 'Quick navigation to all features',
+    ta: 'அனைத்து அம்சங்களுக்கும் விரைவு வழிசெலுத்தல்'
+  },
+  'more_menu.dashboard': {
+    en: 'Dashboard',
+    ta: 'முகப்பு'
+  },
+  'more_menu.live_tracking': {
+    en: 'Live Tracking',
+    ta: 'நேரடி கண்காணிப்பு'
+  },
+  'more_menu.routes': {
+    en: 'Routes',
+    ta: 'பாதைகள்'
+  },
+  'more_menu.bookings': {
+    en: 'Bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'more_menu.profile': {
+    en: 'Profile',
+    ta: 'சுயவிவரம்'
+  },
+  'more_menu.logout': {
+    en: 'Logout',
+    ta: 'வெளியேறு'
+  },
+  'more_menu.logout_description': {
+    en: 'Sign out from your account',
+    ta: 'உங்கள் கணக்கிலிருந்து வெளியேறு'
   }
 };
 

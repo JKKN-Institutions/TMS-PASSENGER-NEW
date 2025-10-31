@@ -176,14 +176,15 @@ function DriverLayoutInner({
           {/* Top bar */}
           <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200">
             <div className="flex items-center justify-between h-16 px-6">
+              {/* Hide menu button on mobile since bottom navbar is available */}
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                className="hidden lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
               >
                 <Menu className="w-6 h-6" />
               </button>
-              
-              <div className="flex items-center space-x-4">
+
+              <div className="flex items-center space-x-4 ml-auto">
                 <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
                   <span>{t('dashboard.welcome', { name: user?.email || 'Driver' })}</span>
                 </div>
@@ -192,8 +193,8 @@ function DriverLayoutInner({
             </div>
           </div>
 
-          {/* Page content */}
-          <main className="min-h-[calc(100vh-4rem)] p-6">
+          {/* Page content - Added bottom padding for mobile navbar */}
+          <main className="min-h-[calc(100vh-4rem)] p-6 pb-24 lg:pb-6">
             {children}
           </main>
         </div>

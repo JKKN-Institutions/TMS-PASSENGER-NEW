@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch bookings for given route and date, include stop/route/student info
+    // Note: boarding_stop is stored as text, not a foreign key to route_stops
     const { data: bookings, error } = await supabase
       .from('bookings')
       .select(`

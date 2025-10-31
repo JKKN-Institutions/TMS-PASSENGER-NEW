@@ -388,10 +388,10 @@ export default function StaffLayout({
           <div className="h-6"></div>
         </div>
 
-        {/* Floating Action Button - Scan Ticket */}
+        {/* Floating Action Button - Scan Ticket (positioned above bug report button) */}
         <button
           onClick={() => setScannerOpen(true)}
-          className="fixed bottom-32 right-6 lg:bottom-24 lg:right-8 z-30 w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+          className="fixed bottom-[200px] right-6 lg:bottom-[104px] lg:right-8 z-30 w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
           aria-label="Scan Ticket"
           title="Scan Ticket"
         >
