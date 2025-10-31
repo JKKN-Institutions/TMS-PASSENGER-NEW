@@ -799,6 +799,406 @@ const translations: Record<string, Record<Language, string>> = {
   'common.refresh': {
     en: 'Refresh Now',
     ta: 'புதுப்பிக்கவும்'
+  },
+
+  // Profile Page - Additional translations
+  'profile.driver_profile': {
+    en: 'Driver Profile',
+    ta: 'ஓட்டுநர் சுயவிவரம்'
+  },
+  'profile.manage_account': {
+    en: 'Manage your account information and view your performance statistics',
+    ta: 'உங்கள் கணக்கு தகவலை நிர்வகித்து செயல்திறன் புள்ளிவிவரங்களைப் பார்க்கவும்'
+  },
+  'profile.management': {
+    en: 'Profile Management',
+    ta: 'சுயவிவர நிர்வாகம்'
+  },
+  'profile.update_info': {
+    en: 'Update your personal information and preferences',
+    ta: 'உங்கள் தனிப்பட்ட தகவல் மற்றும் விருப்பங்களை புதுப்பிக்கவும்'
+  },
+  'profile.personal_info': {
+    en: 'Personal Information',
+    ta: 'தனிப்பட்ட தகவல்'
+  },
+  'profile.basic_details': {
+    en: 'Your basic account details',
+    ta: 'உங்கள் அடிப்படை கணக்கு விவரங்கள்'
+  },
+  'profile.full_name': {
+    en: 'Full Name',
+    ta: 'முழு பெயர்'
+  },
+  'profile.email_address': {
+    en: 'Email Address',
+    ta: 'மின்னஞ்சல் முகவரி'
+  },
+  'profile.phone_number': {
+    en: 'Phone Number',
+    ta: 'தொலைபேசி எண்'
+  },
+  'profile.enter_name': {
+    en: 'Enter your full name',
+    ta: 'உங்கள் முழு பெயரை உள்ளிடவும்'
+  },
+  'profile.enter_phone': {
+    en: 'Enter your phone number',
+    ta: 'உங்கள் தொலைபேசி எண்ணை உள்ளிடவும்'
+  },
+  'profile.enter_license': {
+    en: 'Enter your license number',
+    ta: 'உங்கள் உரிமம் எண்ணை உள்ளிடவும்'
+  },
+  'profile.saving': {
+    en: 'Saving...',
+    ta: 'சேமிக்கிறது...'
+  },
+  'profile.performance_stats': {
+    en: 'Performance Statistics',
+    ta: 'செயல்திறன் புள்ளிவிவரங்கள்'
+  },
+  'profile.driving_metrics': {
+    en: 'Your driving performance metrics',
+    ta: 'உங்கள் ஓட்டுநர் செயல்திறன் அளவீடுகள்'
+  },
+  'profile.years_experience': {
+    en: 'Years Experience',
+    ta: 'ஆண்டுகள் அனுபவம்'
+  },
+  'profile.account_actions': {
+    en: 'Account Actions',
+    ta: 'கணக்கு செயல்கள்'
+  },
+  'profile.manage_settings': {
+    en: 'Manage your account settings',
+    ta: 'உங்கள் கணக்கு அமைப்புகளை நிர்வகிக்கவும்'
+  },
+  'profile.sign_out': {
+    en: 'Sign Out',
+    ta: 'வெளியேறு'
+  },
+  'profile.logout_account': {
+    en: 'Logout from your account',
+    ta: 'உங்கள் கணக்கிலிருந்து வெளியேறு'
+  },
+  'profile.unable_to_load': {
+    en: 'Unable to load driver profile.',
+    ta: 'ஓட்டுநர் சுயவிவரத்தை ஏற்ற முடியவில்லை.'
+  },
+  'profile.what_happened': {
+    en: 'What happened:',
+    ta: 'என்ன நடந்தது:'
+  },
+  'profile.auth_working': {
+    en: 'Your authentication is working correctly',
+    ta: 'உங்கள் அங்கீகாரம் சரியாக செயல்படுகிறது'
+  },
+  'profile.attempted_create': {
+    en: 'We attempted to create a driver profile automatically',
+    ta: 'நாங்கள் தானாக ஓட்டுநர் சுயவிவரத்தை உருவாக்க முயற்சித்தோம்'
+  },
+  'profile.creation_failed': {
+    en: 'The profile creation may have failed or needs admin approval',
+    ta: 'சுயவிவர உருவாக்கம் தோல்வியடைந்திருக்கலாம் அல்லது நிர்வாகி ஒப்புதல் தேவை'
+  },
+  'profile.contact_admin': {
+    en: 'Please contact the transport admin to complete your profile setup',
+    ta: 'உங்கள் சுயவிவர அமைப்பை முடிக்க போக்குவரத்து நிர்வாகியைத் தொடர்பு கொள்ளவும்'
+  },
+  'profile.for_admin': {
+    en: 'For Admin: Check if driver ID matches the drivers table or create a manual entry.',
+    ta: 'நிர்வாகிக்கு: ஓட்டுநர் ஐடி டிரைவர்ஸ் அட்டவணையுடன் பொருந்துகிறதா என சரிபார்க்கவும் அல்லது கைமுறை பதிவு உருவாக்கவும்.'
+  },
+
+  // Layout Page
+  'layout.driver_dashboard_title': {
+    en: 'Driver Dashboard',
+    ta: 'ஓட்டுநர் முகப்பு'
+  },
+  'layout.loading_dashboard': {
+    en: 'Loading your dashboard...',
+    ta: 'உங்கள் முகப்பு ஏற்றுகிறது...'
+  },
+  'layout.driver_app': {
+    en: 'Driver App',
+    ta: 'ஓட்டுநர் பயன்பாடு'
+  },
+  'layout.professional_driver': {
+    en: 'Professional Driver',
+    ta: 'தொழில்முறை ஓட்டுநர்'
+  },
+
+  // Location Page
+  'location.location_tracking_title': {
+    en: 'Location Tracking',
+    ta: 'இடம் கண்காணிப்பு'
+  },
+  'location.realtime_sharing': {
+    en: 'Real-time location sharing for passengers and administrators',
+    ta: 'பயணிகள் மற்றும் நிர்வாகிகளுக்கான நேரடி இட பகிர்வு'
+  },
+  'location.sharing_enabled_status': {
+    en: 'Sharing Enabled',
+    ta: 'பகிர்வு இயக்கப்பட்டது'
+  },
+  'location.current_status': {
+    en: 'Current Status',
+    ta: 'தற்போதைய நிலை'
+  },
+  'location.update_interval_label': {
+    en: 'Update Interval:',
+    ta: 'புதுப்பிப்பு இடைவெளி:'
+  },
+  'location.tracking_label': {
+    en: 'Tracking:',
+    ta: 'கண்காணிப்பு:'
+  },
+  'location.live_location': {
+    en: 'Live Location',
+    ta: 'நேரடி இடம்'
+  },
+  'location.access_denied': {
+    en: 'Access Denied',
+    ta: 'அணுகல் மறுக்கப்பட்டது'
+  },
+  'location.login_required_msg': {
+    en: 'Please log in to access location settings.',
+    ta: 'இட அமைப்புகளை அணுக உள்நுழையவும்.'
+  },
+  'location.drivers_only': {
+    en: 'Only drivers can access location settings.',
+    ta: 'ஓட்டுநர்கள் மட்டுமே இட அமைப்புகளை அணுக முடியும்.'
+  },
+  'location.info_not_found': {
+    en: 'Driver Information Not Found',
+    ta: 'ஓட்டுநர் தகவல் கிடைக்கவில்லை'
+  },
+  'location.unable_retrieve': {
+    en: 'Unable to retrieve driver information. Please try logging in again.',
+    ta: 'ஓட்டுநர் தகவலை மீட்டெடுக்க முடியவில்லை. மீண்டும் உள்நுழைய முயற்சிக்கவும்.'
+  },
+  'location.loading_settings': {
+    en: 'Loading location settings...',
+    ta: 'இட அமைப்புகள் ஏற்றுகிறது...'
+  },
+
+  // Live Tracking Page
+  'tracking.live_location_tracking': {
+    en: 'Live Location Tracking',
+    ta: 'நேரடி இட கண்காணிப்பு'
+  },
+  'tracking.share_realtime': {
+    en: 'Share your real-time location with passengers and administrators',
+    ta: 'பயணிகள் மற்றும் நிர்வாகிகளுடன் உங்கள் நேரடி இருப்பிடத்தைப் பகிரவும்'
+  },
+  'tracking.tracking_status': {
+    en: 'Tracking Status',
+    ta: 'கண்காணிப்பு நிலை'
+  },
+  'tracking.location_status': {
+    en: 'Location Status',
+    ta: 'இட நிலை'
+  },
+  'tracking.available': {
+    en: 'Available',
+    ta: 'கிடைக்கிறது'
+  },
+  'tracking.not_available': {
+    en: 'Not Available',
+    ta: 'கிடைக்கவில்லை'
+  },
+  'tracking.driver': {
+    en: 'Driver',
+    ta: 'ஓட்டுநர்'
+  },
+  'tracking.controls': {
+    en: 'Tracking Controls',
+    ta: 'கண்காணிப்பு கட்டுப்பாடுகள்'
+  },
+  'tracking.start_stop': {
+    en: 'Start or stop location sharing',
+    ta: 'இட பகிர்வைத் தொடங்கவும் அல்லது நிறுத்தவும்'
+  },
+  'tracking.stop': {
+    en: 'Stop Tracking',
+    ta: 'கண்காணிப்பை நிறுத்து'
+  },
+  'tracking.start': {
+    en: 'Start Tracking',
+    ta: 'கண்காணிப்பைத் தொடங்கு'
+  },
+  'tracking.status_label': {
+    en: 'Status:',
+    ta: 'நிலை:'
+  },
+  'tracking.active': {
+    en: 'Tracking Active',
+    ta: 'கண்காணிப்பு செயலில்'
+  },
+  'tracking.stopped': {
+    en: 'Tracking Stopped',
+    ta: 'கண்காணிப்பு நிறுத்தப்பட்டது'
+  },
+  'tracking.location_label': {
+    en: 'Location:',
+    ta: 'இடம்:'
+  },
+  'tracking.gps_available': {
+    en: 'GPS Signal Available',
+    ta: 'GPS சிக்னல் கிடைக்கிறது'
+  },
+  'tracking.gps_not_available': {
+    en: 'GPS Signal Not Available',
+    ta: 'GPS சிக்னல் கிடைக்கவில்லை'
+  },
+  'tracking.coordinates': {
+    en: 'Coordinates',
+    ta: 'ஆயத்தொகுப்புகள்'
+  },
+  'tracking.latitude': {
+    en: 'Latitude:',
+    ta: 'அட்சரேகை:'
+  },
+  'tracking.longitude': {
+    en: 'Longitude:',
+    ta: 'தீர்க்கரேகை:'
+  },
+  'tracking.details': {
+    en: 'Details',
+    ta: 'விவரங்கள்'
+  },
+  'tracking.updated': {
+    en: 'Updated:',
+    ta: 'புதுப்பிக்கப்பட்டது:'
+  },
+  'tracking.location_tracker': {
+    en: 'Location Tracker',
+    ta: 'இட கண்காணிப்பாளர்'
+  },
+  'tracking.realtime_gps': {
+    en: 'Real-time GPS location sharing system',
+    ta: 'நேரடி GPS இட பகிர்வு அமைப்பு'
+  },
+  'tracking.how_it_works': {
+    en: 'How Live Tracking Works',
+    ta: 'நேரடி கண்காணிப்பு எவ்வாறு செயல்படுகிறது'
+  },
+  'tracking.enable_description': {
+    en: 'Enable live tracking to share your real-time location with passengers and administrators. Your location will be updated automatically and can be viewed on the map in real-time.',
+    ta: 'பயணிகள் மற்றும் நிர்வாகிகளுடன் உங்கள் நேரடி இருப்பிடத்தைப் பகிர நேரடி கண்காணிப்பை இயக்கவும். உங்கள் இருப்பிடம் தானாகவே புதுப்பிக்கப்படும் மற்றும் வரைபடத்தில் நேரடியாகப் பார்க்கலாம்.'
+  },
+  'tracking.click_start': {
+    en: 'Click "Start Tracking" to begin sharing your location',
+    ta: 'உங்கள் இருப்பிடத்தைப் பகிரத் தொடங்க "கண்காணிப்பைத் தொடங்கு" என்பதைக் கிளிக் செய்யவும்'
+  },
+  'tracking.gps_update': {
+    en: 'Your GPS coordinates will be updated every few seconds',
+    ta: 'உங்கள் GPS ஆயத்தொகுப்புகள் ஒவ்வொரு சில விநாடிகளுக்கும் புதுப்பிக்கப்படும்'
+  },
+  'tracking.passengers_see': {
+    en: 'Passengers can see your live location on their app',
+    ta: 'பயணிகள் தங்கள் பயன்பாட்டில் உங்கள் நேரடி இருப்பிடத்தைப் பார்க்கலாம்'
+  },
+  'tracking.admin_monitor': {
+    en: 'Administrators can monitor your route progress',
+    ta: 'நிர்வாகிகள் உங்கள் பாதை முன்னேற்றத்தைக் கண்காணிக்கலாம்'
+  },
+  'tracking.loading_live': {
+    en: 'Loading live tracking...',
+    ta: 'நேரடி கண்காணிப்பு ஏற்றுகிறது...'
+  },
+  'tracking.login_access': {
+    en: 'Please log in to access live tracking.',
+    ta: 'நேரடி கண்காணிப்பை அணுக உள்நுழையவும்.'
+  },
+  'tracking.drivers_only_access': {
+    en: 'Only drivers can access live tracking.',
+    ta: 'ஓட்டுநர்கள் மட்டுமே நேரடி கண்காணிப்பை அணுக முடியும்.'
+  },
+
+  // Bookings Page - Additional translations
+  'bookings.passenger_bookings': {
+    en: 'Passenger Bookings',
+    ta: 'பயணிகள் முன்பதிவுகள்'
+  },
+  'bookings.sample_route': {
+    en: '(Sample: Route 29)',
+    ta: '(மாதிரி: பாதை 29)'
+  },
+  'bookings.manage_all': {
+    en: 'Manage and view all passenger bookings for your routes',
+    ta: 'உங்கள் பாதைகளுக்கான அனைத்து பயணிகள் முன்பதிவுகளையும் நிர்வகித்து பார்க்கவும்'
+  },
+  'bookings.showing_for': {
+    en: 'Showing bookings for:',
+    ta: 'முன்பதிவுகள் காட்டப்படுகின்றன:'
+  },
+  'bookings.date_selection': {
+    en: 'Date Selection',
+    ta: 'தேதி தேர்வு'
+  },
+  'bookings.auto_update': {
+    en: 'Bookings automatically update when date changes',
+    ta: 'தேதி மாறும்போது முன்பதிவுகள் தானாகவே புதுப்பிக்கப்படும்'
+  },
+  'bookings.quick_select': {
+    en: 'Quick select:',
+    ta: 'விரைவு தேர்வு:'
+  },
+  'bookings.yesterday': {
+    en: 'Yesterday',
+    ta: 'நேற்று'
+  },
+  'bookings.today': {
+    en: 'Today',
+    ta: 'இன்று'
+  },
+  'bookings.tomorrow': {
+    en: 'Tomorrow',
+    ta: 'நாளை'
+  },
+  'bookings.no_bookings_found': {
+    en: 'No Bookings Found',
+    ta: 'முன்பதிவுகள் எதுவும் கிடைக்கவில்லை'
+  },
+  'bookings.try_different_date': {
+    en: 'No bookings available for the selected date. Try selecting a different date or check your route assignments.',
+    ta: 'தேர்ந்தெடுக்கப்பட்ட தேதிக்கு முன்பதிவுகள் இல்லை. வேறு தேதியைத் தேர்ந்தெடுக்க முயற்சிக்கவும் அல்லது உங்கள் பாதை ஒதுக்கீடுகளைச் சரிபார்க்கவும்.'
+  },
+  'bookings.student': {
+    en: 'Student',
+    ta: 'மாணவர்'
+  },
+  'bookings.booking_s': {
+    en: 'booking',
+    ta: 'முன்பதிவு'
+  },
+  'bookings.bookings_plural': {
+    en: 'bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+
+  // Login Page - Additional translations
+  'login.account_created': {
+    en: 'Driver account created successfully! You can now login.',
+    ta: 'ஓட்டுநர் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது! இப்போது உள்நுழையலாம்.'
+  },
+  'login.login_failed': {
+    en: 'Login failed. Please try again.',
+    ta: 'உள்நுழைவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.'
+  },
+  'login.invalid_credentials': {
+    en: 'Invalid credentials. Please check your email and password.',
+    ta: 'தவறான சான்றுகள். உங்கள் மின்னஞ்சல் மற்றும் கடவுச்சொல்லை சரிபார்க்கவும்.'
+  },
+  'login.invalid_email_password': {
+    en: 'Invalid email or password. Please try again.',
+    ta: 'தவறான மின்னஞ்சல் அல்லது கடவுச்சொல். மீண்டும் முயற்சிக்கவும்.'
+  },
+  'login.success_redirecting': {
+    en: 'Redirecting to driver dashboard...',
+    ta: 'ஓட்டுநர் முகப்புக்கு திருப்பிவிடப்படுகிறது...'
   }
 };
 

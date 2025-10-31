@@ -242,39 +242,39 @@ export default function DriverProfilePage() {
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-2xl text-center">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-red-800 font-semibold text-lg mb-2">
-            {isDriverNotFound ? 'Driver Profile Not Found' : t('common.error')}
+            {isDriverNotFound ? t('profile.not_found') : t('common.error')}
           </h3>
           <p className="text-red-600 mb-4">{error}</p>
-          
+
           {isDriverNotFound && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 text-left">
-              <h4 className="font-medium text-yellow-800 mb-2">🔧 What happened:</h4>
+              <h4 className="font-medium text-yellow-800 mb-2">🔧 {t('profile.what_happened')}</h4>
               <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• Your authentication is working correctly</li>
-                <li>• We attempted to create a driver profile automatically</li>
-                <li>• The profile creation may have failed or needs admin approval</li>
-                <li>• Please contact the transport admin to complete your profile setup</li>
+                <li>• {t('profile.auth_working')}</li>
+                <li>• {t('profile.attempted_create')}</li>
+                <li>• {t('profile.creation_failed')}</li>
+                <li>• {t('profile.contact_admin')}</li>
               </ul>
               <div className="mt-3 p-2 bg-blue-50 rounded border-l-4 border-blue-400">
                 <p className="text-xs text-blue-700">
-                  <strong>For Admin:</strong> Check if driver ID matches the drivers table or create a manual entry.
+                  <strong>{t('profile.for_admin')}</strong>
                 </p>
               </div>
             </div>
           )}
-          
+
           <div className="flex space-x-3">
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
             >
-              Try Again
+              {t('actions.try_again')}
             </button>
-            <button 
-              onClick={() => window.location.href = '/driver'} 
+            <button
+              onClick={() => window.location.href = '/driver'}
               className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
             >
-              Go to Dashboard
+              {t('actions.go_to_dashboard')}
             </button>
           </div>
         </div>
@@ -287,8 +287,8 @@ export default function DriverProfilePage() {
       <div className="flex flex-col items-center justify-center py-20">
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 max-w-md text-center">
           <User className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-3">Profile Not Found</h3>
-          <p className="text-gray-600 mb-4">Unable to load driver profile.</p>
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('profile.not_found')}</h3>
+          <p className="text-gray-600 mb-4">{t('profile.unable_to_load')}</p>
           <div className="w-16 h-1 bg-gray-200 rounded-full mx-auto"></div>
         </div>
       </div>
@@ -301,9 +301,9 @@ export default function DriverProfilePage() {
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Driver Profile</h1>
+            <h1 className="text-3xl font-bold mb-2">{t('profile.driver_profile')}</h1>
             <p className="text-purple-100 text-lg">
-              Manage your account information and view your performance statistics
+              {t('profile.manage_account')}
             </p>
           </div>
           <div className="hidden md:block">
@@ -318,8 +318,8 @@ export default function DriverProfilePage() {
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Profile Management</h2>
-            <p className="text-sm text-gray-600">Update your personal information and preferences</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('profile.management')}</h2>
+            <p className="text-sm text-gray-600">{t('profile.update_info')}</p>
           </div>
           <div className="flex items-center space-x-3">
             {isEditing ? (
@@ -330,14 +330,14 @@ export default function DriverProfilePage() {
                   className="flex items-center px-6 py-3 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? t('profile.saving') : t('profile.save_changes')}
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
                   className="flex items-center px-6 py-3 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
                 >
                   <X className="w-4 h-4 mr-2" />
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </>
             ) : (
@@ -346,7 +346,7 @@ export default function DriverProfilePage() {
                 className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
               >
                 <Edit className="w-4 h-4 mr-2" />
-                Edit Profile
+                {t('profile.edit')}
               </button>
             )}
           </div>
@@ -356,20 +356,20 @@ export default function DriverProfilePage() {
       {/* Profile Information */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
-          <p className="text-sm text-gray-600">Your basic account details</p>
+          <h2 className="text-xl font-semibold text-gray-900">{t('profile.personal_info')}</h2>
+          <p className="text-sm text-gray-600">{t('profile.basic_details')}</p>
         </div>
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700">{t('profile.full_name')}</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={editForm.name || ''}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your full name"
+                  placeholder={t('profile.enter_name')}
                 />
               ) : (
                 <div className="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -380,7 +380,7 @@ export default function DriverProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Email Address</label>
+              <label className="block text-sm font-medium text-gray-700">{t('profile.email_address')}</label>
               <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                 <Mail className="w-5 h-5 text-gray-400 mr-3" />
                 <p className="text-gray-900 font-medium">{profile.email}</p>
@@ -388,14 +388,14 @@ export default function DriverProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+              <label className="block text-sm font-medium text-gray-700">{t('profile.phone_number')}</label>
               {isEditing ? (
                 <input
                   type="tel"
                   value={editForm.phone || ''}
                   onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your phone number"
+                  placeholder={t('profile.enter_phone')}
                 />
               ) : (
                 <div className="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -406,14 +406,14 @@ export default function DriverProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">License Number</label>
+              <label className="block text-sm font-medium text-gray-700">{t('profile.license_number')}</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={editForm.license_number || ''}
                   onChange={(e) => setEditForm({ ...editForm, license_number: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your license number"
+                  placeholder={t('profile.enter_license')}
                 />
               ) : (
                 <div className="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -429,8 +429,8 @@ export default function DriverProfilePage() {
       {/* Driver Statistics */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-green-50 px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Performance Statistics</h2>
-          <p className="text-sm text-gray-600">Your driving performance metrics</p>
+          <h2 className="text-xl font-semibold text-gray-900">{t('profile.performance_stats')}</h2>
+          <p className="text-sm text-gray-600">{t('profile.driving_metrics')}</p>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -439,25 +439,25 @@ export default function DriverProfilePage() {
                 <Calendar className="w-6 h-6 text-blue-600" />
               </div>
               <div className="text-2xl font-bold text-blue-600">{profile.experience_years}</div>
-              <div className="text-sm text-gray-600 font-medium">Years Experience</div>
+              <div className="text-sm text-gray-600 font-medium">{t('profile.years_experience')}</div>
             </div>
-            
+
             <div className="text-center p-4 bg-green-50 rounded-xl">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Star className="w-6 h-6 text-green-600" />
               </div>
               <div className="text-2xl font-bold text-green-600">{profile.rating.toFixed(1)}</div>
-              <div className="text-sm text-gray-600 font-medium">Rating</div>
+              <div className="text-sm text-gray-600 font-medium">{t('profile.rating')}</div>
             </div>
-            
+
             <div className="text-center p-4 bg-purple-50 rounded-xl">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
               </div>
               <div className="text-2xl font-bold text-purple-600">{profile.total_trips}</div>
-              <div className="text-sm text-gray-600 font-medium">Total Trips</div>
+              <div className="text-sm text-gray-600 font-medium">{t('profile.total_trips')}</div>
             </div>
-            
+
             <div className="text-center p-4 bg-amber-50 rounded-xl">
               <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Award className="w-6 h-6 text-amber-600" />
@@ -465,9 +465,9 @@ export default function DriverProfilePage() {
               <div className={`text-2xl font-bold ${
                 profile.status === 'active' ? 'text-green-600' : 'text-red-600'
               }`}>
-                {profile.status.charAt(0).toUpperCase() + profile.status.slice(1)}
+                {t(`status.${profile.status}`)}
               </div>
-              <div className="text-sm text-gray-600 font-medium">Status</div>
+              <div className="text-sm text-gray-600 font-medium">{t('profile.status')}</div>
             </div>
           </div>
         </div>
@@ -476,8 +476,8 @@ export default function DriverProfilePage() {
       {/* Account Actions */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-red-50 px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Account Actions</h2>
-          <p className="text-sm text-gray-600">Manage your account settings</p>
+          <h2 className="text-xl font-semibold text-gray-900">{t('profile.account_actions')}</h2>
+          <p className="text-sm text-gray-600">{t('profile.manage_settings')}</p>
         </div>
         <div className="p-6">
           <button
@@ -488,8 +488,8 @@ export default function DriverProfilePage() {
               <LogOut className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="font-semibold text-lg">Sign Out</span>
-              <p className="text-sm text-red-500">Logout from your account</p>
+              <span className="font-semibold text-lg">{t('profile.sign_out')}</span>
+              <p className="text-sm text-red-500">{t('profile.logout_account')}</p>
             </div>
           </button>
         </div>

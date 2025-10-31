@@ -52,15 +52,15 @@ function DriverLayoutInner({
           <div className="relative mx-auto w-16 h-16 mb-6">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <img 
-                src="/app-logo.png" 
-                alt="Loading" 
+              <img
+                src="/app-logo.png"
+                alt="Loading"
                 className="w-12 h-12 drop-shadow-md"
               />
             </div>
           </div>
-          <p className="text-gray-800 text-lg font-semibold mb-2">Driver Dashboard</p>
-          <p className="text-gray-600 text-sm">Loading your dashboard...</p>
+          <p className="text-gray-800 text-lg font-semibold mb-2">{t('layout.driver_dashboard_title')}</p>
+          <p className="text-gray-600 text-sm">{t('layout.loading_dashboard')}</p>
         </div>
       </div>
     );
@@ -104,12 +104,12 @@ function DriverLayoutInner({
             {/* Header */}
             <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <img 
-                  src="/app-logo.png" 
-                  alt="JKKN TMS Logo" 
+                <img
+                  src="/app-logo.png"
+                  alt="JKKN TMS Logo"
                   className="w-10 h-10 drop-shadow-md"
                 />
-                <h1 className="text-xl font-bold text-gray-900">Driver App</h1>
+                <h1 className="text-xl font-bold text-gray-900">{t('layout.driver_app')}</h1>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
@@ -129,7 +129,7 @@ function DriverLayoutInner({
                   <p className="text-sm font-medium text-gray-900 truncate">
                     {user?.email || 'Driver'}
                   </p>
-                  <p className="text-xs text-gray-500">Professional Driver</p>
+                  <p className="text-xs text-gray-500">{t('layout.professional_driver')}</p>
                 </div>
               </div>
             </div>

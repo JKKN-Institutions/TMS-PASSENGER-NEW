@@ -1,18 +1,22 @@
 {
   "mcpServers": {
     "memory": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@modelcontextprotocol/server-memory"
       ]
     },
     "filesystem": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "D:\\other matters\\jicate\\TMS-ADMIN\\TMS-PASSENGER"
+        "C:\\Users\\admin\\Downloads\\Facepluse"
       ]
     },
     "supabase": {
@@ -21,7 +25,7 @@
         "/c",
         "npx",
         "-y",
-        "@supabase/mcp-server-supabase@0.5.8",
+        "@supabase/mcp-server-supabase@latest",
         "--project-ref=gsvbrytleqdxpdfbykqh"
       ],
       "env": {
@@ -29,8 +33,10 @@
       }
     },
     "context7": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@upstash/context7-mcp"
       ]

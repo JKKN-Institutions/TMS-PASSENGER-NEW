@@ -20,6 +20,8 @@ function BookingsContent() {
   const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [expandedBooking, setExpandedBooking] = useState<string | null>(null);
+  const [driverRoutes, setDriverRoutes] = useState<any[]>([]);
+  const [selectedRouteId, setSelectedRouteId] = useState<string>('');
 
   const routeId = searchParams?.get('routeId') || '';
 
@@ -27,9 +29,31 @@ function BookingsContent() {
     setLoading(true);
     setError(null);
     try {
+      // First, fetch driver's assigned routes if not already loaded
+      if (driverRoutes.length === 0 && user?.id) {
+        const routesData = await driverHelpers.getAssignedRoutes(user.id, user.email);
+        setDriverRoutes(routesData);
+
+        // If no specific route is targeted, use the first route
+        if (!targetRouteId && routesData.length > 0) {
+          targetRouteId = routesData[0].id;
+          setSelectedRouteId(targetRouteId);
+        }
+      }
+
+      // If we have a target route or selected route, fetch bookings
+      const effectiveRouteId = targetRouteId || selectedRouteId || (driverRoutes.length > 0 ? driverRoutes[0].id : '');
+
+      if (!effectiveRouteId) {
+        setBookings([]);
+        setFilteredBookings([]);
+        setError('No routes assigned to this driver');
+        setLoading(false);
+        return;
+      }
+
       const params: any = {};
-      if (targetRouteId) params.routeId = targetRouteId;
-      else params.routeNumber = '29';
+      params.routeId = effectiveRouteId;
       params.date = date;
       const data = await driverHelpers.getRouteBookings(params);
       setBookings(data);
@@ -182,7 +206,12 @@ function BookingsContent() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">
-              Passenger Bookings {routeId ? '' : '(Sample: Route 29)'}
+              Passenger Bookings
+              {driverRoutes.length > 0 && selectedRouteId && (
+                <span className="ml-3 text-2xl font-normal opacity-90">
+                  {driverRoutes.find(r => r.id === selectedRouteId)?.route_number} - {driverRoutes.find(r => r.id === selectedRouteId)?.route_name}
+                </span>
+              )}
             </h1>
             <p className="text-blue-100 text-lg mb-3">
               Manage and view all passenger bookings for your routes
@@ -321,6 +350,27 @@ function BookingsContent() {
 
           {/* Date Picker and Controls */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            {/* Route Selector (if driver has multiple routes) */}
+            {driverRoutes.length > 1 && (
+              <div className="flex items-center">
+                <RouteIcon className="w-5 h-5 text-gray-400 mr-3" />
+                <select
+                  value={selectedRouteId}
+                  onChange={(e) => {
+                    setSelectedRouteId(e.target.value);
+                    load(e.target.value);
+                  }}
+                  className="border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                >
+                  {driverRoutes.map((route) => (
+                    <option key={route.id} value={route.id}>
+                      Route {route.route_number} - {route.route_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className="flex items-center flex-1">
               <Calendar className="w-5 h-5 text-gray-400 mr-3" />
               <input
@@ -347,7 +397,7 @@ function BookingsContent() {
             </div>
 
             <button
-              onClick={() => load(routeId || undefined)}
+              onClick={() => load(selectedRouteId || routeId || undefined)}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
