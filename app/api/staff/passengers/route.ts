@@ -113,16 +113,19 @@ export async function GET(request: NextRequest) {
       const studentId = booking.student_id;
 
       if (!passengersMap.has(studentId)) {
+        // Handle both array and object responses from PostgREST
+        const student = Array.isArray(booking.students) ? booking.students[0] : booking.students;
+
         passengersMap.set(studentId, {
           student_id: studentId,
-          student_name: booking.students?.student_name,
-          roll_number: booking.students?.roll_number,
-          email: booking.students?.email,
-          phone: booking.students?.mobile, // Map mobile to phone for UI compatibility
-          department: booking.students?.department_name,
-          year: booking.students?.semester?.toString() || '',
-          section: booking.students?.section_id || '',
-          profile_image: booking.students?.student_photo_url,
+          student_name: student?.student_name || 'Unknown Student',
+          roll_number: student?.roll_number || 'N/A',
+          email: student?.email || '',
+          phone: student?.mobile || '', // Map mobile to phone for UI compatibility
+          department: student?.department_name || '',
+          year: student?.semester?.toString() || '',
+          section: student?.section_id || '',
+          profile_image: student?.student_photo_url || '',
           routes: [],
           boarding_stops: new Set(),
           total_bookings: 0,
@@ -132,15 +135,18 @@ export async function GET(request: NextRequest) {
 
       const passenger = passengersMap.get(studentId);
 
+      // Handle both array and object responses from PostgREST
+      const route = Array.isArray(booking.routes) ? booking.routes[0] : booking.routes;
+
       // Add route info if not already added
       const routeExists = passenger.routes.find((r: any) => r.route_id === booking.route_id);
-      if (!routeExists) {
+      if (!routeExists && route) {
         passenger.routes.push({
           route_id: booking.route_id,
-          route_number: booking.routes?.route_number,
-          route_name: booking.routes?.route_name,
-          start_location: booking.routes?.start_location,
-          end_location: booking.routes?.end_location
+          route_number: route.route_number,
+          route_name: route.route_name,
+          start_location: route.start_location,
+          end_location: route.end_location
         });
       }
 

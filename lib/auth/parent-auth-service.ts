@@ -126,12 +126,12 @@ class ParentAuthService {
     }
 
     // Build authorization URL (client_id parameter for new auth server)
-    // Add prompt=select_account to force Google account selection every time
-    const authUrl = `${authServerUrl}/api/auth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}&prompt=select_account`;
+    // Add prompt=consent select_account to force Google account selection and re-consent every time
+    const authUrl = `${authServerUrl}/api/auth/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&state=${state}&prompt=consent select_account`;
 
     console.log('\n🔗 Redirecting to auth server...');
     console.log('📍 URL:', authUrl);
-    console.log('🔐 prompt=select_account: Force account selection enabled');
+    console.log('🔐 prompt=consent select_account: Force account selection and re-consent enabled');
     console.log('═══════════════════════════════════════════════════════\n');
 
     window.location.href = authUrl;

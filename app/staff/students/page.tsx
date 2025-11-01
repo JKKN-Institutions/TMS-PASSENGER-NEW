@@ -217,7 +217,7 @@ export default function StaffStudentsPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -249,17 +249,6 @@ export default function StaffStudentsPage() {
             </div>
             <h3 className="text-3xl font-bold text-gray-800">{stats.routes_count || staffRoutes.length}</h3>
             <p className="text-gray-500 text-sm mt-1">Assigned routes</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <BadgeCheck className="w-6 h-6 text-yellow-600" />
-              </div>
-              <span className="text-yellow-600 text-sm font-medium">Bookings</span>
-            </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.total_bookings || 0}</h3>
-            <p className="text-gray-500 text-sm mt-1">Total bookings</p>
           </div>
         </div>
 
@@ -379,10 +368,6 @@ export default function StaffStudentsPage() {
                                 {student.routes.length > 1 && ` +${student.routes.length - 1}`}
                               </span>
                             )}
-                            <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded flex items-center gap-1">
-                              <BadgeCheck className="w-3 h-3" />
-                              {student.total_bookings} bookings
-                            </span>
                           </div>
                         </div>
                       </div>
@@ -423,14 +408,6 @@ export default function StaffStudentsPage() {
                               </div>
                             </div>
                           )}
-
-                          <div className="flex items-center gap-3">
-                            <BadgeCheck className="w-5 h-5 text-gray-400" />
-                            <div>
-                              <p className="text-xs text-gray-500">Total Bookings</p>
-                              <p className="text-sm font-medium text-gray-900">{student.total_bookings} bookings</p>
-                            </div>
-                          </div>
                         </div>
 
                         {student.routes && student.routes.length > 0 && (

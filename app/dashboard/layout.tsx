@@ -27,6 +27,7 @@ import NotificationCenter from '@/components/notification-center';
 import { EnrollmentProvider, useEnrollmentStatus } from '@/lib/enrollment/enrollment-context';
 import BugReportWrapper from '@/components/bug-report-wrapper';
 import MobileBottomNavbar from '@/components/mobile-bottom-navbar';
+import FloatingActionButton from '@/components/passenger/floating-action-button';
 
 interface NavigationItem {
   name: string;
@@ -493,7 +494,10 @@ function DashboardContent({
       
       {/* Mobile Bottom Navigation */}
       <MobileBottomNavbar />
-      
+
+      {/* Floating Action Button for Quick Access */}
+      <FloatingActionButton />
+
       {/* Floating bug report button for dashboard */}
       <BugReportWrapper />
     </div>
