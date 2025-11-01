@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
           student_name,
           roll_number,
           email,
-          phone
+          mobile
         ),
         routes (
           route_number,

@@ -21,38 +21,31 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'staffId or email is required' }, { status: 400 });
     }
 
-    let effectiveStaffId = staffId;
+    let effectiveEmail = email;
 
-    // If only email is provided, find staff by email
-    if (!effectiveStaffId && email) {
-      const { data: staff, error: staffError } = await supabase
+    // If staffId is provided, try to find staff by id first
+    if (staffId) {
+      const { data: staffMember, error: staffError } = await supabase
         .from('staff')
-        .select('id')
-        .eq('email', email)
+        .select('email')
+        .eq('id', staffId)
         .single();
 
-      if (!staffError && staff) {
-        effectiveStaffId = staff.id;
-        console.log('Found staff by email:', email, 'ID:', effectiveStaffId);
+      if (!staffError && staffMember) {
+        effectiveEmail = staffMember.email;
+        console.log('Found staff by ID:', staffId, 'Email:', effectiveEmail);
       }
     }
 
-    if (!effectiveStaffId) {
+    if (!effectiveEmail) {
       return NextResponse.json({ error: 'Staff not found' }, { status: 404 });
     }
 
-    // Find routes assigned to this staff member using route_assignments table
+    // Find routes assigned to this staff member using staff_route_assignments table
     const { data: staffRouteAssignments, error: assignmentsError } = await supabase
-      .from('route_assignments')
-      .select(`
-        route_id,
-        routes (
-          id,
-          route_number,
-          route_name
-        )
-      `)
-      .eq('staff_id', effectiveStaffId)
+      .from('staff_route_assignments')
+      .select('route_id')
+      .eq('staff_email', effectiveEmail.toLowerCase().trim())
       .eq('is_active', true);
 
     if (assignmentsError) {
@@ -61,7 +54,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!staffRouteAssignments || staffRouteAssignments.length === 0) {
-      console.log('⚠️ No routes assigned to staff:', effectiveStaffId);
+      console.log('⚠️ No routes assigned to staff:', effectiveEmail);
       return NextResponse.json({ success: true, passengers: [], stats: { total: 0, active: 0, inactive: 0, total_bookings: 0 } });
     }
 
