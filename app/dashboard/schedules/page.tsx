@@ -1662,14 +1662,13 @@ export default function SchedulesPage() {
   }
 
   return (
-    <>
     <div className="py-4 sm:py-6 space-y-6">
       {/* Header */}
       <PassengerPageHeader
-        titleKey="passenger.schedules.title"
+        title="My Transport Schedule"
         icon={Calendar}
-        iconColor="text-indigo-600"
-        iconBgColor="bg-indigo-50"
+        iconColor="text-yellow-600"
+        iconBgColor="bg-yellow-50"
       />
 
       {/* Refresh Button */}
@@ -1985,6 +1984,5 @@ export default function SchedulesPage() {
         allocation={studentAllocation}
       />
     </div>
-    </>
   );
 } 

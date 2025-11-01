@@ -150,7 +150,7 @@ export default function RoutesPage() {
       <>
         <div className="space-y-6 py-4 sm:py-6">
           <PassengerPageHeader
-            titleKey="passenger.routes.title"
+            title="My Transport Route"
             icon={Bus}
             iconColor="text-green-600"
             iconBgColor="bg-green-50"
@@ -195,7 +195,7 @@ export default function RoutesPage() {
       >
         {/* Header */}
         <PassengerPageHeader
-          titleKey="passenger.routes.title"
+          title="My Transport Route"
           icon={Bus}
           iconColor="text-green-600"
           iconBgColor="bg-green-50"

@@ -483,10 +483,10 @@ export default function ProfilePage() {
     <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
       {/* Header */}
       <PassengerPageHeader
-        titleKey="passenger.profile.title"
+        title="My Profile"
         icon={User}
-        iconColor="text-purple-600"
-        iconBgColor="bg-purple-50"
+        iconColor="text-green-600"
+        iconBgColor="bg-green-50"
       />
 
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
