@@ -6,6 +6,7 @@ import { useLanguage } from '@/lib/i18n/language-context';
 import { useRouter } from 'next/navigation';
 import { User, LogOut, Edit, Save, X, Phone, Mail, Shield, Car, MapPin, Star, Award, Calendar, TrendingUp, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import DriverPageHeader from '@/components/driver-page-header';
 
 interface DriverProfile {
   id: string;
@@ -296,23 +297,15 @@ export default function DriverProfilePage() {
   }
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{t('profile.driver_profile')}</h1>
-            <p className="text-purple-100 text-lg">
-              {t('profile.manage_account')}
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <User className="w-10 h-10" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <DriverPageHeader
+        titleKey="page.profile.title"
+        subtitleKey="page.profile.subtitle"
+        icon={User}
+        iconColor="text-purple-600"
+        iconBgColor="bg-purple-50"
+      />
 
       {/* Profile Actions */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">

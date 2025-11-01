@@ -29,18 +29,14 @@ export default function LanguageSwitcher({ className = '', showLabel = true }: L
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+        className="flex items-center gap-1 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition-colors"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <Globe className="w-4 h-4" />
+        <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
         {showLabel && (
-          <>
-            <span className="hidden sm:inline">{t('language.switch')}</span>
-            <span className="sm:hidden">{currentLanguage?.nativeName}</span>
-          </>
+          <span className="font-semibold">{currentLanguage?.code.toUpperCase()}</span>
         )}
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (

@@ -6,6 +6,7 @@ import DriverLocationTracker from '@/components/driver-location-tracker';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useLanguage } from '@/lib/i18n/language-context';
+import { useLocationSharing } from '@/lib/location-sharing-context';
 
 interface LocationData {
   latitude: number;
@@ -17,9 +18,9 @@ interface LocationData {
 const DriverLiveTrackingPage = () => {
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
   const { t } = useLanguage();
+  const { isSharing: isTracking, setIsSharing: setIsTracking } = useLocationSharing();
   const [driverId, setDriverId] = useState<string>('');
   const [driverName, setDriverName] = useState<string>('');
-  const [isTracking, setIsTracking] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

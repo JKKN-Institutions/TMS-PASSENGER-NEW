@@ -209,26 +209,26 @@ export default function DriverPassengersPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6 border border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 md:p-6 border border-gray-200">
+        <div className="flex flex-col gap-3">
           {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
             <input
               type="text"
               placeholder={t('common.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
 
           {/* Route Filter */}
-          <div className="sm:w-64">
+          <div className="w-full">
             <select
               value={selectedRoute}
               onChange={(e) => setSelectedRoute(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-green-500 focus:border-transparent truncate"
             >
               <option value="all">{t('common.all_routes')}</option>
               {driverRoutes.map((route) => (
@@ -240,8 +240,8 @@ export default function DriverPassengersPage() {
           </div>
         </div>
 
-        <div className="mt-4 text-sm text-gray-600">
-          {t('common.showing')} {filteredPassengers.length} of {passengers.length} {t('driver.passengers.passengers')}
+        <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 break-words">
+          {t('common.showing')} <span className="font-semibold">{filteredPassengers.length}</span> of <span className="font-semibold">{passengers.length}</span> {t('driver.passengers.passengers')}
         </div>
       </div>
 
@@ -292,39 +292,39 @@ export default function DriverPassengersPage() {
                         <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
                       </div>
 
-                      <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-gray-600">
+                        <div className="flex items-center gap-1 min-w-0">
                           <Hash className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="truncate">{passenger.roll_number}</span>
+                          <span className="truncate max-w-[120px] sm:max-w-none">{passenger.roll_number}</span>
                         </div>
                         {passenger.department && (
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 min-w-0">
                             <Building2 className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span className="truncate">{passenger.department}</span>
+                            <span className="truncate max-w-[120px] sm:max-w-none">{passenger.department}</span>
                           </div>
                         )}
                         {passenger.year && (
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 flex-shrink-0">
                             <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span className="truncate">Year {passenger.year}</span>
+                            <span className="whitespace-nowrap">Year {passenger.year}</span>
                           </div>
                         )}
                       </div>
 
                       {/* Quick Stats */}
-                      <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
-                        <div className="flex items-center gap-1 text-xs sm:text-sm bg-green-50 text-green-700 px-2 py-1 rounded">
-                          <RouteIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="truncate">{passenger.route_count} {t('driver.passengers.routes')}</span>
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+                        <div className="flex items-center gap-1 text-xs bg-green-50 text-green-700 px-2 py-1 rounded-md whitespace-nowrap">
+                          <RouteIcon className="w-3 h-3 flex-shrink-0" />
+                          <span>{passenger.route_count} {t('driver.passengers.routes')}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-xs sm:text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="truncate">{passenger.total_bookings} {t('driver.passengers.bookings')}</span>
+                        <div className="flex items-center gap-1 text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-md whitespace-nowrap">
+                          <Calendar className="w-3 h-3 flex-shrink-0" />
+                          <span>{passenger.total_bookings} {t('driver.passengers.bookings')}</span>
                         </div>
                         {passenger.boarding_stops.length > 0 && (
-                          <div className="flex items-center gap-1 text-xs sm:text-sm bg-purple-50 text-purple-700 px-2 py-1 rounded">
-                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span className="truncate">{passenger.boarding_stops.length} {t('driver.passengers.stops')}</span>
+                          <div className="flex items-center gap-1 text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-md whitespace-nowrap">
+                            <MapPin className="w-3 h-3 flex-shrink-0" />
+                            <span>{passenger.boarding_stops.length} {t('driver.passengers.stops')}</span>
                           </div>
                         )}
                       </div>

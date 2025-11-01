@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import DriverRouteGuard from '@/components/driver-route-guard';
 import { LanguageProvider, useLanguage } from '@/lib/i18n/language-context';
+import { LocationSharingProvider } from '@/lib/location-sharing-context';
 import LanguageSwitcher from '@/components/language-switcher';
 import DriverMobileBottomNavbar from '@/components/driver-mobile-bottom-navbar';
 import DriverLocationHeader from '@/components/driver-location-header';
@@ -196,13 +197,13 @@ function DriverLayoutInner({
                 <Menu className="w-6 h-6" />
               </button>
 
-              <div className="flex items-center gap-3 sm:gap-4 ml-auto relative">
+              <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 ml-auto relative">
                 {/* Location Sharing Controls */}
                 <DriverLocationHeader />
 
                 {/* Welcome Message (Desktop Only) */}
-                <div className="hidden md:flex items-center text-sm text-gray-500">
-                  <span className="truncate max-w-[200px]">{t('dashboard.welcome', { name: user?.email?.split('@')[0] || 'Driver' })}</span>
+                <div className="hidden lg:flex items-center text-sm text-gray-500">
+                  <span className="truncate max-w-[150px]">{t('dashboard.welcome', { name: user?.email?.split('@')[0] || 'Driver' })}</span>
                 </div>
 
                 {/* Language Switcher */}
@@ -224,7 +225,7 @@ function DriverLayoutInner({
   );
 }
 
-// Main layout component with language provider
+// Main layout component with providers
 export default function DriverLayout({
   children,
 }: {
@@ -232,9 +233,11 @@ export default function DriverLayout({
 }) {
   return (
     <LanguageProvider defaultLanguage="en">
-      <DriverLayoutInner>
-        {children}
-      </DriverLayoutInner>
+      <LocationSharingProvider>
+        <DriverLayoutInner>
+          {children}
+        </DriverLayoutInner>
+      </LocationSharingProvider>
     </LanguageProvider>
   );
 }

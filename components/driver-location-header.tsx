@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapPinned, MapPinOff, AlertCircle, CheckCircle, Wifi, WifiOff, AlertTriangle } from 'lucide-react';
+import { MapPinned, MapPinOff, AlertCircle, WifiOff, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useLanguage } from '@/lib/i18n/language-context';
+import { useLocationSharing } from '@/lib/location-sharing-context';
 import DriverLocationTracker from './driver-location-tracker';
 
 interface LocationError {
@@ -14,10 +15,10 @@ interface LocationError {
 export default function DriverLocationHeader() {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const [isSharing, setIsSharing] = useState(false);
+  const { isSharing, setIsSharing, setLastUpdate } = useLocationSharing();
   const [error, setError] = useState<LocationError | null>(null);
   const [isOnline, setIsOnline] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [showError, setShowError] = useState(false);
 
   // Check online status
   useEffect(() => {
@@ -154,63 +155,40 @@ export default function DriverLocationHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-2">
-        {/* Status Indicator */}
-        <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+      {/* Compact Toggle Button */}
+      <button
+        onClick={handleToggleSharing}
+        disabled={!isOnline && !isSharing}
+        onMouseEnter={() => error && setShowError(true)}
+        onMouseLeave={() => setShowError(false)}
+        className={`relative flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
           isSharing
-            ? 'bg-green-100 text-green-700 border border-green-300'
+            ? 'bg-green-600 hover:bg-green-700 text-white'
             : error
-            ? 'bg-red-100 text-red-700 border border-red-300'
-            : 'bg-gray-100 text-gray-600 border border-gray-300'
-        }`}>
-          {isSharing ? (
-            <>
-              <MapPinned className="w-3.5 h-3.5 animate-pulse" />
-              <span className="hidden sm:inline">{t('location.sharing')}</span>
-            </>
-          ) : error ? (
-            <>
-              {getErrorIcon()}
-              <span className="hidden sm:inline">{t('location.error')}</span>
-            </>
-          ) : (
-            <>
-              <MapPinOff className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('location.not_sharing')}</span>
-            </>
-          )}
-        </div>
+            ? 'bg-red-600 hover:bg-red-700 text-white'
+            : 'bg-gray-600 hover:bg-gray-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed'
+        }`}
+      >
+        {isSharing ? (
+          <>
+            <MapPinned className="w-3.5 h-3.5 animate-pulse flex-shrink-0" />
+            <span className="hidden sm:inline whitespace-nowrap">{t('location.sharing')}</span>
+          </>
+        ) : error ? (
+          <>
+            {getErrorIcon()}
+            <span className="hidden sm:inline whitespace-nowrap">{t('location.error')}</span>
+          </>
+        ) : (
+          <>
+            <MapPinOff className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="hidden sm:inline whitespace-nowrap">{t('location.start')}</span>
+          </>
+        )}
+      </button>
 
-        {/* Toggle Button */}
-        <button
-          onClick={handleToggleSharing}
-          disabled={!isOnline && !isSharing}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-            isSharing
-              ? 'bg-red-600 hover:bg-red-700 text-white shadow-sm'
-              : error
-              ? 'bg-yellow-600 hover:bg-yellow-700 text-white shadow-sm'
-              : 'bg-green-600 hover:bg-green-700 text-white shadow-sm disabled:bg-gray-400 disabled:cursor-not-allowed'
-          }`}
-        >
-          {isSharing ? (
-            <>
-              <MapPinOff className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('driver.stop_sharing')}</span>
-              <span className="sm:hidden">{t('location.stop')}</span>
-            </>
-          ) : (
-            <>
-              <MapPinned className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('driver.start_sharing')}</span>
-              <span className="sm:hidden">{t('location.start')}</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Error Message */}
-      {error && (
+      {/* Error Tooltip (on hover) */}
+      {error && showError && (
         <div className="absolute top-full right-0 mt-2 w-72 bg-red-50 border border-red-200 rounded-lg p-3 shadow-lg z-50">
           <div className="flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
