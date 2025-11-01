@@ -153,7 +153,6 @@ export default function DriverPassengersPage() {
       {/* Header */}
       <DriverPageHeader
         titleKey="page.passengers.title"
-        subtitleKey="page.passengers.subtitle"
         icon={Users}
         iconColor="text-purple-600"
         iconBgColor="bg-purple-50"

@@ -301,7 +301,6 @@ export default function DriverProfilePage() {
       {/* Header */}
       <DriverPageHeader
         titleKey="page.profile.title"
-        subtitleKey="page.profile.subtitle"
         icon={User}
         iconColor="text-purple-600"
         iconBgColor="bg-purple-50"

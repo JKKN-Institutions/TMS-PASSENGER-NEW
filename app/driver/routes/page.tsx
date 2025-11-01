@@ -55,32 +55,7 @@ export default function DriverRoutesPage() {
         setRoutes(assignedRoutes);
       } catch (err: any) {
         console.error('❌ Error fetching routes:', err);
-        
-        // Handle specific error types gracefully
-        let errorMessage = t('routes.error_loading');
-        
-        if (err.message) {
-          if (err.message.includes('network') || err.message.includes('fetch')) {
-            errorMessage = t('error.network_error');
-          } else if (err.message.includes('timeout')) {
-            errorMessage = t('error.timeout');
-          } else if (err.message.includes('unauthorized') || err.message.includes('401')) {
-            errorMessage = t('error.session_expired');
-          } else if (err.message.includes('forbidden') || err.message.includes('403')) {
-            errorMessage = t('error.access_denied');
-          } else if (err.message.includes('not found') || err.message.includes('404')) {
-            errorMessage = t('error.not_found');
-          } else if (err.message.includes('server') || err.message.includes('500')) {
-            errorMessage = t('error.server_error');
-          } else {
-            errorMessage = err.message;
-          }
-        }
-        
-        setError(errorMessage);
-        
-        // Auto-clear error after 10 seconds
-        setTimeout(() => setError(null), 10000);
+        setError(err.message || t('routes.error_loading'));
       } finally {
         setLoading(false);
       }
@@ -125,7 +100,6 @@ export default function DriverRoutesPage() {
       {/* Header */}
       <DriverPageHeader
         titleKey="page.routes.title"
-        subtitleKey="page.routes.subtitle"
         icon={Route}
         iconColor="text-blue-600"
         iconBgColor="bg-blue-50"

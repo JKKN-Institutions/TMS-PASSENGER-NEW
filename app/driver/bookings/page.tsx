@@ -69,32 +69,7 @@ function BookingsContent() {
       setGrouped(byStop);
     } catch (err: any) {
       console.error('❌ Error fetching bookings:', err);
-      
-      // Handle specific error types gracefully
-      let errorMessage = 'Failed to load bookings';
-      
-      if (err.message) {
-        if (err.message.includes('network') || err.message.includes('fetch')) {
-          errorMessage = 'Network error. Please check your internet connection and refresh the page.';
-        } else if (err.message.includes('timeout')) {
-          errorMessage = 'Request timed out. Please refresh the page and try again.';
-        } else if (err.message.includes('unauthorized') || err.message.includes('401')) {
-          errorMessage = 'Session expired. Please log in again.';
-        } else if (err.message.includes('forbidden') || err.message.includes('403')) {
-          errorMessage = 'Access denied. Contact administrator for assistance.';
-        } else if (err.message.includes('not found') || err.message.includes('404')) {
-          errorMessage = 'No bookings found for the selected date.';
-        } else if (err.message.includes('server') || err.message.includes('500')) {
-          errorMessage = 'Server error. Please try again later or contact support.';
-        } else {
-          errorMessage = err.message;
-        }
-      }
-      
-      setError(errorMessage);
-      
-      // Auto-clear error after 10 seconds
-      setTimeout(() => setError(null), 10000);
+      setError(err.message || 'Failed to load bookings');
     } finally {
       setLoading(false);
     }
@@ -165,10 +140,9 @@ function BookingsContent() {
       <div className="flex flex-col items-center justify-center py-20">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-md text-center">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-red-800 font-semibold text-lg mb-2">Error Loading Bookings</h3>
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => load(routeId || undefined)} 
+          <button
+            onClick={() => load(routeId || undefined)}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
           >
             Retry
@@ -205,7 +179,6 @@ function BookingsContent() {
       {/* Header */}
       <DriverPageHeader
         titleKey="page.bookings.title"
-        subtitleKey="page.bookings.subtitle"
         icon={Calendar}
         iconColor="text-indigo-600"
         iconBgColor="bg-indigo-50"

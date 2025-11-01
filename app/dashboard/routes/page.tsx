@@ -24,6 +24,7 @@ import { RouteAccessControl } from '@/components/account-access-control';
 import { Card, Button, Badge, Spinner, Alert, Avatar } from '@/components/modern-ui-components';
 import toast from 'react-hot-toast';
 import { RouteLoading } from '@/components/loading-screen';
+import PassengerPageHeader from '@/components/passenger-page-header';
 
 interface RouteInfo {
   id: string;
@@ -148,19 +149,12 @@ export default function RoutesPage() {
     return (
       <>
         <div className="space-y-6 py-4 sm:py-6">
-          <div className="flex items-center justify-between">
-            <div>
-            <h1 className="text-heading-1 mb-2">My Transport Route</h1>
-            <p className="text-body">Your allocated transport route and boarding information</p>
-          </div>
-          <Button
-            onClick={handleRefresh}
-            loading={isLoading}
-            icon={RefreshCw}
-          >
-            Refresh
-          </Button>
-        </div>
+          <PassengerPageHeader
+            titleKey="passenger.routes.title"
+            icon={Bus}
+            iconColor="text-green-600"
+            iconBgColor="bg-green-50"
+          />
 
         <Alert variant="warning" title="No Route Allocation">
           {error || 'You have not been allocated a transport route yet. Please contact the administration to request route allocation.'}
@@ -200,26 +194,12 @@ export default function RoutesPage() {
         nextDueAmount={nextDueAmount ?? undefined}
       >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
-        >
-        <div className="flex-1">
-          <h1 className="text-heading-1 mb-2">My Transport Route</h1>
-          <p className="text-body">Your allocated transport route and boarding information</p>
-        </div>
-        <div>
-          <Button
-            onClick={handleRefresh}
-            loading={isLoading}
-            icon={RefreshCw}
-            variant="secondary"
-          >
-            Refresh
-          </Button>
-        </div>
-      </motion.div>
+        <PassengerPageHeader
+          titleKey="passenger.routes.title"
+          icon={Bus}
+          iconColor="text-green-600"
+          iconBgColor="bg-green-50"
+        />
 
       {/* Enhanced Route Status Banner */}
       <motion.div

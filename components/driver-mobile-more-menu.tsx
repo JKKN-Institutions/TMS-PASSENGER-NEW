@@ -72,10 +72,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">{t('more_menu.driver_menu')}</h3>
-                <p className="text-sm text-gray-600">{t('more_menu.quick_navigation')}</p>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-900">{t('more_menu.driver_menu')}</h3>
               <button onClick={onClose} className="p-2 rounded-xl text-gray-500 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>

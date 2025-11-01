@@ -29,6 +29,7 @@ import { formatDate } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { EnhancedInput, validators } from '@/components/enhanced-form-components';
 import { ProfileLoading } from '@/components/loading-screen';
+import PassengerPageHeader from '@/components/passenger-page-header';
 
 // Stable input component to prevent focus loss
 const StableInput = React.memo(({ 
@@ -481,12 +482,16 @@ export default function ProfilePage() {
   return (
     <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100 space-y-4 lg:space-y-0">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">My Profile</h1>
-          <p className="text-gray-700 font-medium mt-1">Manage your personal information and preferences</p>
-        </div>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+      <PassengerPageHeader
+        titleKey="passenger.profile.title"
+        icon={User}
+        iconColor="text-purple-600"
+        iconBgColor="bg-purple-50"
+      />
+
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
           {isEditing ? (
             <>
               <button

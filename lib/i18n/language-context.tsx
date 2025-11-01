@@ -1579,6 +1579,36 @@ const translations: Record<string, Record<Language, string>> = {
   'more_menu.logout_description': {
     en: 'Sign out from your account',
     ta: 'உங்கள் கணக்கிலிருந்து வெளியேறு'
+  },
+
+  // Passenger Page Headers
+  'passenger.routes.title': {
+    en: 'My Transport Route',
+    ta: 'எனது போக்குவரத்து பாதை'
+  },
+  'passenger.schedules.title': {
+    en: 'My Transport Schedule',
+    ta: 'எனது போக்குவரத்து அட்டவணை'
+  },
+  'passenger.profile.title': {
+    en: 'My Profile',
+    ta: 'எனது சுயவிவரம்'
+  },
+  'passenger.payments.title': {
+    en: 'Payments',
+    ta: 'கட்டணங்கள்'
+  },
+  'passenger.grievances.title': {
+    en: 'Grievances',
+    ta: 'குறைகள்'
+  },
+  'passenger.notifications.title': {
+    en: 'Notifications',
+    ta: 'அறிவிப்புகள்'
+  },
+  'passenger.settings.title': {
+    en: 'Settings',
+    ta: 'அமைப்புகள்'
   }
 };
 

@@ -20,9 +20,9 @@ import {
 import { studentHelpers } from '@/lib/supabase';
 import { sessionManager } from '@/lib/session';
 import { ScheduleAccessControl } from '@/components/account-access-control';
-import { 
-  formatDateForDatabase, 
-  compareDateWithScheduleDate, 
+import {
+  formatDateForDatabase,
+  compareDateWithScheduleDate,
   getCurrentDateString,
   formatDateForDisplay,
   createLocalDate,
@@ -31,6 +31,7 @@ import {
 } from '@/lib/date-utils';
 import toast from 'react-hot-toast';
 import { ScheduleLoading } from '@/components/loading-screen';
+import PassengerPageHeader from '@/components/passenger-page-header';
 
 interface StudentAllocation {
   id: string;
@@ -1663,27 +1664,17 @@ export default function SchedulesPage() {
   return (
     <>
     <div className="py-4 sm:py-6 space-y-6">
-      {/* Enhanced Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-green-200">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
-            <Calendar className="w-7 h-7 text-white drop-shadow-sm" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 drop-shadow-sm">My Transport Schedule</h1>
-            <p className="text-green-700 font-medium">Book your daily transport trips</p>
-          </div>
-        </div>
-        <div className="mt-4 lg:mt-0 flex items-center space-x-3">
-          <div className="text-sm text-gray-500">
-            Welcome, <span className="font-medium text-gray-900">{student?.student_name}</span>
-          </div>
-          {lastVerificationTime && (
-            <div className="text-xs text-gray-400">
-              Last refresh: {lastVerificationTime.toLocaleTimeString()}
-            </div>
-          )}
-          <button
+      {/* Header */}
+      <PassengerPageHeader
+        titleKey="passenger.schedules.title"
+        icon={Calendar}
+        iconColor="text-indigo-600"
+        iconBgColor="bg-indigo-50"
+      />
+
+      {/* Refresh Button */}
+      <div className="flex justify-end">
+        <button
             onClick={async () => {
               // Show loading state
               const loadingToast = toast.loading('Refreshing schedules...');
