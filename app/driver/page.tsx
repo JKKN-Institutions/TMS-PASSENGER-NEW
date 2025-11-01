@@ -150,8 +150,8 @@ export default function DriverHomePage() {
 
   // Helper function to get localized stop name
   const getStopName = (stop: any) => {
-    if (language === 'ta' && stop.stop_name_ta) {
-      return stop.stop_name_ta;
+    if (language === 'ta' && stop.tamil_name) {
+      return stop.tamil_name;
     }
     return stop.stop_name;
   };

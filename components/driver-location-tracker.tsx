@@ -366,19 +366,19 @@ const DriverLocationTracker: React.FC<DriverLocationTrackerProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <Navigation className="w-5 h-5 text-blue-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Driver Location Tracker</h3>
+    <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 md:p-6">
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <Navigation className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">Driver Location Tracker</h3>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {isOnline ? (
             <Wifi className="w-4 h-4 text-green-500" />
           ) : (
             <WifiOff className="w-4 h-4 text-red-500" />
           )}
-          <span className={`text-sm ${isOnline ? 'text-green-600' : 'text-red-600'}`}>
+          <span className={`text-xs sm:text-sm whitespace-nowrap ${isOnline ? 'text-green-600' : 'text-red-600'}`}>
             {isOnline ? 'Online' : 'Offline'}
           </span>
         </div>
@@ -386,17 +386,17 @@ const DriverLocationTracker: React.FC<DriverLocationTrackerProps> = ({
 
       {/* Status Indicator */}
       <div className="mb-4">
-        <div className={`flex items-center space-x-2 p-3 rounded-lg ${
+        <div className={`flex items-center gap-2 p-2.5 sm:p-3 rounded-lg ${
           isTracking ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'
         }`}>
-          <div className={`w-3 h-3 rounded-full ${isTracking ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
-          <span className={`font-medium ${isTracking ? 'text-green-800' : 'text-gray-600'}`}>
+          <div className={`w-3 h-3 rounded-full flex-shrink-0 ${isTracking ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+          <span className={`font-medium text-sm sm:text-base truncate ${isTracking ? 'text-green-800' : 'text-gray-600'}`}>
             {isTracking ? 'Location Tracking Active' : 'Location Tracking Inactive'}
           </span>
           {isRetrying && (
-            <div className="flex items-center space-x-1 text-yellow-600">
+            <div className="flex items-center gap-1 text-yellow-600 flex-shrink-0">
               <RefreshCw className="w-4 h-4 animate-spin" />
-              <span className="text-sm">Retrying...</span>
+              <span className="text-sm hidden sm:inline">Retrying...</span>
             </div>
           )}
         </div>
@@ -404,27 +404,27 @@ const DriverLocationTracker: React.FC<DriverLocationTrackerProps> = ({
 
       {/* Current Location Display */}
       {currentLocation && (
-        <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-gray-900">Current Location</h4>
-            <MapPin className="w-4 h-4 text-blue-600" />
+        <div className="mb-4 p-3 sm:p-4 bg-blue-50 rounded-lg">
+          <div className="flex items-center justify-between mb-2 gap-2">
+            <h4 className="font-medium text-sm sm:text-base text-gray-900 truncate">Current Location</h4>
+            <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0" />
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
+            <div className="flex justify-between sm:block">
               <span className="text-gray-600">Latitude:</span>
-              <span className="ml-2 font-mono">{currentLocation.latitude.toFixed(6)}</span>
+              <span className="ml-2 font-mono break-all">{currentLocation.latitude.toFixed(6)}</span>
             </div>
-            <div>
+            <div className="flex justify-between sm:block">
               <span className="text-gray-600">Longitude:</span>
-              <span className="ml-2 font-mono">{currentLocation.longitude.toFixed(6)}</span>
+              <span className="ml-2 font-mono break-all">{currentLocation.longitude.toFixed(6)}</span>
             </div>
-            <div>
+            <div className="flex justify-between sm:block">
               <span className="text-gray-600">Accuracy:</span>
               <span className={`ml-2 font-mono ${getAccuracyColor(currentLocation.accuracy)}`}>
-                {currentLocation.accuracy.toFixed(1)}m
+                ±{currentLocation.accuracy.toFixed(1)}m
               </span>
             </div>
-            <div>
+            <div className="flex justify-between sm:block">
               <span className="text-gray-600">Updates:</span>
               <span className="ml-2 font-mono">{updateCount}</span>
             </div>
@@ -434,24 +434,24 @@ const DriverLocationTracker: React.FC<DriverLocationTrackerProps> = ({
 
       {/* Last Update Time */}
       {lastUpdateTime && (
-        <div className="mb-4 flex items-center space-x-2 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          <span>Last update: {formatTime(lastUpdateTime)}</span>
+        <div className="mb-4 flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+          <Clock className="w-4 h-4 flex-shrink-0" />
+          <span className="break-words">Last update: {formatTime(lastUpdateTime)}</span>
         </div>
       )}
 
       {/* Error Display */}
       {locationError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 text-red-500" />
-            <span className="text-red-700 text-sm">{locationError}</span>
+        <div className="mb-4 p-2.5 sm:p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+            <span className="text-red-700 text-xs sm:text-sm break-words">{locationError}</span>
           </div>
         </div>
       )}
 
       {/* Instructions */}
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-gray-500 break-words">
         <p>Location tracking helps passengers and administrators monitor your route progress in real-time.</p>
         <p className="mt-1">Updates are sent every {updateInterval / 1000} seconds when tracking is active.</p>
         {isRetrying && (

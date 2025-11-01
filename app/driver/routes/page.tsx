@@ -11,10 +11,18 @@ import Link from 'next/link';
 export default function DriverRoutesPage() {
   const router = useRouter();
   const { user, isAuthenticated, userType, isLoading: authLoading } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [routes, setRoutes] = useState<any[]>([]);
+
+  // Helper function to get localized stop name
+  const getStopName = (stop: any) => {
+    if (language === 'ta' && stop.tamil_name) {
+      return stop.tamil_name;
+    }
+    return stop.stop_name;
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -264,7 +272,7 @@ export default function DriverRoutesPage() {
                                 <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium text-blue-600 flex-shrink-0">
                                   {stop.sequence_order}
                                 </div>
-                                <span className="flex-1 font-medium min-w-0 truncate">{stop.stop_name}</span>
+                                <span className="flex-1 font-medium min-w-0 truncate">{getStopName(stop)}</span>
                                 <span className="text-gray-500 text-xs bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded whitespace-nowrap flex-shrink-0">
                                   {stop.stop_time}
                                 </span>

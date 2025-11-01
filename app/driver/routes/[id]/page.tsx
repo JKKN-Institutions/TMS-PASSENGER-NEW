@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/auth-context';
+import { useLanguage } from '@/lib/i18n/language-context';
 import { useRouter } from 'next/navigation';
 import { MapPin, Clock, Users, Car, ArrowRight, Navigation, Calendar } from 'lucide-react';
 import Link from 'next/link';
@@ -9,9 +10,18 @@ import Link from 'next/link';
 interface RouteStop {
   id: string;
   stop_name: string;
+  tamil_name?: string;
   stop_time: string;
   sequence_order: number;
   is_major_stop: boolean;
+}
+
+// Helper function to get localized stop name
+function getLocalizedStopName(stop: RouteStop, language: 'en' | 'ta'): string {
+  if (language === 'ta' && stop.tamil_name) {
+    return stop.tamil_name;
+  }
+  return stop.stop_name;
 }
 
 interface Route {
@@ -35,6 +45,7 @@ interface Route {
 
 export default function RouteDetailsPage({ params }: { params: { id: string } }) {
   const { user, isAuthenticated, userType, isLoading } = useAuth();
+  const { language } = useLanguage();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -222,7 +233,7 @@ export default function RouteDetailsPage({ params }: { params: { id: string } })
                   <div className="flex items-center justify-between">
                     <div>
                       <p className={`font-medium ${stop.is_major_stop ? 'text-blue-900' : 'text-gray-900'}`}>
-                        {stop.stop_name}
+                        {getLocalizedStopName(stop, language)}
                       </p>
                       {stop.is_major_stop && (
                         <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full mt-1">

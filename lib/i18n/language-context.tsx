@@ -112,6 +112,18 @@ const translations: Record<string, Record<Language, string>> = {
     en: 'Close',
     ta: 'மூடு'
   },
+  'common.search': {
+    en: 'Search',
+    ta: 'தேடு'
+  },
+  'common.all_routes': {
+    en: 'All Routes',
+    ta: 'அனைத்து பாதைகள்'
+  },
+  'common.showing': {
+    en: 'Showing',
+    ta: 'காண்பிக்கிறது'
+  },
 
   // Navigation
   'nav.dashboard': {
@@ -125,6 +137,10 @@ const translations: Record<string, Record<Language, string>> = {
   'nav.routes': {
     en: 'Routes',
     ta: 'பாதைகள்'
+  },
+  'nav.passengers': {
+    en: 'Passengers',
+    ta: 'பயணிகள்'
   },
   'nav.location': {
     en: 'Location',
@@ -749,6 +765,64 @@ const translations: Record<string, Record<Language, string>> = {
   'driver.stops_count': {
     en: 'Stops',
     ta: 'நிறுத்தங்கள்'
+  },
+
+  // Driver Passengers Module
+  'driver.passengers.total': {
+    en: 'Total Passengers',
+    ta: 'மொத்த பயணிகள்'
+  },
+  'driver.passengers.active': {
+    en: 'Active Passengers',
+    ta: 'செயலில் உள்ள பயணிகள்'
+  },
+  'driver.passengers.total_bookings': {
+    en: 'Total Bookings',
+    ta: 'மொத்த முன்பதிவுகள்'
+  },
+  'driver.passengers.passengers': {
+    en: 'passengers',
+    ta: 'பயணிகள்'
+  },
+  'driver.passengers.routes': {
+    en: 'Routes',
+    ta: 'பாதைகள்'
+  },
+  'driver.passengers.bookings': {
+    en: 'Bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'driver.passengers.stops': {
+    en: 'Stops',
+    ta: 'நிறுத்தங்கள்'
+  },
+  'driver.passengers.contact_info': {
+    en: 'Contact Information',
+    ta: 'தொடர்பு தகவல்'
+  },
+  'driver.passengers.assigned_routes': {
+    en: 'Assigned Routes',
+    ta: 'ஒதுக்கப்பட்ட பாதைகள்'
+  },
+  'driver.passengers.boarding_stops': {
+    en: 'Boarding Stops',
+    ta: 'ஏறும் நிறுத்தங்கள்'
+  },
+  'driver.passengers.no_results': {
+    en: 'No Results Found',
+    ta: 'முடிவுகள் இல்லை'
+  },
+  'driver.passengers.no_passengers': {
+    en: 'No Passengers',
+    ta: 'பயணிகள் இல்லை'
+  },
+  'driver.passengers.no_passengers_message': {
+    en: 'No passengers found for your assigned routes.',
+    ta: 'உங்கள் ஒதுக்கப்பட்ட பாதைகளுக்கு பயணிகள் இல்லை.'
+  },
+  'driver.passengers.try_different_filter': {
+    en: 'Try adjusting your search or filter criteria.',
+    ta: 'உங்கள் தேடல் அல்லது வடிகட்டி அளவுகோல்களை மாற்றி முயற்சிக்கவும்.'
   },
 
   // Bookings Module

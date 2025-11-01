@@ -51,6 +51,7 @@ export async function GET(
         route_stops (
           id,
           stop_name,
+          tamil_name,
           stop_time,
           sequence_order,
           is_major_stop,

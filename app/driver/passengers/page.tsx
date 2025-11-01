@@ -148,13 +148,13 @@ export default function DriverPassengersPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <Users className="w-8 h-8 text-green-600" />
-            {t('nav.passengers')}
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2 break-words">
+            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 flex-shrink-0" />
+            <span className="truncate">{t('nav.passengers')}</span>
           </h1>
         </div>
       </div>
@@ -170,47 +170,47 @@ export default function DriverPassengersPage() {
       )}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">{t('driver.passengers.total')}</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total || 0}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6 border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">{t('driver.passengers.total')}</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.total || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <Users className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">{t('driver.passengers.active')}</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{stats.active || 0}</p>
-            </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">{t('driver.passengers.total_bookings')}</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total_bookings || 0}</p>
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6 border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">{t('driver.passengers.active')}</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.active || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-purple-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6 border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">{t('driver.passengers.total_bookings')}</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.total_bookings || 0}</p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 md:p-6 border border-gray-200">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           {/* Search */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -264,67 +264,67 @@ export default function DriverPassengersPage() {
         <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
           <div className="divide-y divide-gray-200">
             {filteredPassengers.map((passenger) => (
-              <div key={passenger.student_id} className="p-6 hover:bg-gray-50 transition-colors">
+              <div key={passenger.student_id} className="p-4 sm:p-5 md:p-6 hover:bg-gray-50 transition-colors">
                 <div
-                  className="flex items-start justify-between cursor-pointer"
+                  className="flex items-start justify-between cursor-pointer gap-3"
                   onClick={() => togglePassengerDetails(passenger.student_id)}
                 >
-                  <div className="flex items-start gap-4 flex-1">
+                  <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                     {/* Profile Image */}
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                       {passenger.profile_image ? (
                         <img
                           src={passenger.profile_image}
                           alt={passenger.student_name}
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
                         />
                       ) : (
-                        <User className="w-6 h-6 text-green-600" />
+                        <User className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                       )}
                     </div>
 
                     {/* Passenger Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-semibold text-gray-900 truncate">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                           {passenger.student_name}
                         </h3>
-                        <BadgeCheck className="w-5 h-5 text-green-600 flex-shrink-0" />
+                        <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
                       </div>
 
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                      <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Hash className="w-4 h-4" />
-                          <span>{passenger.roll_number}</span>
+                          <Hash className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">{passenger.roll_number}</span>
                         </div>
                         {passenger.department && (
                           <div className="flex items-center gap-1">
-                            <Building2 className="w-4 h-4" />
-                            <span>{passenger.department}</span>
+                            <Building2 className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{passenger.department}</span>
                           </div>
                         )}
                         {passenger.year && (
                           <div className="flex items-center gap-1">
-                            <GraduationCap className="w-4 h-4" />
-                            <span>Year {passenger.year}</span>
+                            <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">Year {passenger.year}</span>
                           </div>
                         )}
                       </div>
 
                       {/* Quick Stats */}
-                      <div className="flex flex-wrap gap-3 mt-3">
-                        <div className="flex items-center gap-1 text-sm bg-green-50 text-green-700 px-2 py-1 rounded">
-                          <RouteIcon className="w-4 h-4" />
-                          <span>{passenger.route_count} {t('driver.passengers.routes')}</span>
+                      <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
+                        <div className="flex items-center gap-1 text-xs sm:text-sm bg-green-50 text-green-700 px-2 py-1 rounded">
+                          <RouteIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">{passenger.route_count} {t('driver.passengers.routes')}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                          <Calendar className="w-4 h-4" />
-                          <span>{passenger.total_bookings} {t('driver.passengers.bookings')}</span>
+                        <div className="flex items-center gap-1 text-xs sm:text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">{passenger.total_bookings} {t('driver.passengers.bookings')}</span>
                         </div>
                         {passenger.boarding_stops.length > 0 && (
-                          <div className="flex items-center gap-1 text-sm bg-purple-50 text-purple-700 px-2 py-1 rounded">
-                            <MapPin className="w-4 h-4" />
-                            <span>{passenger.boarding_stops.length} {t('driver.passengers.stops')}</span>
+                          <div className="flex items-center gap-1 text-xs sm:text-sm bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{passenger.boarding_stops.length} {t('driver.passengers.stops')}</span>
                           </div>
                         )}
                       </div>
@@ -332,7 +332,7 @@ export default function DriverPassengersPage() {
                   </div>
 
                   {/* Expand Icon */}
-                  <div className="ml-4">
+                  <div className="flex-shrink-0">
                     <svg
                       className={`w-5 h-5 text-gray-400 transition-transform ${
                         expandedPassenger === passenger.student_id ? 'rotate-180' : ''
