@@ -156,9 +156,6 @@ export default function DriverPassengersPage() {
             <Users className="w-8 h-8 text-green-600" />
             {t('nav.passengers')}
           </h1>
-          <p className="text-gray-600 mt-1">
-            {t('driver.passengers.subtitle')}
-          </p>
         </div>
       </div>
 

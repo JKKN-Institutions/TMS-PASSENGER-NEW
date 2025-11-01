@@ -146,10 +146,7 @@ const DriverLiveTrackingPage = () => {
       <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 break-words">{t('tracking.live_location_tracking_header')}</h1>
-            <p className="text-green-100 text-sm sm:text-base md:text-lg line-clamp-2">
-              {t('tracking.share_realtime_description')}
-            </p>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words">{t('tracking.live_location_tracking_header')}</h1>
           </div>
           <div className="hidden md:block flex-shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -218,8 +215,7 @@ const DriverLiveTrackingPage = () => {
       <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2 break-words">{t('tracking.controls')}</h2>
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{t('tracking.start_stop')}</p>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.controls')}</h2>
           </div>
           <button
             onClick={handleTrackingToggle}
@@ -326,7 +322,6 @@ const DriverLiveTrackingPage = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 sm:px-5 md:px-6 py-3 sm:py-4 border-b border-gray-200">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.location_tracker_header')}</h2>
-          <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{t('tracking.realtime_gps_system')}</p>
         </div>
         <div className="p-4 sm:p-5 md:p-6">
           <DriverLocationTracker
@@ -335,25 +330,6 @@ const DriverLiveTrackingPage = () => {
             isEnabled={isTracking}
             onLocationUpdate={handleLocationUpdate}
           />
-        </div>
-      </div>
-
-      {/* Instructions */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-5 md:p-6 border border-blue-200">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5 sm:mt-1" />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-blue-900 text-base sm:text-lg mb-2 break-words">{t('tracking.how_it_works')}</h3>
-            <p className="text-sm sm:text-base text-blue-800 mb-3">
-              {t('tracking.enable_description')}
-            </p>
-            <ul className="text-xs sm:text-sm text-blue-700 space-y-1">
-              <li className="break-words">• {t('tracking.click_start')}</li>
-              <li className="break-words">• {t('tracking.gps_update')}</li>
-              <li className="break-words">• {t('tracking.passengers_see')}</li>
-              <li className="break-words">• {t('tracking.admin_monitor')}</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
