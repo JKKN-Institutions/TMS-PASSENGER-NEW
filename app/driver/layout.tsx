@@ -23,6 +23,7 @@ import DriverRouteGuard from '@/components/driver-route-guard';
 import { LanguageProvider, useLanguage } from '@/lib/i18n/language-context';
 import LanguageSwitcher from '@/components/language-switcher';
 import DriverMobileBottomNavbar from '@/components/driver-mobile-bottom-navbar';
+import DriverLocationHeader from '@/components/driver-location-header';
 
 // Inner layout component that uses language context
 function DriverLayoutInner({
@@ -195,10 +196,16 @@ function DriverLayoutInner({
                 <Menu className="w-6 h-6" />
               </button>
 
-              <div className="flex items-center space-x-4 ml-auto">
-                <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
-                  <span>{t('dashboard.welcome', { name: user?.email || 'Driver' })}</span>
+              <div className="flex items-center gap-3 sm:gap-4 ml-auto relative">
+                {/* Location Sharing Controls */}
+                <DriverLocationHeader />
+
+                {/* Welcome Message (Desktop Only) */}
+                <div className="hidden md:flex items-center text-sm text-gray-500">
+                  <span className="truncate max-w-[200px]">{t('dashboard.welcome', { name: user?.email?.split('@')[0] || 'Driver' })}</span>
                 </div>
+
+                {/* Language Switcher */}
                 <LanguageSwitcher />
               </div>
             </div>

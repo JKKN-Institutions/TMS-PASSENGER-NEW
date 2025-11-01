@@ -23,6 +23,7 @@ import {
   Building2,
   GraduationCap
 } from 'lucide-react';
+import DriverPageHeader from '@/components/driver-page-header';
 
 interface Passenger {
   student_id: string;
@@ -150,14 +151,13 @@ export default function DriverPassengersPage() {
   return (
     <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 flex-shrink-0" />
-            <span className="truncate">{t('nav.passengers')}</span>
-          </h1>
-        </div>
-      </div>
+      <DriverPageHeader
+        titleKey="page.passengers.title"
+        subtitleKey="page.passengers.subtitle"
+        icon={Users}
+        iconColor="text-purple-600"
+        iconBgColor="bg-purple-50"
+      />
 
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
@@ -356,17 +356,17 @@ export default function DriverPassengersPage() {
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {passenger.email && (
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Mail className="w-4 h-4 text-gray-400" />
-                            <a href={`mailto:${passenger.email}`} className="hover:text-green-600 truncate">
+                          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-0">
+                            <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <a href={`mailto:${passenger.email}`} className="hover:text-green-600 truncate min-w-0">
                               {passenger.email}
                             </a>
                           </div>
                         )}
                         {passenger.phone && (
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Phone className="w-4 h-4 text-gray-400" />
-                            <a href={`tel:${passenger.phone}`} className="hover:text-green-600">
+                          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-0">
+                            <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <a href={`tel:${passenger.phone}`} className="hover:text-green-600 truncate">
                               {passenger.phone}
                             </a>
                           </div>
@@ -386,11 +386,11 @@ export default function DriverPassengersPage() {
                             className="bg-gray-50 rounded-lg p-3 flex items-start gap-3"
                           >
                             <RouteIcon className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 break-words">
                                 Route {route.route_number}: {route.route_name}
                               </p>
-                              <p className="text-xs text-gray-600 mt-1">
+                              <p className="text-xs text-gray-600 mt-1 break-words">
                                 {route.start_location} → {route.end_location}
                               </p>
                             </div>
@@ -409,10 +409,10 @@ export default function DriverPassengersPage() {
                           {passenger.boarding_stops.map((stop, index) => (
                             <div
                               key={index}
-                              className="bg-green-50 text-green-700 text-sm px-3 py-1 rounded-full flex items-center gap-1"
+                              className="bg-green-50 text-green-700 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 max-w-full"
                             >
-                              <MapPin className="w-3 h-3" />
-                              <span>{stop}</span>
+                              <MapPin className="w-3 h-3 flex-shrink-0" />
+                              <span className="break-all">{stop}</span>
                             </div>
                           ))}
                         </div>

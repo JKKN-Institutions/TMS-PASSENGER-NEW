@@ -825,6 +825,126 @@ const translations: Record<string, Record<Language, string>> = {
     ta: 'உங்கள் தேடல் அல்லது வடிகட்டி அளவுகோல்களை மாற்றி முயற்சிக்கவும்.'
   },
 
+  // Page Headers & Descriptions
+  'page.dashboard.title': {
+    en: 'Driver Dashboard',
+    ta: 'ஓட்டுநர் முகப்பு'
+  },
+  'page.dashboard.subtitle': {
+    en: 'Overview of your routes and activities',
+    ta: 'உங்கள் பாதைகள் மற்றும் நடவடிக்கைகளின் கண்ணோட்டம்'
+  },
+  'page.routes.title': {
+    en: 'My Routes',
+    ta: 'எனது பாதைகள்'
+  },
+  'page.routes.subtitle': {
+    en: 'Manage and view your assigned routes',
+    ta: 'உங்கள் ஒதுக்கப்பட்ட பாதைகளை நிர்வகிக்கவும் பார்க்கவும்'
+  },
+  'page.route_details.title': {
+    en: 'Route Details',
+    ta: 'பாதை விவரங்கள்'
+  },
+  'page.route_details.subtitle': {
+    en: 'Complete information about this route',
+    ta: 'இந்த பாதை பற்றிய முழு தகவல்'
+  },
+  'page.passengers.title': {
+    en: 'Passengers',
+    ta: 'பயணிகள்'
+  },
+  'page.passengers.subtitle': {
+    en: 'View and manage passengers on your routes',
+    ta: 'உங்கள் பாதைகளில் உள்ள பயணிகளை பார்க்கவும் நிர்வகிக்கவும்'
+  },
+  'page.bookings.title': {
+    en: 'Bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'page.bookings.subtitle': {
+    en: 'Manage passenger bookings and reservations',
+    ta: 'பயணிகள் முன்பதிவுகள் மற்றும் இடஒதுக்கீடுகளை நிர்வகிக்கவும்'
+  },
+  'page.live_tracking.title': {
+    en: 'Live Tracking',
+    ta: 'நேரடி கண்காணிப்பு'
+  },
+  'page.live_tracking.subtitle': {
+    en: 'Track your current location and route progress',
+    ta: 'உங்கள் தற்போதைய இடம் மற்றும் பாதை முன்னேற்றத்தை கண்காணிக்கவும்'
+  },
+  'page.profile.title': {
+    en: 'My Profile',
+    ta: 'எனது சுயவிவரம்'
+  },
+  'page.profile.subtitle': {
+    en: 'View and update your personal information',
+    ta: 'உங்கள் தனிப்பட்ட தகவலை பார்க்கவும் புதுப்பிக்கவும்'
+  },
+  'page.location.title': {
+    en: 'Location Sharing',
+    ta: 'இடம் பகிர்வு'
+  },
+  'page.location.subtitle': {
+    en: 'Manage your location sharing settings',
+    ta: 'உங்கள் இட பகிர்வு அமைப்புகளை நிர்வகிக்கவும்'
+  },
+
+  // Location Sharing
+  'location.sharing': {
+    en: 'Sharing',
+    ta: 'பகிர்கிறது'
+  },
+  'location.not_sharing': {
+    en: 'Not Sharing',
+    ta: 'பகிரவில்லை'
+  },
+  'location.error': {
+    en: 'Error',
+    ta: 'பிழை'
+  },
+  'location.start': {
+    en: 'Start',
+    ta: 'தொடங்கு'
+  },
+  'location.stop': {
+    en: 'Stop',
+    ta: 'நிறுத்து'
+  },
+  'location.error_title': {
+    en: 'Location Sharing Error',
+    ta: 'இடம் பகிர்வு பிழை'
+  },
+  'location.error_offline': {
+    en: 'You are offline. Please check your internet connection.',
+    ta: 'நீங்கள் ஆஃப்லைனில் உள்ளீர்கள். உங்கள் இணைய இணைப்பை சரிபார்க்கவும்.'
+  },
+  'location.error_not_supported': {
+    en: 'Location services are not supported by your device.',
+    ta: 'இருப்பிட சேவைகள் உங்கள் சாதனத்தில் ஆதரிக்கப்படவில்லை.'
+  },
+  'location.error_permission_denied': {
+    en: 'Location permission denied. Please enable location access in your browser settings.',
+    ta: 'இருப்பிட அனுமதி மறுக்கப்பட்டது. உங்கள் உலாவி அமைப்புகளில் இருப்பிட அணுகலை இயக்கவும்.'
+  },
+  'location.error_permission_help': {
+    en: 'Go to browser settings → Privacy & Security → Location',
+    ta: 'உலாவி அமைப்புகள் → தனியுரிமை மற்றும் பாதுகாப்பு → இருப்பிடம்'
+  },
+  'location.error_position_unavailable': {
+    en: 'Location position unavailable. Please try again.',
+    ta: 'இருப்பிட நிலை கிடைக்கவில்லை. மீண்டும் முயற்சிக்கவும்.'
+  },
+  'location.error_timeout': {
+    en: 'Location request timed out. Please try again.',
+    ta: 'இருப்பிட கோரிக்கை காலாவதியானது. மீண்டும் முயற்சிக்கவும்.'
+  },
+  'location.error_unknown': {
+    en: 'An unknown error occurred. Please try again.',
+    ta: 'அறியப்படாத பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.'
+  },
+
   // Bookings Module
   'bookings.total_bookings': {
     en: 'Total Bookings',

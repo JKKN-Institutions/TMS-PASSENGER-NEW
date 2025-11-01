@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { useLanguage } from '@/lib/i18n/language-context';
 import { driverHelpers } from '@/lib/supabase';
 import { Users, Calendar, Clock, MapPin, AlertCircle, CheckCircle, XCircle, AlertTriangle, TrendingUp, User, Phone, Mail, BadgeCheck, Filter, Route as RouteIcon } from 'lucide-react';
+import DriverPageHeader from '@/components/driver-page-header';
 
 function BookingsContent() {
   const router = useRouter();
@@ -200,39 +201,40 @@ function BookingsContent() {
   };
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">
+      <DriverPageHeader
+        titleKey="page.bookings.title"
+        subtitleKey="page.bookings.subtitle"
+        icon={Calendar}
+        iconColor="text-indigo-600"
+        iconBgColor="bg-indigo-50"
+      />
+
+      {/* Date & Route Info */}
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-200">
+        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 text-sm">
+          <div className="flex items-center gap-2 text-indigo-900 font-semibold break-words">
+            <RouteIcon className="w-4 h-4 flex-shrink-0" />
+            <span className="break-words">
               Passenger Bookings
               {driverRoutes.length > 0 && selectedRouteId && (
-                <span className="ml-3 text-2xl font-normal opacity-90">
-                  {driverRoutes.find(r => r.id === selectedRouteId)?.route_number} - {driverRoutes.find(r => r.id === selectedRouteId)?.route_name}
+                <span className="ml-2 font-normal">
+                  - {driverRoutes.find(r => r.id === selectedRouteId)?.route_number} {driverRoutes.find(r => r.id === selectedRouteId)?.route_name}
                 </span>
               )}
-            </h1>
-            <p className="text-blue-100 text-lg mb-3">
-              Manage and view all passenger bookings for your routes
-            </p>
-            <div className="flex items-center gap-2 text-sm bg-white bg-opacity-20 rounded-lg px-4 py-2 w-fit">
-              <Calendar className="w-4 h-4" />
-              <span>Showing bookings for:</span>
-              <span className="font-semibold">
-                {new Date(date).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                })}
-              </span>
-            </div>
+            </span>
           </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Users className="w-10 h-10" />
-            </div>
+          <div className="flex items-center gap-2 text-indigo-700">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span className="font-medium">
+              {new Date(date).toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              })}
+            </span>
           </div>
         </div>
       </div>

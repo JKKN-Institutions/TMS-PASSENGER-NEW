@@ -157,15 +157,15 @@ export default function DriverHomePage() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="w-full overflow-hidden space-y-4 sm:space-y-6">
       {/* Welcome Header */}
       <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 break-words">
               {t('dashboard.welcome', { name: currentDriver?.email?.split('@')[0] || 'Driver' })}
             </h1>
-            <p className="text-green-100 text-sm sm:text-base md:text-lg">
+            <p className="text-green-100 text-sm sm:text-base md:text-lg break-words">
               {t('driver.journey_start')}
             </p>
           </div>
@@ -326,9 +326,9 @@ export default function DriverHomePage() {
                           : 'bg-gray-50 border-gray-200'
                       }`}>
                         <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <h3 className={`font-bold text-lg ${
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start flex-wrap gap-2 mb-1">
+                              <h3 className={`font-bold text-base sm:text-lg break-words ${
                                 isFirst
                                   ? 'text-green-900'
                                   : isLast
@@ -355,14 +355,14 @@ export default function DriverHomePage() {
                                 </span>
                               )}
                             </div>
-                            
-                            <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
-                              <div className="flex items-center">
-                                <Clock className="w-4 h-4 mr-1" />
+
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-gray-600 mt-2">
+                              <div className="flex items-center flex-shrink-0">
+                                <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
                                 <span className="font-medium">{stop.stop_time}</span>
                               </div>
-                              <div className="flex items-center">
-                                <MapPin className="w-4 h-4 mr-1" />
+                              <div className="flex items-center flex-shrink-0">
+                                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
                                 <span>Stop #{stop.sequence_order}</span>
                               </div>
                             </div>

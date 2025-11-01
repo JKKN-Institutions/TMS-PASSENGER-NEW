@@ -7,6 +7,7 @@ import { driverHelpers } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { MapPin, Clock, Users, Car, Route, AlertCircle, CheckCircle, Navigation } from 'lucide-react';
 import Link from 'next/link';
+import DriverPageHeader from '@/components/driver-page-header';
 
 export default function DriverRoutesPage() {
   const router = useRouter();
@@ -120,23 +121,15 @@ export default function DriverRoutesPage() {
   const inactiveRoutes = routes.filter(route => route.status !== 'active');
 
   return (
-    <div className="space-y-6 md:space-y-8 pb-8">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 md:p-6 lg:p-8 text-white">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">{t('routes.my_routes')}</h1>
-            <p className="text-blue-100 text-sm sm:text-base md:text-lg">
-              {t('routes.manage_description')}
-            </p>
-          </div>
-          <div className="hidden sm:block flex-shrink-0">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Route className="w-8 h-8 md:w-10 md:h-10" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <DriverPageHeader
+        titleKey="page.routes.title"
+        subtitleKey="page.routes.subtitle"
+        icon={Route}
+        iconColor="text-blue-600"
+        iconBgColor="bg-blue-50"
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
