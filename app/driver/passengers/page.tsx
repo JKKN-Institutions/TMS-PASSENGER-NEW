@@ -148,11 +148,11 @@ export default function DriverPassengersPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
+    <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2 break-words">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
             <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 flex-shrink-0" />
             <span className="truncate">{t('nav.passengers')}</span>
           </h1>

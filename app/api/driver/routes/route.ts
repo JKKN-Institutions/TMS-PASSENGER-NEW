@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
             model,
             capacity
           ),
-          route_stops (id, stop_name, stop_time, sequence_order, is_major_stop)
+          route_stops (id, stop_name, tamil_name, stop_time, sequence_order, is_major_stop)
         `)
         .eq('driver_id', driverId)
         .order('route_number');
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
           model,
           capacity
         ),
-        route_stops (id, stop_name, stop_name_ta, stop_time, sequence_order, is_major_stop)
+        route_stops (id, stop_name, tamil_name, stop_time, sequence_order, is_major_stop)
       `)
       .eq('driver_id', effectiveDriverId)
       .order('route_number');

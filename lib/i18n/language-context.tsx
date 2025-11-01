@@ -1444,6 +1444,10 @@ const translations: Record<string, Record<Language, string>> = {
     en: 'Bookings',
     ta: 'முன்பதிவுகள்'
   },
+  'more_menu.passengers': {
+    en: 'Passengers',
+    ta: 'பயணிகள்'
+  },
   'more_menu.profile': {
     en: 'Profile',
     ta: 'சுயவிவரம்'
