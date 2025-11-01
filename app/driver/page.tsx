@@ -133,13 +133,13 @@ export default function DriverHomePage() {
   return (
     <div className="w-full overflow-hidden space-y-4 sm:space-y-6">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white">
+      <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 break-words">
               {t('dashboard.welcome', { name: currentDriver?.email?.split('@')[0] || 'Driver' })}
             </h1>
-            <p className="text-green-100 text-sm sm:text-base md:text-lg break-words">
+            <p className="text-yellow-100 text-sm sm:text-base md:text-lg break-words">
               {t('driver.journey_start')}
             </p>
           </div>
@@ -153,7 +153,7 @@ export default function DriverHomePage() {
 
       {/* Location Sharing Toggle - TOP PRIORITY */}
       <div className="bg-white rounded-xl shadow-lg border-2 border-green-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 px-4 md:px-6 py-4 border-b border-green-200">
+        <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-4 md:px-6 py-4 border-b border-green-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3 min-w-0 flex-1">
               <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
@@ -214,7 +214,7 @@ export default function DriverHomePage() {
       {/* Route Stops - Vertical Stepper Design */}
       {selectedRoute && currentStops.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-4 md:px-6 py-4 border-b border-gray-200">
+          <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-4 md:px-6 py-4 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.route_stops')}</h2>
@@ -223,7 +223,7 @@ export default function DriverHomePage() {
                 </p>
               </div>
               <div className="flex items-center space-x-2 flex-shrink-0">
-                <div className="px-2.5 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
+                <div className="px-2.5 sm:px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
                   {currentStops.length} {t('driver.stops_count')}
                 </div>
               </div>
@@ -238,7 +238,7 @@ export default function DriverHomePage() {
                     const route = routes.find(r => r.id === e.target.value);
                     setSelectedRoute(route || null);
                   }}
-                  className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 >
                   {routes.map((route) => (
                     <option key={route.id} value={route.id}>
@@ -263,7 +263,7 @@ export default function DriverHomePage() {
                     {/* Vertical Line */}
                     {!isLast && (
                       <div className={`absolute left-[19px] top-10 bottom-0 w-1 ${
-                        isMajor ? 'bg-blue-300' : 'bg-gray-300'
+                        isMajor ? 'bg-green-300' : 'bg-gray-300'
                       }`} style={{ height: 'calc(100% + 24px)' }} />
                     )}
                     
@@ -275,7 +275,7 @@ export default function DriverHomePage() {
                           : isLast
                           ? 'bg-red-500 border-red-200 text-white shadow-lg shadow-red-200'
                           : isMajor
-                          ? 'bg-blue-500 border-blue-200 text-white shadow-lg shadow-blue-200'
+                          ? 'bg-green-500 border-green-200 text-white shadow-lg shadow-green-200'
                           : 'bg-white border-gray-300 text-gray-700 shadow'
                       }`}>
                         {isFirst ? (
@@ -296,7 +296,7 @@ export default function DriverHomePage() {
                           : isLast
                           ? 'bg-red-50 border-red-200'
                           : isMajor
-                          ? 'bg-blue-50 border-blue-200'
+                          ? 'bg-green-50 border-green-200'
                           : 'bg-gray-50 border-gray-200'
                       }`}>
                         <div className="flex items-start justify-between">
@@ -308,7 +308,7 @@ export default function DriverHomePage() {
                                   : isLast
                                   ? 'text-red-900'
                                   : isMajor
-                                  ? 'text-blue-900'
+                                  ? 'text-green-900'
                                   : 'text-gray-900'
                               }`}>
                                 {getStopName(stop)}
@@ -324,7 +324,7 @@ export default function DriverHomePage() {
                                 </span>
                               )}
                               {isMajor && !isFirst && !isLast && (
-                                <span className="px-2 py-1 bg-blue-200 text-blue-800 text-xs rounded-full font-semibold">
+                                <span className="px-2 py-1 bg-green-200 text-green-800 text-xs rounded-full font-semibold">
                                   MAJOR STOP
                                 </span>
                               )}
@@ -369,7 +369,7 @@ export default function DriverHomePage() {
             <p className="text-xs font-medium text-gray-600 mb-1">Passengers</p>
             <p className="text-2xl font-bold text-gray-900">{totalPassengers}</p>
             <div className="mt-2">
-              <Users className="w-5 h-5 text-blue-600" />
+              <Users className="w-5 h-5 text-green-600" />
             </div>
           </div>
         </div>
@@ -496,7 +496,7 @@ export default function DriverHomePage() {
                   <div className="flex space-x-3">
                     <Link 
                       href={`/driver/bookings?routeId=${route.id}`}
-                      className="flex-1 text-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      className="flex-1 text-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                     >
                       View Bookings
                     </Link>

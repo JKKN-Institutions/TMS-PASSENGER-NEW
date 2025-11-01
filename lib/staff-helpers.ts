@@ -394,6 +394,20 @@ class StaffHelpers {
     if (!res.ok) throw new Error(json.error || 'Failed to bulk mark attendance');
     return json;
   }
+
+  /**
+   * Get all passengers/students for staff's routes (matching driver pattern)
+   */
+  async getPassengers(params: { staffId?: string; email?: string; routeId?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params.staffId) searchParams.set('staffId', params.staffId);
+    if (params.email) searchParams.set('email', params.email);
+    if (params.routeId) searchParams.set('routeId', params.routeId);
+    const res = await fetch(`/api/staff/passengers?${searchParams.toString()}`);
+    if (!res.ok) throw new Error(await res.text());
+    const json = await res.json();
+    return json;
+  }
 }
 
 // Export singleton instance
