@@ -21,47 +21,47 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'driverId or email is required' }, { status: 400 });
     }
 
-    let effectiveEmail = email;
+    let effectiveDriverId = driverId;
 
-    // If driverId is provided, try to find driver by id first
-    if (driverId) {
+    // If only email is provided, find driver by email
+    if (!effectiveDriverId && email) {
       const { data: driver, error: driverError } = await supabase
         .from('drivers')
-        .select('email')
-        .eq('id', driverId)
+        .select('id')
+        .eq('email', email)
         .single();
 
       if (!driverError && driver) {
-        effectiveEmail = driver.email;
-        console.log('Found driver by ID:', driverId, 'Email:', effectiveEmail);
+        effectiveDriverId = driver.id;
+        console.log('Found driver by email:', email, 'ID:', effectiveDriverId);
       }
     }
 
-    if (!effectiveEmail) {
+    if (!effectiveDriverId) {
       return NextResponse.json({ error: 'Driver not found' }, { status: 404 });
     }
 
-    // Find routes assigned to this driver
-    const { data: assignments, error: assignmentsError } = await supabase
-      .from('driver_assignments')
-      .select('route_id')
-      .eq('driver_email', effectiveEmail.toLowerCase().trim())
-      .eq('is_active', true);
+    // Find routes assigned to this driver using routes.driver_id
+    const { data: driverRoutes, error: routesError } = await supabase
+      .from('routes')
+      .select('id, route_number, route_name')
+      .eq('driver_id', effectiveDriverId)
+      .eq('status', 'active');
 
-    if (assignmentsError) {
-      console.error('❌ Driver route assignments fetch error:', assignmentsError);
-      return NextResponse.json({ error: 'Failed to fetch route assignments' }, { status: 500 });
+    if (routesError) {
+      console.error('❌ Driver routes fetch error:', routesError);
+      return NextResponse.json({ error: 'Failed to fetch routes' }, { status: 500 });
     }
 
-    if (!assignments || assignments.length === 0) {
-      console.log('⚠️ No routes assigned to driver:', effectiveEmail);
-      return NextResponse.json({ success: true, passengers: [], stats: { total: 0, active: 0, inactive: 0 } });
+    if (!driverRoutes || driverRoutes.length === 0) {
+      console.log('⚠️ No routes assigned to driver:', effectiveDriverId);
+      return NextResponse.json({ success: true, passengers: [], stats: { total: 0, active: 0, inactive: 0, total_bookings: 0 } });
     }
 
     // Get route IDs
     const routeIds = routeId
       ? [routeId]
-      : assignments.map(a => a.route_id);
+      : driverRoutes.map(r => r.id);
 
     console.log('📊 Fetching passengers for routes:', routeIds);
 
@@ -80,11 +80,11 @@ export async function GET(request: NextRequest) {
           student_name,
           roll_number,
           email,
-          phone,
-          department,
-          year,
-          section,
-          profile_image
+          mobile,
+          department_name,
+          semester,
+          section_id,
+          student_photo_url
         ),
         routes (
           id,
@@ -118,11 +118,11 @@ export async function GET(request: NextRequest) {
           student_name: booking.students?.student_name,
           roll_number: booking.students?.roll_number,
           email: booking.students?.email,
-          phone: booking.students?.phone,
-          department: booking.students?.department,
-          year: booking.students?.year,
-          section: booking.students?.section,
-          profile_image: booking.students?.profile_image,
+          phone: booking.students?.mobile, // Map mobile to phone for UI compatibility
+          department: booking.students?.department_name,
+          year: booking.students?.semester?.toString() || '',
+          section: booking.students?.section_id || '',
+          profile_image: booking.students?.student_photo_url,
           routes: [],
           boarding_stops: new Set(),
           total_bookings: 0,

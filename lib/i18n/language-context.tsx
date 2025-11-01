@@ -800,6 +800,10 @@ const translations: Record<string, Record<Language, string>> = {
     en: 'Refresh Now',
     ta: 'புதுப்பிக்கவும்'
   },
+  'common.retry': {
+    en: 'Retry',
+    ta: 'மீண்டும் முயற்சிக்கவும்'
+  },
 
   // Profile Page - Additional translations
   'profile.driver_profile': {
