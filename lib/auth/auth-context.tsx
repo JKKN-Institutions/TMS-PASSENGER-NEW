@@ -711,6 +711,67 @@ export function AuthProvider({
         console.warn('Could not reset auto-login state:', error);
       }
 
+      // Comprehensive cleanup of all localStorage and sessionStorage
+      if (typeof window !== 'undefined') {
+        console.log('🧹 Clearing all TMS-related storage data...');
+
+        // Clear all localStorage items
+        const localStorageKeys = Object.keys(localStorage);
+        localStorageKeys.forEach(key => {
+          if (key.startsWith('tms_') ||
+              key.startsWith('tms-') ||
+              key.includes('driver') ||
+              key.includes('passenger') ||
+              key.includes('staff') ||
+              key.includes('auth') ||
+              key.includes('session') ||
+              key.includes('token') ||
+              key.includes('user') ||
+              key.includes('oauth')) {
+            localStorage.removeItem(key);
+            console.log('🗑️ Removed localStorage:', key);
+          }
+        });
+
+        // Clear all sessionStorage items
+        const sessionStorageKeys = Object.keys(sessionStorage);
+        sessionStorageKeys.forEach(key => {
+          if (key.startsWith('tms_') ||
+              key.startsWith('tms-') ||
+              key.includes('driver') ||
+              key.includes('passenger') ||
+              key.includes('staff') ||
+              key.includes('auth') ||
+              key.includes('session') ||
+              key.includes('token') ||
+              key.includes('user') ||
+              key.includes('oauth')) {
+            sessionStorage.removeItem(key);
+            console.log('🗑️ Removed sessionStorage:', key);
+          }
+        });
+
+        // Clear all TMS-related cookies
+        const cookies = document.cookie.split(';');
+        cookies.forEach(cookie => {
+          const cookieName = cookie.split('=')[0].trim();
+          if (cookieName.startsWith('tms_') ||
+              cookieName.startsWith('tms-') ||
+              cookieName.includes('driver') ||
+              cookieName.includes('passenger') ||
+              cookieName.includes('staff') ||
+              cookieName.includes('auth') ||
+              cookieName.includes('session') ||
+              cookieName.includes('token')) {
+            // Delete cookie by setting it to expire in the past
+            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            console.log('🗑️ Removed cookie:', cookieName);
+          }
+        });
+
+        console.log('✅ All TMS-related storage data cleared');
+      }
+
       console.log('✅ Logout completed successfully');
     } catch (error) {
       console.error('❌ Logout error:', error);
