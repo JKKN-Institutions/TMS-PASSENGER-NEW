@@ -11,7 +11,7 @@ import DriverLocationTracker from '@/components/driver-location-tracker';
 
 export default function DriverHomePage() {
   const { user, isAuthenticated, userType, isLoading } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [routesLoading, setRoutesLoading] = useState(true);
@@ -144,14 +144,22 @@ export default function DriverHomePage() {
   const driverId = (user as any)?.driver_id || user?.id;
   
   // Get stops for the selected route, sorted by sequence order
-  const currentStops = selectedRoute?.route_stops 
+  const currentStops = selectedRoute?.route_stops
     ? [...selectedRoute.route_stops].sort((a: any, b: any) => a.sequence_order - b.sequence_order)
     : [];
 
+  // Helper function to get localized stop name
+  const getStopName = (stop: any) => {
+    if (language === 'ta' && stop.stop_name_ta) {
+      return stop.stop_name_ta;
+    }
+    return stop.stop_name;
+  };
+
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 sm:space-y-6">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-4 md:p-6 lg:p-8 text-white">
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2">
@@ -329,7 +337,7 @@ export default function DriverHomePage() {
                                   ? 'text-blue-900'
                                   : 'text-gray-900'
                               }`}>
-                                {stop.stop_name}
+                                {getStopName(stop)}
                               </h3>
                               {isFirst && (
                                 <span className="px-2 py-1 bg-green-200 text-green-800 text-xs rounded-full font-semibold">

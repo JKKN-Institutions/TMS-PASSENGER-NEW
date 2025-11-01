@@ -141,89 +141,89 @@ const DriverLiveTrackingPage = () => {
   }
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{t('tracking.live_location_tracking_header')}</h1>
-            <p className="text-green-100 text-lg">
+      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 break-words">{t('tracking.live_location_tracking_header')}</h1>
+            <p className="text-green-100 text-sm sm:text-base md:text-lg line-clamp-2">
               {t('tracking.share_realtime_description')}
             </p>
           </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Satellite className="w-10 h-10" />
+          <div className="hidden md:block flex-shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Satellite className="w-8 h-8 sm:w-10 sm:h-10" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Tracking Status Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('tracking.tracking_status')}</p>
-              <p className={`text-2xl font-bold ${
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('tracking.tracking_status')}</p>
+              <p className={`text-lg sm:text-xl md:text-2xl font-bold truncate ${
                 isTracking ? 'text-green-600' : 'text-gray-600'
               }`}>
                 {isTracking ? t('tracking.active_status') : t('tracking.inactive_status')}
               </p>
             </div>
-            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
               isTracking ? 'bg-green-100' : 'bg-gray-100'
             }`}>
               {isTracking ? (
-                <Wifi className="w-6 h-6 text-green-600" />
+                <Wifi className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               ) : (
-                <WifiOff className="w-6 h-6 text-gray-600" />
+                <WifiOff className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
               )}
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('tracking.location_status')}</p>
-              <p className={`text-2xl font-bold ${
+        <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('tracking.location_status')}</p>
+              <p className={`text-lg sm:text-xl md:text-2xl font-bold truncate ${
                 currentLocation ? 'text-green-600' : 'text-gray-600'
               }`}>
                 {currentLocation ? t('tracking.available') : t('tracking.not_available')}
               </p>
             </div>
-            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
               currentLocation ? 'bg-green-100' : 'bg-gray-100'
             }`}>
-              <MapPin className="w-6 h-6 text-green-600" />
+              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('tracking.driver')}</p>
-              <p className="text-2xl font-bold text-gray-900">{driverName}</p>
+        <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('tracking.driver')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">{driverName}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Target className="w-6 h-6 text-blue-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Target className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Tracking Controls */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('tracking.controls')}</h2>
-            <p className="text-sm text-gray-600">{t('tracking.start_stop')}</p>
+      <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2 break-words">{t('tracking.controls')}</h2>
+            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{t('tracking.start_stop')}</p>
           </div>
           <button
             onClick={handleTrackingToggle}
-            className={`flex items-center px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               isTracking
                 ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg hover:shadow-xl'
                 : 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
@@ -231,24 +231,24 @@ const DriverLiveTrackingPage = () => {
           >
             {isTracking ? (
               <>
-                <Pause className="w-5 h-5 mr-2" />
-                {t('tracking.pause')}
+                <Pause className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <span>{t('tracking.pause')}</span>
               </>
             ) : (
               <>
-                <Play className="w-5 h-5 mr-2" />
-                {t('tracking.play')}
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <span>{t('tracking.play')}</span>
               </>
             )}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-            <Clock className="w-5 h-5 text-gray-400 mr-3" />
-            <div>
-              <span className="text-sm text-gray-600">{t('tracking.status_label')}</span>
-              <span className={`ml-2 font-medium ${
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+          <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg min-w-0">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <span className="text-xs sm:text-sm text-gray-600 block truncate">{t('tracking.status_label')}</span>
+              <span className={`text-sm sm:text-base font-medium block truncate ${
                 isTracking ? 'text-green-600' : 'text-gray-500'
               }`}>
                 {isTracking ? t('tracking.active') : t('tracking.stopped')}
@@ -256,11 +256,11 @@ const DriverLiveTrackingPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-            <MapPin className="w-5 h-5 text-gray-400 mr-3" />
-            <div>
-              <span className="text-sm text-gray-600">{t('tracking.location_label')}</span>
-              <span className="ml-2 font-medium text-gray-900">
+          <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg min-w-0">
+            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <span className="text-xs sm:text-sm text-gray-600 block truncate">{t('tracking.location_label')}</span>
+              <span className="text-sm sm:text-base font-medium text-gray-900 block truncate">
                 {currentLocation ? t('tracking.gps_available') : t('tracking.gps_not_available')}
               </span>
             </div>
@@ -270,49 +270,49 @@ const DriverLiveTrackingPage = () => {
 
       {/* Current Location Display */}
       {currentLocation && (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center mb-6">
-            <Map className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">{t('tracking.current_location_header')}</h2>
+        <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center mb-4 sm:mb-6 gap-2 sm:gap-3">
+            <Map className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0" />
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.current_location_header')}</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center mb-2">
-                <MapPin className="w-4 h-4 text-blue-600 mr-2" />
-                <span className="text-sm font-medium text-blue-800">{t('tracking.coordinates')}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+            <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+              <div className="flex items-center mb-2 gap-2">
+                <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-blue-800 truncate">{t('tracking.coordinates')}</span>
               </div>
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">{t('tracking.latitude')}</span>
-                  <span className="font-mono text-sm font-medium text-gray-900">
+                <div className="flex justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600 truncate">{t('tracking.latitude')}</span>
+                  <span className="font-mono text-xs sm:text-sm font-medium text-gray-900">
                     {currentLocation.latitude.toFixed(6)}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">{t('tracking.longitude')}</span>
-                  <span className="font-mono text-sm font-medium text-gray-900">
+                <div className="flex justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600 truncate">{t('tracking.longitude')}</span>
+                  <span className="font-mono text-xs sm:text-sm font-medium text-gray-900">
                     {currentLocation.longitude.toFixed(6)}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="flex items-center mb-2">
-                <Activity className="w-4 h-4 text-green-600 mr-2" />
-                <span className="text-sm font-medium text-green-800">{t('tracking.details')}</span>
+            <div className="bg-green-50 p-3 sm:p-4 rounded-lg">
+              <div className="flex items-center mb-2 gap-2">
+                <Activity className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-green-800 truncate">{t('tracking.details')}</span>
               </div>
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">{t('tracking.accuracy')}</span>
-                  <span className="font-medium text-gray-900">
+                <div className="flex justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600 truncate">{t('tracking.accuracy')}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900">
                     ±{currentLocation.accuracy.toFixed(1)}m
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">{t('tracking.updated')}</span>
-                  <span className="font-medium text-gray-900">
+                <div className="flex justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600 truncate">{t('tracking.updated')}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900">
                     {new Date(currentLocation.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
@@ -324,11 +324,11 @@ const DriverLiveTrackingPage = () => {
 
       {/* Location Tracker Component */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">{t('tracking.location_tracker_header')}</h2>
-          <p className="text-sm text-gray-600">{t('tracking.realtime_gps_system')}</p>
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 sm:px-5 md:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.location_tracker_header')}</h2>
+          <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{t('tracking.realtime_gps_system')}</p>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-5 md:p-6">
           <DriverLocationTracker
             driverId={driverId}
             driverName={driverName}
@@ -339,19 +339,19 @@ const DriverLiveTrackingPage = () => {
       </div>
 
       {/* Instructions */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-        <div className="flex items-start">
-          <AlertCircle className="w-6 h-6 text-blue-600 mr-4 mt-1" />
-          <div>
-            <h3 className="font-semibold text-blue-900 text-lg mb-2">{t('tracking.how_it_works')}</h3>
-            <p className="text-blue-800 mb-3">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-5 md:p-6 border border-blue-200">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5 sm:mt-1" />
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-blue-900 text-base sm:text-lg mb-2 break-words">{t('tracking.how_it_works')}</h3>
+            <p className="text-sm sm:text-base text-blue-800 mb-3">
               {t('tracking.enable_description')}
             </p>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• {t('tracking.click_start')}</li>
-              <li>• {t('tracking.gps_update')}</li>
-              <li>• {t('tracking.passengers_see')}</li>
-              <li>• {t('tracking.admin_monitor')}</li>
+            <ul className="text-xs sm:text-sm text-blue-700 space-y-1">
+              <li className="break-words">• {t('tracking.click_start')}</li>
+              <li className="break-words">• {t('tracking.gps_update')}</li>
+              <li className="break-words">• {t('tracking.passengers_see')}</li>
+              <li className="break-words">• {t('tracking.admin_monitor')}</li>
             </ul>
           </div>
         </div>

@@ -176,8 +176,18 @@ function DriverLayoutInner({
         <div className="flex-1 lg:ml-0">
           {/* Top bar */}
           <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200">
-            <div className="flex items-center justify-between h-16 px-6">
-              {/* Hide menu button on mobile since bottom navbar is available */}
+            <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+              {/* Mobile: App Logo & Name */}
+              <div className="flex items-center space-x-2 lg:hidden">
+                <img
+                  src="/app-logo.png"
+                  alt="TMS Logo"
+                  className="w-8 h-8 drop-shadow-md"
+                />
+                <h1 className="text-lg font-bold text-gray-900">TMS</h1>
+              </div>
+
+              {/* Desktop: Menu button (hidden for now) */}
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="hidden lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
@@ -195,7 +205,7 @@ function DriverLayoutInner({
           </div>
 
           {/* Page content - Added bottom padding for mobile navbar */}
-          <main className="min-h-[calc(100vh-4rem)] p-6 pb-24 lg:pb-6">
+          <main className="min-h-[calc(100vh-4rem)] p-4 pb-32 sm:p-6 sm:pb-24 lg:pb-6">
             {children}
           </main>
         </div>

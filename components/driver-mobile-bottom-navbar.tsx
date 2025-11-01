@@ -47,8 +47,8 @@ export default function DriverMobileBottomNavbar() {
 
   return (
     <>
-      {/* Speed-dial FAB for quick actions - Positioned above bug report button */}
-      <div className="fixed bottom-[200px] lg:bottom-[104px] right-5 z-40">
+      {/* Speed-dial FAB for quick actions - Positioned above bottom navbar */}
+      <div className="fixed bottom-[80px] lg:bottom-[104px] right-4 z-40">
         {/* Actions */}
         <div className="flex flex-col items-end space-y-3 mb-3">
           {fabOpen && (
@@ -115,24 +115,24 @@ export default function DriverMobileBottomNavbar() {
               {navItems.map((item) => {
                 if (item.isMore) {
                   return (
-                    <button key={item.nameKey} onClick={() => setIsMoreOpen(true)} className="w-16 flex flex-col items-center justify-center py-1.5 px-1 group">
+                    <button key={item.nameKey} onClick={() => setIsMoreOpen(true)} className="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-1 group">
                       <div className="p-2 rounded-xl group-hover:bg-gray-100">
                         <item.icon className="h-5 w-5 text-gray-600 group-hover:text-green-600" />
                       </div>
-                      <span className="text-[11px] font-medium mt-1 text-gray-600 group-hover:text-green-600">{t(item.nameKey)}</span>
+                      <span className="text-[10px] font-medium mt-0.5 line-clamp-1 text-center w-full text-gray-600 group-hover:text-green-600">{t(item.nameKey)}</span>
                     </button>
                   );
                 }
                 const active = isActive(item.href);
                 return (
-                  <Link key={item.nameKey} href={item.href || '#'} className="w-16 flex flex-col items-center justify-center py-1.5 px-1 group">
+                  <Link key={item.nameKey} href={item.href || '#'} className="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-1 group">
                     <motion.div whileTap={{ scale: 0.95 }} className="relative">
                       {active && <span className="absolute -top-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-green-500" />}
                       <div className={`p-2 rounded-xl ${active ? 'bg-gradient-to-r from-green-100 to-yellow-100' : 'group-hover:bg-gray-100'}`}>
                         <item.icon className={`h-5 w-5 ${active ? 'text-green-700' : 'text-gray-600 group-hover:text-green-600'}`} />
                       </div>
                     </motion.div>
-                    <span className={`text-[11px] font-semibold mt-1 ${active ? 'text-green-800' : 'text-gray-600 group-hover:text-green-600'}`}>{t(item.nameKey)}</span>
+                    <span className={`text-[10px] font-semibold mt-0.5 line-clamp-1 text-center w-full ${active ? 'text-green-800' : 'text-gray-600 group-hover:text-green-600'}`}>{t(item.nameKey)}</span>
                   </Link>
                 );
               })}
