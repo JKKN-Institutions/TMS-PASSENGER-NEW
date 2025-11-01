@@ -30,63 +30,73 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Find booking by booking_reference or qr_code
-    const { data: booking, error: bookingError } = await supabase
-      .from('bookings')
-      .select(`
-        id,
-        student_id,
-        route_id,
-        schedule_id,
-        trip_date,
-        boarding_stop,
-        booking_reference,
-        qr_code,
-        seat_number,
-        status,
-        payment_status,
-        verified_at,
-        verified_by,
-        students (
-          id,
-          student_name,
-          roll_number,
-          email,
-          phone
-        ),
-        routes (
-          id,
-          route_number,
-          route_name,
-          start_location,
-          end_location
-        ),
-        schedules (
-          id,
-          departure_time,
-          arrival_time
-        )
-      `)
-      .or(`booking_reference.eq.${ticketCode},qr_code.eq.${ticketCode}`)
-      .single();
+    // First, validate the ticket using our database function
+    const { data: validationResult, error: validationError } = await supabase.rpc('validate_ticket', {
+      p_qr_code: ticketCode
+    });
 
-    if (bookingError || !booking) {
-      console.error('❌ Booking not found:', bookingError);
+    if (validationError) {
+      console.error('❌ Validation error:', validationError);
       return NextResponse.json(
-        { success: false, error: 'Invalid ticket code. Booking not found.' },
-        { status: 404 }
+        { success: false, error: 'Failed to validate ticket' },
+        { status: 500 }
       );
     }
 
-    // Check if booking is confirmed
-    if (booking.status !== 'confirmed' && booking.status !== 'completed') {
+    const validation = typeof validationResult === 'string' ? JSON.parse(validationResult) : validationResult;
+
+    if (!validation.valid) {
       return NextResponse.json(
-        {
-          success: false,
-          error: `Ticket is ${booking.status}. Only confirmed tickets can be scanned.`
-        },
+        { success: false, error: validation.message || 'Invalid ticket' },
         { status: 400 }
       );
+    }
+
+    const booking = {
+      id: validation.booking.id,
+      student_id: validation.student.id,
+      route_id: validation.route.id,
+      trip_date: validation.booking.trip_date,
+      boarding_stop: validation.booking.boarding_stop,
+      qr_code: ticketCode,
+      seat_number: validation.booking.seat_number,
+      students: validation.student,
+      routes: validation.route
+    };
+
+    // Check if already marked (validation returns this info)
+    if (validation.already_marked) {
+      // Fetch the existing attendance record
+      const { data: existingAttendance } = await supabase
+        .from('attendance')
+        .select(`
+          id,
+          boarding_time,
+          boarding_stop,
+          status,
+          marked_by
+        `)
+        .eq('student_id', booking.student_id)
+        .eq('attendance_date', booking.trip_date)
+        .eq('route_id', booking.route_id)
+        .single();
+
+      return NextResponse.json({
+        success: true,
+        message: 'Ticket already scanned',
+        attendance: {
+          id: existingAttendance?.id,
+          student_name: booking.students?.name,
+          roll_number: booking.students?.roll_number,
+          route_number: booking.routes?.route_number,
+          route_name: booking.routes?.route_name,
+          boarding_stop: existingAttendance?.boarding_stop,
+          scanned_at: existingAttendance?.boarding_time,
+          scanned_by: existingAttendance?.marked_by,
+          status: existingAttendance?.status,
+        },
+        alreadyScanned: true,
+      });
     }
 
     // Check if staff is assigned to this route
@@ -108,74 +118,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if attendance already exists for this booking and date
-    const { data: existingAttendance } = await supabase
-      .from('attendance')
-      .select('*')
-      .eq('booking_id', booking.id)
-      .eq('trip_date', booking.trip_date)
+    // Get staff ID for marking attendance
+    const { data: staffData } = await supabase
+      .from('staff')
+      .select('id')
+      .eq('email', staffEmail.toLowerCase())
       .single();
 
-    if (existingAttendance) {
-      return NextResponse.json({
-        success: true,
-        message: 'Ticket already scanned',
-        attendance: {
-          id: existingAttendance.id,
-          student_name: booking.students?.student_name,
-          roll_number: booking.students?.roll_number,
-          route_number: booking.routes?.route_number,
-          route_name: booking.routes?.route_name,
-          boarding_stop: existingAttendance.boarding_stop,
-          scanned_at: existingAttendance.scanned_at,
-          scanned_by: existingAttendance.scanned_by,
-          status: existingAttendance.status,
-        },
-        alreadyScanned: true,
-      });
-    }
+    // Use the database function to mark attendance
+    const { data: markResult, error: markError } = await supabase.rpc('mark_student_attendance', {
+      p_qr_code: ticketCode,
+      p_staff_id: staffData?.id || null,
+      p_scan_location: scanLocation ? {
+        lat: scanLocation.lat,
+        lng: scanLocation.lng,
+        accuracy: scanLocation.accuracy,
+        timestamp: new Date().toISOString()
+      } : null,
+      p_marker_email: staffEmail || null
+    });
 
-    // Create attendance record
-    const { data: attendanceRecord, error: attendanceError } = await supabase
-      .from('attendance')
-      .insert({
-        booking_id: booking.id,
-        student_id: booking.student_id,
-        route_id: booking.route_id,
-        schedule_id: booking.schedule_id,
-        trip_date: booking.trip_date,
-        boarding_stop: booking.boarding_stop,
-        status: 'present',
-        scanned_by: staffEmail,
-        scan_location: scanLocation || null,
-        qr_code: booking.qr_code,
-        booking_reference: booking.booking_reference,
-      })
-      .select()
-      .single();
-
-    if (attendanceError) {
-      console.error('❌ Error creating attendance record:', attendanceError);
+    if (markError) {
+      console.error('❌ Error marking attendance:', markError);
       return NextResponse.json(
         { success: false, error: 'Failed to record attendance' },
         { status: 500 }
       );
     }
 
-    // Update booking to mark as verified (if not already verified)
-    if (!booking.verified_at) {
-      await supabase
-        .from('bookings')
-        .update({
-          verified_at: new Date().toISOString(),
-          verified_by: staffEmail,
-        })
-        .eq('id', booking.id);
+    const result = typeof markResult === 'string' ? JSON.parse(markResult) : markResult;
+
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.message },
+        { status: 400 }
+      );
     }
+
+    // Fetch the complete attendance record
+    const { data: attendanceRecord } = await supabase
+      .from('attendance')
+      .select('*')
+      .eq('id', result.attendance_id)
+      .single();
 
     console.log('✅ Attendance recorded successfully:', {
       bookingId: booking.id,
-      studentName: booking.students?.student_name,
+      studentName: booking.students?.name,
       ticketCode,
       scannedBy: staffEmail,
     });
@@ -184,20 +173,19 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Attendance recorded successfully',
       attendance: {
-        id: attendanceRecord.id,
-        student_name: booking.students?.student_name,
+        id: attendanceRecord?.id,
+        student_name: booking.students?.name,
         roll_number: booking.students?.roll_number,
         student_email: booking.students?.email,
-        student_phone: booking.students?.phone,
+        student_phone: booking.students?.mobile,
         route_number: booking.routes?.route_number,
         route_name: booking.routes?.route_name,
         boarding_stop: booking.boarding_stop,
         seat_number: booking.seat_number,
         trip_date: booking.trip_date,
-        departure_time: booking.schedules?.departure_time,
-        scanned_at: attendanceRecord.scanned_at,
-        scanned_by: attendanceRecord.scanned_by,
-        status: attendanceRecord.status,
+        scanned_at: attendanceRecord?.boarding_time,
+        scanned_by: staffEmail,
+        status: attendanceRecord?.status || 'present',
       },
     });
 

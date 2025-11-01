@@ -24,38 +24,30 @@ export async function GET(request: NextRequest) {
       .from('attendance')
       .select(`
         id,
-        booking_id,
         student_id,
         route_id,
         schedule_id,
-        trip_date,
-        boarding_stop,
+        attendance_date,
+        boarding_time,
+        alighting_time,
         status,
-        scanned_at,
-        scanned_by,
-        scan_location,
-        qr_code,
-        booking_reference,
-        notes,
+        marked_by,
+        created_at,
         students (
           student_name,
           roll_number,
           email,
-          phone
+          mobile
         ),
         routes (
           route_number,
           route_name,
           start_location,
           end_location
-        ),
-        bookings (
-          seat_number,
-          payment_status
         )
       `)
-      .eq('trip_date', date)
-      .order('scanned_at', { ascending: false });
+      .eq('attendance_date', date)
+      .order('created_at', { ascending: false });
 
     // Filter by route if specified
     if (routeId) {
@@ -90,19 +82,13 @@ export async function GET(request: NextRequest) {
       absent: attendance?.filter(a => a.status === 'absent').length || 0,
       cancelled: attendance?.filter(a => a.status === 'cancelled').length || 0,
       byRoute: {} as Record<string, number>,
-      byStop: {} as Record<string, number>,
     };
 
     // Group by route
     attendance?.forEach(a => {
-      const routeKey = a.routes?.route_number || 'Unknown';
+      const route = Array.isArray(a.routes) ? a.routes[0] : a.routes;
+      const routeKey = route?.route_number || 'Unknown';
       stats.byRoute[routeKey] = (stats.byRoute[routeKey] || 0) + 1;
-    });
-
-    // Group by stop
-    attendance?.forEach(a => {
-      const stopKey = a.boarding_stop || 'Unknown';
-      stats.byStop[stopKey] = (stats.byStop[stopKey] || 0) + 1;
     });
 
     return NextResponse.json({

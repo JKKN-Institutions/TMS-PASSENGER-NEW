@@ -95,7 +95,9 @@ export async function GET(request: NextRequest) {
         schedules (
           departure_time,
           arrival_time,
-          estimated_duration
+          schedule_date,
+          status,
+          available_seats
         )
       `)
       .eq('route_id', resolvedRouteId)

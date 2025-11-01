@@ -24,24 +24,23 @@ import { staffHelpers } from '@/lib/staff-helpers';
 
 interface AttendanceRecord {
   id: string;
-  trip_date: string;
-  boarding_stop: string;
+  attendance_date: string;
+  boarding_time: string | null;
+  alighting_time: string | null;
   status: string;
-  scanned_at: string;
-  scanned_by: string;
+  marked_by: string;
+  created_at: string;
   students: {
     student_name: string;
     roll_number: string;
     email: string;
-    phone: string;
+    mobile: string;
   };
   routes: {
     route_number: string;
     route_name: string;
-  };
-  bookings: {
-    seat_number: string;
-    payment_status: string;
+    start_location: string;
+    end_location: string;
   };
 }
 
@@ -482,11 +481,11 @@ export default function StaffAttendancePage() {
                         )}
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
-                          <span>{record.boarding_stop}</span>
+                          <span>{record.routes?.start_location} → {record.routes?.end_location}</span>
                         </div>
-                        {record.bookings?.seat_number && (
+                        {record.boarding_time && (
                           <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
-                            Seat: {record.bookings.seat_number}
+                            Boarded: {new Date(record.boarding_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         )}
                       </div>
@@ -494,12 +493,12 @@ export default function StaffAttendancePage() {
                       <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
                         <Clock className="w-3.5 h-3.5" />
                         <span>
-                          Scanned at {new Date(record.scanned_at).toLocaleString('en-US', {
+                          Marked on {new Date(record.created_at).toLocaleString('en-US', {
                             month: 'short',
                             day: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit'
-                          })} by {record.scanned_by}
+                          })}
                         </span>
                       </div>
                     </div>
