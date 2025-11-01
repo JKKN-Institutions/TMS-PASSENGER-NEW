@@ -1722,13 +1722,7 @@ export default function SchedulesPage() {
               </>
             )}
           </button>
-
-
-
-
-
         </div>
-      </div>
 
       {/* Enhanced Route Information */}
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
