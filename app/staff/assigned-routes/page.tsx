@@ -199,10 +199,10 @@ export default function StaffAssignedRoutesPage() {
 
   if (isLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-yellow-100">
+      <div className="flex items-center justify-center min-h-screen bg-[#fbfbee]">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading assigned routes...</p>
+          <Loader2 className="w-12 h-12 animate-spin text-[#0b6d41] mx-auto mb-4" />
+          <p className="text-gray-600 font-inter">Loading assigned routes...</p>
         </div>
       </div>
     );
@@ -210,14 +210,14 @@ export default function StaffAssignedRoutesPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-yellow-100 p-4">
+      <div className="flex items-center justify-center min-h-screen bg-[#fbfbee] p-4">
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 font-poppins">Error</h2>
+          <p className="text-gray-600 mb-6 font-inter">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="px-6 py-2 bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors font-inter font-medium"
           >
             Retry
           </button>
@@ -227,15 +227,15 @@ export default function StaffAssignedRoutesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-yellow-100 p-6">
+    <div className="min-h-screen bg-[#fbfbee] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <RouteIcon className="w-8 h-8 text-green-600" />
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 font-poppins">
+            <RouteIcon className="w-8 h-8 text-[#0b6d41]" />
             My Assigned Routes
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 mt-2 font-inter">
             View routes assigned to you and the passengers on each route
           </p>
         </div>
@@ -245,36 +245,36 @@ export default function StaffAssignedRoutesPage() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Assigned Routes</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">
+                <p className="text-gray-600 text-sm font-inter">Assigned Routes</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1 font-poppins">
                   {routesWithPassengers.length}
                 </p>
               </div>
-              <RouteIcon className="w-12 h-12 text-green-600 opacity-20" />
+              <RouteIcon className="w-12 h-12 text-[#0b6d41] opacity-20" />
             </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Total Passengers</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{totalPassengers}</p>
+                <p className="text-gray-600 text-sm font-inter">Total Passengers</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1 font-poppins">{totalPassengers}</p>
               </div>
-              <Users className="w-12 h-12 text-blue-600 opacity-20" />
+              <Users className="w-12 h-12 text-[#3b82f6] opacity-20" />
             </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-sm">Average per Route</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">
+                <p className="text-gray-600 text-sm font-inter">Average per Route</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1 font-poppins">
                   {routesWithPassengers.length > 0
                     ? Math.round(totalPassengers / routesWithPassengers.length)
                     : 0}
                 </p>
               </div>
-              <Bus className="w-12 h-12 text-green-600 opacity-20" />
+              <Bus className="w-12 h-12 text-[#0b6d41] opacity-20" />
             </div>
           </div>
         </div>
@@ -283,8 +283,8 @@ export default function StaffAssignedRoutesPage() {
         {routesWithPassengers.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No routes assigned</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-medium text-gray-900 mb-2 font-poppins">No routes assigned</h3>
+            <p className="text-gray-600 font-inter">
               You don&apos;t have any routes assigned yet. Contact your administrator.
             </p>
           </div>
@@ -304,21 +304,21 @@ export default function StaffAssignedRoutesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <RouteIcon className="w-6 h-6 text-green-600" />
+                          <div className="w-12 h-12 bg-[#0b6d41]/10 rounded-full flex items-center justify-center">
+                            <RouteIcon className="w-6 h-6 text-[#0b6d41]" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900">
+                            <h3 className="text-xl font-bold text-gray-900 font-poppins">
                               {routeData.route.route_name}
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 font-inter">
                               Route {routeData.route.route_number}
                             </p>
                           </div>
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            className={`px-3 py-1 rounded-full text-xs font-medium font-inter ${
                               routeData.route.status === 'active'
-                                ? 'bg-green-100 text-green-800'
+                                ? 'bg-[#0b6d41]/10 text-[#0b6d41]'
                                 : 'bg-gray-100 text-gray-800'
                             }`}
                           >
@@ -381,7 +381,7 @@ export default function StaffAssignedRoutesPage() {
                       <div className="ml-4 flex items-center gap-2">
                         <Link
                           href={`/staff/routes/${routeData.route.id}`}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                          className="px-4 py-2 bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors text-sm font-medium font-inter"
                           onClick={(e) => e.stopPropagation()}
                         >
                           View Details
@@ -400,13 +400,13 @@ export default function StaffAssignedRoutesPage() {
                   {/* Passengers List (Expanded) */}
                   {isExpanded && (
                     <div className="border-t border-gray-200 bg-gray-50 p-6">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 font-poppins">
                         <Users className="w-5 h-5" />
                         Passengers ({routeData.passengerCount})
                       </h4>
 
                       {routeData.passengers.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
+                        <div className="text-center py-8 text-gray-500 font-inter">
                           No passengers assigned to this route yet
                         </div>
                       ) : (
@@ -414,8 +414,8 @@ export default function StaffAssignedRoutesPage() {
                           {groupedPassengers.map(([stopName, passengers]) => (
                             <div key={stopName}>
                               <div className="flex items-center gap-2 mb-3">
-                                <MapPin className="w-5 h-5 text-green-600" />
-                                <h5 className="font-semibold text-gray-900">
+                                <MapPin className="w-5 h-5 text-[#0b6d41]" />
+                                <h5 className="font-semibold text-gray-900 font-inter">
                                   {stopName}
                                   {passengers[0]?.boardingStop && (
                                     <span className="text-sm text-gray-600 ml-2">
@@ -423,7 +423,7 @@ export default function StaffAssignedRoutesPage() {
                                     </span>
                                   )}
                                 </h5>
-                                <span className="ml-auto text-sm text-gray-600">
+                                <span className="ml-auto text-sm text-gray-600 font-inter">
                                   {passengers.length} passenger{passengers.length !== 1 ? 's' : ''}
                                 </span>
                               </div>
@@ -435,11 +435,11 @@ export default function StaffAssignedRoutesPage() {
                                     className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
                                   >
                                     <div className="flex items-start gap-3">
-                                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <User className="w-5 h-5 text-blue-600" />
+                                      <div className="w-10 h-10 bg-[#3b82f6]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <User className="w-5 h-5 text-[#3b82f6]" />
                                       </div>
                                       <div className="flex-1 min-w-0">
-                                        <h6 className="font-semibold text-gray-900 truncate">
+                                        <h6 className="font-semibold text-gray-900 truncate font-inter">
                                           {passenger.student.student_name}
                                         </h6>
                                         <p className="text-sm text-gray-600 font-mono">
