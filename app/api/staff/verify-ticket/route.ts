@@ -3,7 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { ticketCode } = await request.json();
+    const { ticketCode, staffEmail } = await request.json();
+
+    console.log('🎫 Ticket verification request:', { ticketCode, staffEmail });
 
     if (!ticketCode) {
       return NextResponse.json(
@@ -23,35 +25,59 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Find booking by ticket code
+    // Find booking by QR code
+    console.log('🔍 Looking for booking with QR code:', ticketCode);
+
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .select(`
         id,
-        booking_reference,
+        student_id,
+        route_id,
+        schedule_id,
+        trip_date,
+        boarding_stop,
+        seat_number,
         status,
-        verified_at,
-        verified_by,
-        passenger_name,
-        passenger_email,
-        passenger_phone,
-        pickup_point,
-        route:routes(
+        qr_code,
+        payment_status,
+        students!inner (
+          id,
+          student_name,
+          email,
+          mobile
+        ),
+        routes!inner (
           id,
           route_number,
-          route_name,
-          departure_time
+          route_name
+        ),
+        schedules (
+          departure_time,
+          arrival_time
         )
       `)
-      .eq('booking_reference', ticketCode)
+      .eq('qr_code', ticketCode)
       .single();
 
     if (bookingError || !booking) {
+      console.error('❌ Booking not found:', bookingError);
       return NextResponse.json(
         { success: false, error: 'Invalid ticket code. Booking not found.' },
         { status: 404 }
       );
     }
+
+    console.log('✅ Booking found:', {
+      id: booking.id,
+      student: booking.students,
+      route: booking.routes
+    });
+
+    // Handle students/routes if they're arrays (PostgREST behavior)
+    const student = Array.isArray(booking.students) ? booking.students[0] : booking.students;
+    const route = Array.isArray(booking.routes) ? booking.routes[0] : booking.routes;
+    const schedule = Array.isArray(booking.schedules) ? booking.schedules[0] : booking.schedules;
 
     // Check if booking is confirmed
     if (booking.status !== 'confirmed') {
@@ -64,65 +90,88 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if already verified
-    if (booking.verified_at) {
+    // Check if already marked attendance
+    const { data: existingAttendance, error: attendanceCheckError } = await supabase
+      .from('attendance')
+      .select('*')
+      .eq('booking_id', booking.id)
+      .eq('trip_date', booking.trip_date)
+      .single();
+
+    if (existingAttendance) {
+      console.log('⚠️ Attendance already marked:', existingAttendance);
       return NextResponse.json({
         success: true,
-        message: 'Ticket already verified',
+        message: 'Attendance already marked',
         booking: {
           id: booking.id,
-          passenger_name: booking.passenger_name,
-          route_name: booking.route?.route_name,
-          route_number: booking.route?.route_number,
-          verified_at: booking.verified_at,
-          verified_by: booking.verified_by,
+          passenger_name: student?.student_name,
+          route_name: route?.route_name,
+          route_number: route?.route_number,
+          boarding_stop: booking.boarding_stop,
+          trip_date: booking.trip_date,
+          scanned_at: existingAttendance.scanned_at,
+          scanned_by: existingAttendance.scanned_by,
         },
         alreadyVerified: true,
       });
     }
 
-    // Get staff email from request headers or body
-    const staffEmail = request.headers.get('x-staff-email') || 'staff@system';
+    // Get staff email from request body or headers
+    const verifyingStaffEmail = staffEmail || request.headers.get('x-staff-email') || 'staff@system';
 
-    // Update booking to mark as verified
-    const { data: updatedBooking, error: updateError } = await supabase
-      .from('bookings')
-      .update({
-        verified_at: new Date().toISOString(),
-        verified_by: staffEmail,
+    // Create attendance record
+    console.log('📝 Creating attendance record...');
+
+    const { data: attendanceRecord, error: attendanceError } = await supabase
+      .from('attendance')
+      .insert({
+        booking_id: booking.id,
+        student_id: booking.student_id,
+        route_id: booking.route_id,
+        schedule_id: booking.schedule_id,
+        trip_date: booking.trip_date,
+        boarding_stop: booking.boarding_stop,
+        status: 'present',
+        scanned_by: verifyingStaffEmail,
+        qr_code: ticketCode,
+        scanned_at: new Date().toISOString(),
       })
-      .eq('id', booking.id)
       .select()
       .single();
 
-    if (updateError) {
-      console.error('❌ Error updating booking:', updateError);
+    if (attendanceError) {
+      console.error('❌ Error creating attendance record:', attendanceError);
       return NextResponse.json(
-        { success: false, error: 'Failed to verify ticket' },
+        { success: false, error: 'Failed to mark attendance: ' + attendanceError.message },
         { status: 500 }
       );
     }
 
-    console.log('✅ Ticket verified successfully:', {
+    console.log('✅ Attendance marked successfully:', {
       bookingId: booking.id,
+      studentName: student?.student_name,
       ticketCode,
-      verifiedBy: staffEmail,
+      scannedBy: verifyingStaffEmail,
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Ticket verified successfully',
+      message: 'Attendance marked successfully',
       booking: {
-        id: updatedBooking.id,
-        passenger_name: booking.passenger_name,
-        passenger_email: booking.passenger_email,
-        passenger_phone: booking.passenger_phone,
-        pickup_point: booking.pickup_point,
-        route_name: booking.route?.route_name,
-        route_number: booking.route?.route_number,
-        departure_time: booking.route?.departure_time,
-        verified_at: updatedBooking.verified_at,
-        verified_by: updatedBooking.verified_by,
+        id: booking.id,
+        passenger_name: student?.student_name,
+        passenger_email: student?.email,
+        passenger_phone: student?.mobile,
+        boarding_stop: booking.boarding_stop,
+        route_name: route?.route_name,
+        route_number: route?.route_number,
+        departure_time: schedule?.departure_time,
+        trip_date: booking.trip_date,
+        scanned_at: attendanceRecord.scanned_at,
+        scanned_by: attendanceRecord.scanned_by,
+        seat_number: booking.seat_number,
+        payment_status: booking.payment_status,
       },
     });
 

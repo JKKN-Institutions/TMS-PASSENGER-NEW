@@ -408,6 +408,7 @@ export default function StaffLayout({
         <TicketScanner
           isOpen={scannerOpen}
           onClose={() => setScannerOpen(false)}
+          staffEmail={user?.email}
           onScanSuccess={(bookingId) => {
             console.log('✅ Ticket verified:', bookingId);
             // Optionally refresh the bookings page if currently on it

@@ -2,14 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Camera, CheckCircle, XCircle, Loader2, ScanLine } from 'lucide-react';
+import { Html5Qrcode } from 'html5-qrcode';
 
 interface TicketScannerProps {
   isOpen: boolean;
   onClose: () => void;
   onScanSuccess?: (bookingId: string) => void;
+  staffEmail?: string;
 }
 
-export default function TicketScanner({ isOpen, onClose, onScanSuccess }: TicketScannerProps) {
+export default function TicketScanner({ isOpen, onClose, onScanSuccess, staffEmail }: TicketScannerProps) {
   const [scanning, setScanning] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [result, setResult] = useState<{
@@ -20,8 +22,8 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
     routeName?: string;
   } | null>(null);
   const [manualCode, setManualCode] = useState('');
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const [scannerError, setScannerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && scanning) {
@@ -34,46 +36,96 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+      setScannerError(null);
+
+      // Create scanner instance if not exists
+      if (!scannerRef.current) {
+        scannerRef.current = new Html5Qrcode('qr-reader');
       }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      alert('Unable to access camera. Please check permissions.');
+
+      // Start scanning with continuous mode
+      await scannerRef.current.start(
+        { facingMode: 'environment' }, // Use back camera
+        {
+          fps: 30, // Higher FPS for faster detection (like GPay)
+          qrbox: { width: 250, height: 250 }, // QR box size
+          aspectRatio: 1.0, // Square aspect ratio
+        },
+        (decodedText) => {
+          // Success callback when QR code is scanned
+          console.log('✅ QR Code scanned:', decodedText);
+
+          // Don't stop camera - keep scanning for continuous mode
+          // Just verify the ticket
+          verifyTicket(decodedText);
+        },
+        (errorMessage) => {
+          // Error callback (this fires frequently while searching, so we don't show it)
+          // This is normal during scanning, not an actual error
+        }
+      );
+
+      console.log('✅ Camera started successfully');
+    } catch (error: any) {
+      console.error('❌ Error starting camera:', error);
+      setScannerError('Unable to access camera. Please check permissions.');
       setScanning(false);
     }
   };
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
+  const stopCamera = async () => {
+    try {
+      if (scannerRef.current && scannerRef.current.isScanning) {
+        await scannerRef.current.stop();
+        console.log('🛑 Camera stopped');
+      }
+    } catch (error) {
+      console.error('Error stopping camera:', error);
     }
   };
 
   const verifyTicket = async (ticketCode: string) => {
+    // Prevent duplicate verification while already verifying
+    if (verifying) {
+      console.log('⏸️ Already verifying, skipping...');
+      return;
+    }
+
     setVerifying(true);
     setResult(null);
 
+    // Pause scanning during verification to prevent multiple scans
+    const wasScanningBeforeVerify = scanning;
+    if (wasScanningBeforeVerify) {
+      await stopCamera();
+      setScanning(false);
+    }
+
     try {
+      console.log('🔍 Verifying ticket:', ticketCode);
+      console.log('👤 Staff email:', staffEmail);
+
       const response = await fetch('/api/staff/verify-ticket', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ticketCode }),
+        body: JSON.stringify({
+          ticketCode,
+          staffEmail: staffEmail || 'staff@system'
+        }),
       });
 
       const data = await response.json();
 
+      console.log('📊 Verification response:', data);
+
       if (data.success) {
         setResult({
           success: true,
-          message: 'Ticket Verified Successfully!',
+          message: data.alreadyVerified
+            ? 'Attendance Already Marked!'
+            : 'Attendance Marked Successfully!',
           bookingId: data.booking?.id,
           passengerName: data.booking?.passenger_name,
           routeName: data.booking?.route_name,
@@ -88,7 +140,7 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
         });
       }
     } catch (error) {
-      console.error('Error verifying ticket:', error);
+      console.error('❌ Error verifying ticket:', error);
       setResult({
         success: false,
         message: 'Error verifying ticket. Please try again.',
@@ -96,10 +148,6 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
     } finally {
       setVerifying(false);
       setManualCode('');
-      if (scanning) {
-        stopCamera();
-        setScanning(false);
-      }
     }
   };
 
@@ -115,12 +163,14 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
     setScanning(false);
     setResult(null);
     setManualCode('');
+    setScannerError(null);
     onClose();
   };
 
   const resetScanner = () => {
     setResult(null);
     setManualCode('');
+    setScannerError(null);
   };
 
   if (!isOpen) return null;
@@ -151,24 +201,29 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
               {/* Camera Scanner */}
               {scanning ? (
                 <div className="space-y-4">
-                  <div className="relative bg-black rounded-xl overflow-hidden aspect-video">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-48 h-48 border-4 border-green-500 rounded-xl animate-pulse"></div>
-                    </div>
+                  <div className="relative bg-black rounded-xl overflow-hidden">
+                    {/* QR Reader Container */}
+                    <div id="qr-reader" className="w-full"></div>
                   </div>
-                  <p className="text-center text-sm text-gray-600">
-                    Position the QR code within the frame
-                  </p>
+
+                  {scannerError && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="text-red-800 text-sm">{scannerError}</p>
+                    </div>
+                  )}
+
+                  {verifying && (
+                    <div className="flex items-center justify-center space-x-2 text-green-600">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span className="font-medium">Verifying ticket...</span>
+                    </div>
+                  )}
+
                   <button
                     onClick={() => {
                       stopCamera();
                       setScanning(false);
+                      setScannerError(null);
                     }}
                     className="w-full px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors"
                   >
@@ -201,16 +256,19 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
                   <form onSubmit={handleManualSubmit} className="space-y-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Enter Ticket Code Manually
+                        Enter QR Code Manually
                       </label>
                       <input
                         type="text"
                         value={manualCode}
                         onChange={(e) => setManualCode(e.target.value)}
-                        placeholder="e.g., TMS-12345678"
+                        placeholder="e.g., QR-abc123-2025-11-03"
                         disabled={verifying}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:cursor-not-allowed font-mono text-center text-lg"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:cursor-not-allowed font-mono text-center text-sm"
                       />
+                      <p className="mt-2 text-xs text-gray-500">
+                        Enter the QR code exactly as shown on the ticket
+                      </p>
                     </div>
                     <button
                       type="submit"
@@ -271,9 +329,9 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess }: Ticket
                           </div>
                         )}
                         {result.bookingId && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between items-start">
                             <span className="font-semibold text-gray-700">Booking ID:</span>
-                            <span className="text-gray-900 font-mono text-sm">{result.bookingId}</span>
+                            <span className="text-gray-900 font-mono text-xs break-all max-w-[200px]">{result.bookingId}</span>
                           </div>
                         )}
                       </div>

@@ -17,6 +17,7 @@ import {
   Star,
   Ticket
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { studentHelpers } from '@/lib/supabase';
 import { sessionManager } from '@/lib/session';
 import { ScheduleAccessControl } from '@/components/account-access-control';
@@ -98,31 +99,6 @@ interface BoardingPassProps {
 }
 
 const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking }) => {
-  const generateBarcodeLines = () => {
-    const lines: React.JSX.Element[] = [];
-    // Responsive barcode - fewer lines on mobile
-    const totalLines = typeof window !== 'undefined' && window.innerWidth < 640 ? 30 : 40;
-    const minLineWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 1.5 : 2;
-    const maxLineWidth = typeof window !== 'undefined' && window.innerWidth < 640 ? 6 : 8;
-    const spacing = typeof window !== 'undefined' && window.innerWidth < 640 ? '1px' : '2px';
-
-    for (let i = 0; i < totalLines; i++) {
-      const lineWidth = Math.random() * (maxLineWidth - minLineWidth) + minLineWidth;
-      lines.push(
-        <div
-          key={i}
-          className="bg-black flex-shrink-0"
-          style={{ 
-            width: `${lineWidth}px`, 
-            height: '100%',
-            marginRight: i < totalLines - 1 ? spacing : '0'
-          }}
-        />
-      );
-    }
-    return lines;
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -194,12 +170,19 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
               </div>
             </div>
 
-            {/* Barcode Container */}
-            <div className="bg-gray-100 dark:bg-gray-700 p-3 sm:p-4 text-center border-t border-gray-200 dark:border-gray-600">
-              <div className="flex justify-center items-end h-16 sm:h-20 w-full bg-white dark:bg-gray-100 rounded-lg p-2 overflow-hidden">
-                {generateBarcodeLines()}
+            {/* QR Code Container */}
+            <div className="bg-gray-100 dark:bg-gray-700 p-4 sm:p-6 text-center border-t border-gray-200 dark:border-gray-600">
+              <div className="flex justify-center items-center bg-white dark:bg-white rounded-xl p-4 sm:p-6">
+                <QRCodeSVG
+                  value={booking.qrCode}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                  className="max-w-full h-auto"
+                />
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Scan this code when boarding</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-3 font-medium">Scan this QR code when boarding</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">{booking.qrCode}</p>
             </div>
           </div>
 
