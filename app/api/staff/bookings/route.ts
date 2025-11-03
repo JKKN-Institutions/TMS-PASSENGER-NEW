@@ -122,10 +122,31 @@ export async function GET(request: NextRequest) {
 
     // Map bookings to add booking_reference for backward compatibility
     // Until migration is run, use qr_code as booking_reference or generate a temporary one
-    const mappedBookings = (bookings || []).map((booking: any) => ({
-      ...booking,
-      booking_reference: booking.booking_reference || booking.qr_code || `TEMP-${booking.id.substring(0, 8)}`
-    }));
+    // Also handle PostgREST returning students/routes/schedules as arrays or objects
+    const mappedBookings = (bookings || []).map((booking: any) => {
+      // Handle students relation - can be array or object
+      const student = Array.isArray(booking.students)
+        ? booking.students[0]
+        : booking.students;
+
+      // Handle routes relation - can be array or object
+      const route = Array.isArray(booking.routes)
+        ? booking.routes[0]
+        : booking.routes;
+
+      // Handle schedules relation - can be array or object
+      const schedule = Array.isArray(booking.schedules)
+        ? booking.schedules[0]
+        : booking.schedules;
+
+      return {
+        ...booking,
+        students: student,
+        routes: route,
+        schedules: schedule,
+        booking_reference: booking.booking_reference || booking.qr_code || `TEMP-${booking.id.substring(0, 8)}`
+      };
+    });
 
     console.log(`✅ Mapped ${mappedBookings.length} bookings with booking references`);
 
