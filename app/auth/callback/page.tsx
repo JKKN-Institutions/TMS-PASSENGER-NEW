@@ -137,7 +137,49 @@ function CallbackContent() {
 
         console.log('🔍 Role detection results:', { isDriver, isStaff, oauthRole });
 
-        // If not marked as driver by parent app, check local drivers table
+        // Priority: Check local staff table first, then drivers table
+        // This ensures staff users who are also students get directed to staff portal
+        if (!isStaff && data.user?.email) {
+          console.log('🔍 Checking if user exists in local staff table...');
+          try {
+            const staffCheckResponse = await fetch(`/api/check-staff?email=${encodeURIComponent(data.user.email)}`);
+            if (staffCheckResponse.ok) {
+              const staffData = await staffCheckResponse.json();
+              isStaff = staffData.isStaff;
+              console.log(`✅ Staff check complete: ${isStaff ? 'User IS staff' : 'User is NOT staff'}`);
+
+              // Store staff info in localStorage if they are staff
+              if (isStaff && staffData.staff) {
+                const staffUser = {
+                  id: staffData.staff.id,
+                  email: staffData.staff.email,
+                  staff_name: staffData.staff.staff_name || data.user.full_name || data.user.email?.split('@')[0],
+                  department: staffData.staff.department || 'Transport Management',
+                  role: 'staff' as const
+                };
+
+                const staffSession = {
+                  access_token: data.access_token,
+                  refresh_token: data.refresh_token,
+                  expires_at: tokenExpiresAt
+                };
+
+                localStorage.setItem('tms_staff_user', JSON.stringify(staffUser));
+                localStorage.setItem('tms_staff_session', JSON.stringify(staffSession));
+
+                // Set cookies for server-side access
+                document.cookie = `tms_staff_token=${data.access_token}; ${cookieOptions}; max-age=${data.expires_in || 3600}`;
+                document.cookie = `tms_staff_refresh=${data.refresh_token}; ${cookieOptions}; max-age=${30 * 24 * 60 * 60}`;
+
+                console.log('💾 Stored staff authentication data');
+              }
+            }
+          } catch (error) {
+            console.warn('⚠️ Failed to check staff status:', error);
+          }
+        }
+
+        // If not staff or driver by parent app, check local drivers table
         if (!isDriver && !isStaff && data.user?.email) {
           console.log('🔍 Checking if user exists in local drivers table...');
           try {
