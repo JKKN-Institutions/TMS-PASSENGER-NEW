@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase';
 export async function GET(request: NextRequest) {
   try {
     console.log('\n====================================');
-    console.log('🚀 SPECIFIC-DATE API CALLED');
+    console.log('🚀🚀🚀 SPECIFIC-DATE API CALLED - V2');
     console.log('====================================\n');
 
     const supabase = createClient();
