@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
 
       const { data: bookings, error: bookingError } = await supabase
         .from('bookings')
-        .select('id, schedule_id, trip_date, route_id, status as booking_status, seat_number, qr_code')
+        .select('id, schedule_id, trip_date, route_id, status, seat_number, qr_code')
         .eq('student_id', studentId)
         .eq('status', 'confirmed');  // Get all confirmed bookings for this student
 
@@ -189,7 +189,7 @@ export async function GET(request: NextRequest) {
       } : null,
       user_booking: existingBooking ? {
         id: existingBooking.id,
-        status: existingBooking.booking_status,
+        status: existingBooking.status,
         seatNumber: existingBooking.seat_number,
         qrCode: existingBooking.qr_code
       } : null
