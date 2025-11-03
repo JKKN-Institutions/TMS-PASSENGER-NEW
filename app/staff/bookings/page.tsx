@@ -31,13 +31,17 @@ interface Booking {
   seat_number?: string;
   verified_at?: string;
   verified_by?: string;
-  student?: {
+  students?: {
     student_name: string;
     roll_number: string;
   };
-  route?: {
+  routes?: {
     route_number: string;
     route_name: string;
+  };
+  schedules?: {
+    departure_time: string;
+    arrival_time: string;
   };
 }
 
@@ -398,10 +402,10 @@ export default function StaffBookingsPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <User className="w-5 h-5 text-gray-400" />
                       <span className="font-semibold text-gray-900">
-                        {booking.student?.student_name || 'Unknown Student'}
+                        {booking.students?.student_name || 'Unknown Student'}
                       </span>
                       <span className="text-sm text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
-                        {booking.student?.roll_number}
+                        {booking.students?.roll_number}
                       </span>
                       {booking.verified_at && (
                         <div className="flex items-center gap-1.5 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 px-3 py-1 rounded-full">
@@ -412,10 +416,10 @@ export default function StaffBookingsPage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                      {booking.route && (
+                      {booking.routes && (
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
-                          <span>{booking.route.route_number} - {booking.route.route_name}</span>
+                          <span>{booking.routes.route_number} - {booking.routes.route_name}</span>
                         </div>
                       )}
                       {booking.booking_reference && (
