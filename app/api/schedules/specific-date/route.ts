@@ -3,11 +3,21 @@ import { createClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('\n====================================');
+    console.log('🚀 SPECIFIC-DATE API CALLED');
+    console.log('====================================\n');
+
     const supabase = createClient();
     const { searchParams } = new URL(request.url);
     const routeId = searchParams.get('routeId');
     const scheduleDate = searchParams.get('scheduleDate'); // YYYY-MM-DD format
     const studentId = searchParams.get('studentId');
+
+    console.log('📋 Request params:', {
+      routeId,
+      scheduleDate,
+      studentId
+    });
 
     if (!routeId || !scheduleDate) {
       return NextResponse.json({ error: 'Route ID and schedule date are required' }, { status: 400 });
