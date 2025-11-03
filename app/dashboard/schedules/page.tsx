@@ -170,19 +170,35 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
               </div>
             </div>
 
-            {/* QR Code Container */}
-            <div className="bg-gray-100 dark:bg-gray-700 p-4 sm:p-6 text-center border-t border-gray-200 dark:border-gray-600">
-              <div className="flex justify-center items-center bg-white dark:bg-white rounded-xl p-4 sm:p-6">
-                <QRCodeSVG
-                  value={booking.qrCode}
-                  size={200}
-                  level="H"
-                  includeMargin={false}
-                  className="max-w-full h-auto"
-                />
+            {/* QR Code Container - Prominent and Easy to Scan */}
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 p-6 text-center border-t-2 border-dashed border-gray-300 dark:border-gray-600">
+              <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Show This QR Code to Staff</p>
+              <div className="flex justify-center items-center bg-white rounded-2xl p-6 shadow-lg mx-auto" style={{ maxWidth: '280px' }}>
+                {booking.qrCode ? (
+                  <QRCodeSVG
+                    value={booking.qrCode}
+                    size={220}
+                    level="H"
+                    includeMargin={true}
+                    className="w-full h-auto"
+                  />
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-red-600 font-semibold">QR Code Unavailable</p>
+                    <p className="text-xs text-gray-500 mt-2">Contact support</p>
+                  </div>
+                )}
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-3 font-medium">Scan this QR code when boarding</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">{booking.qrCode}</p>
+              {booking.qrCode && (
+                <>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-4 font-medium">
+                    Point your camera here when boarding
+                  </p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-2 font-mono break-all px-4">
+                    {booking.qrCode}
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

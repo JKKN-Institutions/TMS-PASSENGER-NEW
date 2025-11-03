@@ -91,6 +91,16 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess, staffEma
       return;
     }
 
+    // Validate ticket code
+    if (!ticketCode || ticketCode.trim() === '') {
+      console.error('❌ Empty ticket code received');
+      setResult({
+        success: false,
+        message: 'Invalid QR code - empty or malformed',
+      });
+      return;
+    }
+
     setVerifying(true);
     setResult(null);
 
@@ -103,6 +113,7 @@ export default function TicketScanner({ isOpen, onClose, onScanSuccess, staffEma
 
     try {
       console.log('🔍 Verifying ticket:', ticketCode);
+      console.log('📏 Ticket code length:', ticketCode.length);
       console.log('👤 Staff email:', staffEmail);
 
       const response = await fetch('/api/staff/verify-ticket', {
