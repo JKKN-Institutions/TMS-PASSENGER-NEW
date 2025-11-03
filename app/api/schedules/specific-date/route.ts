@@ -79,18 +79,39 @@ export async function GET(request: NextRequest) {
     // Check existing booking if student ID is provided
     let existingBooking = null;
     if (studentId) {
+      console.log('🔍 Checking for existing booking:', {
+        student_id: studentId,
+        schedule_id: schedule.id,
+        trip_date: schedule.schedule_date,
+        route_id: schedule.route_id
+      });
+
       const { data: bookings, error: bookingError } = await supabase
         .from('bookings')
-        .select('id, status as booking_status, seat_number, qr_code')
+        .select('id, schedule_id, trip_date, route_id, status as booking_status, seat_number, qr_code')
         .eq('student_id', studentId)
-        .eq('schedule_id', schedule.id)
-        .eq('status', 'confirmed')  // Only check for confirmed bookings
-        .limit(1);
+        .eq('status', 'confirmed');  // Get all confirmed bookings for this student
 
       if (bookingError) {
         console.error('Error checking existing booking:', bookingError);
       } else {
-        existingBooking = bookings?.[0] || null;
+        // Find booking that matches by schedule_id OR by trip_date+route_id
+        existingBooking = bookings?.find(booking =>
+          booking.schedule_id === schedule.id ||
+          (booking.trip_date === schedule.schedule_date && booking.route_id === schedule.route_id)
+        ) || null;
+
+        if (existingBooking) {
+          console.log('✅ Found existing booking:', {
+            id: existingBooking.id,
+            schedule_id: existingBooking.schedule_id,
+            trip_date: existingBooking.trip_date,
+            route_id: existingBooking.route_id,
+            qr_code: existingBooking.qr_code
+          });
+        } else {
+          console.log('❌ No booking found for this schedule');
+        }
       }
     }
 

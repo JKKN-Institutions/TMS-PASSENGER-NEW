@@ -873,14 +873,20 @@ export default function SchedulesPage() {
       }
       
       const { schedule } = await response.json();
-      
+
+      console.log('🔍 API Response - Full schedule object:', JSON.stringify(schedule, null, 2));
+      console.log('🔍 API Response - user_booking:', schedule?.user_booking);
+      console.log('🔍 API Response - user_booking.id:', schedule?.user_booking?.id);
+      console.log('🔍 API Response - user_booking.qrCode:', schedule?.user_booking?.qrCode);
+
       if (!schedule) {
         toast.error('No schedule available for this date');
         return;
       }
-      
+
       // Check if user already has a booking for this schedule
       if (schedule.user_booking && schedule.user_booking.id) {
+        console.log('✅ FOUND EXISTING BOOKING - Showing boarding pass with QR code:', schedule.user_booking.qrCode);
         console.log('🔍 BOOKING DEBUG: User has existing booking, showing boarding pass');
         
         // Update local state immediately
