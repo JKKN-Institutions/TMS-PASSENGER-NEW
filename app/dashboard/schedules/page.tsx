@@ -848,27 +848,7 @@ export default function SchedulesPage() {
     try {
       // Convert date to YYYY-MM-DD format for SQL query
       const dateString = formatDateForDatabase(date);
-      
-      // Check local booking status first
-      if (bookingStatus.has(dateString) && bookingStatus.get(dateString)) {
-        toast.success('You already have a booking for this date');
-        // Show simplified boarding pass for local bookings
-        setSelectedBooking({
-          id: `local-${dateString}`,
-          seatNumber: 'TBD',
-          qrCode: '',
-          studentName: student.student_name,
-          rollNumber: student.roll_number,
-          routeName: studentAllocation?.route.routeName || '',
-          routeNumber: studentAllocation?.route.routeNumber || '',
-          departureTime: formatTime(studentAllocation?.route.departureTime || ''),
-          boardingStop: studentAllocation?.boardingStop.stopName || '',
-          scheduleDate: formatDate(date)
-        });
-        setShowBoardingPass(true);
-        return;
-      }
-      
+
       // Check if date is in the past
       const today = new Date();
       today.setHours(0, 0, 0, 0);
