@@ -96,9 +96,10 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('booking_id', booking.id)
       .eq('attendance_date', booking.trip_date)
-      .single();
+      .maybeSingle();  // Use maybeSingle() instead of single() - returns null if not found without error
 
-    if (existingAttendance) {
+    // Only treat as duplicate if we actually found a record (not an error)
+    if (existingAttendance && !attendanceCheckError) {
       console.log('⚠️ Attendance already marked:', existingAttendance);
       return NextResponse.json({
         success: true,
@@ -115,6 +116,11 @@ export async function POST(request: NextRequest) {
         },
         alreadyVerified: true,
       });
+    }
+
+    // Log if there was an error checking (but continue to mark attendance)
+    if (attendanceCheckError) {
+      console.log('⚠️ Error checking existing attendance (will proceed to mark):', attendanceCheckError);
     }
 
     // Get staff email from request body or headers
