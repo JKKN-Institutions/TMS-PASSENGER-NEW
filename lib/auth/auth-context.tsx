@@ -715,43 +715,49 @@ export function AuthProvider({
       if (typeof window !== 'undefined') {
         console.log('🧹 Clearing all TMS-related storage data...');
 
-        // Clear all localStorage items
+        // Clear all localStorage items (including passenger-specific data)
         const localStorageKeys = Object.keys(localStorage);
         localStorageKeys.forEach(key => {
           if (key.startsWith('tms_') ||
               key.startsWith('tms-') ||
               key.includes('driver') ||
               key.includes('passenger') ||
+              key.includes('student') ||
               key.includes('staff') ||
               key.includes('auth') ||
               key.includes('session') ||
               key.includes('token') ||
               key.includes('user') ||
-              key.includes('oauth')) {
+              key.includes('oauth') ||
+              key.includes('booking') ||
+              key.includes('route')) {
             localStorage.removeItem(key);
             console.log('🗑️ Removed localStorage:', key);
           }
         });
 
-        // Clear all sessionStorage items
+        // Clear all sessionStorage items (including passenger-specific data)
         const sessionStorageKeys = Object.keys(sessionStorage);
         sessionStorageKeys.forEach(key => {
           if (key.startsWith('tms_') ||
               key.startsWith('tms-') ||
               key.includes('driver') ||
               key.includes('passenger') ||
+              key.includes('student') ||
               key.includes('staff') ||
               key.includes('auth') ||
               key.includes('session') ||
               key.includes('token') ||
               key.includes('user') ||
-              key.includes('oauth')) {
+              key.includes('oauth') ||
+              key.includes('booking') ||
+              key.includes('route')) {
             sessionStorage.removeItem(key);
             console.log('🗑️ Removed sessionStorage:', key);
           }
         });
 
-        // Clear all TMS-related cookies
+        // Clear all TMS-related cookies (including passenger-specific cookies)
         const cookies = document.cookie.split(';');
         cookies.forEach(cookie => {
           const cookieName = cookie.split('=')[0].trim();
@@ -759,10 +765,13 @@ export function AuthProvider({
               cookieName.startsWith('tms-') ||
               cookieName.includes('driver') ||
               cookieName.includes('passenger') ||
+              cookieName.includes('student') ||
               cookieName.includes('staff') ||
               cookieName.includes('auth') ||
               cookieName.includes('session') ||
-              cookieName.includes('token')) {
+              cookieName.includes('token') ||
+              cookieName.includes('booking') ||
+              cookieName.includes('route')) {
             // Delete cookie by setting it to expire in the past
             document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
             console.log('🗑️ Removed cookie:', cookieName);
