@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase';
 
+// Force recompile - timestamp: 2025-11-03 13:05
 export async function GET(request: NextRequest) {
   try {
     console.log('\n====================================');
-    console.log('🚀🚀🚀 SPECIFIC-DATE API CALLED - V2');
+    console.log('🚀🚀🚀 SPECIFIC-DATE API CALLED - V3 (RECOMPILED)');
     console.log('====================================\n');
 
     const supabase = createClient();

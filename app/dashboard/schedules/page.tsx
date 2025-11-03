@@ -864,7 +864,14 @@ export default function SchedulesPage() {
       }
       
       // Query database directly for this specific date with comprehensive checks
-      const response = await fetch(`/api/schedules/specific-date?routeId=${studentAllocation.route.id}&scheduleDate=${dateString}&studentId=${student.student_id}`);
+      const apiUrl = `/api/schedules/specific-date?routeId=${studentAllocation.route.id}&scheduleDate=${dateString}&studentId=${student.student_id}&_=${Date.now()}`;
+      console.log('🌐 Calling specific-date API:', apiUrl);
+      const response = await fetch(apiUrl, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      });
       
       if (!response.ok) {
         const errorText = await response.text();
