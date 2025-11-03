@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
       .from('attendance')
       .select('*')
       .eq('booking_id', booking.id)
-      .eq('trip_date', booking.trip_date)
+      .eq('attendance_date', booking.trip_date)
       .single();
 
     if (existingAttendance) {
@@ -110,8 +110,8 @@ export async function POST(request: NextRequest) {
           route_number: route?.route_number,
           boarding_stop: booking.boarding_stop,
           trip_date: booking.trip_date,
-          scanned_at: existingAttendance.scanned_at,
-          scanned_by: existingAttendance.scanned_by,
+          scanned_at: existingAttendance.boarding_time || existingAttendance.created_at,
+          scanned_by: existingAttendance.marked_by_email,
         },
         alreadyVerified: true,
       });
@@ -130,12 +130,12 @@ export async function POST(request: NextRequest) {
         student_id: booking.student_id,
         route_id: booking.route_id,
         schedule_id: booking.schedule_id,
-        trip_date: booking.trip_date,
+        attendance_date: booking.trip_date,
         boarding_stop: booking.boarding_stop,
+        boarding_time: new Date().toISOString(),
         status: 'present',
-        scanned_by: verifyingStaffEmail,
+        marked_by_email: verifyingStaffEmail,
         qr_code: ticketCode,
-        scanned_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -168,8 +168,8 @@ export async function POST(request: NextRequest) {
         route_number: route?.route_number,
         departure_time: schedule?.departure_time,
         trip_date: booking.trip_date,
-        scanned_at: attendanceRecord.scanned_at,
-        scanned_by: attendanceRecord.scanned_by,
+        scanned_at: attendanceRecord.boarding_time || attendanceRecord.created_at,
+        scanned_by: attendanceRecord.marked_by_email,
         seat_number: booking.seat_number,
         payment_status: booking.payment_status,
       },
