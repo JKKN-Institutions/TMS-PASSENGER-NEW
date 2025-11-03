@@ -394,15 +394,15 @@ class ParentAuthService {
         process.env.NEXT_PUBLIC_PARENT_APP_URL || 'https://my.jkkn.ac.in'
       );
 
-      // Enhanced logout with seamless re-auth support
-      // The parent app will only clear child app session, not parent session
+      // Force full re-authentication by NOT using seamless_reauth
+      // This ensures Google account selection prompt appears on next login
       window.location.href =
         logoutUrl.toString() +
         `?app_id=${
           process.env.NEXT_PUBLIC_APP_ID || 'transport_management_system_menrm674'
         }&redirect_uri=${encodeURIComponent(
           window.location.origin
-        )}&seamless_reauth=true`;
+        )}`;
     }
   }
 

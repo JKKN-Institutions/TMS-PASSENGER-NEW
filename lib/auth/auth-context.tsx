@@ -770,6 +770,19 @@ export function AuthProvider({
         });
 
         console.log('✅ All TMS-related storage data cleared');
+
+        // Also clear any Google OAuth session state by clearing accounts.google.com cookies
+        // This forces Google to show account selection on next login
+        try {
+          // Clear Google OAuth state from sessionStorage
+          sessionStorage.removeItem('g_state');
+
+          // Note: We can't directly clear Google's cookies due to same-origin policy,
+          // but the prompt=consent parameter in the OAuth URL will force re-authentication
+          console.log('🔐 Google OAuth state cleared from sessionStorage');
+        } catch (error) {
+          console.warn('Could not clear Google OAuth state:', error);
+        }
       }
 
       console.log('✅ Logout completed successfully');
