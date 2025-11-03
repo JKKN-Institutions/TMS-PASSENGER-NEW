@@ -11,28 +11,40 @@ async function addBookingDataToSchedules(schedules: any[], studentId: string | n
   }
 
   // Get student bookings using the exact logic that works
+  console.log('🔍 API DEBUG: Fetching bookings for studentId:', studentId);
   const { data: bookings, error: bookingError } = await supabase
     .from('bookings')
     .select('id, student_id, route_id, schedule_id, trip_date, boarding_stop, seat_number, status, payment_status, amount, qr_code')
     .eq('student_id', studentId)
     .eq('status', 'confirmed');
 
-  console.log('🔍 API DEBUG: Student bookings found:', bookings?.length || 0, bookings);
+  console.log('🔍 API DEBUG: Student bookings query completed');
+  console.log('🔍 API DEBUG: Student bookings found:', bookings?.length || 0);
+  console.log('🔍 API DEBUG: Bookings data:', JSON.stringify(bookings, null, 2));
 
   if (bookingError || !bookings) {
     console.error('🔍 API DEBUG: Booking query error:', bookingError);
     return schedules.map(schedule => ({ ...schedule, user_booking: null }));
   }
 
-  // Match bookings to schedules using the exact logic that works  
+  // Match bookings to schedules using the exact logic that works
+  console.log('🔍 API DEBUG: Matching bookings to schedules...');
+  console.log('🔍 API DEBUG: Total schedules to match:', schedules.length);
+
   return schedules.map(schedule => {
-    const matchingBooking = bookings.find(booking => 
-      booking.schedule_id === schedule.id || 
-      (booking.trip_date === schedule.schedule_date && booking.route_id === schedule.route_id)
-    );
+    console.log(`🔍 API DEBUG: Checking schedule ${schedule.id} (date: ${schedule.schedule_date})`);
+
+    const matchingBooking = bookings.find(booking => {
+      const scheduleIdMatch = booking.schedule_id === schedule.id;
+      const dateRouteMatch = booking.trip_date === schedule.schedule_date && booking.route_id === schedule.route_id;
+
+      console.log(`🔍 API DEBUG:   Booking ${booking.id}: schedule_id match=${scheduleIdMatch} (${booking.schedule_id} === ${schedule.id}), date+route match=${dateRouteMatch} (${booking.trip_date} === ${schedule.schedule_date} && ${booking.route_id} === ${schedule.route_id})`);
+
+      return scheduleIdMatch || dateRouteMatch;
+    });
 
     if (matchingBooking) {
-      console.log(`🔍 API DEBUG: Found booking for schedule ${schedule.id} (${schedule.schedule_date}):`, matchingBooking);
+      console.log(`🔍 API DEBUG: ✅ Found booking for schedule ${schedule.id} (${schedule.schedule_date}):`, matchingBooking);
       return {
         ...schedule,
         user_booking: {
@@ -45,6 +57,7 @@ async function addBookingDataToSchedules(schedules: any[], studentId: string | n
       };
     }
 
+    console.log(`🔍 API DEBUG: ❌ No booking found for schedule ${schedule.id} (${schedule.schedule_date})`);
     return {
       ...schedule,
       user_booking: null

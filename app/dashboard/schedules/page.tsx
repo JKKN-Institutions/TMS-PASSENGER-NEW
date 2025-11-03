@@ -512,13 +512,14 @@ export default function SchedulesPage() {
       return 'unavailable';
     }
 
-    // DEBUG: Log schedule details for specific dates
-    if (dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
+    // DEBUG: Log schedule details for specific dates - including November 3rd
+    if (dateString === '2025-11-03' || dateString === '2025-11-02' || dateString === '2025-11-04' || dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
       console.log(`🔍 DATE STATUS DEBUG: PRIORITY CHECK for ${dateString}:`, {
         isDisabled: schedule.isDisabled,
         bookingEnabled: schedule.bookingEnabled,
         status: schedule.status,
         hasUserBooking: !!(schedule.userBooking && schedule.userBooking.id),
+        userBookingObject: schedule.userBooking,
         bookingDisabledReason: schedule.bookingDisabledReason,
         isBookingAvailable: schedule.isBookingAvailable,
         availableSeats: schedule.availableSeats,
@@ -584,23 +585,26 @@ export default function SchedulesPage() {
   const generateCalendarDays = () => {
     const year = calendarDate.getFullYear();
     const month = calendarDate.getMonth();
-    
+
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
+
     const days = [];
     const today = new Date();
-    
+    // Set today to start of day for accurate past/future comparison
+    today.setHours(0, 0, 0, 0);
+
     for (let i = 0; i < 42; i++) {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);
-      
+
       const isCurrentMonth = date.getMonth() === month;
       const isToday = date.toDateString() === today.toDateString();
+      // Compare dates at start of day to avoid time-of-day issues
       const isPast = date < today;
-      
+
       days.push({
         date,
         isCurrentMonth,
@@ -609,7 +613,7 @@ export default function SchedulesPage() {
         status: getDateStatus(date)
       });
     }
-    
+
     return days;
   };
 
@@ -1820,8 +1824,10 @@ export default function SchedulesPage() {
 
         <div key={calendarKey} className="grid grid-cols-7 gap-1">
           {calendarDays.map((day, dayIndex) => {
-            const dateStatus = day.isCurrentMonth && !day.isPast ? day.status : 'unavailable';
-            const statusColor = day.isCurrentMonth && !day.isPast ? getStatusColor(day.status) : 'bg-gray-100 text-gray-400';
+            // Allow showing booked status even for today/past dates (but not other statuses)
+            const canShowStatus = day.isCurrentMonth && (!day.isPast || day.status === 'booked' || day.status === 'completed');
+            const dateStatus = canShowStatus ? day.status : 'unavailable';
+            const statusColor = canShowStatus ? getStatusColor(day.status) : 'bg-gray-100 text-gray-400';
             const isDisabled = day.status === 'disabled';
             
             // Get the schedule for this date to determine the specific disable reason
