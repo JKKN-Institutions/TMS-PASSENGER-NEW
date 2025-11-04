@@ -21,6 +21,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { staffHelpers } from '@/lib/staff-helpers';
+import { Html5Qrcode } from 'html5-qrcode';
 
 interface AttendanceRecord {
   id: string;
@@ -60,8 +61,8 @@ export default function StaffAttendancePage() {
   const [showScanner, setShowScanner] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [manualCode, setManualCode] = useState('');
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const [scannerError, setScannerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLoading) return;
@@ -73,6 +74,15 @@ export default function StaffAttendancePage() {
 
     loadData();
   }, [isAuthenticated, userType, isLoading, router, selectedDate, selectedRouteId]);
+
+  useEffect(() => {
+    if (showScanner && scanning) {
+      startCamera();
+    }
+    return () => {
+      stopCamera();
+    };
+  }, [showScanner, scanning]);
 
   const loadData = async () => {
     try {
@@ -113,32 +123,59 @@ export default function StaffAttendancePage() {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
+      setScannerError(null);
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+      // Create scanner instance if not exists
+      if (!scannerRef.current) {
+        scannerRef.current = new Html5Qrcode('qr-reader-attendance');
       }
-      setShowScanner(true);
-    } catch (err) {
-      console.error('Camera error:', err);
-      setError('Failed to access camera. Please ensure camera permissions are granted.');
+
+      // Start scanning with continuous mode
+      await scannerRef.current.start(
+        { facingMode: 'environment' }, // Use back camera
+        {
+          fps: 30, // Higher FPS for faster detection
+          qrbox: { width: 250, height: 250 }, // QR box size
+          aspectRatio: 1.0, // Square aspect ratio
+        },
+        (decodedText) => {
+          // Success callback when QR code is scanned
+          console.log('✅ QR Code scanned:', decodedText);
+          handleScanTicket(decodedText);
+        },
+        (errorMessage) => {
+          // Error callback (fires frequently while searching, so we don't show it)
+        }
+      );
+
+      console.log('✅ Camera started successfully');
+    } catch (error: any) {
+      console.error('❌ Error starting camera:', error);
+      setScannerError('Unable to access camera. Please check permissions.');
+      setScanning(false);
     }
   };
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
+  const stopCamera = async () => {
+    try {
+      if (scannerRef.current && scannerRef.current.isScanning) {
+        await scannerRef.current.stop();
+        console.log('🛑 Camera stopped');
+      }
+    } catch (error) {
+      console.error('Error stopping camera:', error);
     }
-    setShowScanner(false);
-    setManualCode('');
   };
 
   const handleScanTicket = async (ticketCode: string) => {
     if (!ticketCode || scanning) return;
+
+    // Pause scanning during verification to prevent multiple scans
+    const wasScanningBeforeVerify = showScanner;
+    if (wasScanningBeforeVerify) {
+      await stopCamera();
+      setShowScanner(false);
+    }
 
     try {
       setScanning(true);
@@ -157,11 +194,11 @@ export default function StaffAttendancePage() {
         // Reload attendance data
         await loadData();
 
-        // Auto-clear success message after 3 seconds
-        setTimeout(() => setSuccess(null), 3000);
+        // Auto-clear success message after 5 seconds
+        setTimeout(() => setSuccess(null), 5000);
 
-        // Close scanner and clear input
-        stopCamera();
+        // Clear manual input
+        setManualCode('');
       } else {
         setError(result.error || 'Failed to scan ticket');
       }
@@ -301,8 +338,12 @@ export default function StaffAttendancePage() {
             <h2 className="text-xl font-bold text-gray-900">Scan Ticket</h2>
             {!showScanner && (
               <button
-                onClick={startCamera}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                onClick={() => {
+                  setShowScanner(true);
+                  setScanning(true);
+                }}
+                disabled={scanning}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
               >
                 <Camera className="w-5 h-5" />
                 <span>Open Scanner</span>
@@ -310,27 +351,42 @@ export default function StaffAttendancePage() {
             )}
           </div>
 
-          {showScanner ? (
+          {showScanner && (
             <div className="space-y-4">
               <div className="relative bg-black rounded-lg overflow-hidden">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  className="w-full h-64 object-cover"
-                />
-                <button
-                  onClick={stopCamera}
-                  className="absolute top-4 right-4 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                {/* QR Reader Container */}
+                <div id="qr-reader-attendance" className="w-full"></div>
               </div>
-              <p className="text-center text-gray-600 text-sm">
-                Position the QR code within the camera view
-              </p>
+
+              {scannerError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-800 text-sm">{scannerError}</p>
+                </div>
+              )}
+
+              {scanning && (
+                <div className="flex items-center justify-center space-x-2 text-green-600">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="font-medium">Scanning QR codes...</span>
+                </div>
+              )}
+
+              <button
+                onClick={async () => {
+                  await stopCamera();
+                  setShowScanner(false);
+                  setScanning(false);
+                  setScannerError(null);
+                }}
+                className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <X className="w-5 h-5" />
+                  <span>Stop Camera</span>
+                </div>
+              </button>
             </div>
-          ) : null}
+          )}
 
           {/* Manual Entry */}
           <form onSubmit={handleManualSubmit} className="mt-4">

@@ -145,7 +145,7 @@ export default function StaffDashboardPage() {
     <div className="min-h-screen bg-[#fbfbee] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-[#0b6d41] to-[#ffde59] rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-[#0b6d41] rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2 font-poppins">Welcome back, {staffName}!</h1>
@@ -165,7 +165,7 @@ export default function StaffDashboardPage() {
           {/* Assigned Routes */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#0b6d41]/10 to-[#0b6d41]/5 rounded-xl flex items-center justify-center shadow-sm">
+              <div className="w-14 h-14 bg-[#0b6d41]/10 rounded-xl flex items-center justify-center shadow-sm">
                 <RouteIcon className="w-7 h-7 text-[#0b6d41]" />
               </div>
               <span className="text-[#0b6d41] text-sm font-semibold uppercase tracking-wide font-inter">Routes</span>
@@ -177,7 +177,7 @@ export default function StaffDashboardPage() {
           {/* Total Passengers */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#ffde59]/20 to-[#ffde59]/10 rounded-xl flex items-center justify-center shadow-sm">
+              <div className="w-14 h-14 bg-[#ffde59]/20 rounded-xl flex items-center justify-center shadow-sm">
                 <Users className="w-7 h-7 text-[#e6c64d]" />
               </div>
               <span className="text-[#ccae3d] text-sm font-semibold uppercase tracking-wide font-inter">Passengers</span>
@@ -189,7 +189,7 @@ export default function StaffDashboardPage() {
           {/* Active Routes */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#0b6d41]/10 to-[#0b6d41]/5 rounded-xl flex items-center justify-center shadow-sm">
+              <div className="w-14 h-14 bg-[#0b6d41]/10 rounded-xl flex items-center justify-center shadow-sm">
                 <Bus className="w-7 h-7 text-[#0b6d41]" />
               </div>
               <span className="text-[#0b6d41] text-sm font-semibold uppercase tracking-wide font-inter">Active</span>
@@ -201,7 +201,7 @@ export default function StaffDashboardPage() {
           {/* Total Capacity */}
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all hover:scale-105 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#f59e0b]/10 to-[#f59e0b]/5 rounded-xl flex items-center justify-center shadow-sm">
+              <div className="w-14 h-14 bg-[#f59e0b]/10 rounded-xl flex items-center justify-center shadow-sm">
                 <Calendar className="w-7 h-7 text-[#f59e0b]" />
               </div>
               <span className="text-[#f59e0b] text-sm font-semibold uppercase tracking-wide font-inter">Capacity</span>
@@ -228,10 +228,10 @@ export default function StaffDashboardPage() {
               {recentRoutes.map((route, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-5 bg-gradient-to-r from-[#0b6d41]/10 to-[#ffde59]/10 rounded-xl border border-[#0b6d41]/30 hover:shadow-lg hover:bg-gradient-to-r hover:from-[#0b6d41]/20 hover:to-[#ffde59]/20 transition-all hover:border-[#0b6d41] duration-200"
+                  className="flex items-center justify-between p-5 bg-[#0b6d41]/10 rounded-xl border border-[#0b6d41]/30 hover:shadow-lg hover:bg-[#0b6d41]/20 transition-all hover:border-[#0b6d41] duration-200"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#0b6d41] to-[#0f8f56] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md font-poppins">
+                    <div className="w-14 h-14 bg-[#0b6d41] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md font-poppins">
                       {route.route_number}
                     </div>
                     <div>
@@ -250,7 +250,7 @@ export default function StaffDashboardPage() {
                   </div>
                   <Link
                     href={`/staff/routes/${route.route_id}`}
-                    className="px-5 py-2.5 bg-gradient-to-r from-[#0b6d41] to-[#0f8f56] text-white rounded-xl hover:from-[#085032] hover:to-[#0b6d41] focus:from-[#085032] focus:to-[#085032] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:from-[#085032] active:to-[#085032] active:scale-95 transition-all text-sm font-semibold shadow-md hover:shadow-xl hover:scale-105 font-inter"
+                    className="px-5 py-2.5 bg-[#0b6d41] text-white rounded-xl hover:bg-[#085032] focus:bg-[#085032] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:bg-[#085032] active:scale-95 transition-all text-sm font-semibold shadow-md hover:shadow-xl hover:scale-105 font-inter"
                   >
                     View Details
                   </Link>
@@ -266,7 +266,7 @@ export default function StaffDashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/staff/assigned-routes"
-              className="flex items-center p-5 bg-gradient-to-br from-[#0b6d41]/10 to-[#0b6d41]/5 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:scale-100 transition-all border border-[#0b6d41]/20 hover:border-[#0b6d41] focus:border-[#0b6d41] group"
+              className="flex items-center p-5 bg-[#0b6d41]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:scale-100 transition-all border border-[#0b6d41]/20 hover:border-[#0b6d41] focus:border-[#0b6d41] group"
             >
               <div className="w-12 h-12 bg-[#0b6d41] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <RouteIcon className="w-6 h-6 text-white" />
@@ -279,7 +279,7 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/routes"
-              className="flex items-center p-5 bg-gradient-to-br from-[#ffde59]/20 to-[#ffde59]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#e6c64d] focus:ring-offset-2 active:scale-100 transition-all border border-[#ffde59]/30 hover:border-[#e6c64d] focus:border-[#e6c64d] group"
+              className="flex items-center p-5 bg-[#ffde59]/20 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#e6c64d] focus:ring-offset-2 active:scale-100 transition-all border border-[#ffde59]/30 hover:border-[#e6c64d] focus:border-[#e6c64d] group"
             >
               <div className="w-12 h-12 bg-[#e6c64d] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <Bus className="w-6 h-6 text-white" />
@@ -292,7 +292,7 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/students"
-              className="flex items-center p-5 bg-gradient-to-br from-[#3b82f6]/10 to-[#3b82f6]/5 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 active:scale-100 transition-all border border-[#3b82f6]/20 hover:border-[#3b82f6] focus:border-[#3b82f6] group"
+              className="flex items-center p-5 bg-[#3b82f6]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 active:scale-100 transition-all border border-[#3b82f6]/20 hover:border-[#3b82f6] focus:border-[#3b82f6] group"
             >
               <div className="w-12 h-12 bg-[#3b82f6] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <Users className="w-6 h-6 text-white" />
@@ -305,7 +305,7 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/grievances"
-              className="flex items-center p-5 bg-gradient-to-br from-[#f59e0b]/10 to-[#f59e0b]/5 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:ring-offset-2 active:scale-100 transition-all border border-[#f59e0b]/20 hover:border-[#f59e0b] focus:border-[#f59e0b] group"
+              className="flex items-center p-5 bg-[#f59e0b]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:ring-offset-2 active:scale-100 transition-all border border-[#f59e0b]/20 hover:border-[#f59e0b] focus:border-[#f59e0b] group"
             >
               <div className="w-12 h-12 bg-[#f59e0b] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <FileText className="w-6 h-6 text-white" />
@@ -318,7 +318,7 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/bookings"
-              className="flex items-center p-5 bg-gradient-to-br from-[#0b6d41]/10 to-[#0b6d41]/5 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:scale-100 transition-all border border-[#0b6d41]/20 hover:border-[#0b6d41] focus:border-[#0b6d41] group"
+              className="flex items-center p-5 bg-[#0b6d41]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:ring-offset-2 active:scale-100 transition-all border border-[#0b6d41]/20 hover:border-[#0b6d41] focus:border-[#0b6d41] group"
             >
               <div className="w-12 h-12 bg-[#0b6d41] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <Calendar className="w-6 h-6 text-white" />
@@ -331,7 +331,7 @@ export default function StaffDashboardPage() {
 
             <Link
               href="/staff/reports"
-              className="flex items-center p-5 bg-gradient-to-br from-[#14b8a6]/10 to-[#14b8a6]/5 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#14b8a6] focus:ring-offset-2 active:scale-100 transition-all border border-[#14b8a6]/20 hover:border-[#14b8a6] focus:border-[#14b8a6] group"
+              className="flex items-center p-5 bg-[#14b8a6]/10 rounded-xl hover:shadow-lg hover:scale-[1.02] focus:shadow-xl focus:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-[#14b8a6] focus:ring-offset-2 active:scale-100 transition-all border border-[#14b8a6]/20 hover:border-[#14b8a6] focus:border-[#14b8a6] group"
             >
               <div className="w-12 h-12 bg-[#14b8a6] rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <TrendingUp className="w-6 h-6 text-white" />

@@ -133,9 +133,9 @@ export default function StaffLayout({
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/10 to-transparent pointer-events-none"></div>
 
         {/* Sidebar Header */}
-        <div className="relative p-6 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent">
+        <div className="relative p-6 border-b border-white/10 bg-white/5">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#0b6d41] to-[#ffde59] rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/20 backdrop-blur-sm">
+            <div className="w-12 h-12 bg-[#0b6d41] rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/20 backdrop-blur-sm">
               <Briefcase className="w-6 h-6 text-white" strokeWidth={2.5} />
             </div>
             <div>
@@ -147,10 +147,10 @@ export default function StaffLayout({
 
         {/* User Info Card */}
         <div className="relative p-4 border-b border-white/10">
-          <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-white/10 hover:from-white/15 hover:to-white/10 transition-all duration-300">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-white/10 hover:bg-white/15 transition-all duration-300">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-[#0b6d41] via-[#ffde59] to-[#0b6d41] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/20">
+                <div className="w-14 h-14 bg-[#0b6d41] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/20">
                   <User className="w-7 h-7 text-white" strokeWidth={2.5} />
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#ffde59] rounded-full border-2 border-white shadow-lg"></div>
@@ -186,7 +186,7 @@ export default function StaffLayout({
                 >
                   {/* Active indicator */}
                   {item.current && (
-                    <div className="active-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-[#0b6d41] to-[#ffde59] rounded-r-full shadow-lg"></div>
+                    <div className="active-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ffde59] rounded-r-full shadow-lg"></div>
                   )}
 
                   {/* Icon container */}
@@ -194,11 +194,11 @@ export default function StaffLayout({
                     flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
                     transition-all duration-300
                     ${item.current
-                      ? 'bg-gradient-to-br from-[#0b6d41] to-[#ffde59] shadow-lg scale-110'
+                      ? 'bg-[#ffde59] shadow-lg scale-110'
                       : 'bg-white/10 group-hover:bg-white/20 group-hover:scale-110 group-hover:shadow-md'
                     }
                   `}>
-                    <Icon className="w-5 h-5" strokeWidth={item.current ? 2.5 : 2} />
+                    <Icon className="w-5 h-5 text-white" strokeWidth={item.current ? 2.5 : 2} />
                   </div>
 
                   {/* Text */}
@@ -337,15 +337,15 @@ export default function StaffLayout({
                     )}
                     className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl transition-all ${
                       item.current
-                        ? 'bg-gradient-to-r from-[#0b6d41]/10 to-[#ffde59]/10 border border-[#0b6d41]/30 shadow-sm'
+                        ? 'bg-[#0b6d41]/10 border border-[#0b6d41]/30 shadow-sm'
                         : 'hover:bg-gray-50 active:bg-gray-100'
-                    } ${isAction && item.name === 'Scan Ticket' ? 'bg-gradient-to-r from-[#0b6d41]/10 to-[#ffde59]/10 border border-[#0b6d41]/30' : ''}`}
+                    } ${isAction && item.name === 'Scan Ticket' ? 'bg-[#ffde59]/10 border border-[#ffde59]/30' : ''}`}
                   >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                       item.current
-                        ? 'bg-gradient-to-br from-[#0b6d41] to-[#0f8f56] shadow-md'
+                        ? 'bg-[#0b6d41] shadow-md'
                         : isAction && item.name === 'Scan Ticket'
-                        ? 'bg-gradient-to-br from-[#0b6d41] to-[#ffde59] shadow-md'
+                        ? 'bg-[#ffde59] shadow-md'
                         : 'bg-gray-100'
                     }`}>
                       <Icon className={`w-6 h-6 ${item.current || (isAction && item.name === 'Scan Ticket') ? 'text-white' : 'text-gray-600'}`} />
@@ -394,7 +394,7 @@ export default function StaffLayout({
         {/* Floating Action Button - Scan Ticket (positioned above bug report button) */}
         <button
           onClick={() => setScannerOpen(true)}
-          className="fixed bottom-[200px] right-6 lg:bottom-[104px] lg:right-8 z-30 w-16 h-16 bg-gradient-to-br from-[#0b6d41] to-[#ffde59] text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+          className="fixed bottom-[200px] right-6 lg:bottom-[104px] lg:right-8 z-30 w-16 h-16 bg-[#0b6d41] text-white rounded-full shadow-2xl hover:shadow-xl hover:scale-110 hover:bg-[#085032] active:scale-95 transition-all flex items-center justify-center group"
           aria-label="Scan Ticket"
           title="Scan Ticket"
         >
