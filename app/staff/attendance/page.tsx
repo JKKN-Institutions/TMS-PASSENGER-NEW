@@ -237,8 +237,7 @@ export default function StaffAttendancePage() {
         </div>
 
         <div className="p-4 md:p-6 space-y-6">
-
-        {/* Error/Success Messages */}
+          {/* Error/Success Messages */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-center">
@@ -543,6 +542,7 @@ export default function StaffAttendancePage() {
               </table>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

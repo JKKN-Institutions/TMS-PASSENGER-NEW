@@ -244,6 +244,7 @@ export default function StaffReportsPage() {
             </div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   );

@@ -545,6 +545,7 @@ export default function RouteDetailPage() {
             </p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

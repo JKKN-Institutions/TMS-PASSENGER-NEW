@@ -235,8 +235,7 @@ export default function StaffAssignedRoutesPage() {
         </div>
 
         <div className="p-4 md:p-6">
-
-        {/* Stats Cards */}
+          {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
@@ -490,6 +489,7 @@ export default function StaffAssignedRoutesPage() {
             })}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

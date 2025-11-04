@@ -367,6 +367,7 @@ export default function StaffStudentsPage() {
             )}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

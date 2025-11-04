@@ -420,6 +420,7 @@ export default function StaffRoutesPage() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
