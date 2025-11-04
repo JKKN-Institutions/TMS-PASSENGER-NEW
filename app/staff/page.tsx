@@ -145,14 +145,14 @@ export default function StaffDashboardPage() {
     <div className="min-h-screen bg-[#fbfbee] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Welcome Header */}
-        <div className="bg-[#0b6d41] rounded-2xl p-8 text-white shadow-xl">
+        <div className="bg-[#0b6d41] rounded-2xl p-6 md:p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-2 font-poppins">Welcome back, {staffName}!</h1>
-              <p className="text-white text-base md:text-lg opacity-95 font-inter">{department}</p>
-              <p className="text-white text-sm mt-1 opacity-90 font-inter">Manage your assigned routes and passengers efficiently</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold font-poppins truncate">Welcome back, {staffName}!</h1>
+              <p className="hidden md:block text-white text-base md:text-lg opacity-95 font-inter mt-2">{department}</p>
+              <p className="hidden md:block text-white text-sm mt-1 opacity-90 font-inter">Manage your assigned routes and passengers efficiently</p>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:block flex-shrink-0 ml-4">
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
                 <UserCheck className="w-10 h-10 text-white" />
               </div>
