@@ -199,56 +199,39 @@ export default function StaffStudentsPage() {
   const uniqueYears = Array.from(new Set(students.map(s => s.year).filter(Boolean))).sort();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="bg-[#0b6d41] rounded-2xl p-6 md:p-8 text-white shadow-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold truncate">Students Directory</h1>
-              <p className="hidden md:block text-white opacity-95 text-base md:text-lg mt-2">View and manage student records</p>
-            </div>
-            <div className="hidden md:block flex-shrink-0 ml-4">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <Users className="w-10 h-10" />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Simple Fixed Header */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 md:px-6 md:py-4 sticky top-0 z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-poppins">Students</h1>
         </div>
 
+        <div className="p-4 md:p-6 space-y-6">
+
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-green-600" />
-              </div>
-              <span className="text-green-600 text-sm font-medium">Students</span>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="w-5 h-5 text-[#0b6d41]" />
+              <span className="text-xs text-gray-600 font-medium font-inter">Total</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.total || students.length}</h3>
-            <p className="text-gray-500 text-sm mt-1">Total students</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 font-poppins">{stats.total || students.length}</h3>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-blue-600" />
-              </div>
-              <span className="text-blue-600 text-sm font-medium">Active</span>
+          <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-[#0b6d41]" />
+              <span className="text-xs text-gray-600 font-medium font-inter">Active</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.active || 0}</h3>
-            <p className="text-gray-500 text-sm mt-1">Active students</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 font-poppins">{stats.active || 0}</h3>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-green-600" />
-              </div>
-              <span className="text-green-600 text-sm font-medium">Routes</span>
+          <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-5 h-5 text-[#0b6d41]" />
+              <span className="text-xs text-gray-600 font-medium font-inter truncate">Routes</span>
             </div>
-            <h3 className="text-3xl font-bold text-gray-800">{stats.routes_count || staffRoutes.length}</h3>
-            <p className="text-gray-500 text-sm mt-1">Assigned routes</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 font-poppins">{stats.routes || 0}</h3>
           </div>
         </div>
 
@@ -315,9 +298,9 @@ export default function StaffStudentsPage() {
           </div>
         </div>
 
-        {/* Students List */}
+        {/* Students Table */}
         {filteredStudents.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-lg border border-gray-100">
+          <div className="bg-white rounded-lg p-12 text-center border border-gray-200">
             <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No students found</h3>
             <p className="text-gray-600">
@@ -327,127 +310,61 @@ export default function StaffStudentsPage() {
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 divide-y divide-gray-100">
-            {filteredStudents.map((student) => {
-              const isExpanded = expandedStudent === student.student_id;
-              return (
-                <div key={student.student_id} className="hover:bg-gray-50 transition-colors">
-                  <div
-                    className="p-6 cursor-pointer"
-                    onClick={() => setExpandedStudent(isExpanded ? null : student.student_id)}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Roll No</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Department</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Year</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden lg:table-cell">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden lg:table-cell">Phone</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Route</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredStudents.map((student) => (
+                  <tr key={student.student_id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-[#0b6d41] bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0">
                           {student.profile_image ? (
                             <img src={student.profile_image} alt={student.student_name} className="w-full h-full rounded-full object-cover" />
                           ) : (
-                            <User className="w-6 h-6 text-green-600" />
+                            <User className="w-4 h-4 text-[#0b6d41]" />
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-gray-900 text-lg truncate">
-                            {student.student_name}
-                          </h3>
-                          <p className="text-sm text-gray-600 font-mono">{student.roll_number}</p>
-                          <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
-                            {student.department && (
-                              <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                                {student.department}
-                              </span>
-                            )}
-                            {student.year && (
-                              <span className="bg-green-50 text-green-700 px-2 py-1 rounded">
-                                Year {student.year}
-                              </span>
-                            )}
-                            {student.routes && student.routes.length > 0 && (
-                              <span className="bg-green-50 text-green-700 px-2 py-1 rounded flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                {student.routes[0].route_number}
-                                {student.routes.length > 1 && ` +${student.routes.length - 1}`}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                        <span className="font-medium text-gray-900 text-sm">{student.student_name}</span>
                       </div>
-                      {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0 ml-4" />
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600 font-mono">{student.roll_number}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">{student.department || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">{student.year ? `Year ${student.year}` : '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">{student.email}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">{student.phone}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {student.routes && student.routes.length > 0 ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#0b6d41] bg-opacity-10 text-[#0b6d41] rounded text-xs font-medium">
+                          <MapPin className="w-3 h-3" />
+                          {student.routes[0].route_number}
+                          {student.routes.length > 1 && ` +${student.routes.length - 1}`}
+                        </span>
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0 ml-4" />
+                        <span className="text-gray-400">-</span>
                       )}
-                    </div>
-                  </div>
-
-                  {isExpanded && (
-                    <div className="px-6 pb-6 bg-gray-50 border-t border-gray-200">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-3">
-                            <Mail className="w-5 h-5 text-gray-400" />
-                            <div>
-                              <p className="text-xs text-gray-500">Email</p>
-                              <p className="text-sm font-medium text-gray-900">{student.email}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <Phone className="w-5 h-5 text-gray-400" />
-                            <div>
-                              <p className="text-xs text-gray-500">Mobile</p>
-                              <p className="text-sm font-medium text-gray-900">{student.phone}</p>
-                            </div>
-                          </div>
-
-                          {student.section && (
-                            <div className="flex items-center gap-3">
-                              <Hash className="w-5 h-5 text-gray-400" />
-                              <div>
-                                <p className="text-xs text-gray-500">Section</p>
-                                <p className="text-sm font-medium text-gray-900">{student.section}</p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {student.routes && student.routes.length > 0 && (
-                          <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                              <MapPin className="w-4 h-4 text-green-600" />
-                              Transport Details
-                            </h4>
-                            <div className="space-y-3">
-                              {student.routes.map((route, idx) => (
-                                <div key={idx} className="text-sm border-b border-gray-100 pb-2 last:border-0 last:pb-0">
-                                  <div className="font-medium text-gray-900 mb-1">
-                                    Route {route.route_number} - {route.route_name}
-                                  </div>
-                                  <div className="text-gray-600 text-xs">
-                                    {route.start_location} → {route.end_location}
-                                  </div>
-                                </div>
-                              ))}
-                              {student.boarding_stops && student.boarding_stops.length > 0 && (
-                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <p className="text-xs text-gray-500 mb-2">Boarding Stops:</p>
-                                  <div className="flex flex-wrap gap-2">
-                                    {student.boarding_stops.map((stop, idx) => (
-                                      <span key={idx} className="bg-green-50 text-green-700 px-2 py-1 rounded text-xs">
-                                        {stop}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredStudents.length > 0 && (
+              <div className="bg-gray-50 px-4 py-3 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Showing {filteredStudents.length} of {students.length} students
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

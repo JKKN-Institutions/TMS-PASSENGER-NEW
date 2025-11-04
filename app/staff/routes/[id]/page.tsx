@@ -241,40 +241,41 @@ export default function RouteDetailPage() {
   const filteredCount = getFilteredPassengers().length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Link
-            href="/staff/assigned-routes"
-            className="p-2 hover:bg-white rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6 text-gray-600" />
-          </Link>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Route Details</h1>
-            <p className="text-gray-600 mt-1 text-sm md:text-base">View route information and passenger list</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Simple Fixed Header */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 md:px-6 md:py-4 sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/staff/assigned-routes"
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </Link>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-poppins">Route</h1>
           </div>
         </div>
 
+        <div className="p-4 md:p-6 space-y-6">
+
         {/* Route Info Card */}
-        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="bg-[#0b6d41] rounded-lg p-6 text-white border border-gray-200">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center text-2xl font-bold">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-2xl font-bold">
                 {routeData.route.route_number}
               </div>
               <div>
-                <h2 className="text-2xl font-bold mb-1">{routeData.route.route_name}</h2>
-                <div className="flex items-center gap-2 text-white opacity-95">
+                <h2 className="text-xl font-bold mb-1">{routeData.route.route_name}</h2>
+                <div className="flex items-center gap-2 text-white opacity-95 text-sm">
                   <MapPin className="w-4 h-4" />
                   <span>{routeData.route.start_location} → {routeData.route.end_location}</span>
                 </div>
               </div>
             </div>
-            <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+            <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
               routeData.route.status === 'active'
-                ? 'bg-green-100 text-green-800'
+                ? 'bg-white text-[#0b6d41]'
                 : 'bg-gray-100 text-gray-800'
             }`}>
               {routeData.route.status}
@@ -282,20 +283,20 @@ export default function RouteDetailPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
+            <div className="bg-white bg-opacity-10 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-white opacity-90 text-xs mb-1">
                 <Clock className="w-4 h-4" />
                 <span>Timing</span>
               </div>
-              <p className="text-lg font-semibold text-white">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
+              <p className="text-base font-semibold text-white">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
             </div>
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
+            <div className="bg-white bg-opacity-10 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-white opacity-90 text-xs mb-1">
                 <Users className="w-4 h-4" />
                 <span>Capacity</span>
               </div>
-              <p className="text-lg font-semibold text-white">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
+              <p className="text-base font-semibold text-white">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
             </div>
 
             <div className="bg-white bg-opacity-10 rounded-lg p-4">
@@ -432,11 +433,11 @@ export default function RouteDetailPage() {
         {/* Passengers List */}
         <div className="space-y-6">
           {groupedPassengers.map(([stopName, passengers]) => (
-            <div key={stopName} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-100 to-yellow-100 p-4 border-b border-gray-200">
+            <div key={stopName} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 p-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-green-600" />
+                    <MapPin className="w-5 h-5 text-[#0b6d41]" />
                     <div>
                       <h3 className="font-semibold text-gray-900">{stopName}</h3>
                       {passengers[0]?.boardingStop && (
@@ -444,7 +445,7 @@ export default function RouteDetailPage() {
                       )}
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-[#0b6d41] text-white rounded-lg text-sm font-medium">
                     {passengers.length} passenger{passengers.length !== 1 ? 's' : ''}
                   </span>
                 </div>

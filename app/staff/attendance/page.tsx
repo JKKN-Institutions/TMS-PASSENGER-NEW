@@ -229,34 +229,14 @@ export default function StaffAttendancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="bg-[#0b6d41] rounded-2xl p-6 md:p-8 text-white shadow-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold truncate">Attendance Management</h1>
-              <p className="hidden md:block text-white opacity-95 text-base md:text-lg mt-2">Scan tickets and track student attendance</p>
-              <div className="hidden md:flex items-center gap-2 text-sm bg-white bg-opacity-20 rounded-lg px-4 py-2 w-fit mt-3">
-                <Calendar className="w-4 h-4" />
-                <span>Showing attendance for:</span>
-                <span className="font-semibold">
-                  {new Date(selectedDate).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </span>
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <UserCheck className="w-10 h-10" />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Simple Fixed Header */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 md:px-6 md:py-4 sticky top-0 z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-poppins">Attendance</h1>
         </div>
+
+        <div className="p-4 md:p-6 space-y-6">
 
         {/* Error/Success Messages */}
         {error && (
@@ -491,9 +471,9 @@ export default function StaffAttendancePage() {
         </div>
 
         {/* Attendance Records */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900">Attendance Records</h2>
+        <div className="bg-white rounded-lg border border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Attendance Records</h2>
             <p className="text-gray-600 text-sm mt-1">
               {attendanceRecords.length} record{attendanceRecords.length !== 1 ? 's' : ''} found
             </p>
@@ -506,61 +486,61 @@ export default function StaffAttendancePage() {
               <p className="text-gray-600">Scan tickets to record attendance</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
-              {attendanceRecords.map((record) => (
-                <div key={record.id} className="p-6 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <BadgeCheck className="w-5 h-5 text-green-600" />
-                        <span className="font-semibold text-gray-900">
-                          {record.students?.student_name || 'Unknown Student'}
-                        </span>
-                        <span className="text-sm text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
-                          {record.students?.roll_number}
-                        </span>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Student</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Roll No</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Route</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden lg:table-cell">Boarding Time</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden lg:table-cell">Marked At</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {attendanceRecords.map((record) => (
+                    <tr key={record.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                        {record.students?.student_name || 'Unknown Student'}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 font-mono">
+                        {record.students?.roll_number}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
+                        <div className="flex items-center gap-1">
+                          <RouteIcon className="w-3.5 h-3.5 text-[#0b6d41]" />
+                          <span>{record.routes?.route_number}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">
+                        {record.boarding_time ? (
+                          new Date(record.boarding_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
                           record.status === 'present' ? 'bg-green-100 text-green-800' :
                           record.status === 'absent' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
                           {record.status}
                         </span>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                        {record.routes && (
-                          <div className="flex items-center gap-1">
-                            <RouteIcon className="w-4 h-4" />
-                            <span>{record.routes.route_number} - {record.routes.route_name}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{record.routes?.start_location} → {record.routes?.end_location}</span>
-                        </div>
-                        {record.boarding_time && (
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
-                            Boarded: {new Date(record.boarding_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>
-                          Marked on {new Date(record.created_at).toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-500 hidden lg:table-cell">
+                        {new Date(record.created_at).toLocaleString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

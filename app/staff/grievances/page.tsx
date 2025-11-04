@@ -245,22 +245,14 @@ export default function StaffGrievancesPage() {
   const resolvedCount = grievances.filter(g => g.status === 'resolved').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="bg-[#0b6d41] rounded-2xl p-6 md:p-8 text-white shadow-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold truncate">Grievances Management</h1>
-              <p className="hidden md:block text-white opacity-95 text-base md:text-lg mt-2">Handle student complaints and issues</p>
-            </div>
-            <div className="hidden md:block flex-shrink-0 ml-4">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <FileText className="w-10 h-10" />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Simple Fixed Header */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 md:px-6 md:py-4 sticky top-0 z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-poppins">Grievances</h1>
         </div>
+
+        <div className="p-4 md:p-6 space-y-6">
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

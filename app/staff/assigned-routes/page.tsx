@@ -227,24 +227,14 @@ export default function StaffAssignedRoutesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbfbee] p-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="bg-[#0b6d41] rounded-2xl p-6 md:p-8 text-white shadow-xl mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold truncate font-poppins">My Assigned Routes</h1>
-              <p className="hidden md:block text-white opacity-95 text-base md:text-lg mt-2 font-inter">
-                View routes assigned to you and the passengers on each route
-              </p>
-            </div>
-            <div className="hidden md:block flex-shrink-0 ml-4">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <RouteIcon className="w-10 h-10 text-white" />
-              </div>
-            </div>
-          </div>
+        {/* Simple Fixed Header */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 md:px-6 md:py-4 sticky top-0 z-10">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-poppins">Assigned</h1>
         </div>
+
+        <div className="p-4 md:p-6">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
