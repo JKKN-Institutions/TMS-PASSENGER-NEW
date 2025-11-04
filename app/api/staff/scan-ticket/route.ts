@@ -155,6 +155,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get staff information from admin_users
+    const { data: adminUser } = await supabase
+      .from('admin_users')
+      .select('name, email')
+      .eq('email', staffEmail.toLowerCase())
+      .single();
+
+    // Update attendance record with staff information
+    const { error: updateError } = await supabase
+      .from('attendance')
+      .update({
+        marked_by_staff_email: staffEmail,
+        marked_by_staff_name: adminUser?.name || staffEmail.split('@')[0]
+      })
+      .eq('id', result.attendance_id);
+
+    if (updateError) {
+      console.error('⚠️ Warning: Could not update staff info:', updateError);
+    }
+
     // Fetch the complete attendance record
     const { data: attendanceRecord } = await supabase
       .from('attendance')
@@ -166,7 +186,7 @@ export async function POST(request: NextRequest) {
       bookingId: booking.id,
       studentName: booking.students?.name,
       ticketCode,
-      scannedBy: staffEmail,
+      scannedBy: adminUser?.name || staffEmail,
     });
 
     return NextResponse.json({
