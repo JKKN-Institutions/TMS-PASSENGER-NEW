@@ -24,13 +24,17 @@ import {
 } from 'lucide-react';
 import TicketScanner from './components/TicketScanner';
 import './sidebar-styles.css';
+import { LanguageProvider, useLanguage } from '@/lib/i18n/language-context';
+import LanguageSwitcher from '@/components/language-switcher';
 
-export default function StaffLayout({
+// Inner layout component that uses language context
+function StaffLayoutInner({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { isAuthenticated, userType, isLoading, user, logout } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -243,6 +247,29 @@ export default function StaffLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar - Similar to driver layout */}
+        <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200">
+          <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+            {/* Mobile: App Logo & Name */}
+            <div className="flex items-center space-x-2 lg:hidden">
+              <img
+                src="/app-logo.png"
+                alt="TMS Logo"
+                className="w-8 h-8 drop-shadow-md"
+              />
+              <h1 className="text-lg font-bold text-gray-900">TMS</h1>
+            </div>
+
+            {/* Desktop: Empty space or can add title if needed */}
+            <div className="hidden lg:block"></div>
+
+            {/* Right side: Language Switcher only */}
+            <div className="flex items-center gap-2 ml-auto">
+              <LanguageSwitcher />
+            </div>
+          </div>
+        </div>
+
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
           {children}
@@ -419,5 +446,20 @@ export default function StaffLayout({
         />
       </div>
     </div>
+  );
+}
+
+// Main layout component with providers
+export default function StaffLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LanguageProvider defaultLanguage="en">
+      <StaffLayoutInner>
+        {children}
+      </StaffLayoutInner>
+    </LanguageProvider>
   );
 }
