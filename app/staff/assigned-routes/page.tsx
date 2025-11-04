@@ -231,11 +231,11 @@ export default function StaffAssignedRoutesPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 font-poppins">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-3 font-poppins">
             <RouteIcon className="w-8 h-8 text-[#0b6d41]" />
             My Assigned Routes
           </h1>
-          <p className="text-gray-600 mt-2 font-inter">
+          <p className="text-gray-600 mt-2 text-sm md:text-base font-inter">
             View routes assigned to you and the passengers on each route
           </p>
         </div>

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { ticketCode, staffEmail, scanLocation } = await request.json();
+    const { ticketCode, staffEmail, staffName, scanLocation } = await request.json();
 
     if (!ticketCode) {
       return NextResponse.json(
@@ -155,19 +155,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get staff information from admin_users
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('name, email')
-      .eq('email', staffEmail.toLowerCase())
-      .single();
+    // Determine staff name: use provided staffName, or lookup from admin_users, or fallback to email username
+    let finalStaffName = staffName;
+
+    if (!finalStaffName) {
+      // Try to get staff name from admin_users table
+      const { data: adminUser } = await supabase
+        .from('admin_users')
+        .select('name, email')
+        .eq('email', staffEmail.toLowerCase())
+        .single();
+
+      finalStaffName = adminUser?.name;
+    }
+
+    // Final fallback to email username
+    if (!finalStaffName) {
+      finalStaffName = staffEmail.split('@')[0];
+    }
 
     // Update attendance record with staff information
     const { error: updateError } = await supabase
       .from('attendance')
       .update({
         marked_by_staff_email: staffEmail,
-        marked_by_staff_name: adminUser?.name || staffEmail.split('@')[0]
+        marked_by_staff_name: finalStaffName
       })
       .eq('id', result.attendance_id);
 
@@ -186,7 +198,7 @@ export async function POST(request: NextRequest) {
       bookingId: booking.id,
       studentName: booking.students?.name,
       ticketCode,
-      scannedBy: adminUser?.name || staffEmail,
+      scannedBy: finalStaffName,
     });
 
     return NextResponse.json({

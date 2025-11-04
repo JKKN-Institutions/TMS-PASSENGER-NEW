@@ -148,8 +148,8 @@ export default function StaffDashboardPage() {
         <div className="bg-[#0b6d41] rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2 font-poppins">Welcome back, {staffName}!</h1>
-              <p className="text-white text-lg opacity-95 font-inter">{department}</p>
+              <h1 className="text-2xl md:text-3xl font-bold mb-2 font-poppins">Welcome back, {staffName}!</h1>
+              <p className="text-white text-base md:text-lg opacity-95 font-inter">{department}</p>
               <p className="text-white text-sm mt-1 opacity-90 font-inter">Manage your assigned routes and passengers efficiently</p>
             </div>
             <div className="hidden md:block">

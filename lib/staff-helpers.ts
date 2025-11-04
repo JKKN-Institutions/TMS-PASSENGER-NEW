@@ -317,11 +317,11 @@ class StaffHelpers {
   /**
    * Scan a ticket and record attendance
    */
-  async scanTicket(ticketCode: string, staffEmail: string, scanLocation?: string) {
+  async scanTicket(ticketCode: string, staffEmail: string, staffName?: string, scanLocation?: string) {
     const res = await fetch('/api/staff/scan-ticket', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticketCode, staffEmail, scanLocation })
+      body: JSON.stringify({ ticketCode, staffEmail, staffName, scanLocation })
     });
 
     const json = await res.json();

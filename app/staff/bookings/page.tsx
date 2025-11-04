@@ -199,8 +199,8 @@ export default function StaffBookingsPage() {
         <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-white shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Bookings Management</h1>
-              <p className="text-white opacity-95 text-lg mb-3">View and manage transport bookings</p>
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">Bookings Management</h1>
+              <p className="text-white opacity-95 text-base md:text-lg mb-3">View and manage transport bookings</p>
               <div className="flex items-center gap-2 text-sm bg-white bg-opacity-20 rounded-lg px-4 py-2 w-fit">
                 <Calendar className="w-4 h-4" />
                 <span>Showing bookings for:</span>

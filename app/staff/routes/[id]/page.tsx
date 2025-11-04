@@ -252,8 +252,8 @@ export default function RouteDetailPage() {
             <ArrowLeft className="w-6 h-6 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Route Details</h1>
-            <p className="text-gray-600 mt-1">View route information and passenger list</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Route Details</h1>
+            <p className="text-gray-600 mt-1 text-sm md:text-base">View route information and passenger list</p>
           </div>
         </div>
 

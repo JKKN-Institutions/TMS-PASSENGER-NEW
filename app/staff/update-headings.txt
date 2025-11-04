@@ -1,0 +1,13 @@
+Files to update:
+1. attendance-manage/page.tsx
+2. bookings/page.tsx
+3. grievances/page.tsx
+4. profile/page.tsx
+5. reports/page.tsx
+6. routes/page.tsx
+7. routes/[id]/page.tsx
+
+Pattern:
+- Change text-3xl to text-2xl md:text-3xl for h1 titles
+- Change text-lg to text-base md:text-lg for subtitles
+- Keep text-4xl as is for dashboard stats (those are fine)

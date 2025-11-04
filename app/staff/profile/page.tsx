@@ -93,8 +93,8 @@ export default function StaffProfilePage() {
                 <User className="w-10 h-10" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-2">{profile.name || 'Staff Profile'}</h1>
-                <p className="text-white opacity-95 text-lg">{profile.designation}</p>
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">{profile.name || 'Staff Profile'}</h1>
+                <p className="text-white opacity-95 text-base md:text-lg">{profile.designation}</p>
               </div>
             </div>
             {!editing && (
