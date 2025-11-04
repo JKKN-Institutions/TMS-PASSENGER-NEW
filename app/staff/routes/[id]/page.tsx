@@ -259,60 +259,60 @@ export default function RouteDetailPage() {
         <div className="p-4 md:p-6 space-y-6">
 
         {/* Route Info Card */}
-        <div className="bg-[#0b6d41] rounded-lg p-6 text-white border border-gray-200">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-2xl font-bold">
+        <div className="bg-white rounded-lg p-4 md:p-6 border border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-[#0b6d41] rounded-lg flex items-center justify-center text-lg md:text-2xl font-bold text-white flex-shrink-0">
                 {routeData.route.route_number}
               </div>
-              <div>
-                <h2 className="text-xl font-bold mb-1">{routeData.route.route_name}</h2>
-                <div className="flex items-center gap-2 text-white opacity-95 text-sm">
-                  <MapPin className="w-4 h-4" />
-                  <span>{routeData.route.start_location} → {routeData.route.end_location}</span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1 truncate">{routeData.route.route_name}</h2>
+                <div className="flex items-center gap-2 text-gray-600 text-sm">
+                  <MapPin className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{routeData.route.start_location} → {routeData.route.end_location}</span>
                 </div>
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
+            <span className={`px-3 py-1 rounded-lg text-sm font-medium flex-shrink-0 self-start ${
               routeData.route.status === 'active'
-                ? 'bg-white text-[#0b6d41]'
+                ? 'bg-[#0b6d41] text-white'
                 : 'bg-gray-100 text-gray-800'
             }`}>
               {routeData.route.status}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white bg-opacity-10 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-white opacity-90 text-xs mb-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
                 <Clock className="w-4 h-4" />
                 <span>Timing</span>
               </div>
-              <p className="text-base font-semibold text-white">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
+              <p className="text-sm md:text-base font-semibold text-gray-900">{routeData.route.departure_time} - {routeData.route.arrival_time}</p>
             </div>
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-white opacity-90 text-xs mb-1">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
                 <Users className="w-4 h-4" />
                 <span>Capacity</span>
               </div>
-              <p className="text-base font-semibold text-white">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
+              <p className="text-sm md:text-base font-semibold text-gray-900">{routeData.passengerCount}/{routeData.route.total_capacity}</p>
             </div>
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
                 <Navigation className="w-4 h-4" />
                 <span>Distance</span>
               </div>
-              <p className="text-lg font-semibold text-white">{routeData.route.distance} km</p>
+              <p className="text-sm md:text-base font-semibold text-gray-900">{routeData.route.distance} km</p>
             </div>
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-white opacity-90 text-sm mb-1">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
                 <Calendar className="w-4 h-4" />
                 <span>Fare</span>
               </div>
-              <p className="text-lg font-semibold text-white">₹{routeData.route.fare}</p>
+              <p className="text-sm md:text-base font-semibold text-gray-900">₹{routeData.route.fare}</p>
             </div>
           </div>
         </div>

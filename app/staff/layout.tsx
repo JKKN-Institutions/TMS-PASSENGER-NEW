@@ -375,8 +375,8 @@ function StaffLayoutInner({
                     }`}>
                       <Icon className={`w-6 h-6 ${item.current || (isAction && item.name === 'Scan Ticket') ? 'text-white' : 'text-gray-600'}`} />
                     </div>
-                    <div className="flex-1 text-left">
-                      <h3 className={`font-semibold font-inter ${
+                    <div className="flex-1 text-left min-w-0">
+                      <h3 className={`font-semibold font-inter truncate ${
                         item.current
                           ? 'text-[#0b6d41]'
                           : isAction && item.name === 'Scan Ticket'
@@ -386,7 +386,7 @@ function StaffLayoutInner({
                         {item.name}
                       </h3>
                       {isAction && item.name === 'Scan Ticket' && (
-                        <p className="text-xs text-[#0b6d41]/80 mt-0.5 font-inter">Verify passenger tickets</p>
+                        <p className="text-xs text-[#0b6d41]/80 mt-0.5 font-inter truncate">Verify passenger tickets</p>
                       )}
                     </div>
                     {item.current && (
