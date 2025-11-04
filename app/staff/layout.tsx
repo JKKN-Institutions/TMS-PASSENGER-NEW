@@ -88,9 +88,7 @@ function StaffLayoutInner({
   const moreMenuItems = [
     { name: 'Scan Ticket', icon: ScanLine, action: () => setScannerOpen(true) },
     { name: 'Assigned Routes', href: '/staff/assigned-routes', icon: RouteIcon, current: pathname === '/staff/assigned-routes' },
-    { name: 'All Routes', href: '/staff/routes', icon: Bus, current: pathname === '/staff/routes' },
     { name: 'Grievances', href: '/staff/grievances', icon: FileText, current: pathname === '/staff/grievances' },
-    { name: 'Reports', href: '/staff/reports', icon: TrendingUp, current: pathname === '/staff/reports' },
     { name: 'Profile', href: '/staff/profile', icon: User, current: pathname === '/staff/profile' },
   ];
 
@@ -263,8 +261,8 @@ function StaffLayoutInner({
             {/* Desktop: Empty space or can add title if needed */}
             <div className="hidden lg:block"></div>
 
-            {/* Right side: Language Switcher only */}
-            <div className="flex items-center gap-2 ml-auto">
+            {/* Right side: Language Switcher - Desktop only */}
+            <div className="hidden lg:flex items-center gap-2 ml-auto">
               <LanguageSwitcher />
             </div>
           </div>

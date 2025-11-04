@@ -92,7 +92,7 @@ export default function StaffProfilePage() {
             {!editing && (
               <button
                 onClick={() => setEditing(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors text-sm font-medium"
+                className="hidden lg:flex items-center gap-2 px-4 py-2 bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors text-sm font-medium"
               >
                 <Edit className="w-4 h-4" />
                 Edit
@@ -103,8 +103,8 @@ export default function StaffProfilePage() {
 
         <div className="p-4 md:p-6 space-y-6">
 
-        {/* Profile Information */}
-        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
+        {/* Profile Information - Hidden on mobile (lg:block) */}
+        <div className="hidden lg:block bg-white rounded-xl p-8 shadow-lg border border-gray-100">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Personal Information</h2>
 
           <div className="space-y-6">
@@ -244,8 +244,8 @@ export default function StaffProfilePage() {
           )}
         </div>
 
-        {/* Info Card */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+        {/* Info Card - Hidden on mobile (lg:block) */}
+        <div className="hidden lg:block bg-blue-50 border border-blue-200 rounded-xl p-6">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
@@ -258,6 +258,13 @@ export default function StaffProfilePage() {
               </ul>
             </div>
           </div>
+        </div>
+
+        {/* Mobile View - Show simple message */}
+        <div className="lg:hidden bg-white rounded-lg p-8 text-center border border-gray-200">
+          <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Profile Settings</h3>
+          <p className="text-gray-600">Profile management is available on desktop</p>
         </div>
         </div>
       </div>

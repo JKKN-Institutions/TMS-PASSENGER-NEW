@@ -322,10 +322,10 @@ export default function StaffAttendancePage() {
                   setScanning(true);
                 }}
                 disabled={scanning}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-sm sm:text-base flex-shrink-0"
               >
-                <Camera className="w-5 h-5" />
-                <span>Open Scanner</span>
+                <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="whitespace-nowrap">Open Scanner</span>
               </button>
             )}
           </div>
@@ -377,23 +377,23 @@ export default function StaffAttendancePage() {
                 type="text"
                 value={manualCode}
                 onChange={(e) => setManualCode(e.target.value)}
-                placeholder="Enter booking reference or QR code"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Enter booking reference"
+                className="flex-1 min-w-0 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm sm:text-base"
                 disabled={scanning}
               />
               <button
                 type="submit"
                 disabled={scanning || !manualCode.trim()}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-3 sm:px-6 py-2 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2 flex-shrink-0 text-sm sm:text-base"
               >
                 {scanning ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Scanning...</span>
+                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <span className="hidden sm:inline">Scanning...</span>
                   </>
                 ) : (
                   <>
-                    <QrCode className="w-5 h-5" />
+                    <QrCode className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>Scan</span>
                   </>
                 )}

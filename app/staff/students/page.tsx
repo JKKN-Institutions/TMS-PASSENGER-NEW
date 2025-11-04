@@ -314,6 +314,7 @@ export default function StaffStudentsPage() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider w-16">#</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Roll No</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider hidden md:table-cell">Department</th>
@@ -324,19 +325,11 @@ export default function StaffStudentsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredStudents.map((student) => (
+                {filteredStudents.map((student, index) => (
                   <tr key={student.student_id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-gray-500 font-medium">{index + 1}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-[#0b6d41] bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0">
-                          {student.profile_image ? (
-                            <img src={student.profile_image} alt={student.student_name} className="w-full h-full rounded-full object-cover" />
-                          ) : (
-                            <User className="w-4 h-4 text-[#0b6d41]" />
-                          )}
-                        </div>
-                        <span className="font-medium text-gray-900 text-sm">{student.student_name}</span>
-                      </div>
+                      <span className="font-medium text-gray-900 text-sm">{student.student_name}</span>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600 font-mono">{student.roll_number}</td>
                     <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">{student.department || '-'}</td>
