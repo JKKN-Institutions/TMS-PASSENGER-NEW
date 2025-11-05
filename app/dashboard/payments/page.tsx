@@ -77,7 +77,7 @@ export default function PaymentsPage() {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper className="pb-24 lg:pb-6">
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 py-4 sm:py-6">
         {/* Header */}
         <PassengerPageHeader

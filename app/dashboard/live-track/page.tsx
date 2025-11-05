@@ -331,7 +331,7 @@ export default function LiveTrackPage() {
   const isOnline = gpsStatus === 'online';
 
   return (
-    <PageWrapper className="bg-gray-50">
+    <PageWrapper className="bg-gray-50 pb-24 lg:pb-6">
       {/* Simple Header */}
       <PassengerPageHeader
         title="Live Track"

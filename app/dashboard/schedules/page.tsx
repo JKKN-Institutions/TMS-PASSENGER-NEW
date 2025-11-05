@@ -1658,7 +1658,7 @@ export default function SchedulesPage() {
   }
 
   return (
-    <div className="py-4 sm:py-6 space-y-6">
+    <div className="py-4 sm:py-6 space-y-6 pb-24 lg:pb-6">
       {/* Header */}
       <PassengerPageHeader
         title="My Transport Schedule"

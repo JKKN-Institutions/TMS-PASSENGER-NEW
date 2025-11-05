@@ -188,7 +188,7 @@ export default function RoutesPage() {
 
   return (
     <>
-      <div className="space-y-8">
+      <div className="space-y-8 pb-24 lg:pb-6">
         <RouteAccessControl
         isActive={paymentStatus?.isActive ?? true}
         nextDueAmount={nextDueAmount ?? undefined}

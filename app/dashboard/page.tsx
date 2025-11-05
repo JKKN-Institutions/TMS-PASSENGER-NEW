@@ -258,7 +258,7 @@ export default function DashboardPage() {
   if (shouldShowEnrollmentDashboard) {
     return (
       <>
-        <div className="min-h-full py-8 sm:py-12 px-4">
+        <div className="min-h-full py-8 sm:py-12 px-4 pb-24 lg:pb-6">
           {/* Simplified Welcome Section */}
         <motion.div
             initial={{ opacity: 0, y: -20 }}
