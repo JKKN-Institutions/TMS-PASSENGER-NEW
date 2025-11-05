@@ -1209,12 +1209,12 @@ export default function SchedulesPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'booked': return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg';
-      case 'available': return 'bg-gradient-to-r from-green-400 to-yellow-500 text-white hover:from-green-500 hover:to-yellow-600 shadow-md hover:shadow-lg';
-      case 'disabled': return 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-md';
-      case 'completed': return 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-md';
-      case 'closed': return 'bg-gradient-to-r from-gray-300 to-gray-400 text-white shadow-sm';
-      case 'full': return 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md';
+      case 'booked': return 'bg-[#0b6d41] text-white shadow-md';
+      case 'available': return 'bg-green-100 text-green-800 hover:bg-green-200 shadow-sm hover:shadow-md';
+      case 'disabled': return 'bg-orange-100 text-orange-800 shadow-sm';
+      case 'completed': return 'bg-gray-200 text-gray-700 shadow-sm';
+      case 'closed': return 'bg-gray-100 text-gray-600 shadow-sm';
+      case 'full': return 'bg-red-100 text-red-800 shadow-sm';
       default: return 'bg-gray-100 text-gray-400 border border-gray-200';
     }
   };
@@ -1667,102 +1667,50 @@ export default function SchedulesPage() {
         iconBgColor="bg-yellow-50"
       />
 
-      {/* Refresh Button */}
-      <div className="flex justify-end">
-        <button
-            onClick={async () => {
-              // Show loading state
-              const loadingToast = toast.loading('Refreshing schedules...');
-              
-              try {
-                // Just refresh route schedules WITHOUT aggressive booking verification
-                if (studentAllocation?.route.id && student?.student_id) {
-                  await fetchRouteSchedules(studentAllocation.route.id, student.student_id);
-                  
-                  // Load existing bookings after refreshing schedules
-                  setTimeout(() => {
-                    loadExistingBookings(student.student_id);
-                  }, 500);
-                }
-                
-                // Update refresh time
-                setLastVerificationTime(new Date());
-                
-                // Force calendar update
-                setCalendarKey(prev => prev + 1);
-                
-                toast.dismiss(loadingToast);
-                toast.success('Schedules refreshed successfully');
-                
-              } catch (error) {
-                console.error('Manual refresh failed:', error);
-                toast.dismiss(loadingToast);
-                toast.error('Failed to refresh schedules');
-              }
-            }}
-            disabled={verificationInProgress}
-            className={`px-4 py-2 text-sm text-white rounded-xl transition-all duration-300 flex items-center space-x-2 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 ${
-              verificationInProgress 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600'
-            }`}
-          >
-            {verificationInProgress ? (
-              <>
-                <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Refresh</span>
-              </>
-            ) : (
-              <>
-                <span>Refresh</span>
-              </>
-            )}
-          </button>
-        </div>
 
       {/* Enhanced Route Information */}
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 shadow-md">
+        <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+          <div className="w-10 h-10 bg-[#0b6d41] rounded-xl flex items-center justify-center flex-shrink-0">
             <Bus className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Your Allocated Route</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Allocated Route</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 shadow-sm">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl flex items-center justify-center shadow-md">
-              <Bus className="w-6 h-6 text-green-600 drop-shadow-sm" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="flex items-center space-x-3 bg-green-50 rounded-xl p-3 sm:p-4 shadow-sm">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+              <Bus className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
-            <div>
-              <p className="text-sm text-green-600 font-medium">Route</p>
-              <p className="font-bold text-gray-900 text-lg">{studentAllocation.route.routeNumber}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-yellow-50 to-green-50 rounded-xl p-4 shadow-sm">
-            <div className="w-12 h-12 bg-gradient-to-r from-yellow-100 to-green-100 rounded-xl flex items-center justify-center shadow-md">
-              <MapPin className="w-6 h-6 text-yellow-600 drop-shadow-sm" />
-            </div>
-            <div>
-              <p className="text-sm text-yellow-600 font-medium">Boarding Stop</p>
-              <p className="font-bold text-gray-900 text-lg">{studentAllocation.boardingStop.stopName}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-green-600 font-medium">Route</p>
+              <p className="font-bold text-gray-900 text-base sm:text-lg truncate">{studentAllocation.route.routeNumber}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-4 shadow-sm">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl flex items-center justify-center shadow-md">
-              <Clock className="w-6 h-6 text-green-600 drop-shadow-sm" />
+          <div className="flex items-center space-x-3 bg-green-50 rounded-xl p-3 sm:p-4 shadow-sm">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
-            <div>
-              <p className="text-sm text-green-600 font-medium">Departure Time</p>
-              <p className="font-bold text-gray-900 text-lg">{formatTime(studentAllocation.boardingStop.stopTime)}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-green-600 font-medium">Boarding Stop</p>
+              <p className="font-bold text-gray-900 text-base sm:text-lg truncate">{studentAllocation.boardingStop.stopName}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 shadow-sm">
-            <div className="w-12 h-12 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl flex items-center justify-center shadow-md">
-              <CreditCard className="w-6 h-6 text-yellow-600 drop-shadow-sm" />
+          <div className="flex items-center space-x-3 bg-green-50 rounded-xl p-3 sm:p-4 shadow-sm">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
-            <div>
-              <p className="text-sm text-yellow-600 font-medium">Fare</p>
-              <p className="font-bold text-gray-900 text-lg">{formatCurrency(studentAllocation.route.fare)}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-green-600 font-medium">Departure Time</p>
+              <p className="font-bold text-gray-900 text-base sm:text-lg truncate">{formatTime(studentAllocation.boardingStop.stopTime)}</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3 bg-green-50 rounded-xl p-3 sm:p-4 shadow-sm">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-green-600 font-medium">Fare</p>
+              <p className="font-bold text-gray-900 text-base sm:text-lg truncate">{formatCurrency(studentAllocation.route.fare)}</p>
             </div>
           </div>
         </div>
@@ -1773,34 +1721,33 @@ export default function SchedulesPage() {
         isActive={studentAllocation?.route ? (paymentStatus?.isActive ?? true) : true}
         nextDueAmount={studentAllocation?.route ? (nextDueAmount ?? undefined) : undefined}
       >
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
-        <div className="flex items-center justify-between mb-6">
+        <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 shadow-md">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#0b6d41] rounded-xl flex items-center justify-center flex-shrink-0">
               <Calendar className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
                 {calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </h2>
-              <div className="text-sm text-green-700 font-medium">
-                Detected bookings: {Array.from(bookingStatus.values()).filter(Boolean).length} | 
-                Schedules with bookings: {schedules.filter(s => s.userBooking).length}
+              <div className="text-xs sm:text-sm text-gray-600 font-medium truncate">
+                Bookings: {Array.from(bookingStatus.values()).filter(Boolean).length}
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             <button
               onClick={() => navigateMonth('prev')}
-              className="p-3 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200"
             >
-              <ChevronLeft className="w-6 h-6 text-green-600" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </button>
             <button
               onClick={() => navigateMonth('next')}
-              className="p-3 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-xl transition-all duration-200"
             >
-              <ChevronRight className="w-6 h-6 text-green-600" />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </button>
           </div>
         </div>
@@ -1896,65 +1843,34 @@ export default function SchedulesPage() {
       </div>
 
       {/* Enhanced Legend */}
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-green-200 p-6 shadow-xl">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 shadow-md">
+        <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+          <div className="w-10 h-10 bg-[#0b6d41] rounded-xl flex items-center justify-center flex-shrink-0">
             <Star className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Calendar Legend</h3>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900">Calendar Legend</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-3 shadow-sm">
-            <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-sm"></div>
-            <span className="text-sm font-bold text-green-800">Booked</span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#0b6d41] rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Booked</span>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-3 shadow-sm">
-            <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-yellow-500 rounded-lg shadow-sm"></div>
-            <span className="text-sm font-bold text-green-700">Available</span>
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Available</span>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-3 shadow-sm">
-            <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg shadow-sm"></div>
-            <span className="text-sm font-bold text-orange-700">Disabled</span>
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Disabled</span>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-3 shadow-sm">
-            <div className="w-6 h-6 bg-gradient-to-r from-gray-300 to-gray-400 rounded-lg shadow-sm"></div>
-            <span className="text-sm font-bold text-gray-600">Closed</span>
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Closed</span>
           </div>
-          <div className="flex items-center space-x-3 bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-3 shadow-sm">
-            <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-lg shadow-sm"></div>
-            <span className="text-sm font-bold text-red-700">Full</span>
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-red-100 rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Full</span>
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-200 shadow-sm">
-            <p className="text-sm text-green-800 font-medium">
-              <strong className="text-green-900">Booking Process:</strong> Click on green-yellow (available) dates to book your trip. 
-              Green dates show your existing bookings - click to view your ticket.
-            </p>
-          </div>
-          <div className="p-4 bg-gradient-to-r from-yellow-50 to-green-50 rounded-xl border border-yellow-200 shadow-sm">
-            <p className="text-sm text-green-800 font-medium">
-              <strong className="text-green-900">Manual Refresh:</strong> Use the "Refresh" button to sync schedules. 
-              No automatic booking - all bookings require your confirmation.
-            </p>
-          </div>
-        </div>
-        <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-green-50 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-sm text-gray-700 font-medium">
-            <strong className="text-gray-900">Status Guide:</strong> 
-            <span className="text-orange-600 font-bold"> Disabled</span> - Administration restricted. 
-            <span className="text-gray-600 font-bold"> Closed</span> - Booking window expired. 
-            <span className="text-red-600 font-bold"> Full</span> - No seats available.
-          </p>
-          <p className="text-sm text-gray-700 mt-2 font-medium">
-            <strong className="text-gray-900">Visual Indicators:</strong>
-            <span className="text-red-600 font-bold"> Red diagonal lines with "CANCELLED" or "DISABLED"</span> - Trip unavailable due to admin action.
-          </p>
-          {lastVerificationTime && (
-            <p className="text-sm text-green-600 mt-2 font-medium">
-              <strong>Last refreshed:</strong> {lastVerificationTime.toLocaleString()}
-            </p>
-          )}
         </div>
       </div>
       </ScheduleAccessControl>

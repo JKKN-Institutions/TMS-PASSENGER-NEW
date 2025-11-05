@@ -28,6 +28,7 @@ import toast from 'react-hot-toast';
 import { sessionManager } from '@/lib/session';
 import dynamic from 'next/dynamic';
 import PageWrapper from '@/components/page-wrapper';
+import PassengerPageHeader from '@/components/passenger-page-header';
 
 // Dynamically import the enhanced map component
 const EnhancedLiveTrackingMap = dynamic(() => import('@/components/enhanced-live-tracking-map'), {
@@ -213,10 +214,10 @@ export default function LiveTrackPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'from-green-500 to-emerald-600';
-      case 'recent': return 'from-yellow-500 to-orange-600';
-      case 'offline': return 'from-gray-400 to-gray-600';
-      default: return 'from-gray-400 to-gray-600';
+      case 'online': return 'bg-green-100 text-green-800';
+      case 'recent': return 'bg-yellow-100 text-yellow-800';
+      case 'offline': return 'bg-gray-100 text-gray-600';
+      default: return 'bg-gray-100 text-gray-600';
     }
   };
 
@@ -331,62 +332,54 @@ export default function LiveTrackPage() {
 
   return (
     <PageWrapper className="bg-gray-50">
-      {/* Modern Header with Gradient */}
-      <div className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-4">
-            {/* Top row */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-3">
-                <motion.div 
-                  className="p-2 bg-white/20 backdrop-blur-sm rounded-xl"
-                  animate={{ rotate: isOnline ? [0, 10, -10, 0] : 0 }}
-                  transition={{ duration: 2, repeat: isOnline ? Infinity : 0, repeatDelay: 3 }}
-                >
-                  <Navigation className="h-7 w-7 text-white" />
-                </motion.div>
-                <div>
-                  <h1 className="text-2xl font-bold text-white">Live Bus Tracking</h1>
-                  <p className="text-white/80 text-sm font-medium">Route {route.routeNumber}</p>
-                </div>
-              </div>
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2.5 rounded-xl hover:bg-white/30 transition-all duration-200 disabled:opacity-50 border border-white/30"
-              >
-                <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span className="font-semibold hidden sm:inline">Refresh</span>
-              </motion.button>
-            </div>
+      {/* Simple Header */}
+      <PassengerPageHeader
+        title="Live Track"
+        icon={Navigation}
+      />
 
-            {/* Status badge */}
-            <div className="flex items-center justify-between">
-              <motion.div 
-                className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r ${getStatusColor(gpsStatus)} text-white shadow-lg`}
-                animate={{ scale: isOnline ? [1, 1.05, 1] : 1 }}
-                transition={{ duration: 2, repeat: isOnline ? Infinity : 0 }}
+      {/* Status Bar */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <motion.div
+              className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium ${
+                gpsStatus === 'online' ? 'bg-green-100 text-green-800' :
+                gpsStatus === 'recent' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-gray-100 text-gray-600'
+              }`}
+              animate={{ scale: isOnline ? [1, 1.05, 1] : 1 }}
+              transition={{ duration: 2, repeat: isOnline ? Infinity : 0 }}
+            >
+              {getStatusIcon(gpsStatus)}
+              <span className="ml-2 capitalize">
+                {gpsStatus === 'online' ? 'Live Now' : gpsStatus === 'recent' ? 'Recently Active' : 'Offline'}
+              </span>
+            </motion.div>
+
+            <span className="text-sm text-gray-600">Route {route.routeNumber}</span>
+
+            {eta && isOnline && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center space-x-1 bg-[#0b6d41] text-white px-3 py-1.5 rounded-lg text-sm font-medium"
               >
-                {getStatusIcon(gpsStatus)}
-                <span className="ml-2 capitalize">
-                  {gpsStatus === 'online' ? 'Live Now' : gpsStatus === 'recent' ? 'Recently Active' : 'Offline'}
-                </span>
+                <Timer className="w-4 h-4" />
+                <span>{eta} ETA</span>
               </motion.div>
-              
-              {eta && isOnline && (
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/30"
-                >
-                  <Timer className="w-4 h-4 text-white" />
-                  <span className="text-white font-bold">{eta}</span>
-                  <span className="text-white/80 text-sm">ETA</span>
-                </motion.div>
-              )}
-            </div>
+            )}
           </div>
+
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center space-x-2 bg-[#0b6d41] text-white px-3 py-2 rounded-lg hover:bg-[#085032] transition-all duration-200 disabled:opacity-50 text-sm font-medium"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh</span>
+          </motion.button>
         </div>
       </div>
 
@@ -432,26 +425,26 @@ export default function LiveTrackPage() {
           <div className="hidden lg:block space-y-4">
             {/* Quick Stats */}
             {isOnline && gps?.currentLocation && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white"
+                className="bg-[#0b6d41] rounded-2xl shadow-lg p-6 text-white"
               >
                 <div className="flex items-center justify-between mb-4">
                   <Activity className="w-8 h-8" />
-                  <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">Live</span>
+                  <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-lg">Live</span>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-white/80">Speed</span>
+                    <span className="text-white/90">Speed</span>
                     <span className="text-2xl font-bold">{gps.currentLocation.speed || 0} km/h</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/80">Accuracy</span>
+                    <span className="text-white/90">Accuracy</span>
                     <span className="font-semibold">±{gps.currentLocation.accuracy}m</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/80">Updated</span>
+                    <span className="text-white/90">Updated</span>
                     <span className="font-semibold">{formatTimeSince(gps.currentLocation.lastUpdate)}</span>
                   </div>
                 </div>
@@ -467,7 +460,7 @@ export default function LiveTrackPage() {
                 className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100"
               >
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <Bus className="w-5 h-5 mr-2 text-green-600" />
+                  <Bus className="w-5 h-5 mr-2 text-[#0b6d41]" />
                   Driver & Vehicle
                 </h3>
                 
@@ -480,7 +473,7 @@ export default function LiveTrackPage() {
                       <div className="flex-1">
                         <p className="text-sm text-gray-500">Driver</p>
                         <p className="font-semibold text-gray-900">{driver.name}</p>
-                        <a href={`tel:${driver.phone}`} className="text-sm text-green-600 hover:text-green-700 flex items-center mt-1">
+                        <a href={`tel:${driver.phone}`} className="text-sm text-[#0b6d41] hover:text-[#085032] flex items-center mt-1">
                           <Phone className="w-3 h-3 mr-1" />
                           {driver.phone}
                         </a>
@@ -580,25 +573,25 @@ export default function LiveTrackPage() {
           <div className="px-6 pb-6 max-h-96 overflow-y-auto">
             {/* Quick Stats */}
             {isOnline && gps?.currentLocation && (
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white mb-4">
+              <div className="bg-[#0b6d41] rounded-2xl p-4 sm:p-6 text-white mb-4">
                 <div className="flex items-center justify-between mb-4">
-                  <Activity className="w-8 h-8" />
-                  <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">Live</span>
+                  <Activity className="w-6 h-6 sm:w-8 sm:h-8" />
+                  <span className="text-xs sm:text-sm font-semibold bg-white/20 px-2 sm:px-3 py-1 rounded-lg">Live</span>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
                   <div>
-                    <p className="text-white/80 text-sm">Speed</p>
-                    <p className="text-2xl font-bold">{gps.currentLocation.speed || 0}</p>
-                    <p className="text-white/80 text-xs">km/h</p>
+                    <p className="text-white/90 text-xs sm:text-sm">Speed</p>
+                    <p className="text-xl sm:text-2xl font-bold">{gps.currentLocation.speed || 0}</p>
+                    <p className="text-white/90 text-xs">km/h</p>
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm">Accuracy</p>
-                    <p className="text-xl font-bold">±{gps.currentLocation.accuracy}</p>
-                    <p className="text-white/80 text-xs">meters</p>
+                    <p className="text-white/90 text-xs sm:text-sm">Accuracy</p>
+                    <p className="text-lg sm:text-xl font-bold">±{gps.currentLocation.accuracy}</p>
+                    <p className="text-white/90 text-xs">meters</p>
                   </div>
                   <div>
-                    <p className="text-white/80 text-sm">Updated</p>
-                    <p className="text-sm font-bold">{formatTimeSince(gps.currentLocation.lastUpdate)}</p>
+                    <p className="text-white/90 text-xs sm:text-sm">Updated</p>
+                    <p className="text-xs sm:text-sm font-bold">{formatTimeSince(gps.currentLocation.lastUpdate)}</p>
                   </div>
                 </div>
               </div>
@@ -616,7 +609,7 @@ export default function LiveTrackPage() {
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-gray-900">{driver.name}</p>
-                        <a href={`tel:${driver.phone}`} className="text-sm text-green-600 flex items-center">
+                        <a href={`tel:${driver.phone}`} className="text-sm text-[#0b6d41] flex items-center">
                           <Phone className="w-3 h-3 mr-1" />
                           {driver.phone}
                         </a>

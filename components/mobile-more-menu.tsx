@@ -177,7 +177,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-green-600 to-yellow-500 flex items-center justify-center shadow-lg">
+                  <div className="h-12 w-12 rounded-2xl bg-[#0b6d41] flex items-center justify-center shadow-lg">
                     <span className="text-lg font-bold text-white">
                       {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase() || 'U'}
                     </span>
@@ -249,14 +249,14 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                           onClick={() => handleItemClick(item)}
                           className={`flex items-center justify-between p-4 rounded-2xl transition-all duration-200 ${
                             isActive
-                              ? 'bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200'
+                              ? 'bg-green-50 border border-green-200'
                               : 'hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex items-center space-x-3">
                             <div className={`p-2.5 rounded-xl ${
                               isActive
-                                ? 'bg-gradient-to-r from-green-600 to-yellow-500'
+                                ? 'bg-[#0b6d41]'
                                 : 'bg-gray-100'
                             }`}>
                               <item.icon className={`h-5 w-5 ${
@@ -265,7 +265,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                             </div>
                             <div>
                               <p className={`font-medium ${
-                                isActive ? 'text-green-700' : 'text-gray-900'
+                                isActive ? 'text-[#0b6d41]' : 'text-gray-900'
                               }`}>
                                 {item.name}
                               </p>
@@ -277,7 +277,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                             </div>
                           </div>
                           <ChevronRight className={`h-5 w-5 ${
-                            isActive ? 'text-green-600' : 'text-gray-400'
+                            isActive ? 'text-[#0b6d41]' : 'text-gray-400'
                           }`} />
                         </Link>
                       );
@@ -329,14 +329,14 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                           onClick={() => handleItemClick(item)}
                           className={`flex items-center justify-between p-4 rounded-2xl transition-all duration-200 ${
                             isActive
-                              ? 'bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200'
+                              ? 'bg-green-50 border border-green-200'
                               : 'hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex items-center space-x-3">
                             <div className={`p-2.5 rounded-xl ${
                               isActive
-                                ? 'bg-gradient-to-r from-green-600 to-yellow-500'
+                                ? 'bg-[#0b6d41]'
                                 : 'bg-gray-100'
                             }`}>
                               <item.icon className={`h-5 w-5 ${
@@ -345,7 +345,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                             </div>
                             <div>
                               <p className={`font-medium ${
-                                isActive ? 'text-green-700' : 'text-gray-900'
+                                isActive ? 'text-[#0b6d41]' : 'text-gray-900'
                               }`}>
                                 {item.name}
                               </p>
@@ -357,7 +357,7 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
                             </div>
                           </div>
                           <ChevronRight className={`h-5 w-5 ${
-                            isActive ? 'text-green-600' : 'text-gray-400'
+                            isActive ? 'text-[#0b6d41]' : 'text-gray-400'
                           }`} />
                         </Link>
                       );

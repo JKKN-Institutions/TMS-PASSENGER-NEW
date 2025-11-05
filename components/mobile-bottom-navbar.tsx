@@ -77,7 +77,7 @@ export default function MobileBottomNavbar() {
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30">
         {/* Background with blur effect */}
-        <div className="bg-white/95 backdrop-blur-xl border-t border-green-100 shadow-2xl">
+        <div className="bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-2xl">
           <div className="px-4 py-2">
             <nav className="flex items-center justify-around">
               {navItems.map((item) => {
@@ -99,12 +99,12 @@ export default function MobileBottomNavbar() {
                       >
                         {/* Icon container */}
                         <div className="relative p-2 rounded-xl transition-all duration-200 group-hover:bg-gray-100">
-                          <item.icon className="h-5 w-5 transition-colors duration-200 text-gray-600 group-hover:text-green-600" />
+                          <item.icon className="h-5 w-5 transition-colors duration-200 text-gray-600 group-hover:text-[#0b6d41]" />
                         </div>
                       </motion.div>
                       
                       {/* Label */}
-                      <span className="text-xs font-medium mt-1 transition-colors duration-200 text-gray-600 group-hover:text-green-600">
+                      <span className="text-xs font-medium mt-1 transition-colors duration-200 text-gray-600 group-hover:text-[#0b6d41]">
                         {item.name}
                       </span>
                     </button>
@@ -145,7 +145,7 @@ export default function MobileBottomNavbar() {
                       {active && (
                         <motion.div
                           layoutId="activeTab"
-                          className="absolute inset-0 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl -m-2"
+                          className="absolute inset-0 bg-green-50 rounded-xl -m-2"
                           initial={false}
                           transition={{
                             type: "spring",
@@ -154,19 +154,19 @@ export default function MobileBottomNavbar() {
                           }}
                         />
                       )}
-                      
+
                       {/* Icon container */}
                       <div className={`relative p-2 rounded-xl transition-all duration-200 ${
-                        active 
-                          ? 'bg-gradient-to-r from-green-500 to-yellow-500 shadow-lg' 
+                        active
+                          ? 'bg-[#0b6d41] shadow-md'
                           : 'group-hover:bg-gray-100'
                       }`}>
                         <item.icon className={`h-5 w-5 transition-colors duration-200 ${
-                          active 
-                            ? 'text-white drop-shadow-sm' 
-                            : 'text-gray-600 group-hover:text-green-600'
+                          active
+                            ? 'text-white'
+                            : 'text-gray-600 group-hover:text-[#0b6d41]'
                         }`} />
-                        
+
                         {/* Badge for notifications */}
                         {item.badge && item.badge > 0 && (
                           <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
@@ -177,12 +177,12 @@ export default function MobileBottomNavbar() {
                         )}
                       </div>
                     </motion.div>
-                    
+
                     {/* Label */}
                     <span className={`text-xs font-medium mt-1 transition-colors duration-200 ${
-                      active 
-                        ? 'text-green-700' 
-                        : 'text-gray-600 group-hover:text-green-600'
+                      active
+                        ? 'text-[#0b6d41]'
+                        : 'text-gray-600 group-hover:text-[#0b6d41]'
                     }`}>
                       {item.name}
                     </span>

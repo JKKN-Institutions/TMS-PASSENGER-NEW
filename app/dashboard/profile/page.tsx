@@ -77,9 +77,9 @@ const StableInput = React.memo(({
             className={`
             block w-full rounded-xl border px-4 py-3 text-sm
             ${Icon ? 'pl-12' : ''}
-            ${error 
-              ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-              : 'border-gray-300 focus:border-green-500 focus:ring-green-200 focus:ring-3'
+            ${error
+              ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:border-[#0b6d41] focus:ring-green-200 focus:ring-3'
             }
             placeholder-gray-400 focus:outline-none bg-white shadow-sm
             transition-all duration-200
@@ -144,9 +144,9 @@ const EditableField = ({
               className={`
                 block w-full rounded-xl border px-4 py-3 text-sm
                 ${icon ? 'pl-12' : ''}
-                ${fieldError 
-                  ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:border-green-500 focus:ring-green-200 focus:ring-3'
+                ${fieldError
+                  ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:border-[#0b6d41] focus:ring-green-200 focus:ring-3'
                 }
                 placeholder-gray-400 focus:outline-none bg-white shadow-sm
                 transition-all duration-200
@@ -460,9 +460,9 @@ export default function ProfilePage() {
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">Failed to Load Profile</h2>
           <p className="text-gray-600 mb-6">Please refresh the page or try again later.</p>
-          <button 
+          <button
             onClick={fetchProfile}
-            className="px-6 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
+            className="px-6 py-3 bg-[#0b6d41] text-white rounded-xl hover:bg-[#085032] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
           >
             Retry
           </button>
@@ -505,7 +505,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving || Object.values(errors).some(error => error !== '')}
-                className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
+                className="flex items-center justify-center space-x-2 px-4 py-3 bg-[#0b6d41] text-white rounded-xl hover:bg-[#085032] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
               >
                 {isSaving ? (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
@@ -518,7 +518,7 @@ export default function ProfilePage() {
           ) : (
             <button
               onClick={startEditing}
-              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-[#0b6d41] text-white rounded-xl hover:bg-[#085032] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
             >
               <Edit className="h-4 w-4" />
               <span className="font-semibold">Edit Profile</span>
@@ -528,23 +528,23 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Completion */}
-      <div className="bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 rounded-2xl p-6 shadow-lg">
+      <div className="bg-green-50 border border-green-200 rounded-2xl p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+            <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+              <CheckCircle className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-green-900">Profile Completion</h3>
-              <p className="text-sm text-green-700 font-medium">
+              <h3 className="text-lg font-semibold text-gray-900">Profile Completion</h3>
+              <p className="text-sm text-gray-600 font-medium">
                 Your profile is {calculateProfileCompletion()}% complete
               </p>
             </div>
           </div>
         </div>
         <div className="bg-green-200 rounded-full h-3 shadow-inner">
-          <div 
-            className="bg-gradient-to-r from-green-500 to-yellow-500 h-3 rounded-full transition-all duration-500 shadow-sm"
+          <div
+            className="bg-[#0b6d41] h-3 rounded-full transition-all duration-500 shadow-sm"
             style={{ width: `${calculateProfileCompletion()}%` }}
           />
         </div>
@@ -554,8 +554,8 @@ export default function ProfilePage() {
         {/* Personal Information */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
-              <User className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+              <User className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
           </div>
@@ -641,8 +641,8 @@ export default function ProfilePage() {
         {/* Academic Information */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl shadow-md">
-              <GraduationCap className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+              <GraduationCap className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-green-900">Academic Information</h2>
           </div>
@@ -695,8 +695,8 @@ export default function ProfilePage() {
         {/* Address Information */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-orange-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2 bg-gradient-to-r from-orange-100 to-yellow-100 rounded-xl shadow-md">
-              <Home className="h-5 w-5 text-orange-600" />
+            <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+              <Home className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-orange-900">Address Information</h2>
           </div>
@@ -751,8 +751,8 @@ export default function ProfilePage() {
         {/* Transport Information */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-200 p-6 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2 bg-gradient-to-r from-blue-100 to-green-100 rounded-xl shadow-md">
-              <Bus className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+              <Bus className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-blue-900">Transport Information</h2>
           </div>
@@ -801,8 +801,8 @@ export default function ProfilePage() {
       {/* Profile History */}
       <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="p-2 bg-gradient-to-r from-gray-100 to-slate-100 rounded-xl shadow-md">
-            <Calendar className="h-5 w-5 text-gray-600" />
+          <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+            <Calendar className="h-5 w-5 text-white" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900">Profile History</h2>
         </div>

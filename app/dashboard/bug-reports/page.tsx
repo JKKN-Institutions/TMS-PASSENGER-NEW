@@ -31,6 +31,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/lib/auth/auth-context';
 import BugBountyTracker from '@/components/bug-bounty-tracker';
 import PageWrapper from '@/components/page-wrapper';
+import PassengerPageHeader from '@/components/passenger-page-header';
 
 interface BugReport {
   id: string;
@@ -189,81 +190,75 @@ export default function BugReportsPage() {
   return (
     <PageWrapper className="space-y-6 p-6 pb-24 lg:pb-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-xl border border-green-200 space-y-4 lg:space-y-0">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md flex-shrink-0">
-              <Bug className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
-            </div>
-            <span className="truncate">My Bug Reports</span>
-          </h1>
-          <p className="text-gray-700 font-medium mt-2 text-sm sm:text-base">Track and manage your submitted bug reports</p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
-          <Button onClick={() => loadMyBugReports()} variant="outline" size="sm" className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
-          <Button onClick={openBugReportModal} className="bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 w-full sm:w-auto">
-            <Plus className="w-4 h-4 mr-2" />
-            Report Bug
-          </Button>
-        </div>
+      <PassengerPageHeader
+        title="Bug Reports"
+        icon={Bug}
+      />
+
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+        <Button onClick={() => loadMyBugReports()} variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
+        <Button onClick={openBugReportModal} className="bg-[#0b6d41] hover:bg-[#085032] text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 w-full sm:w-auto">
+          <Plus className="w-4 h-4 mr-2" />
+          Report Bug
+        </Button>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-          <CardContent className="p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-700">Total Reports</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-700">Total Reports</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.total}</p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl shadow-md">
-                <Bug className="w-8 h-8 text-green-600" />
+              <div className="p-2 sm:p-3 bg-[#0b6d41] rounded-xl shadow-md">
+                <Bug className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-          <CardContent className="p-6">
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-700">Open</p>
-                <p className="text-3xl font-bold text-blue-600">{stats.open}</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-700">Open</p>
+                <p className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.open}</p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl shadow-md">
-                <AlertCircle className="w-8 h-8 text-blue-600" />
+              <div className="p-2 sm:p-3 bg-blue-100 rounded-xl shadow-md">
+                <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-          <CardContent className="p-6">
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-700">Resolved</p>
-                <p className="text-3xl font-bold text-green-600">{stats.resolved}</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-700">Resolved</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#0b6d41]">{stats.resolved}</p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl shadow-md">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="p-2 sm:p-3 bg-[#0b6d41] rounded-xl shadow-md">
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
-          <CardContent className="p-6">
+        <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-700">Critical</p>
-                <p className="text-3xl font-bold text-red-600">{stats.critical}</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-700">Critical</p>
+                <p className="text-2xl sm:text-3xl font-bold text-red-600">{stats.critical}</p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl shadow-md">
-                <AlertTriangle className="w-8 h-8 text-red-600" />
+              <div className="p-2 sm:p-3 bg-red-100 rounded-xl shadow-md">
+                <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-red-600" />
               </div>
             </div>
           </CardContent>
@@ -271,35 +266,35 @@ export default function BugReportsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 bg-white/90 backdrop-blur-sm shadow-lg border border-green-100 rounded-xl p-1">
-          <TabsTrigger value="my-reports" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">My Reports</TabsTrigger>
-          <TabsTrigger value="bug-bounty" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-yellow-500 data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">Bug Bounty</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 rounded-xl p-1">
+          <TabsTrigger value="my-reports" className="data-[state=active]:bg-[#0b6d41] data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">My Reports</TabsTrigger>
+          <TabsTrigger value="bug-bounty" className="data-[state=active]:bg-[#0b6d41] data-[state=active]:text-white rounded-lg font-semibold transition-all duration-200">Bug Bounty</TabsTrigger>
         </TabsList>
 
         {/* My Reports Tab */}
         <TabsContent value="my-reports" className="space-y-6">
           {/* Filters */}
-          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
+          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200">
             <CardContent className="p-6">
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-lg">
-                    <Filter className="w-4 h-4 text-green-600" />
+                  <div className="p-2 bg-[#0b6d41] rounded-lg">
+                    <Filter className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-sm font-semibold text-gray-700">Filters:</span>
                 </div>
-                
+
                 <div className="flex-1 min-w-64">
                   <Input
                     placeholder="Search bugs..."
                     value={filters.search}
                     onChange={(e) => setFilters({...filters, search: e.target.value})}
-                    className="w-full border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+                    className="w-full border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm"
                   />
                 </div>
 
                 <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
-                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
+                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -312,7 +307,7 @@ export default function BugReportsPage() {
                 </Select>
 
                 <Select value={filters.priority} onValueChange={(value) => setFilters({...filters, priority: value})}>
-                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
+                  <SelectTrigger className="w-32 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Priority" />
                   </SelectTrigger>
                   <SelectContent>
@@ -325,7 +320,7 @@ export default function BugReportsPage() {
                 </Select>
 
                 <Select value={filters.category} onValueChange={(value) => setFilters({...filters, category: value})}>
-                  <SelectTrigger className="w-40 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm">
+                  <SelectTrigger className="w-40 border-gray-300 rounded-xl focus:ring-3 focus:ring-green-200 focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -341,105 +336,144 @@ export default function BugReportsPage() {
             </CardContent>
           </Card>
 
-          {/* Bug Reports List */}
-          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-green-100">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-yellow-50 border-b border-green-100">
+          {/* Bug Reports Table */}
+          <Card className="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200">
+            <CardHeader className="bg-green-50 border-b border-gray-200">
               <CardTitle className="text-xl font-bold text-gray-900">Your Bug Reports ({filteredReports.length})</CardTitle>
-              <CardDescription className="text-gray-700 font-medium">
-                {filteredReports.length === 0 && bugReports.length > 0 
-                  ? "No reports match your current filters" 
+              <CardDescription className="text-gray-600 font-medium">
+                {filteredReports.length === 0 && bugReports.length > 0
+                  ? "No reports match your current filters"
                   : "Track the status of your submitted bug reports"}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
-                  <span className="ml-2 text-green-700 font-medium">Loading your bug reports...</span>
+                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-4"></div>
+                  <span className="ml-2 text-[#0b6d41] font-medium">Loading your bug reports...</span>
                 </div>
               ) : filteredReports.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="p-4 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full w-20 h-20 mx-auto mb-6 shadow-md">
-                    <Bug className="w-12 h-12 text-green-600 mx-auto mt-4" />
+                <div className="text-center py-16 px-6">
+                  <div className="p-4 bg-[#0b6d41] rounded-full w-20 h-20 mx-auto mb-6 shadow-md flex items-center justify-center">
+                    <Bug className="w-12 h-12 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {bugReports.length === 0 ? 'No bug reports yet' : 'No reports match filters'}
                   </h3>
                   <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                    {bugReports.length === 0 
+                    {bugReports.length === 0
                       ? 'Start contributing by reporting bugs you encounter in the system.'
                       : 'Try adjusting your filters to see more results.'}
                   </p>
                   {bugReports.length === 0 && (
-                    <Button onClick={openBugReportModal} className="bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
+                    <Button onClick={openBugReportModal} className="bg-[#0b6d41] hover:bg-[#085032] text-white shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
                       <Plus className="w-4 h-4 mr-2" />
                       Report Your First Bug
                     </Button>
                   )}
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {filteredReports.map((bug) => (
-                    <motion.div
-                      key={bug.id}
-                      className="border border-green-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white/95 backdrop-blur-sm hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 shadow-md"
-                      whileHover={{ scale: 1.02, y: -4 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        setSelectedBug(bug);
-                        setShowBugDetails(true);
-                      }}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-start space-x-4 mb-4">
-                            <div className="p-3 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl shadow-md">
-                              <Bug className="w-6 h-6 text-red-600" />
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="font-bold text-lg text-gray-900 mb-2">{bug.title}</h3>
-                              <div className="flex items-center space-x-2 flex-wrap gap-2">
-                                <Badge className={`${getPriorityColor(bug.priority)} shadow-sm font-semibold`}>
-                                  {bug.priority}
-                                </Badge>
-                                <Badge className={`${getStatusColor(bug.status)} shadow-sm font-semibold`}>
-                                  <span className="flex items-center space-x-1">
-                                    {getStatusIcon(bug.status)}
-                                    <span>{bug.status.replace('_', ' ')}</span>
-                                  </span>
-                                </Badge>
+                <div className="overflow-x-auto">
+                  {/* Desktop Table */}
+                  <table className="w-full hidden md:table">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Title</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Priority</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Category</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredReports.map((bug) => (
+                        <tr key={bug.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="p-2 bg-red-100 rounded-lg">
+                                <Bug className="w-4 h-4 text-red-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-semibold text-gray-900">{bug.title}</p>
+                                <p className="text-xs text-gray-500 line-clamp-1">{bug.description}</p>
                               </div>
                             </div>
-                          </div>
-                          <p className="text-gray-700 text-sm mb-4 line-clamp-2 leading-relaxed">{bug.description}</p>
-                          <div className="bg-gradient-to-r from-gray-50 to-green-50 rounded-xl p-3 mb-3">
-                            <div className="flex items-center space-x-4 text-xs text-gray-600 flex-wrap gap-2">
-                              <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
-                                <Calendar className="w-3 h-3 text-green-600" />
-                                <span className="font-medium">Created {formatDate(bug.created_at)}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <Badge className={`${getStatusColor(bug.status)} shadow-sm`}>
+                              <span className="flex items-center space-x-1">
+                                {getStatusIcon(bug.status)}
+                                <span>{bug.status.replace('_', ' ')}</span>
                               </span>
-                              <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
-                                <Clock className="w-3 h-3 text-blue-600" />
-                                <span className="font-medium">Updated {formatDate(bug.updated_at)}</span>
-                              </span>
-                              {bug.screenshot_url && (
-                                <span className="flex items-center space-x-1 bg-white px-2 py-1 rounded-lg shadow-sm">
-                                  <ImageIcon className="w-3 h-3 text-purple-600" />
-                                  <span className="font-medium">Screenshot</span>
-                                </span>
-                              )}
+                            </Badge>
+                          </td>
+                          <td className="px-6 py-4">
+                            <Badge className={`${getPriorityColor(bug.priority)} shadow-sm`}>
+                              {bug.priority}
+                            </Badge>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm text-gray-700 capitalize">{bug.category.replace('_', ' ')}</span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{formatDate(bug.created_at)}</td>
+                          <td className="px-6 py-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedBug(bug);
+                                setShowBugDetails(true);
+                              }}
+                              className="text-[#0b6d41] hover:text-[#085032] hover:bg-green-50"
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              View
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* Mobile Table */}
+                  <div className="md:hidden divide-y divide-gray-200">
+                    {filteredReports.map((bug) => (
+                      <div key={bug.id} className="p-4 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-start space-x-3 flex-1">
+                            <div className="p-2 bg-red-100 rounded-lg flex-shrink-0">
+                              <Bug className="w-4 h-4 text-red-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-gray-900 mb-1">{bug.title}</p>
+                              <div className="flex items-center space-x-2 flex-wrap gap-1 mb-2">
+                                <Badge className={`${getStatusColor(bug.status)} text-xs`}>
+                                  {bug.status.replace('_', ' ')}
+                                </Badge>
+                                <Badge className={`${getPriorityColor(bug.priority)} text-xs`}>
+                                  {bug.priority}
+                                </Badge>
+                              </div>
+                              <p className="text-xs text-gray-500">{formatDate(bug.created_at)}</p>
                             </div>
                           </div>
                         </div>
-                        <div className="flex flex-col space-y-2">
-                          <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800 hover:bg-green-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md">
-                            <Eye className="w-4 h-4 mr-1" />
-                            <span className="text-xs font-semibold">View</span>
-                          </Button>
-                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedBug(bug);
+                            setShowBugDetails(true);
+                          }}
+                          className="w-full text-[#0b6d41] border-[#0b6d41] hover:bg-green-50"
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </Button>
                       </div>
-                    </motion.div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -474,10 +508,10 @@ export default function BugReportsPage() {
               exit={{ scale: 0.9, opacity: 0 }}
             >
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-6 py-4 border-b border-green-100 flex items-center justify-between">
+              <div className="bg-green-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gradient-to-r from-green-100 to-yellow-100 rounded-xl shadow-md">
-                    <Bug className="w-6 h-6 text-green-600" />
+                  <div className="p-2 bg-[#0b6d41] rounded-xl shadow-md">
+                    <Bug className="w-6 h-6 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">{selectedBug.title}</h2>
                   <Badge className={getPriorityColor(selectedBug.priority)}>
@@ -539,7 +573,7 @@ export default function BugReportsPage() {
                   {/* Sidebar */}
                   <div className="space-y-6">
                     {/* Bug Info */}
-                    <div className="bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl p-6 border border-green-100 shadow-sm">
+                    <div className="bg-green-50 rounded-xl p-6 border border-gray-200 shadow-sm">
                       <h3 className="font-semibold text-gray-900 mb-4">Bug Information</h3>
                       <div className="space-y-2 text-sm">
                         <div>
