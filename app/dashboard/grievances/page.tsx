@@ -482,9 +482,9 @@ export default function GrievancesPage() {
             </div>
           ))
         ) : (
-          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100">
-            <div className="p-4 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full w-24 h-24 mx-auto mb-6 shadow-md">
-              <MessageSquare className="h-16 w-16 text-green-600 mx-auto mt-4" />
+          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200">
+            <div className="p-4 bg-green-50 rounded-full w-24 h-24 mx-auto mb-6 shadow-md">
+              <MessageSquare className="h-16 w-16 text-[#0b6d41] mx-auto mt-4" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-3">No grievances found</h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
@@ -494,7 +494,7 @@ export default function GrievancesPage() {
             </p>
             <button
               onClick={() => setShowGrievanceModal(true)}
-              className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
+              className="bg-[#0b6d41] hover:bg-[#085032] text-white px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
             >
               Submit Your First Grievance
             </button>

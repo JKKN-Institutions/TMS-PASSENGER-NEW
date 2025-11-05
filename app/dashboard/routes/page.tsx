@@ -35,6 +35,7 @@ interface RouteInfo {
   fare: number;
   departureTime: string;
   arrivalTime: string;
+  driverId?: string;
   stops?: RouteStop[];
 }
 

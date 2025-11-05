@@ -170,10 +170,10 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200 max-w-sm">
           <div className="relative mx-auto w-16 h-16 mb-6">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41]"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <img src="/app-logo.png" alt="Loading" className="w-12 h-12 drop-shadow-md" />
             </div>
@@ -186,10 +186,10 @@ export default function LoginPage() {
 
   if (isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200 max-w-sm">
           <div className="relative mx-auto w-16 h-16 mb-6">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41]"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <img src="/app-logo.png" alt="Loading" className="w-12 h-12 drop-shadow-md" />
             </div>
@@ -201,18 +201,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto h-24 w-24 flex items-center justify-center">
-            <img 
-              src="/app-logo.png" 
-              alt="JKKN TMS Logo" 
+            <img
+              src="/app-logo.png"
+              alt="JKKN TMS Logo"
               className="h-24 w-24 drop-shadow-lg"
             />
           </div>
-          <h2 className="mt-6 text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Transport Management System
           </h2>
           <p className="mt-2 text-sm text-gray-700 font-medium">
@@ -246,39 +246,39 @@ export default function LoginPage() {
                   {/* Passenger Option */}
                   <button
                     onClick={() => setSelectedRole('passenger')}
-                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-green-400 focus:outline-none focus:ring-3 focus:ring-green-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-[#0b6d41] focus:outline-none focus:ring-3 focus:ring-green-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-green-100 to-yellow-100 group-hover:from-green-200 group-hover:to-yellow-200 transition-all duration-300 shadow-md">
-                      <Users className="h-7 w-7 text-green-600" />
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-green-50 group-hover:bg-green-100 transition-all duration-300 shadow-md">
+                      <Users className="h-7 w-7 text-[#0b6d41]" />
                     </div>
                     <div className="ml-4 text-left flex-1">
-                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-green-700 transition-colors">Passenger</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Passenger</h4>
                       <p className="text-sm text-gray-600">Students and staff members</p>
                     </div>
-                    <div className="w-2 h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-2 h-2 bg-[#0b6d41] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </button>
-                  
+
                   {/* Driver Option */}
                   <button
                     onClick={() => setSelectedRole('driver')}
-                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-yellow-400 focus:outline-none focus:ring-3 focus:ring-yellow-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-[#0b6d41] focus:outline-none focus:ring-3 focus:ring-green-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-yellow-100 to-green-100 group-hover:from-yellow-200 group-hover:to-green-200 transition-all duration-300 shadow-md">
-                      <Car className="h-7 w-7 text-yellow-600" />
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-green-50 group-hover:bg-green-100 transition-all duration-300 shadow-md">
+                      <Car className="h-7 w-7 text-[#0b6d41]" />
                     </div>
                     <div className="ml-4 text-left flex-1">
-                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-yellow-700 transition-colors">Driver</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Driver</h4>
                       <p className="text-sm text-gray-600">Bus drivers</p>
                     </div>
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-2 h-2 bg-[#0b6d41] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </button>
 
                   {/* Staff Option */}
                   <button
                     onClick={() => router.push('/staff-login')}
-                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-purple-400 focus:outline-none focus:ring-3 focus:ring-purple-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                    className="group relative w-full flex items-center p-6 border-2 border-gray-200 rounded-xl hover:border-purple-600 focus:outline-none focus:ring-3 focus:ring-purple-200 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 group-hover:from-purple-200 group-hover:to-indigo-200 transition-all duration-300 shadow-md">
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-purple-50 group-hover:bg-purple-100 transition-all duration-300 shadow-md">
                       <GraduationCap className="h-7 w-7 text-purple-600" />
                     </div>
                     <div className="ml-4 text-left flex-1">
@@ -303,15 +303,11 @@ export default function LoginPage() {
                 </div>
                 
                 <div className="text-center">
-                  <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg ${
-                    selectedRole === 'passenger' 
-                      ? 'bg-gradient-to-br from-green-100 to-yellow-100' 
-                      : 'bg-gradient-to-br from-yellow-100 to-green-100'
-                  }`}>
+                  <div className="mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg bg-green-50">
                     {selectedRole === 'passenger' ? (
-                      <Users className="h-8 w-8 text-green-600" />
+                      <Users className="h-8 w-8 text-[#0b6d41]" />
                     ) : (
-                      <Car className="h-8 w-8 text-yellow-600" />
+                      <Car className="h-8 w-8 text-[#0b6d41]" />
                     )}
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -321,15 +317,11 @@ export default function LoginPage() {
                     Sign in with your MYJKKN account
                   </p>
                 </div>
-                
+
                 <button
                   onClick={handleLogin}
                   disabled={isLoading}
-                  className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl ${
-                    selectedRole === 'passenger' 
-                      ? 'bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 focus:ring-green-200' 
-                      : 'bg-gradient-to-r from-yellow-500 to-green-600 hover:from-yellow-600 hover:to-green-700 focus:ring-yellow-200'
-                  }`}
+                  className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl bg-[#0b6d41] hover:bg-[#085032] focus:ring-green-200"
                 >
                   {isLoading ? (
                     <div className="flex items-center">
@@ -352,13 +344,9 @@ export default function LoginPage() {
                 <div className="text-center border-t border-gray-100 pt-6">
                   <button
                     onClick={() => setShowFallback(true)}
-                    className={`text-sm font-medium underline transition-colors duration-200 ${
-                      selectedRole === 'passenger' 
-                        ? 'text-green-600 hover:text-green-700'
-                        : 'text-yellow-600 hover:text-yellow-700'
-                    }`}
+                    className="text-sm font-medium underline transition-colors duration-200 text-[#0b6d41] hover:text-[#085032]"
                   >
-                    {selectedRole === 'passenger' 
+                    {selectedRole === 'passenger'
                       ? 'Having trouble? Try alternative login'
                       : 'Try direct login with enhanced authentication'
                     }
@@ -379,15 +367,11 @@ export default function LoginPage() {
                 </div>
                 
                 <div className="text-center">
-                  <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg ${
-                    selectedRole === 'passenger' 
-                      ? 'bg-gradient-to-br from-green-100 to-yellow-100' 
-                      : 'bg-gradient-to-br from-yellow-100 to-green-100'
-                  }`}>
+                  <div className="mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 shadow-lg bg-green-50">
                     {selectedRole === 'passenger' ? (
-                      <Users className="h-8 w-8 text-green-600" />
+                      <Users className="h-8 w-8 text-[#0b6d41]" />
                     ) : (
-                      <Car className="h-8 w-8 text-yellow-600" />
+                      <Car className="h-8 w-8 text-[#0b6d41]" />
                     )}
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -437,11 +421,7 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={fallbackLoading}
-                    className={`group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg ${
-                      selectedRole === 'passenger'
-                        ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:ring-green-200'
-                        : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-yellow-200'
-                    }`}
+                    className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white focus:outline-none focus:ring-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg bg-[#0b6d41] hover:bg-[#085032] focus:ring-green-200"
                   >
                     {fallbackLoading ? (
                       <div className="flex items-center">

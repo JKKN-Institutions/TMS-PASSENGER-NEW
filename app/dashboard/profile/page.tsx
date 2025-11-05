@@ -453,9 +453,9 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <div className="p-6 text-center bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen flex items-center justify-center">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-green-100">
-          <div className="p-4 bg-gradient-to-br from-red-100 to-orange-100 rounded-full w-16 h-16 mx-auto mb-6">
+      <div className="p-6 text-center bg-gray-50 min-h-screen flex items-center justify-center">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-200">
+          <div className="p-4 bg-red-100 rounded-full w-16 h-16 mx-auto mb-6">
             <AlertTriangle className="h-8 w-8 text-red-600 mx-auto mt-4" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-3">Failed to Load Profile</h2>
@@ -480,7 +480,7 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-br from-green-50 via-yellow-50 to-green-100 min-h-screen">
+    <div className="p-6 pb-24 lg:pb-6 space-y-6 max-w-7xl mx-auto bg-gray-50 min-h-screen">
       {/* Header */}
       <PassengerPageHeader
         title="My Profile"

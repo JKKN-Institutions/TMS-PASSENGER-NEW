@@ -1347,6 +1347,7 @@ export const studentHelpers = {
           fare: route.fare as number,
           departureTime: route.departure_time as string,
           arrivalTime: route.arrival_time as string,
+          driverId: route.driver_id as string,
           stops: formattedStops
         },
         boardingStop: boardingStop,

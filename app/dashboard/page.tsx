@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Bus, 
-  CreditCard, 
-  Calendar, 
-  AlertCircle, 
+import {
+  Bus,
+  CreditCard,
+  Calendar,
+  AlertCircle,
   RefreshCw,
-  CheckCircle,
-  PlusCircle,
-  X
+  CheckCircle
 } from 'lucide-react';
 import { studentHelpers } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth/auth-context';
-import EnrollmentDashboard from '@/components/enrollment-dashboard';
 import EnhancedPassengerDashboard from '@/components/enhanced-passenger-dashboard';
 import StaffDashboard from '@/components/staff-dashboard';
 import PaymentStatusBadge from '@/components/payment-status-badge';
@@ -43,7 +40,6 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -268,13 +264,13 @@ export default function DashboardPage() {
             <div className="max-w-2xl mx-auto">
               {/* Welcome Icon */}
               <div className="mb-6">
-                <div className="inline-flex p-4 bg-gradient-to-r from-green-500 to-yellow-500 rounded-3xl shadow-xl">
+                <div className="inline-flex p-4 bg-[#0b6d41] rounded-3xl shadow-xl">
                   <Bus className="w-12 h-12 text-white drop-shadow-sm" />
                 </div>
               </div>
-              
+
               {/* Welcome Text */}
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent mb-4">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 Welcome to TMS Transport!
               </h1>
               <p className="text-xl text-gray-700 leading-relaxed font-medium">
@@ -294,33 +290,36 @@ export default function DashboardPage() {
               <div className="text-center">
                 {/* Enrollment Icon */}
                 <div className="mb-6">
-                  <div className="inline-flex p-6 bg-gradient-to-r from-green-500 to-yellow-500 rounded-2xl shadow-lg">
+                  <div className="inline-flex p-6 bg-[#0b6d41] rounded-2xl shadow-lg">
                     <Bus className="w-16 h-16 text-white drop-shadow-sm" />
                   </div>
                 </div>
                 
                 {/* Main Message */}
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Ready to Get Started?
+                  Transport Enrollment Required
                 </h2>
                 <p className="text-gray-700 mb-8 text-lg leading-relaxed font-medium">
-                  Enroll for transport services to access routes, schedules, and live tracking. 
-                  It only takes a few minutes to set up.
+                  You need to be enrolled in the transport system to access routes, schedules, and live tracking.
                 </p>
-                
-                {/* Single Call-to-Action */}
+
+                {/* Contact Admin Message */}
                 <div className="space-y-4">
-                  <Button
-                    onClick={() => setShowEnrollmentForm(true)}
-                    size="lg"
-                    className="w-full bg-gradient-to-r from-green-600 to-yellow-500 hover:from-green-700 hover:to-yellow-600 text-white font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    Start Enrollment Process
-                  </Button>
-                  
-                  <p className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-                    🚌 You'll be able to choose your preferred route and boarding stop
-                  </p>
+                  <Alert variant="info" className="text-left">
+                    <div className="space-y-3">
+                      <p className="font-semibold text-gray-900">
+                        Please contact the transport administration to get enrolled.
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        The admin team will verify your details and allocate a suitable route for you.
+                      </p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                        <p className="text-sm font-medium text-blue-900">
+                          📧 Contact transport office for enrollment assistance
+                        </p>
+                      </div>
+                    </div>
+                  </Alert>
                 </div>
               </div>
             </Card>
@@ -344,45 +343,6 @@ export default function DashboardPage() {
               </div>
             </Card>
           </motion.div>
-
-          {/* Enrollment Form Modal */}
-          {showEnrollmentForm && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-              onClick={() => setShowEnrollmentForm(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Transport Enrollment</h2>
-                    <button
-                      onClick={() => setShowEnrollmentForm(false)}
-                      className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200"
-                    >
-                      <X className="w-6 h-6 text-gray-500" />
-                    </button>
-                  </div>
-                  
-                  <EnrollmentDashboard 
-                    student={{
-                      id: profile?.id || '',
-                      student_name: profile?.studentName || '',
-                      email: profile?.email || '',
-                      transport_enrolled: profile?.transportProfile?.transportStatus === 'active',
-                      enrollment_status: profile?.transportProfile?.enrollmentStatus || 'pending'
-                    }}
-                  />
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
         </div>
       </>
     );
