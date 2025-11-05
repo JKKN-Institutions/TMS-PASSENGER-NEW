@@ -373,7 +373,7 @@ function DashboardContent({
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto min-w-0 main-content bg-gray-50">
-          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-32 lg:pb-6">
+          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-40 lg:pb-6">
             {children}
           </div>
         </main>

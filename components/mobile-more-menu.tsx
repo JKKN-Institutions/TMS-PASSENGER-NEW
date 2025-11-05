@@ -125,12 +125,6 @@ export default function MobileMoreMenu({ isOpen, onClose }: MobileMoreMenuProps)
       href: '/dashboard/settings',
       icon: Settings,
       description: 'App preferences and settings'
-    },
-    {
-      name: 'Help & Support',
-      href: '/dashboard/help',
-      icon: HelpCircle,
-      description: 'Get help and support'
     }
   ];
 

@@ -5,6 +5,8 @@ import { sessionManager } from '@/lib/session';
 import EnhancedPaymentInterface from '@/components/enhanced-payment-interface';
 import PaymentHistoryViewer from '@/components/payment-history-viewer';
 import PageWrapper from '@/components/page-wrapper';
+import PassengerPageHeader from '@/components/passenger-page-header';
+import { CreditCard } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { PaymentLoading } from '@/components/loading-screen';
 
@@ -77,35 +79,24 @@ export default function PaymentsPage() {
   return (
     <PageWrapper>
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 py-4 sm:py-6">
-        {/* Enhanced Header */}
-        <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-green-400/30">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                  <svg className="w-7 h-7 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold drop-shadow-sm">Payment Center</h1>
-                  <p className="text-green-100 mt-1 text-sm sm:text-base">Secure transport fee management system</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <div className="text-center">
-                <div className="text-xs sm:text-sm text-green-100 mb-1">Student</div>
-                <div className="text-lg sm:text-xl font-bold truncate text-white drop-shadow-sm">{student.name}</div>
-                <div className="text-xs sm:text-sm text-green-100 mt-1">Academic Year 2025-26</div>
-              </div>
-            </div>
+        {/* Header */}
+        <PassengerPageHeader
+          title="Payments"
+          icon={CreditCard}
+        />
+
+        {/* Student Info Card */}
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div className="text-center">
+            <div className="text-xs sm:text-sm text-gray-600 mb-1">Student</div>
+            <div className="text-lg sm:text-xl font-bold text-gray-900">{student.name}</div>
+            <div className="text-xs sm:text-sm text-gray-600 mt-1">Academic Year 2025-26</div>
           </div>
         </div>
 
-        {/* Enhanced Tab Navigation */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50">
-          <div className="border-b border-green-100">
+        {/* Tab Navigation */}
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+          <div className="border-b border-gray-200">
             <nav className="flex space-x-1 sm:space-x-2 p-2 overflow-x-auto scrollbar-hide">
               {[
                 { id: 'payments', label: 'Make Payment', icon: '💳', description: 'Pay fees securely' },
@@ -116,8 +107,8 @@ export default function PaymentsPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`relative py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold text-sm sm:text-base flex items-center space-x-2 sm:space-x-3 whitespace-nowrap flex-shrink-0 min-w-0 transition-all duration-300 ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow-lg transform scale-105'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 hover:shadow-md'
+                      ? 'bg-[#0b6d41] text-white shadow-lg transform scale-105'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-green-50 hover:shadow-md'
                   }`}
                 >
                   <span className="text-lg flex-shrink-0">{tab.icon}</span>
@@ -127,9 +118,6 @@ export default function PaymentsPage() {
                       {tab.description}
                     </div>
                   </div>
-                  {activeTab === tab.id && (
-                    <div className="absolute inset-0 bg-white/10 rounded-xl border border-white/20"></div>
-                  )}
                 </button>
               ))}
             </nav>
