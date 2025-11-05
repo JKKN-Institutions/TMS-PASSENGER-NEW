@@ -450,24 +450,12 @@ function DashboardContent({
               </div>
             )}
             
-            {/* Enhanced User Avatar */}
-            <div className="relative group">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-r from-green-600 to-yellow-500 flex items-center justify-center cursor-pointer hover:from-green-700 hover:to-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
-                <span className="text-sm font-bold text-white drop-shadow-sm">
-                  {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase() || 'S'}
-                </span>
-              </div>
-              
-              {/* User info tooltip on hover */}
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-green-100 p-3 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-[110]">
-                <div className="text-sm">
-                  <p className="font-semibold text-gray-900 truncate">{user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}</p>
-                  <p className="text-green-600 text-xs mt-1">{user?.email}</p>
-                  <div className="mt-2 pt-2 border-t border-green-100">
-                    <p className="text-xs text-gray-500">Transport Management System</p>
-                  </div>
-                </div>
-              </div>
+            {/* Term Period Badge */}
+            <div className="flex items-center">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                Active Term
+              </span>
             </div>
           </div>
         </div>

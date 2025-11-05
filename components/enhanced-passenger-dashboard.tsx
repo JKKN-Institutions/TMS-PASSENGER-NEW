@@ -387,8 +387,7 @@ export default function EnhancedPassengerDashboard({
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
       >
         <div className="min-w-0 flex-1">
-          <h1 className="text-heading-1 mb-2 dark:text-[var(--text-primary)]">Dashboard</h1>
-          <p className="text-body dark:text-[var(--text-secondary)]">Plan, prioritize, and accomplish your transport tasks with ease.</p>
+          <h1 className="text-heading-1 dark:text-[var(--text-primary)]">Dashboard</h1>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
           <button className="btn-secondary flex items-center space-x-1 sm:space-x-2">
@@ -440,7 +439,6 @@ export default function EnhancedPassengerDashboard({
                 </div>
                 <div className="min-w-0 flex-1">
                   <h2 className="text-heading-3 dark:text-[var(--text-primary)]">Quick Actions</h2>
-                  <p className="text-body dark:text-[var(--text-secondary)]">Access your most-used transport features</p>
                 </div>
               </div>
               <button 
@@ -486,7 +484,6 @@ export default function EnhancedPassengerDashboard({
                 </div>
                 <div>
                   <h2 className="text-heading-3 dark:text-[var(--text-primary)]">Upcoming Bookings</h2>
-                  <p className="text-body dark:text-[var(--text-secondary)]">Your scheduled trips</p>
                 </div>
               </div>
               
@@ -530,8 +527,7 @@ export default function EnhancedPassengerDashboard({
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-heading-3 mb-1 dark:text-[var(--text-primary)]">Recent Payments</h3>
-                <p className="text-body text-sm dark:text-[var(--text-secondary)]">Your transaction history</p>
+                <h3 className="text-heading-3 dark:text-[var(--text-primary)]">Recent Payments</h3>
               </div>
               <Link href="/dashboard/payments" className="text-green-600 dark:text-[var(--neon-green)] 
                 hover:text-green-700 dark:hover:text-[var(--neon-green)] transition-colors">
@@ -626,10 +622,7 @@ export default function EnhancedPassengerDashboard({
         >
           <div className="flex items-center justify-between">
             <h2 className="text-heading-2">Live Driver Tracking</h2>
-            <div className="flex items-center space-x-3">
-              <Navigation className="w-6 h-6 text-blue-500" />
-              <span className="text-sm text-gray-500">Real-time updates</span>
-            </div>
+            <Navigation className="w-6 h-6 text-blue-500" />
           </div>
           
           <DriverLocationDisplay />
