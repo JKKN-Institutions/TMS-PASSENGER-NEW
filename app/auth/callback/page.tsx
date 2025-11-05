@@ -228,8 +228,8 @@ function CallbackContent() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-red-200">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-200">
           {/* Error Icon with Logo */}
           <div className="relative w-24 h-24 mx-auto mb-6">
             <div className="absolute inset-0 bg-red-100 rounded-full flex items-center justify-center">
@@ -241,19 +241,19 @@ function CallbackContent() {
               <img src="/app-logo.png" alt="JKKN TMS" className="w-full h-full" />
             </div>
           </div>
-          
+
           <h1 className="text-2xl font-bold text-red-600 mb-3">
             Authentication Error
           </h1>
-          <p className="text-gray-700 mb-6 leading-relaxed">{error}</p>
-          
+          <p className="text-gray-700 mb-6 leading-relaxed font-medium">{error}</p>
+
           <button
             onClick={() => router.push('/')}
-            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            className="w-full bg-[#0b6d41] hover:bg-[#085032] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
           >
             Return to Login
           </button>
-          
+
           <p className="text-sm text-gray-500 mt-4">Need help? Contact support</p>
         </div>
       </div>
@@ -261,33 +261,33 @@ function CallbackContent() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-      <div className="text-center max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-green-200">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="text-center max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-200">
         {/* Animated Logo with Spinner */}
         <div className="relative w-24 h-24 mx-auto mb-6">
           <div className="absolute inset-0">
-            <div className="animate-spin rounded-full h-24 w-24 border-4 border-green-200 border-t-green-600"></div>
+            <div className="animate-spin rounded-full h-24 w-24 border-4 border-green-200 border-t-[#0b6d41]"></div>
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
             <img src="/app-logo.png" alt="JKKN TMS" className="w-16 h-16 drop-shadow-lg" />
           </div>
         </div>
-        
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent mb-3">
+
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">
           Authenticating...
         </h1>
-        <p className="text-gray-700 mb-4">
+        <p className="text-gray-700 mb-4 font-medium">
           Please wait while we securely log you in.
         </p>
-        
+
         {/* Progress Indicators */}
         <div className="mt-6 space-y-3">
           <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+            <div className="w-2 h-2 bg-[#0b6d41] rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-[#0b6d41] rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 bg-[#0b6d41] rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
           </div>
-          <p className="text-sm text-gray-500">Verifying your credentials</p>
+          <p className="text-sm text-gray-600">Verifying your credentials</p>
         </div>
       </div>
     </div>
@@ -297,10 +297,10 @@ function CallbackContent() {
 export default function CallbackPage() {
   return (
     <Suspense fallback={
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-2 border-green-200">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-200">
           <div className="relative w-16 h-16 mx-auto mb-4">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41]"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <img src="/app-logo.png" alt="JKKN TMS" className="w-12 h-12" />
             </div>
