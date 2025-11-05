@@ -406,8 +406,8 @@ export default function EnhancedPassengerDashboard({
         </div>
       </motion.div>
 
-      {/* Transport Statistics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Transport Statistics Grid - Optimized for mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         {statsCards.map((card, index) => (
           <StatCard
             key={card.title}
@@ -424,12 +424,12 @@ export default function EnhancedPassengerDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Column - Transport Actions & Bookings */}
         <div className="lg:col-span-3 space-y-8">
-          {/* Transport Quick Actions */}
+          {/* Transport Quick Actions - Hidden on mobile */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="modern-card p-8 
+            className="hidden lg:block modern-card p-8
               dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
@@ -520,12 +520,12 @@ export default function EnhancedPassengerDashboard({
 
         {/* Right Column - Payments & Notifications */}
         <div className="space-y-8">
-          {/* Recent Payments */}
+          {/* Recent Payments - Hidden on mobile */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
-            className="modern-card p-6 
+            className="hidden lg:block modern-card p-6
               dark:bg-[var(--dark-bg-secondary)] dark:border-[var(--dark-bg-elevated)]"
           >
             <div className="flex items-center justify-between mb-6">
@@ -598,13 +598,13 @@ export default function EnhancedPassengerDashboard({
         </div>
       </div>
 
-      {/* Show Analytics Button (when hidden) */}
+      {/* Show Analytics Button (when hidden) - Hidden on mobile */}
       {data.analytics && !showAnalytics && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="text-center"
+          className="hidden lg:block text-center"
         >
           <button
             onClick={() => setShowAnalytics(true)}
@@ -636,13 +636,13 @@ export default function EnhancedPassengerDashboard({
         </motion.div>
       )}
 
-      {/* Analytics Section */}
+      {/* Analytics Section - Hidden on mobile */}
       {data.analytics && showAnalytics && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="space-y-8"
+          className="hidden lg:block space-y-8"
         >
           <div className="flex items-center justify-between">
             <h2 className="text-heading-2">Analytics & Insights</h2>
