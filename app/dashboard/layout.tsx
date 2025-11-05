@@ -142,90 +142,68 @@ function DashboardContent({
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-[var(--dark-bg-primary)] overflow-hidden flex">
-      {/* Enhanced Collapsible Desktop Sidebar with Dark Theme Support */}
-      <div 
-        className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 
-          bg-gradient-to-b from-white via-white to-gray-50 
-          dark:bg-gradient-to-b dark:from-[var(--dark-bg-secondary)] dark:via-[var(--dark-bg-secondary)] dark:to-[var(--dark-bg-tertiary)]
-          border-r border-gray-200/80 dark:border-[var(--dark-bg-elevated)] 
-          shadow-xl dark:shadow-[0_4px_40px_rgba(0,0,0,0.8)] 
+      {/* Simplified Desktop Sidebar */}
+      <div
+        className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0
+          bg-white border-r border-gray-200 shadow-lg
           transition-all duration-300 ease-in-out ${
           sidebarCollapsed ? 'lg:w-20' : 'lg:w-80'
         }`}
       >
-        {/* Modern Header with Gradient & Dark Theme */}
+        {/* Sidebar Header */}
         <div className="relative">
-          <div className={`flex items-center justify-between p-6 border-b border-gray-100/80 dark:border-[var(--dark-bg-elevated)]
-            bg-gradient-to-r from-green-50/50 to-yellow-50/50 
-            dark:bg-gradient-to-r dark:from-[rgba(0,255,136,0.1)] dark:to-[rgba(0,212,255,0.1)]
-            backdrop-blur-sm ${
+          <div className={`flex items-center justify-between p-6 border-b border-gray-200 ${
             sidebarCollapsed ? 'flex-col space-y-3 py-4' : ''
           }`}>
             <div className={`flex items-center ${sidebarCollapsed ? 'flex-col' : 'space-x-3'}`}>
-              <div className="w-12 h-12 flex items-center justify-center transform hover:scale-105 transition-all duration-200">
-                <img 
-                  src="/app-logo.png" 
-                  alt="JKKN TMS Logo" 
-                  className="h-12 w-12 drop-shadow-lg"
+              <div className="w-10 h-10 bg-[#0b6d41] rounded-lg flex items-center justify-center">
+                <img
+                  src="/app-logo.png"
+                  alt="JKKN TMS Logo"
+                  className="h-6 w-6"
                 />
               </div>
               {!sidebarCollapsed && (
-                <div className="animate-fadeIn">
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent
-                    dark:bg-gradient-to-r dark:from-[var(--neon-green)] dark:to-[var(--neon-yellow)] dark:bg-clip-text dark:text-transparent
-                    gradient-text">
-                    TMS Student
+                <div>
+                  <h1 className="text-lg font-bold text-gray-900 font-poppins">
+                    Student Portal
                   </h1>
-                  <p className="text-xs text-gray-500 dark:text-[var(--text-secondary)] font-medium">Transport Management</p>
+                  <p className="text-xs text-gray-600 font-inter">TMS</p>
                 </div>
               )}
             </div>
-            
-            {/* Collapse Toggle Button with Dark Theme */}
+
+            {/* Collapse Toggle Button */}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className={`p-2.5 rounded-xl bg-white dark:bg-[var(--dark-bg-elevated)]
-                hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 
-                dark:hover:bg-gradient-to-r dark:hover:from-[rgba(0,255,136,0.2)] dark:hover:to-[rgba(0,212,255,0.2)]
-                border border-gray-200/50 dark:border-[var(--neon-green)]/30
-                shadow-sm hover:shadow-md 
-                dark:shadow-[0_0_10px_rgba(0,255,136,0.2)] dark:hover:shadow-[0_0_20px_var(--neon-green-glow)]
-                transition-all duration-200 group ${
+              className={`p-2 rounded-lg bg-white hover:bg-gray-100 border border-gray-200 transition-colors ${
                 sidebarCollapsed ? 'mt-0' : ''
               }`}
               title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               {sidebarCollapsed ? (
-                <ChevronRight className="h-4 w-4 text-gray-600 dark:text-[var(--neon-green)] group-hover:text-green-600 dark:group-hover:text-[var(--neon-blue)] transition-colors" />
+                <ChevronRight className="h-4 w-4 text-gray-600" />
               ) : (
-                <ChevronLeft className="h-4 w-4 text-gray-600 dark:text-[var(--neon-green)] group-hover:text-green-600 dark:group-hover:text-[var(--neon-blue)] transition-colors" />
+                <ChevronLeft className="h-4 w-4 text-gray-600" />
               )}
             </button>
           </div>
         </div>
         
-        {/* Enhanced Navigation with Modern Design & Dark Theme */}
-        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto custom-scrollbar">
-          {!sidebarCollapsed && (
-            <div className="mb-6">
-              <p className="px-3 text-xs font-bold text-gray-400 dark:text-[var(--text-tertiary)] uppercase tracking-wider mb-3">
-                Navigation
-              </p>
-            </div>
-          )}
-          
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           <div className="space-y-1">
             {navigation.map((item) => {
               const isDisabled = item.disabled;
               const isActive = item.current;
-              
+
               if (isDisabled) {
                 return (
                   <div
                     key={item.name}
                     className={`group relative flex items-center ${
-                      sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
-                    } rounded-xl opacity-50 cursor-not-allowed`}
+                      sidebarCollapsed ? 'justify-center px-3 py-2.5' : 'px-3 py-2.5'
+                    } rounded-lg opacity-50 cursor-not-allowed`}
                     title={`${item.name} - Available after enrollment`}
                   >
                     <div className={`flex items-center ${sidebarCollapsed ? '' : 'flex-1'}`}>
@@ -247,76 +225,57 @@ function DashboardContent({
                   </div>
                 );
               }
-              
+
               return (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={`group relative flex items-center ${
-                    sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
-                  } rounded-xl transition-all duration-200 ${
+                    sidebarCollapsed ? 'justify-center px-3 py-2.5' : 'px-3 py-2.5'
+                  } rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-green-500 to-yellow-500 dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)] shadow-lg shadow-green-200/50 dark:shadow-[0_0_20px_var(--neon-green-glow)] scale-[1.02]'
-                      : 'hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 dark:hover:from-[rgba(0,255,136,0.15)] dark:hover:to-[rgba(0,212,255,0.15)] hover:shadow-md dark:hover:shadow-[0_0_15px_var(--neon-green-glow)]'
+                      ? 'bg-[#0b6d41] text-white font-semibold'
+                      : 'text-gray-700 hover:bg-gray-100 font-medium'
                   }`}
                 >
                   <div className={`flex items-center ${sidebarCollapsed ? '' : 'flex-1'}`}>
-                    <item.icon className={`h-5 w-5 flex-shrink-0 transition-colors duration-200 ${
-                      isActive 
-                        ? 'text-white dark:text-[var(--dark-bg-primary)] drop-shadow-sm' 
-                        : 'text-gray-600 dark:text-[var(--text-secondary)] group-hover:text-green-600 dark:group-hover:text-[var(--neon-green)]'
-                    }`} />
+                    <item.icon className={`h-5 w-5 flex-shrink-0 ${
+                      isActive ? 'text-white' : 'text-gray-500'
+                    }`} strokeWidth={isActive ? 2 : 1.5} />
                     {!sidebarCollapsed && (
-                      <span className={`ml-3 text-sm font-semibold transition-colors duration-200 ${
-                        isActive 
-                          ? 'text-white dark:text-[var(--dark-bg-primary)] drop-shadow-sm' 
-                          : 'text-gray-700 dark:text-[var(--text-primary)] group-hover:text-green-700 dark:group-hover:text-[var(--neon-green)]'
-                      }`}>
+                      <span className="ml-3 text-sm">
                         {item.name}
                       </span>
                     )}
                   </div>
-                  
-                  {/* Tooltip for collapsed state with dark theme */}
+
+                  {/* Tooltip for collapsed state */}
                   {sidebarCollapsed && (
-                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-[var(--dark-bg-elevated)] dark:border dark:border-[var(--neon-green)]/30 text-white dark:text-[var(--neon-green)] text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl dark:shadow-[0_0_20px_var(--neon-green-glow)]">
+                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50">
                       {item.name}
                     </div>
-                  )}
-                  
-                  {/* Active indicator with neon glow */}
-                  {isActive && !sidebarCollapsed && (
-                    <div className="w-1.5 h-1.5 bg-white dark:bg-[var(--neon-yellow)] rounded-full shadow-sm dark:shadow-[0_0_10px_var(--neon-yellow-glow)]" />
                   )}
                 </Link>
               );
             })}
           </div>
 
-          {/* Settings Section with Dark Theme */}
-          <div className={`pt-6 mt-6 border-t border-gray-200/50 dark:border-[var(--dark-bg-elevated)] ${sidebarCollapsed ? '' : 'space-y-1'}`}>
-            {!sidebarCollapsed && (
-              <p className="px-3 text-xs font-bold text-gray-400 dark:text-[var(--text-tertiary)] uppercase tracking-wider mb-3">
-                Settings
-              </p>
-            )}
+          {/* Settings Section */}
+          <div className={`pt-6 mt-6 border-t border-gray-200 ${sidebarCollapsed ? '' : 'space-y-1'}`}>
             <Link
               href="/dashboard/settings"
               className={`group relative flex items-center ${
-                sidebarCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3'
-              } rounded-xl transition-all duration-200 
-                hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 
-                dark:hover:from-[rgba(0,255,136,0.15)] dark:hover:to-[rgba(0,212,255,0.15)]
-                hover:shadow-md dark:hover:shadow-[0_0_15px_var(--neon-green-glow)]`}
+                sidebarCollapsed ? 'justify-center px-3 py-2.5' : 'px-3 py-2.5'
+              } rounded-lg transition-all duration-200 text-gray-700 hover:bg-gray-100 font-medium`}
             >
-              <Settings className="h-5 w-5 text-gray-600 dark:text-[var(--text-secondary)] group-hover:text-green-600 dark:group-hover:text-[var(--neon-green)] flex-shrink-0 transition-colors" />
+              <Settings className="h-5 w-5 text-gray-500 flex-shrink-0" strokeWidth={1.5} />
               {!sidebarCollapsed && (
-                <span className="ml-3 text-sm font-semibold text-gray-700 dark:text-[var(--text-primary)] group-hover:text-green-700 dark:group-hover:text-[var(--neon-green)] transition-colors">
+                <span className="ml-3 text-sm">
                   Settings
                 </span>
               )}
               {sidebarCollapsed && (
-                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-[var(--dark-bg-elevated)] dark:border dark:border-[var(--neon-green)]/30 text-white dark:text-[var(--neon-green)] text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl dark:shadow-[0_0_20px_var(--neon-green-glow)]">
+                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50">
                   Settings
                 </div>
               )}
@@ -324,40 +283,27 @@ function DashboardContent({
           </div>
         </nav>
         
-        {/* Enhanced User Profile Section with Dark Theme */}
-        <div className={`border-t border-gray-200/80 dark:border-[var(--dark-bg-elevated)] 
-          bg-gradient-to-r from-gray-50/50 to-gray-100/50 
-          dark:bg-gradient-to-r dark:from-[rgba(0,255,136,0.05)] dark:to-[rgba(0,212,255,0.05)]
-          ${sidebarCollapsed ? 'p-4' : 'p-6'}`}>
+        {/* User Profile Section */}
+        <div className={`border-t border-gray-200 bg-gray-50 ${sidebarCollapsed ? 'p-4' : 'p-6'}`}>
           {sidebarCollapsed ? (
             <div className="group relative">
               <div className="flex justify-center mb-3">
                 <div className="relative">
-                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-green-600 to-yellow-500 
-                    dark:bg-gradient-to-br dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)]
-                    flex items-center justify-center shadow-lg 
-                    dark:shadow-[0_0_25px_var(--neon-green-glow)]
-                    cursor-pointer transform hover:scale-105 transition-transform icon-glow">
-                    <span className="text-sm font-bold text-white drop-shadow-sm">
+                  <div className="h-11 w-11 rounded-lg bg-[#0b6d41] flex items-center justify-center cursor-pointer">
+                    <span className="text-sm font-bold text-white">
                       {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 dark:bg-[var(--neon-yellow)] rounded-full border-2 border-white dark:border-[var(--dark-bg-secondary)] shadow-sm dark:shadow-[0_0_10px_var(--neon-yellow-glow)]"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white"></div>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full p-2.5 flex justify-center items-center rounded-xl 
-                  bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 
-                  dark:from-[rgba(255,102,0,0.2)] dark:to-[rgba(255,102,0,0.3)]
-                  dark:hover:from-[rgba(255,102,0,0.3)] dark:hover:to-[rgba(255,102,0,0.4)]
-                  transition-all duration-200 shadow-sm hover:shadow-md 
-                  dark:shadow-[0_0_10px_rgba(255,102,0,0.3)] dark:hover:shadow-[0_0_20px_var(--neon-orange-glow)]
-                  group"
+                className="w-full p-2.5 flex justify-center items-center rounded-lg bg-red-50 hover:bg-red-100 transition-colors"
               >
-                <LogOut className="h-4 w-4 text-red-600 dark:text-[var(--neon-orange)]" />
+                <LogOut className="h-4 w-4 text-red-600" />
               </button>
-              <div className="absolute left-full ml-2 bottom-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50 shadow-xl">
+              <div className="absolute left-full ml-2 bottom-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50">
                 {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
               </div>
             </div>
@@ -365,35 +311,25 @@ function DashboardContent({
             <>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="relative">
-                  <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-green-600 to-yellow-500 
-                    dark:bg-gradient-to-br dark:from-[var(--neon-green)] dark:to-[var(--neon-blue)]
-                    flex items-center justify-center shadow-lg 
-                    dark:shadow-[0_0_25px_var(--neon-green-glow)]
-                    icon-glow">
-                    <span className="text-sm font-bold text-white drop-shadow-sm">
+                  <div className="h-11 w-11 rounded-lg bg-[#0b6d41] flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">
                       {(user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User')?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 dark:bg-[var(--neon-yellow)] rounded-full border-2 border-white dark:border-[var(--dark-bg-secondary)] shadow-sm dark:shadow-[0_0_10px_var(--neon-yellow-glow)]"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white"></div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-gray-900 dark:text-[var(--text-primary)] truncate">
+                  <p className="text-sm font-bold text-gray-900 truncate">
                     {user && 'full_name' in user ? user.full_name : user && 'driver_name' in user ? user.driver_name : 'User'}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-[var(--text-secondary)] truncate font-medium">
+                  <p className="text-xs text-gray-500 truncate">
                     {user?.email || 'student@email.com'}
                   </p>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 text-sm font-semibold rounded-xl 
-                  bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 
-                  dark:from-[rgba(255,102,0,0.2)] dark:to-[rgba(255,102,0,0.3)]
-                  dark:hover:from-[rgba(255,102,0,0.3)] dark:hover:to-[rgba(255,102,0,0.4)]
-                  text-red-600 dark:text-[var(--neon-orange)]
-                  transition-all duration-200 shadow-sm hover:shadow-md 
-                  dark:shadow-[0_0_10px_rgba(255,102,0,0.3)] dark:hover:shadow-[0_0_20px_var(--neon-orange-glow)]"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>
@@ -407,74 +343,28 @@ function DashboardContent({
       <div className={`flex flex-col h-full flex-1 min-w-0 transition-all duration-300 ease-in-out ${
         sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-80'
       }`}>
-        {/* Enhanced Top bar with Dark Theme */}
-        <div className="bg-white/95 dark:bg-[var(--dark-bg-secondary)]/95 backdrop-blur-xl border-b border-green-100 dark:border-[var(--dark-bg-elevated)] shadow-sm dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
+        {/* Top bar - Simple and Clean */}
+        <div className="bg-white border-b border-gray-200 shadow-sm flex h-16 flex-shrink-0 items-center justify-between px-4 sm:px-6 min-w-0">
           <div className="flex items-center space-x-3">
-            {/* Logo for mobile - hamburger menu removed, using More menu in bottom nav instead */}
+            {/* Logo for mobile */}
             <div className="flex items-center lg:hidden">
-              <img 
-                src="/app-logo.png" 
-                alt="JKKN TMS" 
-                className="w-10 h-10 mr-3 drop-shadow-md"
+              <img
+                src="/app-logo.png"
+                alt="JKKN TMS"
+                className="w-8 h-8 mr-2"
               />
-              <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 dark:from-[var(--neon-green)] dark:to-[var(--neon-yellow)] bg-clip-text text-transparent gradient-text">TMS Student</span>
-            </div>
-          </div>
-
-          <div className="hidden lg:flex lg:items-center lg:space-x-4 flex-1 max-w-2xl mx-8">
-            <div className="flex items-center space-x-4 w-full">
-              <div className="relative flex-1 max-w-md">
-                <input
-                  type="text"
-                  placeholder="Search transport services..."
-                  className="w-full pl-4 pr-12 py-2.5 border border-green-200 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <kbd className="px-2 py-1 text-xs font-semibold text-green-600 bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 rounded shadow-sm">
-                    ⌘ F
-                  </kbd>
-                </div>
-              </div>
+              <span className="text-lg font-bold text-gray-900">TMS</span>
             </div>
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Notification Center */}
-            {user?.id && (
-              <div className="relative">
-                <NotificationCenter 
-                  userId={user.id} 
-                  userType="student" 
-                  className="p-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                />
-              </div>
-            )}
-            
-            {/* Term Period Badge */}
-            <div className="flex items-center">
-              <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                Active Term
-              </span>
-            </div>
+            {/* Empty space - notifications removed */}
           </div>
         </div>
 
-        {/* Enhanced Page content with Modern Background */}
-        <main className="flex-1 overflow-y-auto min-w-0 main-content
-          bg-gradient-to-br from-green-50/30 via-yellow-50/20 to-blue-50/30
-          relative">
-          {/* Decorative Background Elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Top right circle */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-200/20 to-yellow-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            {/* Bottom left circle */}
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-200/20 to-green-200/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-            {/* Center accent */}
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-yellow-100/10 to-green-100/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          
-          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-24 lg:pb-6 relative z-10">
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto min-w-0 main-content bg-gray-50">
+          <div className="container-modern py-2 sm:py-4 lg:py-6 min-w-0 pb-24 lg:pb-6">
             {children}
           </div>
         </main>

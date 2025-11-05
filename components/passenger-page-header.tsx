@@ -17,16 +17,16 @@ export default function PassengerPageHeader({
   iconBgColor = 'bg-green-50'
 }: PassengerPageHeaderProps) {
   return (
-    <div className="w-full bg-gradient-to-r from-green-50 via-yellow-50 to-green-100 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-green-200 shadow-sm">
+    <div className="w-full bg-white rounded-lg p-4 sm:p-5 md:p-6 border border-gray-200">
       <div className="flex items-start gap-3 sm:gap-4">
         {/* Icon */}
-        <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 ${iconBgColor} rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm`}>
+        <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 ${iconBgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
           <Icon className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${iconColor}`} />
         </div>
 
         {/* Text Content */}
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 break-words">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 break-words">
             {title}
           </h1>
         </div>
