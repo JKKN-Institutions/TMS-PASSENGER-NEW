@@ -52,14 +52,14 @@ export const THEME = {
 
   // Gradients
   gradients: {
-    background: 'bg-gradient-to-br from-green-50 via-yellow-50 to-green-100',
-    backgroundDark: 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900',
-    primary: 'bg-gradient-to-r from-green-600 to-emerald-600',
-    secondary: 'bg-gradient-to-r from-yellow-500 to-amber-500',
-    accent: 'bg-gradient-to-r from-green-500 to-yellow-500',
-    card: 'bg-gradient-to-br from-green-50/50 to-yellow-50/50',
-    hover: 'hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50',
-    text: 'bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent',
+    background: 'bg-gray-50',
+    backgroundDark: 'bg-gray-900',
+    primary: 'bg-[#0b6d41]',
+    secondary: 'bg-gray-100',
+    accent: 'bg-[#0b6d41]',
+    card: 'bg-white',
+    hover: 'hover:bg-gray-50',
+    text: 'text-gray-900',
   },
 
   // Borders
@@ -100,18 +100,18 @@ export const THEME = {
   // Buttons
   buttons: {
     primary: `
-      bg-gradient-to-r from-green-600 to-emerald-600 
-      hover:from-green-700 hover:to-emerald-700
-      text-white font-semibold 
-      px-6 py-3 rounded-xl 
+      bg-[#0b6d41]
+      hover:bg-[#085032]
+      text-white font-semibold
+      px-6 py-3 rounded-xl
       shadow-lg hover:shadow-xl
       transition-all duration-200
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
     secondary: `
-      bg-white border-2 border-green-200
-      hover:bg-green-50 hover:border-green-300
-      text-green-700 font-semibold
+      bg-white border-2 border-gray-200
+      hover:bg-gray-50 hover:border-gray-300
+      text-gray-700 font-semibold
       px-6 py-3 rounded-xl
       shadow-md hover:shadow-lg
       transition-all duration-200
@@ -119,8 +119,8 @@ export const THEME = {
     `,
     ghost: `
       bg-transparent
-      hover:bg-green-50
-      text-green-700 font-medium
+      hover:bg-gray-50
+      text-gray-700 font-medium
       px-4 py-2 rounded-lg
       transition-colors duration-200
       disabled:opacity-50 disabled:cursor-not-allowed
@@ -131,9 +131,9 @@ export const THEME = {
   cards: {
     default: `
       bg-white/80 backdrop-blur-sm
-      rounded-xl border border-gray-200/50
+      rounded-xl border border-gray-200
       shadow-lg hover:shadow-xl
-      hover:border-green-200/70
+      hover:border-gray-300
       transition-all duration-300
     `,
     elevated: `
@@ -143,8 +143,8 @@ export const THEME = {
       transition-all duration-300
     `,
     gradient: `
-      bg-gradient-to-br from-white to-green-50/30
-      rounded-xl border border-green-200/50
+      bg-white
+      rounded-xl border border-gray-200
       shadow-lg hover:shadow-xl
       transition-all duration-300
     `,
@@ -159,7 +159,7 @@ export const THEME = {
     body: 'text-base',
     small: 'text-sm',
     xs: 'text-xs',
-    gradient: 'bg-gradient-to-r from-green-700 to-yellow-600 bg-clip-text text-transparent',
+    gradient: 'text-gray-900',
   },
 } as const;
 

@@ -128,12 +128,6 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
 
           {/* Ticket Container */}
           <div className="bg-white dark:bg-gray-800">
-            {/* Ticket Header - Seat Number */}
-            <div className="bg-[#0b6d41] p-4 sm:p-6 text-center">
-              <div className="text-white text-2xl sm:text-4xl font-bold drop-shadow-lg">{booking.seatNumber}</div>
-              <div className="text-white/90 text-xs sm:text-sm mt-1 font-medium">SEAT NUMBER</div>
-            </div>
-
             {/* Ticket Content */}
             <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
               <div className="text-center border-b border-gray-200 dark:border-gray-600 pb-3 sm:pb-4">
