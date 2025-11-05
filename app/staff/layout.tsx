@@ -116,154 +116,86 @@ function StaffLayoutInner({
       )}
 
       {/* Sidebar - Hidden on mobile, shown on desktop */}
-      <aside
-        className={`
-          hidden lg:flex
-          fixed lg:static inset-y-0 left-0 z-50
-          w-72 sidebar-theme-adaptive
-          flex-col shadow-2xl
-          backdrop-blur-xl
-          border-r sidebar-border-adaptive
-        `}
-      >
-        {/* Decorative Background Pattern */}
-        <div className="absolute inset-0 sidebar-pattern-overlay pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCAzLjk5LTRzNC4wMSAxLjc5IDQuMDEgNGMwIDIuMjEtMS44MSA0LTQuMDEgNFMzNiAzNi4yMSAzNiAzNHoiLz48L2c+PC9nPjwvc3ZnPg==')]"></div>
-        </div>
-
-        {/* Top gradient overlay */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/10 to-transparent pointer-events-none"></div>
-
+      <aside className="hidden lg:flex fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white flex-col shadow-lg border-r border-gray-200">
         {/* Sidebar Header */}
-        <div className="relative p-6 border-b border-white/10 bg-white/5">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-[#0b6d41] rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white/20 backdrop-blur-sm">
-              <Briefcase className="w-6 h-6 text-white" strokeWidth={2.5} />
+            <div className="w-10 h-10 bg-[#0b6d41] rounded-lg flex items-center justify-center">
+              <Briefcase className="w-5 h-5 text-white" strokeWidth={2} />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold text-white sidebar-text-adaptive tracking-tight font-poppins">Staff Portal</h2>
-              <p className="text-xs text-white/90 font-medium font-inter">Transport Management System</p>
+              <h2 className="text-lg font-bold text-gray-900 font-poppins">Staff Portal</h2>
+              <p className="text-xs text-gray-600 font-inter">TMS</p>
             </div>
           </div>
         </div>
 
         {/* User Info Card */}
-        <div className="relative p-4 border-b border-white/10">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-white/10 hover:bg-white/15 transition-all duration-300">
+        <div className="p-4 border-b border-gray-200">
+          <div className="bg-gray-50 rounded-lg p-3">
             <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-14 h-14 bg-[#0b6d41] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white/20">
-                  <User className="w-7 h-7 text-white" strokeWidth={2.5} />
-                </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#ffde59] rounded-full border-2 border-white shadow-lg"></div>
+              <div className="w-10 h-10 bg-[#0b6d41] rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="w-5 h-5 text-white" strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate drop-shadow-md font-inter">{staffName}</p>
-                <p className="text-xs text-white/80 truncate opacity-90 font-inter">{user?.email}</p>
+                <p className="text-sm font-semibold text-gray-900 truncate font-inter">{staffName}</p>
+                <p className="text-xs text-gray-600 truncate font-inter">{user?.email}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-2 relative sidebar-nav-scroll">
-          <div className="space-y-1.5">
-            {navigation.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    nav-item-animated group relative flex items-center space-x-3 px-4 py-3.5 rounded-xl
-                    transition-all duration-300 ease-out
-                    ${item.current
-                      ? 'bg-gradient-to-r from-white/20 to-white/10 text-white font-bold shadow-xl border border-white/30 backdrop-blur-sm scale-[1.02]'
-                      : 'text-white/90 font-semibold hover:bg-white/15 hover:text-white hover:shadow-lg hover:scale-[1.02] hover:border-white/20 focus:bg-white/20 focus:text-white focus:shadow-xl focus:border-white/30 focus:outline-none active:bg-white/25 active:scale-95 border border-transparent'
-                    }
-                  `}
-                  style={{
-                    animationDelay: `${index * 50}ms`
-                  }}
-                >
-                  {/* Active indicator */}
-                  {item.current && (
-                    <div className="active-indicator absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ffde59] rounded-r-full shadow-lg"></div>
-                  )}
-
-                  {/* Icon container */}
-                  <div className={`
-                    flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
-                    transition-all duration-300
-                    ${item.current
-                      ? 'bg-[#ffde59] shadow-lg scale-110'
-                      : 'bg-white/10 group-hover:bg-white/20 group-hover:scale-110 group-hover:shadow-md'
-                    }
-                  `}>
-                    <Icon className="w-5 h-5 text-white" strokeWidth={item.current ? 2.5 : 2} />
-                  </div>
-
-                  {/* Text */}
-                  <span className={`text-sm tracking-wide font-inter ${item.current ? 'sidebar-text-adaptive font-semibold' : 'font-medium'}`}>
-                    {item.name}
-                  </span>
-
-                  {/* Hover shimmer effect */}
-                  <div className="shimmer-effect absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none"></div>
-                </Link>
-              );
-            })}
-          </div>
+        <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+          {navigation.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
+                  group relative flex items-center space-x-3 px-3 py-2.5 rounded-lg
+                  transition-all duration-200
+                  ${item.current
+                    ? 'bg-[#0b6d41] text-white font-semibold'
+                    : 'text-gray-700 hover:bg-gray-100 font-medium'
+                  }
+                `}
+              >
+                <Icon className={`w-5 h-5 flex-shrink-0 ${item.current ? 'text-white' : 'text-gray-500'}`} strokeWidth={item.current ? 2 : 1.5} />
+                <span className="text-sm">{item.name}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Logout Button */}
-        <div className="relative p-4 border-t border-white/10 bg-gradient-to-t from-black/10 to-transparent">
+        <div className="p-4 border-t border-gray-200">
           <button
             onClick={handleLogout}
-            className="group relative w-full flex items-center justify-center space-x-3 px-4 py-4 rounded-xl
-              bg-gradient-to-r from-red-500/20 to-red-600/20
-              text-white font-bold
-              border border-red-400/30
-              hover:from-red-500 hover:to-red-600 hover:shadow-xl hover:border-red-300 hover:scale-[1.02]
-              focus:from-red-600 focus:to-red-700 focus:shadow-2xl focus:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-transparent
-              active:from-red-700 active:to-red-800 active:scale-95
-              transition-all duration-300 overflow-hidden"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg
+              bg-red-50 text-red-600 font-medium
+              hover:bg-red-100 transition-all duration-200"
           >
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-red-400/0 via-red-300/20 to-red-400/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-
-            {/* Icon */}
-            <div className="relative w-10 h-10 rounded-xl bg-red-500/30 group-hover:bg-white/20 flex items-center justify-center transition-all duration-300 group-hover:rotate-12">
-              <LogOut className="w-5 h-5" strokeWidth={2.5} />
-            </div>
-
-            {/* Text */}
-            <span className="relative text-sm tracking-wide drop-shadow-md">Sign Out</span>
+            <LogOut className="w-5 h-5" strokeWidth={1.5} />
+            <span className="text-sm">Sign Out</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar - Similar to driver layout */}
-        <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200">
+        {/* Top bar - Mobile only */}
+        <div className="lg:hidden sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6">
             {/* Mobile: App Logo & Name */}
-            <div className="flex items-center space-x-2 lg:hidden">
+            <div className="flex items-center space-x-2">
               <img
                 src="/app-logo.png"
                 alt="TMS Logo"
                 className="w-8 h-8 drop-shadow-md"
               />
               <h1 className="text-lg font-bold text-gray-900">TMS</h1>
-            </div>
-
-            {/* Desktop: Empty space or can add title if needed */}
-            <div className="hidden lg:block"></div>
-
-            {/* Right side: Language Switcher - Desktop only */}
-            <div className="hidden lg:flex items-center gap-2 ml-auto">
-              <LanguageSwitcher />
             </div>
           </div>
         </div>

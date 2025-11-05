@@ -338,10 +338,10 @@ export default function StaffStudentsPage() {
                     <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">{student.phone}</td>
                     <td className="px-4 py-3 text-sm">
                       {student.routes && student.routes.length > 0 ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#0b6d41] bg-opacity-10 text-[#0b6d41] rounded text-xs font-medium">
-                          <MapPin className="w-3 h-3" />
-                          {student.routes[0].route_number}
-                          {student.routes.length > 1 && ` +${student.routes.length - 1}`}
+                        <span className="inline-flex items-center gap-1 text-gray-900 text-xs font-medium">
+                          <MapPin className="w-3 h-3 text-[#0b6d41]" />
+                          <span className="font-semibold">{student.routes[0].route_number}</span>
+                          {student.routes.length > 1 && <span className="text-gray-500"> +{student.routes.length - 1}</span>}
                         </span>
                       ) : (
                         <span className="text-gray-400">-</span>
