@@ -32,8 +32,8 @@ export default function LoadingScreen({
     return (
       <div className={containerClasses}>
         <div className="flex items-center space-x-3">
-          <Loader2 className="h-6 w-6 animate-spin text-green-600" />
-          <span className="text-green-700 font-medium">{message}</span>
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-200 border-t-[#0b6d41]" />
+          <span className="text-[#0b6d41] font-medium">{message}</span>
         </div>
       </div>
     );
@@ -54,26 +54,26 @@ export default function LoadingScreen({
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full border-4 border-green-200 border-t-green-600"
+                className="absolute inset-0 rounded-full border-4 border-green-200 border-t-[#0b6d41]"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <img 
-                  src="/app-logo.png" 
-                  alt="Loading" 
+                <img
+                  src="/app-logo.png"
+                  alt="Loading"
                   className="w-16 h-16 drop-shadow-lg"
                 />
               </div>
             </div>
-            
+
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Transport Management System
               </h2>
-              <p className="text-green-700 font-medium mb-4">{message}</p>
+              <p className="text-[#0b6d41] font-medium mb-4">{message}</p>
             </motion.div>
           </motion.div>
 
@@ -82,13 +82,13 @@ export default function LoadingScreen({
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="h-2 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full mb-4"
+            className="h-2 bg-[#0b6d41] rounded-full mb-4"
           />
-          
+
           <motion.p
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-sm text-green-600"
+            className="text-sm text-gray-600"
           >
             Please wait while we load your data...
           </motion.p>
@@ -100,7 +100,7 @@ export default function LoadingScreen({
   // Default variant
   return (
     <div className={containerClasses}>
-      <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm mx-auto">
+      <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200 max-w-sm mx-auto">
         {/* Animated Logo with Spinner */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -112,25 +112,25 @@ export default function LoadingScreen({
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-full border-4 border-green-200 border-t-green-600"
+              className="absolute inset-0 rounded-full border-4 border-green-200 border-t-[#0b6d41]"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <img 
-                src="/app-logo.png" 
-                alt="Loading" 
+              <img
+                src="/app-logo.png"
+                alt="Loading"
                 className="w-12 h-12 drop-shadow-md"
               />
             </div>
           </div>
         </motion.div>
-        
+
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.3 }}
         >
-          <h3 className="text-xl font-bold text-green-900 mb-2">{message}</h3>
-          <p className="text-green-700 text-sm">Fetching your transport data...</p>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">{message}</h3>
+          <p className="text-[#0b6d41] text-sm font-medium">Fetching your transport data...</p>
         </motion.div>
       </div>
     </div>

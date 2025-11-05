@@ -270,47 +270,37 @@ export default function GrievancesPage() {
         nextDueAmount={nextDueAmount ?? undefined}
       >
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-100">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">Grievances & Feedback</h1>
-            <p className="text-gray-700 font-medium mt-1">Submit complaints, suggestions, and track their resolution</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200">
+          <div className="mb-4 sm:mb-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Grievances & Feedback</h1>
+            <p className="text-sm sm:text-base text-gray-600 font-medium mt-1">Submit complaints, suggestions, and track their resolution</p>
           </div>
           <button
             onClick={() => setShowGrievanceModal(true)}
-            className="mt-4 sm:mt-0 bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:w-auto bg-[#0b6d41] hover:bg-[#085032] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-semibold"
           >
-            <Plus className="h-5 w-5" />
-            <span className="font-semibold">Submit Grievance</span>
+            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span>Submit Grievance</span>
           </button>
         </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Stats Overview - Optimized for Mobile */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {[
-          { label: 'Total Submitted', value: grievances.length, color: 'blue' },
-          { label: 'Open', value: grievances.filter(g => g.status === 'open').length, color: 'orange' },
-          { label: 'In Progress', value: grievances.filter(g => g.status === 'in_progress').length, color: 'yellow' },
-          { label: 'Resolved', value: grievances.filter(g => g.status === 'resolved').length, color: 'green' }
+          { label: 'Total', value: grievances.length, icon: MessageSquare, color: 'bg-[#0b6d41]' },
+          { label: 'Open', value: grievances.filter(g => g.status === 'open').length, icon: AlertCircle, color: 'bg-blue-600' },
+          { label: 'In Progress', value: grievances.filter(g => g.status === 'in_progress').length, icon: Clock, color: 'bg-yellow-600' },
+          { label: 'Resolved', value: grievances.filter(g => g.status === 'resolved').length, icon: CheckCircle, color: 'bg-green-600' }
         ].map((stat) => (
-          <div key={stat.label} className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-700">{stat.label}</p>
-                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+          <div key={stat.label} className="bg-white rounded-xl shadow-lg border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs sm:text-sm font-semibold text-gray-700 truncate">{stat.label}</p>
+                <div className={`p-1.5 sm:p-2 rounded-lg ${stat.color} shadow-md flex-shrink-0`}>
+                  <stat.icon className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-white" />
+                </div>
               </div>
-              <div className={`p-3 rounded-full bg-gradient-to-br ${
-                stat.color === 'green' ? 'from-green-100 to-yellow-100' :
-                stat.color === 'yellow' ? 'from-yellow-100 to-green-100' :
-                stat.color === 'orange' ? 'from-orange-100 to-yellow-100' :
-                'from-blue-100 to-green-100'
-              } shadow-md`}>
-                <MessageSquare className={`h-6 w-6 ${
-                  stat.color === 'green' ? 'text-green-600' :
-                  stat.color === 'yellow' ? 'text-yellow-600' :
-                  stat.color === 'orange' ? 'text-orange-600' :
-                  'text-blue-600'
-                }`} />
-              </div>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -319,14 +309,14 @@ export default function GrievancesPage() {
 
 
       {/* Filters */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm text-sm"
             >
               <option value="all">All Status</option>
               <option value="open">Open</option>
@@ -341,7 +331,7 @@ export default function GrievancesPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm text-sm"
             >
               <option value="all">All Categories</option>
               <option value="complaint">Complaint</option>
@@ -354,13 +344,13 @@ export default function GrievancesPage() {
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Search</label>
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-[#0b6d41]" />
               <input
                 type="text"
                 placeholder="Search grievances..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-green-200 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+                className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:border-[#0b6d41] transition-all duration-200 bg-white shadow-sm text-sm"
               />
             </div>
           </div>
@@ -372,7 +362,7 @@ export default function GrievancesPage() {
                 setCategoryFilter('all');
                 setSearchTerm('');
               }}
-              className="text-green-600 hover:text-green-700 font-semibold text-sm bg-green-50 hover:bg-green-100 px-4 py-2 rounded-xl transition-all duration-200 border border-green-200"
+              className="w-full text-[#0b6d41] hover:text-white hover:bg-[#0b6d41] font-semibold text-sm bg-green-50 px-4 py-2.5 rounded-xl transition-all duration-200 border border-gray-200"
             >
               Clear Filters
             </button>
@@ -384,10 +374,10 @@ export default function GrievancesPage() {
       <div className="space-y-4">
         {filteredGrievances.length > 0 ? (
           filteredGrievances.map((grievance) => (
-            <div key={grievance.id} className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-green-200 p-6 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
+            <div key={grievance.id} className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-3 bg-gradient-to-br from-green-100 to-yellow-100 rounded-xl shadow-md">
+                  <div className="p-2 sm:p-3 bg-green-50 rounded-xl shadow-sm border border-green-100">
                     {getGrievanceIcon(grievance.status)}
                   </div>
                   <div>

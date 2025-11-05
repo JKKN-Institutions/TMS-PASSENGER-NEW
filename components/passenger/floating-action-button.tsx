@@ -35,8 +35,8 @@ export default function FloatingActionButton() {
 
   return (
     <>
-      {/* FAB Container - positioned higher to avoid bug report button */}
-      <div className="fixed bottom-36 right-6 md:bottom-8 md:right-28 z-40 lg:hidden">
+      {/* FAB Container - positioned higher to avoid bug report button and bottom nav */}
+      <div className="fixed bottom-44 right-6 md:bottom-8 md:right-28 z-40 lg:hidden">
         {/* Main FAB Button - Redirects to Live Track */}
         <button
           onClick={handleFABClick}
