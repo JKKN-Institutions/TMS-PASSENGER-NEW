@@ -358,7 +358,16 @@ function DashboardContent({
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Empty space - notifications removed */}
+            {/* Term Period Badge */}
+            {enrollmentStatus?.currentTerm && (
+              <div className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium ${
+                enrollmentStatus.currentTerm.status === 'active'
+                  ? 'bg-green-50 text-green-700 border border-green-200'
+                  : 'bg-gray-100 text-gray-600 border border-gray-200'
+              }`}>
+                {enrollmentStatus.currentTerm.status === 'active' ? 'Active Term' : 'Inactive Term'}
+              </div>
+            )}
           </div>
         </div>
 

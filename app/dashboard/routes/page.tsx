@@ -201,30 +201,8 @@ export default function RoutesPage() {
           iconBgColor="bg-green-50"
         />
 
-      {/* Enhanced Route Status Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <Card className="bg-white border-gray-200" padding="lg">
-          <div className="flex items-center space-x-4">
-            <div className="p-4 bg-[#0b6d41] rounded-lg">
-              <CheckCircle className="h-8 w-8 text-white" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Route Successfully Allocated</h2>
-              <p className="text-gray-600 font-medium">You are assigned to route {route.routeNumber} - {route.routeName}</p>
-            </div>
-            <Badge variant="success" size="md" className="bg-green-50 text-green-700">
-              Active
-            </Badge>
-          </div>
-        </Card>
-      </motion.div>
-
       {/* Route Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         {routeStats.map((stat, index) => (
           <motion.div
             key={stat.title}
@@ -482,29 +460,6 @@ export default function RoutesPage() {
             </Card>
           </motion.div>
 
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <Card padding="md" className="bg-white border-gray-200">
-              <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
-                <div className="space-y-3">
-                    <Button 
-                      fullWidth 
-                      variant="primary" 
-                      icon={Navigation}
-                      onClick={() => router.push('/dashboard/live-track')}
-                    >
-                      Track Bus
-                    </Button>
-                    <Button fullWidth variant="secondary" icon={AlertCircle}>
-                      Report Issue
-                    </Button>
-                  </div>
-            </Card>
-          </motion.div>
         </div>
       </div>
       </RouteAccessControl>
