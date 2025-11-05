@@ -34,11 +34,11 @@ import PassengerPageHeader from '@/components/passenger-page-header';
 const EnhancedLiveTrackingMap = dynamic(() => import('@/components/enhanced-live-tracking-map'), {
   ssr: false,
   loading: () => (
-    <div className="h-full bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl flex items-center justify-center">
+    <div className="h-full bg-gray-50 rounded-2xl flex items-center justify-center">
       <div className="text-center">
         <div className="relative w-20 h-20 mx-auto mb-4">
           <div className="absolute inset-0 border-4 border-green-200 rounded-full animate-ping"></div>
-          <div className="absolute inset-0 border-4 border-t-green-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-green-200 border-t-[#0b6d41] rounded-full animate-spin"></div>
         </div>
         <p className="text-gray-700 font-medium text-lg">Loading map...</p>
         <p className="text-gray-500 text-sm mt-1">Preparing your bus tracking</p>
@@ -252,23 +252,23 @@ export default function LiveTrackPage() {
   if (isLoading) {
     return (
       <PageWrapper className="flex items-center justify-center min-h-[80vh]">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
           <div className="relative w-24 h-24 mx-auto mb-6">
-            <motion.div 
+            <motion.div
               className="absolute inset-0 border-4 border-green-200 rounded-full"
               animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <motion.div 
-              className="absolute inset-0 border-4 border-t-green-600 rounded-full"
+            <motion.div
+              className="absolute inset-0 border-4 border-green-200 border-t-[#0b6d41] rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
-            <Bus className="absolute inset-0 m-auto w-10 h-10 text-green-600" />
+            <Bus className="absolute inset-0 m-auto w-10 h-10 text-[#0b6d41]" />
           </div>
           <p className="text-gray-700 font-semibold text-xl mb-2">Tracking your bus...</p>
           <p className="text-gray-500 text-sm">Getting real-time location</p>
@@ -280,18 +280,18 @@ export default function LiveTrackPage() {
   if (error) {
     return (
       <PageWrapper className="flex items-center justify-center min-h-[80vh] p-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md mx-auto"
         >
-          <div className="bg-white rounded-3xl shadow-2xl p-8 border-2 border-red-100">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 border-2 border-gray-200">
             <XCircle className="h-20 w-20 text-red-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-3">Unable to Track Bus</h2>
             <p className="text-gray-600 mb-6">{error}</p>
             <button
               onClick={checkSessionAndLoadData}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="w-full bg-[#0b6d41] text-white px-6 py-4 rounded-2xl hover:bg-[#085032] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Try Again
             </button>
@@ -304,7 +304,7 @@ export default function LiveTrackPage() {
   if (!trackingData) {
     return (
       <PageWrapper className="flex items-center justify-center min-h-[80vh] p-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md mx-auto"
@@ -315,7 +315,7 @@ export default function LiveTrackPage() {
             <p className="text-gray-600 mb-6">You don't have a route assigned yet. Please contact your administration.</p>
             <button
               onClick={() => router.push('/dashboard/routes')}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="w-full bg-[#0b6d41] text-white px-6 py-4 rounded-2xl hover:bg-[#085032] transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               View Available Routes
             </button>

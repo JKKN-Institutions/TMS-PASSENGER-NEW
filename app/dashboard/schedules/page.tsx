@@ -129,7 +129,7 @@ const BoardingPass: React.FC<BoardingPassProps> = ({ isOpen, onClose, booking })
           {/* Ticket Container */}
           <div className="bg-white dark:bg-gray-800">
             {/* Ticket Header - Seat Number */}
-            <div className="bg-gradient-to-r from-green-500 to-yellow-500 p-4 sm:p-6 text-center">
+            <div className="bg-[#0b6d41] p-4 sm:p-6 text-center">
               <div className="text-white text-2xl sm:text-4xl font-bold drop-shadow-lg">{booking.seatNumber}</div>
               <div className="text-white/90 text-xs sm:text-sm mt-1 font-medium">SEAT NUMBER</div>
             </div>
@@ -232,9 +232,9 @@ const BookingConfirmationModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full shadow-2xl border border-green-200">
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full shadow-2xl border border-gray-200">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-[#0b6d41] rounded-xl flex items-center justify-center">
             <Ticket className="w-7 h-7 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Confirm Your Booking</h2>
@@ -259,8 +259,8 @@ const BookingConfirmationModal: React.FC<{
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-green-50 to-yellow-50 border border-green-300 rounded-xl p-4 mb-6 shadow-sm">
-          <p className="text-green-800 text-sm font-medium">
+        <div className="bg-green-50 border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
+          <p className="text-gray-800 text-sm font-medium">
             <strong>Student:</strong> {student?.student_name} ({student?.roll_number})
           </p>
         </div>
@@ -274,7 +274,7 @@ const BookingConfirmationModal: React.FC<{
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="flex-1 px-4 py-3 bg-[#0b6d41] text-white rounded-xl hover:bg-[#085032] transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Confirm Booking
           </button>
@@ -1638,8 +1638,8 @@ export default function SchedulesPage() {
   if (!studentAllocation) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-yellow-200 p-8 text-center shadow-xl max-w-md">
-          <div className="w-20 h-20 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200 p-8 text-center shadow-xl max-w-md">
+          <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-12 h-12 text-yellow-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-3">No Route Allocation</h2>
@@ -1648,7 +1648,7 @@ export default function SchedulesPage() {
           </p>
           <button
             onClick={() => window.location.href = '/dashboard'}
-            className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="bg-[#0b6d41] text-white px-6 py-3 rounded-xl hover:bg-[#085032] transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Go to Dashboard
           </button>
