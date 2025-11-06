@@ -90,6 +90,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ⭐ NEW: Validate that the scan date matches the trip date
+    const currentDate = new Date();
+    const tripDate = new Date(booking.trip_date);
+
+    // Format dates to YYYY-MM-DD for comparison (ignore time)
+    const currentDateStr = currentDate.toISOString().split('T')[0];
+    const tripDateStr = tripDate.toISOString().split('T')[0];
+
+    console.log('📅 Date validation:', {
+      currentDate: currentDateStr,
+      tripDate: tripDateStr,
+      match: currentDateStr === tripDateStr
+    });
+
+    if (currentDateStr !== tripDateStr) {
+      const isPastDate = tripDate < currentDate;
+      const isFutureDate = tripDate > currentDate;
+
+      let errorMessage = '';
+      if (isPastDate) {
+        errorMessage = `This ticket is for a past date (${tripDateStr}). Attendance cannot be marked for expired tickets.`;
+      } else if (isFutureDate) {
+        errorMessage = `This ticket is for a future date (${tripDateStr}). Attendance can only be marked on the day of travel.`;
+      }
+
+      console.error('❌ Date mismatch:', errorMessage);
+      return NextResponse.json(
+        {
+          success: false,
+          error: errorMessage,
+          ticketDate: tripDateStr,
+          currentDate: currentDateStr
+        },
+        { status: 400 }
+      );
+    }
+
+    console.log('✅ Date validation passed - ticket is valid for today');
+
     // Check if already marked attendance
     const { data: existingAttendance, error: attendanceCheckError } = await supabase
       .from('attendance')
