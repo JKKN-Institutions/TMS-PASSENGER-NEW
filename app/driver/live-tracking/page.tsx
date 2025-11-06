@@ -55,28 +55,28 @@ const DriverLiveTrackingPage = () => {
         
       } catch (error) {
         console.error('Error fetching driver info:', error);
-        
+
         // Handle specific error types gracefully
-        let errorMessage = 'Failed to load driver information';
-        
+        let errorMessage = t('error.failed_to_load_driver_info');
+
         if (error instanceof Error) {
           if (error.message.includes('network') || error.message.includes('fetch')) {
-            errorMessage = 'Network error. Please check your internet connection and refresh the page.';
+            errorMessage = t('error.network_check_internet');
           } else if (error.message.includes('timeout')) {
-            errorMessage = 'Request timed out. Please refresh the page and try again.';
+            errorMessage = t('error.request_timeout_refresh');
           } else if (error.message.includes('unauthorized') || error.message.includes('401')) {
-            errorMessage = 'Session expired. Please log in again.';
+            errorMessage = t('error.session_expired_login');
           } else if (error.message.includes('forbidden') || error.message.includes('403')) {
-            errorMessage = 'Access denied. Contact administrator for assistance.';
+            errorMessage = t('error.forbidden_contact_admin');
           } else if (error.message.includes('not found') || error.message.includes('404')) {
-            errorMessage = 'Driver profile not found. Please contact support.';
+            errorMessage = t('error.not_found_contact_support');
           } else if (error.message.includes('server') || error.message.includes('500')) {
-            errorMessage = 'Server error. Please try again later or contact support.';
+            errorMessage = t('error.server_contact_support');
           } else {
             errorMessage = error.message;
           }
         }
-        
+
         toast.error(errorMessage);
       } finally {
         setIsLoading(false);

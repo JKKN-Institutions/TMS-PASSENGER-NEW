@@ -1579,6 +1579,212 @@ const translations: Record<string, Record<Language, string>> = {
   'more_menu.logout_description': {
     en: 'Sign out from your account',
     ta: 'உங்கள் கணக்கிலிருந்து வெளியேறு'
+  },
+
+  // Dashboard - Stats Cards
+  'stats.active_routes': {
+    en: 'Active Routes',
+    ta: 'செயலில் உள்ள பாதைகள்'
+  },
+  'stats.passengers': {
+    en: 'Passengers',
+    ta: 'பயணிகள்'
+  },
+  'stats.total_routes': {
+    en: 'Total Routes',
+    ta: 'மொத்த பாதைகள்'
+  },
+  'stats.status': {
+    en: 'Status',
+    ta: 'நிலை'
+  },
+  'stats.active': {
+    en: 'Active',
+    ta: 'செயலில்'
+  },
+
+  // Quick Actions
+  'quick_actions.title': {
+    en: 'Quick Actions',
+    ta: 'விரைவு செயல்கள்'
+  },
+  'quick_actions.my_routes': {
+    en: 'My Routes',
+    ta: 'எனது பாதைகள்'
+  },
+  'quick_actions.view_routes': {
+    en: 'View all assigned routes',
+    ta: 'அனைத்து ஒதுக்கப்பட்ட பாதைகளையும் பார்க்கவும்'
+  },
+  'quick_actions.bookings': {
+    en: 'Bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'quick_actions.view_bookings': {
+    en: 'View passenger bookings',
+    ta: 'பயணிகள் முன்பதிவுகளைப் பார்க்கவும்'
+  },
+
+  // Routes Page
+  'routes.no_routes': {
+    en: 'No Routes Assigned',
+    ta: 'பாதைகள் ஒதுக்கப்படவில்லை'
+  },
+  'routes.route': {
+    en: 'Route',
+    ta: 'பாதை'
+  },
+  'routes.loading_routes': {
+    en: 'Loading routes...',
+    ta: 'பாதைகள் ஏற்றப்படுகின்றன...'
+  },
+  'routes.view_bookings_button': {
+    en: 'View Bookings',
+    ta: 'முன்பதிவுகளைப் பார்க்கவும்'
+  },
+  'routes.route_details_button': {
+    en: 'Route Details',
+    ta: 'பாதை விவரங்கள்'
+  },
+  'routes.start_tracking_button': {
+    en: 'Start Tracking',
+    ta: 'கண்காணிப்பைத் தொடங்கவும்'
+  },
+
+  // Bookings Page - Date Selection
+  'bookings.quick_select': {
+    en: 'Quick select:',
+    ta: 'விரைவு தேர்வு:'
+  },
+  'bookings.yesterday': {
+    en: 'Yesterday',
+    ta: 'நேற்று'
+  },
+  'bookings.today': {
+    en: 'Today',
+    ta: 'இன்று'
+  },
+  'bookings.tomorrow': {
+    en: 'Tomorrow',
+    ta: 'நாளை'
+  },
+  'bookings.date_selection': {
+    en: 'Date Selection',
+    ta: 'தேதி தேர்வு'
+  },
+  'bookings.total_bookings_label': {
+    en: 'Total Bookings',
+    ta: 'மொத்த முன்பதிவுகள்'
+  },
+
+  // Common Route Text
+  'common.route': {
+    en: 'Route',
+    ta: 'பாதை'
+  },
+
+  // Additional Error Messages for Profile Page
+  'error.user_email_not_found': {
+    en: 'User email not found',
+    ta: 'பயனர் மின்னஞ்சல் கிடைக்கவில்லை'
+  },
+  'error.failed_to_load_passengers': {
+    en: 'Failed to load passengers',
+    ta: 'பயணிகளை ஏற்ற முடியவில்லை'
+  },
+  'error.network_check_connection': {
+    en: 'Network error. Please check your internet connection and refresh the page.',
+    ta: 'நெட்வொர்க் பிழை. உங்கள் இணைய இணைப்பைச் சரிபார்த்து பக்கத்தைப் புதுப்பிக்கவும்.'
+  },
+  'error.request_timeout': {
+    en: 'Request timed out. Please refresh the page and try again.',
+    ta: 'கோரிக்கை நேரம் முடிந்தது. பக்கத்தைப் புதுப்பித்து மீண்டும் முயற்சிக்கவும்.'
+  },
+  'error.unauthorized_login_again': {
+    en: 'Session expired. Please log in again.',
+    ta: 'அமர்வு காலாவதியானது. மீண்டும் உள்நுழையவும்.'
+  },
+  'error.access_denied_contact_admin': {
+    en: 'Access denied. Contact administrator for assistance.',
+    ta: 'அணுகல் மறுக்கப்பட்டது. உதவிக்கு நிர்வாகியைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.profile_not_found_contact_support': {
+    en: 'Driver profile not found. Please contact support.',
+    ta: 'ஓட்டுநர் சுயவிவரம் கிடைக்கவில்லை. ஆதரவைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.server_error_try_later': {
+    en: 'Server error. Please try again later or contact support.',
+    ta: 'சர்வர் பிழை. பின்னர் மீண்டும் முயற்சிக்கவும் அல்லது ஆதரவைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.validation_invalid_data': {
+    en: 'Invalid data provided. Please check your input and try again.',
+    ta: 'தவறான தரவு வழங்கப்பட்டது. உங்கள் உள்ளீட்டைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.'
+  },
+  'error.driver_not_found': {
+    en: 'Driver ID not found',
+    ta: 'ஓட்டுநர் ஐடி கிடைக்கவில்லை'
+  },
+  'error.failed_to_update_profile': {
+    en: 'Failed to update profile',
+    ta: 'சுயவிவரம் புதுப்பிக்க முடியவில்லை'
+  },
+  'error.failed_to_logout': {
+    en: 'Failed to logout',
+    ta: 'வெளியேற முடியவில்லை'
+  },
+
+  // Success Messages
+  'success.profile_updated': {
+    en: 'Profile updated successfully',
+    ta: 'சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது'
+  },
+  'success.logged_out': {
+    en: 'Logged out successfully',
+    ta: 'வெற்றிகரமாக வெளியேறினீர்கள்'
+  },
+
+  // Live Tracking Error Messages
+  'error.network_check_internet': {
+    en: 'Network error. Please check your internet connection and refresh the page.',
+    ta: 'நெட்வொர்க் பிழை. உங்கள் இணைய இணைப்பைச் சரிபார்த்து பக்கத்தைப் புதுப்பிக்கவும்.'
+  },
+  'error.request_timeout_refresh': {
+    en: 'Request timed out. Please refresh the page and try again.',
+    ta: 'கோரிக்கை நேரம் முடிந்தது. பக்கத்தைப் புதுப்பித்து மீண்டும் முயற்சிக்கவும்.'
+  },
+  'error.session_expired_login': {
+    en: 'Session expired. Please log in again.',
+    ta: 'அமர்வு காலாவதியானது. மீண்டும் உள்நுழையவும்.'
+  },
+  'error.forbidden_contact_admin': {
+    en: 'Access denied. Contact administrator for assistance.',
+    ta: 'அணுகல் மறுக்கப்பட்டது. உதவிக்கு நிர்வாகியைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.not_found_contact_support': {
+    en: 'Driver profile not found. Please contact support.',
+    ta: 'ஓட்டுநர் சுயவிவரம் கிடைக்கவில்லை. ஆதரவைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.server_contact_support': {
+    en: 'Server error. Please try again later or contact support.',
+    ta: 'சர்வர் பிழை. பின்னர் மீண்டும் முயற்சிக்கவும் அல்லது ஆதரவைத் தொடர்பு கொள்ளவும்.'
+  },
+  'error.failed_to_load_driver_info': {
+    en: 'Failed to load driver information',
+    ta: 'ஓட்டுநர் தகவலை ஏற்ற முடியவில்லை'
+  },
+
+  // Passengers Page Additional Text
+  'passengers.error': {
+    en: 'Error',
+    ta: 'பிழை'
+  },
+  'passengers.year': {
+    en: 'Year',
+    ta: 'ஆண்டு'
+  },
+  'passengers.route': {
+    en: 'Route',
+    ta: 'பாதை'
   }
 };
 

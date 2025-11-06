@@ -163,7 +163,7 @@ export default function DriverProfilePage() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      if (!user || !user.id) throw new Error('Driver ID not found');
+      if (!user || !user.id) throw new Error(t('error.driver_not_found'));
 
       const driverId = (user as any)?.driver_id || user.id;
       const response = await fetch('/api/driver/profile/update', {
@@ -175,37 +175,37 @@ export default function DriverProfilePage() {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to update profile');
+      if (!response.ok) throw new Error(t('error.failed_to_update_profile'));
       
       await loadProfile();
       setIsEditing(false);
-      toast.success('Profile updated successfully');
+      toast.success(t('success.profile_updated'));
     } catch (err: any) {
       console.error('❌ Error updating profile:', err);
-      
+
       // Handle specific error types gracefully
-      let errorMessage = 'Failed to update profile';
-      
+      let errorMessage = t('error.failed_to_update_profile');
+
       if (err.message) {
         if (err.message.includes('network') || err.message.includes('fetch')) {
-          errorMessage = 'Network error. Please check your internet connection and try again.';
+          errorMessage = t('error.network_check_connection');
         } else if (err.message.includes('timeout')) {
-          errorMessage = 'Request timed out. Please try again.';
+          errorMessage = t('error.request_timeout');
         } else if (err.message.includes('unauthorized') || err.message.includes('401')) {
-          errorMessage = 'Session expired. Please log in again.';
+          errorMessage = t('error.unauthorized_login_again');
         } else if (err.message.includes('forbidden') || err.message.includes('403')) {
-          errorMessage = 'Access denied. Contact administrator for assistance.';
+          errorMessage = t('error.access_denied_contact_admin');
         } else if (err.message.includes('not found') || err.message.includes('404')) {
-          errorMessage = 'Driver profile not found. Please contact support.';
+          errorMessage = t('error.profile_not_found_contact_support');
         } else if (err.message.includes('server') || err.message.includes('500')) {
-          errorMessage = 'Server error. Please try again later or contact support.';
+          errorMessage = t('error.server_error_try_later');
         } else if (err.message.includes('validation') || err.message.includes('invalid')) {
-          errorMessage = 'Invalid data provided. Please check your input and try again.';
+          errorMessage = t('error.validation_invalid_data');
         } else {
           errorMessage = err.message;
         }
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setSaving(false);
@@ -217,10 +217,10 @@ export default function DriverProfilePage() {
       // Note: sessionManager is not defined in the original code
       // You may need to implement proper logout logic
       router.replace('/login');
-      toast.success('Logged out successfully');
+      toast.success(t('success.logged_out'));
     } catch (err: any) {
       console.error('Logout error:', err);
-      toast.error('Failed to logout');
+      toast.error(t('error.failed_to_logout'));
     }
   };
 

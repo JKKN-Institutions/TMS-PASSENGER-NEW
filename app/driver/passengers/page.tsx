@@ -83,7 +83,7 @@ export default function DriverPassengersPage() {
       setError(null);
 
       if (!user?.email) {
-        setError('User email not found');
+        setError(t('error.user_email_not_found'));
         return;
       }
 
@@ -103,7 +103,7 @@ export default function DriverPassengersPage() {
       setStats(data.stats || {});
     } catch (err: any) {
       console.error('❌ Error loading passengers:', err);
-      setError(err.message || 'Failed to load passengers');
+      setError(err.message || t('error.failed_to_load_passengers'));
     } finally {
       setLoading(false);
     }
@@ -162,7 +162,7 @@ export default function DriverPassengersPage() {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h3 className="font-medium text-red-900">Error</h3>
+            <h3 className="font-medium text-red-900">{t('passengers.error')}</h3>
             <p className="text-sm text-red-700 mt-1">{error}</p>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function DriverPassengersPage() {
               <option value="all">{t('common.all_routes')}</option>
               {driverRoutes.map((route) => (
                 <option key={route.id} value={route.id}>
-                  Route {route.route_number} - {route.route_name}
+                  {t('passengers.route')} {route.route_number} - {route.route_name}
                 </option>
               ))}
             </select>
@@ -305,7 +305,7 @@ export default function DriverPassengersPage() {
                         {passenger.year && (
                           <div className="flex items-center gap-1 flex-shrink-0">
                             <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span className="whitespace-nowrap">Year {passenger.year}</span>
+                            <span className="whitespace-nowrap">{t('passengers.year')} {passenger.year}</span>
                           </div>
                         )}
                       </div>
@@ -387,7 +387,7 @@ export default function DriverPassengersPage() {
                             <RouteIcon className="w-5 h-5 text-[#0b6d41] flex-shrink-0 mt-0.5" />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-gray-900 break-words">
-                                Route {route.route_number}: {route.route_name}
+                                {t('passengers.route')} {route.route_number}: {route.route_name}
                               </p>
                               <p className="text-xs text-gray-600 mt-1 break-words">
                                 {route.start_location} → {route.end_location}

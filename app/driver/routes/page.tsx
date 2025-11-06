@@ -201,7 +201,7 @@ export default function DriverRoutesPage() {
                         className="flex items-center text-[#0b6d41] text-xs sm:text-sm font-medium hover:text-[#085032] transition-colors whitespace-nowrap"
                       >
                         <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-                        {t('routes.view_bookings')}
+                        {t('routes.view_bookings_button')}
                       </Link>
                     </div>
                   </div>
@@ -256,19 +256,19 @@ export default function DriverRoutesPage() {
                       href={`/driver/bookings?routeId=${route.id}`}
                       className="px-4 sm:px-6 py-2 bg-[#0b6d41] text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors text-center shadow-md hover:shadow-lg"
                     >
-                      {t('routes.view_bookings')}
+                      {t('routes.view_bookings_button')}
                     </Link>
                     <Link
                       href={`/driver/routes/${route.id}`}
                       className="px-4 sm:px-6 py-2 bg-gray-100 text-gray-700 text-xs sm:text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors text-center"
                     >
-                      {t('routes.route_details')}
+                      {t('routes.route_details_button')}
                     </Link>
                     <Link
                       href="/driver/live-tracking"
                       className="px-4 sm:px-6 py-2 bg-[#0b6d41] text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors text-center shadow-md hover:shadow-lg"
                     >
-                      {t('routes.start_tracking')}
+                      {t('routes.start_tracking_button')}
                     </Link>
                   </div>
                 </div>

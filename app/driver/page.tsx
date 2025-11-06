@@ -356,7 +356,7 @@ export default function DriverHomePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Active Routes</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{t('stats.active_routes')}</p>
             <p className="text-xl sm:text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
             <div className="mt-2">
               <TrendingUp className="w-5 h-5 text-[#0b6d41]" />
@@ -366,7 +366,7 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Passengers</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{t('stats.passengers')}</p>
             <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalPassengers}</p>
             <div className="mt-2">
               <Users className="w-5 h-5 text-[#0b6d41]" />
@@ -376,7 +376,7 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Total Routes</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{t('stats.total_routes')}</p>
             <p className="text-xl sm:text-2xl font-bold text-gray-900">{routes.length}</p>
             <div className="mt-2">
               <MapPin className="w-5 h-5 text-[#0b6d41]" />
@@ -386,8 +386,8 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Status</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#0b6d41]">Active</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{t('stats.status')}</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#0b6d41]">{t('stats.active')}</p>
             <div className="mt-2">
               <CheckCircle className="w-5 h-5 text-[#0b6d41]" />
             </div>
@@ -397,7 +397,7 @@ export default function DriverHomePage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">{t('quick_actions.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link href="/driver/routes" className="block group">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-green-200 group-hover:bg-green-50">
@@ -406,8 +406,8 @@ export default function DriverHomePage() {
                   <MapPin className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">My Routes</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-gray-700">View all assigned routes</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">{t('quick_actions.my_routes')}</h3>
+                  <p className="text-sm text-gray-600 group-hover:text-gray-700">{t('quick_actions.view_routes')}</p>
                 </div>
               </div>
             </div>
@@ -420,8 +420,8 @@ export default function DriverHomePage() {
                   <Users className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Bookings</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-gray-700">View passenger bookings</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">{t('quick_actions.bookings')}</h3>
+                  <p className="text-sm text-gray-600 group-hover:text-gray-700">{t('quick_actions.view_bookings')}</p>
                 </div>
               </div>
             </div>
@@ -462,7 +462,7 @@ export default function DriverHomePage() {
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <div className="text-sm text-gray-500 mb-1">Route {route.route_number}</div>
+                      <div className="text-sm text-gray-500 mb-1">{t('common.route')} {route.route_number}</div>
                       <div className="text-base sm:text-lg font-semibold text-gray-900">{route.route_name}</div>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -498,13 +498,13 @@ export default function DriverHomePage() {
                       href={`/driver/bookings?routeId=${route.id}`}
                       className="flex-1 text-center px-4 py-2 bg-[#0b6d41] text-white text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors shadow-md hover:shadow-lg"
                     >
-                      View Bookings
+                      {t('routes.view_bookings_button')}
                     </Link>
                     <Link
                       href={`/driver/routes/${route.id}`}
                       className="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
                     >
-                      Route Details
+                      {t('routes.route_details_button')}
                     </Link>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ export default function DriverHomePage() {
               <div className="col-span-full">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
                   <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-6" />
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">No Routes Assigned</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">{t('routes.no_routes')}</h3>
                   <p className="text-gray-600 mb-4 max-w-md mx-auto">
                     You don't have any active routes assigned at the moment. 
                     Contact your administrator for route assignments.

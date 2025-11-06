@@ -129,7 +129,7 @@ function BookingsContent() {
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
-          <p className="text-gray-600 text-lg font-medium">Loading bookings...</p>
+          <p className="text-gray-600 text-lg font-medium">{t('bookings.loading_bookings')}</p>
         </div>
       </div>
     );
@@ -145,7 +145,7 @@ function BookingsContent() {
             onClick={() => load(routeId || undefined)}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
           >
-            Retry
+            {t('bookings.retry_button')}
           </button>
         </div>
       </div>
@@ -281,20 +281,20 @@ function BookingsContent() {
           <div className="flex items-center">
             <Calendar className="w-6 h-6 text-[#0b6d41] mr-3" />
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Date Selection</h2>
-              <p className="text-sm text-gray-600">Bookings automatically update when date changes</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t('bookings.date_selection')}</h2>
+              <p className="text-sm text-gray-600">{t('bookings.auto_update')}</p>
             </div>
           </div>
           <div className="text-right">
             <div className="text-xl sm:text-2xl font-bold text-[#0b6d41]">{total}</div>
-            <div className="text-sm text-gray-600">Total Bookings</div>
+            <div className="text-sm text-gray-600">{t('bookings.total_bookings_label')}</div>
           </div>
         </div>
 
         <div className="space-y-4">
           {/* Quick Date Navigation */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Quick select:</span>
+            <span className="text-sm font-medium text-gray-700">{t('bookings.quick_select')}</span>
             <button
               onClick={() => {
                 const yesterday = new Date();
@@ -303,13 +303,13 @@ function BookingsContent() {
               }}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Yesterday
+              {t('bookings.yesterday')}
             </button>
             <button
               onClick={() => setDate(new Date().toISOString().split('T')[0])}
               className="px-3 py-1.5 text-sm bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors"
             >
-              Today
+              {t('bookings.today')}
             </button>
             <button
               onClick={() => {
@@ -319,7 +319,7 @@ function BookingsContent() {
               }}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Tomorrow
+              {t('bookings.tomorrow')}
             </button>
           </div>
 
@@ -529,11 +529,12 @@ function BookingsContent() {
 }
 
 function BookingsFallback() {
+  const { t } = useLanguage();
   return (
     <div className="flex items-center justify-center py-20">
       <div className="text-center">
         <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
-        <p className="text-gray-600 text-lg font-medium">Loading bookings...</p>
+        <p className="text-gray-600 text-lg font-medium">{t('bookings.loading_bookings')}</p>
       </div>
     </div>
   );
