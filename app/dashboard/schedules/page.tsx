@@ -351,14 +351,16 @@ export default function SchedulesPage() {
     try {
       // Fetch fresh schedule data with booking information
       const today = new Date();
+      // ⭐ UPDATED: Start from beginning of current month to show attendance history
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const nextMonth = new Date();
       nextMonth.setMonth(today.getMonth() + 1);
-      const todayStr = formatDateForDatabase(today);
+      const startDateStr = formatDateForDatabase(startOfMonth);
       const nextMonthStr = formatDateForDatabase(nextMonth);
 
-      console.log('🔍 BOOKING DEBUG: Fetching schedules with date range:', { todayStr, nextMonthStr });
+      console.log('🔍 BOOKING DEBUG: Fetching schedules with date range:', { startDateStr, nextMonthStr });
 
-      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${todayStr}&endDate=${nextMonthStr}&studentId=${student.student_id}`;
+      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${startDateStr}&endDate=${nextMonthStr}&studentId=${student.student_id}`;
       console.log('🔍 BOOKING DEBUG: API URL:', apiUrl);
 
       const response = await fetch(apiUrl);
@@ -509,8 +511,8 @@ export default function SchedulesPage() {
       return 'unavailable';
     }
 
-    // DEBUG: Log schedule details for specific dates - including November 3rd
-    if (dateString === '2025-11-03' || dateString === '2025-11-02' || dateString === '2025-11-04' || dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
+    // DEBUG: Log schedule details for specific dates - including November dates
+    if (dateString === '2025-11-03' || dateString === '2025-11-02' || dateString === '2025-11-04' || dateString === '2025-11-05' || dateString === '2025-11-06' || dateString === '2025-11-07' || dateString === '2025-11-08' || dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
       console.log(`🔍 DATE STATUS DEBUG: PRIORITY CHECK for ${dateString}:`, {
         isDisabled: schedule.isDisabled,
         bookingEnabled: schedule.bookingEnabled,
@@ -746,11 +748,13 @@ export default function SchedulesPage() {
   const fetchRouteSchedules = async (routeId: string, studentId?: string) => {
     try {
       const today = new Date();
+      // ⭐ UPDATED: Start from beginning of current month to show attendance history
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const nextMonth = new Date();
       nextMonth.setMonth(today.getMonth() + 1);
 
       // Use utility functions for consistent date formatting
-      const todayStr = formatDateForDatabase(today);
+      const startDateStr = formatDateForDatabase(startOfMonth);
       const nextMonthStr = formatDateForDatabase(nextMonth);
 
       // Use provided studentId or fall back to state
@@ -758,7 +762,7 @@ export default function SchedulesPage() {
 
       // Try the new availability API endpoint first
       try {
-        const apiUrl = `/api/schedules/availability?routeId=${routeId}&startDate=${todayStr}&endDate=${nextMonthStr}&studentId=${currentStudentId}`;
+        const apiUrl = `/api/schedules/availability?routeId=${routeId}&startDate=${startDateStr}&endDate=${nextMonthStr}&studentId=${currentStudentId}`;
         
         const response = await fetch(apiUrl);
         
@@ -831,11 +835,11 @@ export default function SchedulesPage() {
         
       } catch (apiError) {
         console.error('❌ New API failed, falling back to studentHelpers:', apiError);
-        
+
         // Fallback to the original method if the new API fails
         const schedulesData = await studentHelpers.getRouteSchedules(
           routeId,
-          todayStr,
+          startDateStr,
           nextMonthStr
         );
 
@@ -1302,14 +1306,16 @@ export default function SchedulesPage() {
     try {
       console.log('🔍 BOOKING LOAD: Loading existing bookings for student:', studentId);
       console.log('🔍 BOOKING LOAD: Route ID:', studentAllocation.route.id);
-      
+
       const today = new Date();
+      // ⭐ UPDATED: Start from beginning of current month to show attendance history
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const nextMonth = new Date();
       nextMonth.setMonth(today.getMonth() + 1);
-      const todayStr = formatDateForDatabase(today);
+      const startDateStr = formatDateForDatabase(startOfMonth);
       const nextMonthStr = formatDateForDatabase(nextMonth);
 
-      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${todayStr}&endDate=${nextMonthStr}&studentId=${studentId}`;
+      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${startDateStr}&endDate=${nextMonthStr}&studentId=${studentId}`;
       console.log('🔍 BOOKING LOAD: API URL:', apiUrl);
       
       const response = await fetch(apiUrl);
@@ -1394,12 +1400,14 @@ export default function SchedulesPage() {
 
     try {
       const today = new Date();
+      // ⭐ UPDATED: Start from beginning of current month to show attendance history
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const nextMonth = new Date();
       nextMonth.setMonth(today.getMonth() + 1);
-      const todayStr = formatDateForDatabase(today);
+      const startDateStr = formatDateForDatabase(startOfMonth);
       const nextMonthStr = formatDateForDatabase(nextMonth);
 
-      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${todayStr}&endDate=${nextMonthStr}&studentId=${student.student_id}`;
+      const apiUrl = `/api/schedules/availability?routeId=${studentAllocation.route.id}&startDate=${startDateStr}&endDate=${nextMonthStr}&studentId=${student.student_id}`;
       
       console.log('🔍 API TEST: Testing API URL:', apiUrl);
       console.log('🔍 API TEST: Student ID:', student.student_id);

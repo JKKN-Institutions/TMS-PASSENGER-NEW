@@ -110,7 +110,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Set default date range if not provided
-    const today = new Date().toISOString().split('T')[0];
+    // ⭐ UPDATED: Start from beginning of current month to show attendance history for past dates
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const defaultStartDate = startOfMonth.toISOString().split('T')[0];
+
     const nextMonth = new Date();
     nextMonth.setMonth(nextMonth.getMonth() + 1);
     const defaultEndDate = nextMonth.toISOString().split('T')[0];
@@ -118,7 +122,7 @@ export async function GET(request: NextRequest) {
     // Use the exact SQL logic that works in database
     console.log('🔍 API DEBUG: *** USING WORKING SQL LOGIC *** Querying with:', {
       routeId,
-      startDate: startDate || today,
+      startDate: startDate || defaultStartDate,
       endDate: endDate || defaultEndDate,
       studentId
     });
@@ -162,7 +166,7 @@ export async function GET(request: NextRequest) {
         )
       `)
       .eq('route_id', routeId)
-      .gte('schedule_date', startDate || today)
+      .gte('schedule_date', startDate || defaultStartDate)
       .lte('schedule_date', endDate || defaultEndDate)
       .in('status', ['scheduled', 'in_progress', 'cancelled']) // Include cancelled schedules
       .order('schedule_date', { ascending: true })
@@ -205,7 +209,9 @@ export async function GET(request: NextRequest) {
 
     // Format response using the working booking data with proper disabled schedule handling
     const formattedSchedules = schedulesWithBookings.map((schedule: any) => {
-      const isPastDate = new Date(schedule.schedule_date) < new Date(today);
+      // Use current date (not defaultStartDate) to determine if schedule is in the past
+      const currentDate = new Date().toISOString().split('T')[0];
+      const isPastDate = new Date(schedule.schedule_date) < new Date(currentDate);
       const isScheduleDisabled = schedule.status === 'cancelled' || schedule.booking_enabled === false;
       const isScheduleCompleted = schedule.status === 'completed';
       const hasAvailableSeats = schedule.available_seats > 0;
