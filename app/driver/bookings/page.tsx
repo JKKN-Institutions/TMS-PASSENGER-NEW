@@ -6,7 +6,6 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { useLanguage } from '@/lib/i18n/language-context';
 import { driverHelpers } from '@/lib/supabase';
 import { Users, Calendar, Clock, MapPin, AlertCircle, CheckCircle, XCircle, AlertTriangle, TrendingUp, User, Phone, Mail, BadgeCheck, Filter, Route as RouteIcon } from 'lucide-react';
-import DriverPageHeader from '@/components/driver-page-header';
 
 function BookingsContent() {
   const router = useRouter();
@@ -177,12 +176,18 @@ function BookingsContent() {
   return (
     <div className="space-y-4 sm:space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <DriverPageHeader
-        titleKey="page.bookings.title"
-        icon={Calendar}
-        iconColor="text-indigo-600"
-        iconBgColor="bg-indigo-50"
-      />
+      <div className="bg-[#0b6d41] rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-lg">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words">{t('page.bookings.title')}</h1>
+          </div>
+          <div className="hidden md:block flex-shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Calendar className="w-8 h-8 sm:w-10 sm:h-10" />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Date & Route Info */}
       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-200">

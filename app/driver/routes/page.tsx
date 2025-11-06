@@ -7,7 +7,6 @@ import { driverHelpers } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { MapPin, Clock, Users, Car, Route, AlertCircle, CheckCircle, Navigation } from 'lucide-react';
 import Link from 'next/link';
-import DriverPageHeader from '@/components/driver-page-header';
 
 export default function DriverRoutesPage() {
   const router = useRouter();
@@ -98,12 +97,18 @@ export default function DriverRoutesPage() {
   return (
     <div className="space-y-4 sm:space-y-6 md:space-y-8 pb-8">
       {/* Header */}
-      <DriverPageHeader
-        titleKey="page.routes.title"
-        icon={Route}
-        iconColor="text-blue-600"
-        iconBgColor="bg-blue-50"
-      />
+      <div className="bg-[#0b6d41] rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-lg">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words">{t('page.routes.title')}</h1>
+          </div>
+          <div className="hidden md:block flex-shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Route className="w-8 h-8 sm:w-10 sm:h-10" />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
