@@ -512,7 +512,7 @@ export default function SchedulesPage() {
     }
 
     // DEBUG: Log schedule details for specific dates - including November dates
-    if (dateString === '2025-11-03' || dateString === '2025-11-02' || dateString === '2025-11-04' || dateString === '2025-11-05' || dateString === '2025-11-06' || dateString === '2025-11-07' || dateString === '2025-11-08' || dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
+    if (dateString === '2025-11-01' || dateString === '2025-11-03' || dateString === '2025-11-02' || dateString === '2025-11-04' || dateString === '2025-11-05' || dateString === '2025-11-06' || dateString === '2025-11-07' || dateString === '2025-11-08' || dateString === '2025-07-07' || dateString === '2025-07-08' || dateString === '2025-07-10' || dateString === '2025-07-15' || dateString === '2025-07-17') {
       console.log(`🔍 DATE STATUS DEBUG: PRIORITY CHECK for ${dateString}:`, {
         isDisabled: schedule.isDisabled,
         bookingEnabled: schedule.bookingEnabled,
@@ -526,29 +526,35 @@ export default function SchedulesPage() {
       });
     }
 
-    // PRIORITY 1: Check if schedule is disabled/cancelled FIRST (HIGHEST PRIORITY)
-    // Disabled schedules should show as "disabled" even if there are existing bookings
+    // ⭐ PRIORITY 1 (HIGHEST): Check if user has attendance marked - MUST BE FIRST
+    // This ensures that dates with attendance always show as "present" regardless of schedule status
+    if (schedule.userBooking && typeof schedule.userBooking === 'object' && schedule.userBooking.id) {
+      // Check if attendance was marked - show "present" instead of "booked"
+      if (schedule.userBooking.attendanceMarked && schedule.userBooking.attendanceStatus === 'present') {
+        console.log(`🔍 DATE STATUS DEBUG: ✅ Attendance marked for ${dateString} - showing as 'present' (HIGHEST PRIORITY)`);
+        return 'present';
+      }
+
+      // If booking exists but no attendance, check other conditions before showing "booked"
+      console.log(`🔍 DATE STATUS DEBUG: Valid booking found for ${dateString}:`, schedule.userBooking);
+    }
+
+    // PRIORITY 2: Check if schedule is disabled/cancelled
+    // Disabled schedules without bookings/attendance should show as "disabled"
     if (schedule.isDisabled === true || schedule.status === 'cancelled' || schedule.bookingEnabled === false) {
       console.log(`🔍 DATE STATUS DEBUG: Schedule disabled for ${dateString}: ${schedule.bookingDisabledReason || 'Schedule disabled'}`);
       return 'disabled';
     }
 
-    // PRIORITY 2: Check if schedule is completed
+    // PRIORITY 3: Check if schedule is completed
     if (schedule.status === 'completed') {
       console.log(`🔍 DATE STATUS DEBUG: Schedule completed for ${dateString}`);
       return 'completed';
     }
 
-    // PRIORITY 3: Check if user has an existing booking
+    // PRIORITY 4: If there's a valid booking (without attendance), show as "booked"
     if (schedule.userBooking && typeof schedule.userBooking === 'object' && schedule.userBooking.id) {
-      console.log(`🔍 DATE STATUS DEBUG: Valid booking found for ${dateString}:`, schedule.userBooking);
-
-      // ⭐ NEW: Check if attendance was marked - show "present" instead of "booked"
-      if (schedule.userBooking.attendanceMarked && schedule.userBooking.attendanceStatus === 'present') {
-        console.log(`🔍 DATE STATUS DEBUG: Attendance marked for ${dateString} - showing as 'present'`);
-        return 'present';
-      }
-
+      console.log(`🔍 DATE STATUS DEBUG: Showing booking for ${dateString} as 'booked'`);
       return 'booked';
     } else if (schedule.userBooking) {
       console.log(`🔍 DATE STATUS DEBUG: Invalid booking object detected for ${dateString}, treating as available:`, schedule.userBooking);
@@ -1848,7 +1854,8 @@ export default function SchedulesPage() {
                 )}
                 
                 <span className="font-medium relative z-10">{day.date.getDate()}</span>
-                {day.isCurrentMonth && !day.isPast && (
+                {/* ⭐ UPDATED: Show status text for past dates with present/booked/completed status */}
+                {day.isCurrentMonth && (!day.isPast || day.status === 'present' || day.status === 'booked' || day.status === 'completed') && (
                   <span className="text-xs mt-1 relative z-10">{getStatusText(day.status)}</span>
                 )}
               </button>
