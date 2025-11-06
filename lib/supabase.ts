@@ -1424,19 +1424,32 @@ export const studentHelpers = {
           if (studentId) {
             const { data: booking } = await supabase
               .from('bookings')
-              .select('id, status, seat_number, qr_code, payment_status')
+              .select('id, status, seat_number, qr_code, payment_status, trip_date')
               .eq('student_id', studentId)
               .eq('schedule_id', schedule.id)
               .eq('status', 'confirmed')  // Only check for confirmed bookings
               .single();
-            
+
             if (booking) {
+              // Check if attendance was marked for this booking
+              const { data: attendance } = await supabase
+                .from('attendance')
+                .select('id, status, boarding_time, marked_by_email')
+                .eq('booking_id', booking.id)
+                .eq('attendance_date', booking.trip_date)
+                .maybeSingle();
+
               userBooking = {
                 id: booking.id as string,
                 status: booking.status as string,
                 seatNumber: booking.seat_number as string,
                 qrCode: booking.qr_code as string,
-                paymentStatus: booking.payment_status as string
+                paymentStatus: booking.payment_status as string,
+                // Add attendance information
+                attendanceMarked: !!attendance,
+                attendanceStatus: attendance?.status as string | undefined,
+                boardingTime: attendance?.boarding_time as string | undefined,
+                verifiedBy: attendance?.marked_by_email as string | undefined
               };
             }
           }

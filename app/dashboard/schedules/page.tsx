@@ -78,6 +78,10 @@ interface ScheduleData {
     seatNumber?: string;
     qrCode?: string;
     paymentStatus: 'paid' | 'pending';
+    attendanceMarked?: boolean;
+    attendanceStatus?: string;
+    boardingTime?: string;
+    verifiedBy?: string;
   };
 }
 
@@ -536,6 +540,13 @@ export default function SchedulesPage() {
     // PRIORITY 3: Check if user has an existing booking
     if (schedule.userBooking && typeof schedule.userBooking === 'object' && schedule.userBooking.id) {
       console.log(`🔍 DATE STATUS DEBUG: Valid booking found for ${dateString}:`, schedule.userBooking);
+
+      // ⭐ NEW: Check if attendance was marked - show "present" instead of "booked"
+      if (schedule.userBooking.attendanceMarked && schedule.userBooking.attendanceStatus === 'present') {
+        console.log(`🔍 DATE STATUS DEBUG: Attendance marked for ${dateString} - showing as 'present'`);
+        return 'present';
+      }
+
       return 'booked';
     } else if (schedule.userBooking) {
       console.log(`🔍 DATE STATUS DEBUG: Invalid booking object detected for ${dateString}, treating as available:`, schedule.userBooking);
@@ -1203,6 +1214,7 @@ export default function SchedulesPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'present': return 'bg-purple-600 text-white shadow-md'; // ⭐ NEW: Purple for attendance marked
       case 'booked': return 'bg-[#0b6d41] text-white shadow-md';
       case 'available': return 'bg-green-100 text-green-800 hover:bg-green-200 shadow-sm hover:shadow-md';
       case 'disabled': return 'bg-orange-100 text-orange-800 shadow-sm';
@@ -1215,6 +1227,7 @@ export default function SchedulesPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
+      case 'present': return 'Present'; // ⭐ NEW: Show "Present" for attendance marked
       case 'booked': return 'Booked';
       case 'available': return 'Available';
       case 'disabled': return 'Disabled';
@@ -1757,8 +1770,8 @@ export default function SchedulesPage() {
 
         <div key={calendarKey} className="grid grid-cols-7 gap-1">
           {calendarDays.map((day, dayIndex) => {
-            // Allow showing booked status even for today/past dates (but not other statuses)
-            const canShowStatus = day.isCurrentMonth && (!day.isPast || day.status === 'booked' || day.status === 'completed');
+            // ⭐ UPDATED: Allow showing booked, present, and completed status even for past dates
+            const canShowStatus = day.isCurrentMonth && (!day.isPast || day.status === 'booked' || day.status === 'present' || day.status === 'completed');
             const dateStatus = canShowStatus ? day.status : 'unavailable';
             const statusColor = canShowStatus ? getStatusColor(day.status) : 'bg-gray-100 text-gray-400';
             const isDisabled = day.status === 'disabled';
@@ -1844,7 +1857,11 @@ export default function SchedulesPage() {
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-gray-900">Calendar Legend</h3>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4">
+          <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-600 rounded-lg shadow-sm flex-shrink-0"></div>
+            <span className="text-xs sm:text-sm font-bold text-gray-900">Present</span>
+          </div>
           <div className="flex items-center space-x-2 bg-gray-50 rounded-xl p-2 sm:p-3 shadow-sm">
             <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#0b6d41] rounded-lg shadow-sm flex-shrink-0"></div>
             <span className="text-xs sm:text-sm font-bold text-gray-900">Booked</span>
