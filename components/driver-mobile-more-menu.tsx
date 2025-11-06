@@ -88,15 +88,15 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
                     onClick={() => handleNav(href)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                       active
-                        ? 'bg-gradient-to-r from-green-50 to-yellow-50 border border-green-200 shadow-md'
+                        ? 'bg-green-50 border border-green-200 shadow-md'
                         : 'hover:bg-gray-50 border border-transparent'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 rounded-xl bg-gray-100">
-                        <Icon className={`h-5 w-5 ${active ? 'text-green-600' : 'text-gray-600'}`} />
+                      <div className={`p-2 rounded-xl ${active ? 'bg-green-100' : 'bg-gray-100'}`}>
+                        <Icon className={`h-5 w-5 ${active ? 'text-[#0b6d41]' : 'text-gray-600'}`} />
                       </div>
-                      <span className={`text-sm font-medium ${active ? 'text-green-800' : 'text-gray-800'}`}>{t(labelKey)}</span>
+                      <span className={`text-sm font-medium ${active ? 'text-[#0b6d41]' : 'text-gray-800'}`}>{t(labelKey)}</span>
                     </div>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                   </button>
@@ -107,7 +107,7 @@ export default function DriverMobileMoreMenu({ isOpen, onClose }: DriverMobileMo
 
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white shadow-md transition-colors"
               >
                 <span className="text-sm font-semibold">{t('more_menu.logout')}</span>
                 <LogOut className="h-4 w-4" />

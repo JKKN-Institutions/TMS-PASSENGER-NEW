@@ -61,7 +61,7 @@ export default function DriverMobileBottomNavbar() {
                 className="flex items-center space-x-2 px-3 py-2 rounded-full bg-white/95 backdrop-blur-md border border-green-200 shadow-xl"
                 aria-label={t('fab.start_tracking')}
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow">
+                <div className="p-2 rounded-full bg-[#0b6d41] text-white shadow">
                   <Navigation className="h-4 w-4" />
                 </div>
                 <span className="text-xs font-semibold text-gray-800">{t('fab.start_tracking')}</span>
@@ -74,7 +74,7 @@ export default function DriverMobileBottomNavbar() {
                 className="flex items-center space-x-2 px-3 py-2 rounded-full bg-white/95 backdrop-blur-md border border-green-200 shadow-xl"
                 aria-label={t('fab.share_location')}
               >
-                <div className="p-2 rounded-full bg-blue-500 text-white shadow">
+                <div className="p-2 rounded-full bg-[#0b6d41] text-white shadow">
                   <MapPin className="h-4 w-4" />
                 </div>
                 <span className="text-xs font-semibold text-gray-800">{t('fab.share_location')}</span>
@@ -99,7 +99,7 @@ export default function DriverMobileBottomNavbar() {
         <button
           onClick={() => setFabOpen((v) => !v)}
           className={`p-4 rounded-full shadow-2xl text-white active:scale-95 transition-transform ${
-            fabOpen ? 'bg-gray-800' : 'bg-gradient-to-r from-green-500 to-yellow-500 hover:from-green-600 hover:to-yellow-600'
+            fabOpen ? 'bg-gray-800' : 'bg-[#0b6d41] hover:bg-[#085032]'
           }`}
           aria-label={fabOpen ? t('fab.close_actions') : t('fab.open_actions')}
         >
@@ -117,9 +117,9 @@ export default function DriverMobileBottomNavbar() {
                   return (
                     <button key={item.nameKey} onClick={() => setIsMoreOpen(true)} className="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-1 group">
                       <div className="p-2 rounded-xl group-hover:bg-gray-100">
-                        <item.icon className="h-5 w-5 text-gray-600 group-hover:text-green-600" />
+                        <item.icon className="h-5 w-5 text-gray-600 group-hover:text-[#0b6d41]" />
                       </div>
-                      <span className="text-[10px] font-medium mt-0.5 line-clamp-1 text-center w-full text-gray-600 group-hover:text-green-600">{t(item.nameKey)}</span>
+                      <span className="text-[10px] font-medium mt-0.5 line-clamp-1 text-center w-full text-gray-600 group-hover:text-[#0b6d41]">{t(item.nameKey)}</span>
                     </button>
                   );
                 }
@@ -127,12 +127,12 @@ export default function DriverMobileBottomNavbar() {
                 return (
                   <Link key={item.nameKey} href={item.href || '#'} className="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-1 group">
                     <motion.div whileTap={{ scale: 0.95 }} className="relative">
-                      {active && <span className="absolute -top-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-green-500" />}
-                      <div className={`p-2 rounded-xl ${active ? 'bg-gradient-to-r from-green-100 to-yellow-100' : 'group-hover:bg-gray-100'}`}>
-                        <item.icon className={`h-5 w-5 ${active ? 'text-green-700' : 'text-gray-600 group-hover:text-green-600'}`} />
+                      {active && <span className="absolute -top-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-[#0b6d41]" />}
+                      <div className={`p-2 rounded-xl ${active ? 'bg-green-100' : 'group-hover:bg-gray-100'}`}>
+                        <item.icon className={`h-5 w-5 ${active ? 'text-[#0b6d41]' : 'text-gray-600 group-hover:text-[#0b6d41]'}`} />
                       </div>
                     </motion.div>
-                    <span className={`text-[10px] font-semibold mt-0.5 line-clamp-1 text-center w-full ${active ? 'text-green-800' : 'text-gray-600 group-hover:text-green-600'}`}>{t(item.nameKey)}</span>
+                    <span className={`text-[10px] font-semibold mt-0.5 line-clamp-1 text-center w-full ${active ? 'text-[#0b6d41]' : 'text-gray-600 group-hover:text-[#0b6d41]'}`}>{t(item.nameKey)}</span>
                   </Link>
                 );
               })}
