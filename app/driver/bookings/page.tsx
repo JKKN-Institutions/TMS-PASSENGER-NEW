@@ -281,12 +281,12 @@ function BookingsContent() {
           <div className="flex items-center">
             <Calendar className="w-6 h-6 text-[#0b6d41] mr-3" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Date Selection</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Date Selection</h2>
               <p className="text-sm text-gray-600">Bookings automatically update when date changes</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-[#0b6d41]">{total}</div>
+            <div className="text-xl sm:text-2xl font-bold text-[#0b6d41]">{total}</div>
             <div className="text-sm text-gray-600">Total Bookings</div>
           </div>
         </div>
@@ -387,7 +387,7 @@ function BookingsContent() {
       {Object.keys(grouped).length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
           <Users className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-3">No Bookings Found</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">No Bookings Found</h3>
           <p className="text-gray-600 mb-4 max-w-md mx-auto">
             No bookings available for the selected date. Try selecting a different date or check your route assignments.
           </p>
@@ -401,7 +401,7 @@ function BookingsContent() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <MapPin className="w-5 h-5 text-blue-500 mr-3" />
-                    <span className="font-semibold text-gray-900 text-lg">{stop}</span>
+                    <span className="text-base sm:text-lg font-semibold text-gray-900">{stop}</span>
                   </div>
                   <div className="flex items-center">
                     <Users className="w-5 h-5 text-gray-400 mr-2" />
@@ -423,7 +423,7 @@ function BookingsContent() {
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-3">
                           <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                          <span className="font-semibold text-gray-900 text-base md:text-lg truncate">
+                          <span className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                             {booking.students?.student_name || 'Student'}
                           </span>
                           <span className="text-gray-500 text-xs md:text-sm bg-gray-100 px-2 md:px-3 py-1 rounded-full whitespace-nowrap">

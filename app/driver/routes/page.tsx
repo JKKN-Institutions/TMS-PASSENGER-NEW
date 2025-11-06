@@ -147,7 +147,7 @@ export default function DriverRoutesPage() {
       {/* Routes List */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">{t('routes.route_details')}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t('routes.route_details')}</h2>
           <div className="text-sm text-gray-600">
             {t('routes.routes_assigned', { 
               count: routes.length, 
@@ -159,7 +159,7 @@ export default function DriverRoutesPage() {
         {routes.length === 0 ? (
           <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
             <MapPin className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('routes.no_routes_assigned')}</h3>
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">{t('routes.no_routes_assigned')}</h3>
             <p className="text-gray-600 mb-4 max-w-md mx-auto">
               {t('routes.no_routes_description')}
             </p>
@@ -178,7 +178,7 @@ export default function DriverRoutesPage() {
                           <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{route.route_name}</h3>
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{route.route_name}</h3>
                           <p className="text-xs sm:text-sm text-gray-500">{t('common.route')} {route.route_number}</p>
                         </div>
                       </div>

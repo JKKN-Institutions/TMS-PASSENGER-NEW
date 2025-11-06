@@ -164,7 +164,7 @@ export default function DriverHomePage() {
                 <MapPinned className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.location_sharing_title')}</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{t('driver.location_sharing_title')}</h2>
                 <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
                   {locationSharingEnabled
                     ? t('driver.location_sharing_active')
@@ -217,7 +217,7 @@ export default function DriverHomePage() {
           <div className="bg-green-50 px-4 md:px-6 py-4 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.route_stops')}</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{t('driver.route_stops')}</h2>
                 <p className="text-xs sm:text-sm text-gray-600 truncate">
                   {t('common.route')} {selectedRoute.route_number}: {selectedRoute.route_name}
                 </p>
@@ -302,7 +302,7 @@ export default function DriverHomePage() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start flex-wrap gap-2 mb-1">
-                              <h3 className={`font-bold text-base sm:text-lg break-words ${
+                              <h3 className={`text-base sm:text-lg font-semibold break-words ${
                                 isFirst
                                   ? 'text-green-900'
                                   : isLast
@@ -356,8 +356,8 @@ export default function DriverHomePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs font-medium text-gray-600 mb-1">Active Routes</p>
-            <p className="text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Active Routes</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
             <div className="mt-2">
               <TrendingUp className="w-5 h-5 text-[#0b6d41]" />
             </div>
@@ -366,8 +366,8 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs font-medium text-gray-600 mb-1">Passengers</p>
-            <p className="text-2xl font-bold text-gray-900">{totalPassengers}</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Passengers</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalPassengers}</p>
             <div className="mt-2">
               <Users className="w-5 h-5 text-[#0b6d41]" />
             </div>
@@ -376,8 +376,8 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs font-medium text-gray-600 mb-1">Total Routes</p>
-            <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Total Routes</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{routes.length}</p>
             <div className="mt-2">
               <MapPin className="w-5 h-5 text-[#0b6d41]" />
             </div>
@@ -386,8 +386,8 @@ export default function DriverHomePage() {
 
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
-            <p className="text-xs font-medium text-gray-600 mb-1">Status</p>
-            <p className="text-2xl font-bold text-[#0b6d41]">Active</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">Status</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#0b6d41]">Active</p>
             <div className="mt-2">
               <CheckCircle className="w-5 h-5 text-[#0b6d41]" />
             </div>
@@ -397,7 +397,7 @@ export default function DriverHomePage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link href="/driver/routes" className="block group">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-green-200 group-hover:bg-green-50">
@@ -406,7 +406,7 @@ export default function DriverHomePage() {
                   <MapPin className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">My Routes</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">My Routes</h3>
                   <p className="text-sm text-gray-600 group-hover:text-gray-700">View all assigned routes</p>
                 </div>
               </div>
@@ -420,7 +420,7 @@ export default function DriverHomePage() {
                   <Users className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Bookings</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Bookings</h3>
                   <p className="text-sm text-gray-600 group-hover:text-gray-700">View passenger bookings</p>
                 </div>
               </div>
@@ -432,7 +432,7 @@ export default function DriverHomePage() {
       {/* Assigned Routes */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">{t('dashboard.assigned_routes')}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t('dashboard.assigned_routes')}</h2>
           {routesLoading && (
             <div className="flex items-center text-sm text-gray-500">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-500 mr-2"></div>
@@ -463,7 +463,7 @@ export default function DriverHomePage() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <div className="text-sm text-gray-500 mb-1">Route {route.route_number}</div>
-                      <div className="font-semibold text-lg text-gray-900">{route.route_name}</div>
+                      <div className="text-base sm:text-lg font-semibold text-gray-900">{route.route_name}</div>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                       route.status === 'active' 
@@ -515,7 +515,7 @@ export default function DriverHomePage() {
               <div className="col-span-full">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
                   <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-6" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">No Routes Assigned</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">No Routes Assigned</h3>
                   <p className="text-gray-600 mb-4 max-w-md mx-auto">
                     You don't have any active routes assigned at the moment. 
                     Contact your administrator for route assignments.

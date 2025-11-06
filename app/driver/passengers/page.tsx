@@ -248,7 +248,7 @@ export default function DriverPassengersPage() {
       {filteredPassengers.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center border border-gray-200">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
             {searchQuery || selectedRoute !== 'all'
               ? t('driver.passengers.no_results')
               : t('driver.passengers.no_passengers')}
