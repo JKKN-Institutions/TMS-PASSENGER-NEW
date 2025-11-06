@@ -27,6 +27,22 @@ async function addBookingDataToSchedules(schedules: any[], studentId: string | n
     return schedules.map(schedule => ({ ...schedule, user_booking: null }));
   }
 
+  // ⭐ NEW: Fetch attendance records for all bookings
+  console.log('🔍 API DEBUG: Fetching attendance records for bookings...');
+  const bookingIds = bookings.map(b => b.id);
+  const { data: attendanceRecords } = await supabase
+    .from('attendance')
+    .select('id, booking_id, status, boarding_time, marked_by_email')
+    .in('booking_id', bookingIds);
+
+  console.log('🔍 API DEBUG: Attendance records found:', attendanceRecords?.length || 0);
+
+  // Create a map of booking_id => attendance for quick lookup
+  const attendanceMap = new Map();
+  (attendanceRecords || []).forEach((att: any) => {
+    attendanceMap.set(att.booking_id, att);
+  });
+
   // Match bookings to schedules using the exact logic that works
   console.log('🔍 API DEBUG: Matching bookings to schedules...');
   console.log('🔍 API DEBUG: Total schedules to match:', schedules.length);
@@ -45,6 +61,14 @@ async function addBookingDataToSchedules(schedules: any[], studentId: string | n
 
     if (matchingBooking) {
       console.log(`🔍 API DEBUG: ✅ Found booking for schedule ${schedule.id} (${schedule.schedule_date}):`, matchingBooking);
+
+      // ⭐ NEW: Get attendance data for this booking
+      const attendance = attendanceMap.get(matchingBooking.id);
+
+      if (attendance) {
+        console.log(`🔍 API DEBUG: 🟣 Attendance found for booking ${matchingBooking.id}:`, attendance);
+      }
+
       return {
         ...schedule,
         user_booking: {
@@ -52,7 +76,12 @@ async function addBookingDataToSchedules(schedules: any[], studentId: string | n
           status: matchingBooking.status,
           seatNumber: matchingBooking.seat_number,
           qrCode: matchingBooking.qr_code,
-          paymentStatus: matchingBooking.payment_status
+          paymentStatus: matchingBooking.payment_status,
+          // ⭐ NEW: Include attendance information
+          attendanceMarked: !!attendance,
+          attendanceStatus: attendance?.status,
+          boardingTime: attendance?.boarding_time,
+          verifiedBy: attendance?.marked_by_email
         }
       };
     }
@@ -326,6 +355,8 @@ export async function POST(request: NextRequest) {
 
     // Check existing bookings if student ID is provided
     let existingBookings: any[] = [];
+    let attendanceMap = new Map();
+
     if (studentId) {
       // Get all confirmed bookings for student (not filtered by schedule IDs)
       const { data: bookings, error: bookingError } = await supabase
@@ -340,12 +371,25 @@ export async function POST(request: NextRequest) {
         // Filter bookings to match schedules by ID OR by date+route
         existingBookings = (bookings || []).filter(booking => {
           const scheduleIdMatch = activeSchedules.some(schedule => schedule.id === booking.schedule_id);
-          const dateRouteMatch = activeSchedules.some(schedule => 
-            schedule.schedule_date === booking.trip_date && 
+          const dateRouteMatch = activeSchedules.some(schedule =>
+            schedule.schedule_date === booking.trip_date &&
             schedule.route_id === booking.route_id
           );
           return scheduleIdMatch || dateRouteMatch;
         });
+
+        // ⭐ NEW: Fetch attendance records for existing bookings
+        if (existingBookings.length > 0) {
+          const bookingIds = existingBookings.map(b => b.id);
+          const { data: attendanceRecords } = await supabase
+            .from('attendance')
+            .select('id, booking_id, status, boarding_time, marked_by_email')
+            .in('booking_id', bookingIds);
+
+          (attendanceRecords || []).forEach((att: any) => {
+            attendanceMap.set(att.booking_id, att);
+          });
+        }
       }
     }
 
@@ -386,12 +430,15 @@ export async function POST(request: NextRequest) {
     // Format schedules for passenger-side compatibility with proper field mapping
     const formattedSchedules = activeSchedules.map((schedule: any) => {
       // Find booking by schedule ID or by date+route match
-      const existingBooking = existingBookings.find((booking: any) => 
-        booking.schedule_id === schedule.id || 
+      const existingBooking = existingBookings.find((booking: any) =>
+        booking.schedule_id === schedule.id ||
         (booking.trip_date === schedule.schedule_date && booking.route_id === schedule.route_id)
       );
       const isBookingWindowOpen = bookingWindowMap.get(schedule.id) || false;
-      
+
+      // ⭐ NEW: Get attendance data for this booking
+      const attendance = existingBooking ? attendanceMap.get(existingBooking.id) : null;
+
       return {
         id: schedule.id,
         schedule_date: schedule.schedule_date,
@@ -406,9 +453,9 @@ export async function POST(request: NextRequest) {
         special_instructions: schedule.special_instructions,
         status: schedule.status,
         is_booking_window_open: isBookingWindowOpen,
-        is_booking_available: isBookingWindowOpen && 
+        is_booking_available: isBookingWindowOpen &&
                             (schedule.admin_scheduling_enabled === true) &&
-                            (schedule.booking_enabled !== false) && 
+                            (schedule.booking_enabled !== false) &&
                             (schedule.available_seats > 0),
         route: schedule.routes ? {
           id: schedule.routes.id,
@@ -423,7 +470,12 @@ export async function POST(request: NextRequest) {
           id: existingBooking.id,
           status: existingBooking.booking_status,
           seatNumber: existingBooking.seat_number,
-          qrCode: existingBooking.qr_code
+          qrCode: existingBooking.qr_code,
+          // ⭐ NEW: Include attendance information
+          attendanceMarked: !!attendance,
+          attendanceStatus: attendance?.status,
+          boardingTime: attendance?.boarding_time,
+          verifiedBy: attendance?.marked_by_email
         } : null
       };
     });
