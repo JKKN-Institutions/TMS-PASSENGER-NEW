@@ -31,7 +31,7 @@ export default function DriverPageHeader({
 
         {/* Text Content */}
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 break-words">
+          <h1 className="text-2xl sm:text-2xl md:text-2xl font-bold text-[#0b6d41] mb-1 sm:mb-2 break-words">
             {t(titleKey)}
           </h1>
           {subtitleKey && (

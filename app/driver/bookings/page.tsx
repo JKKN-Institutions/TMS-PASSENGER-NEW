@@ -387,9 +387,9 @@ function BookingsContent() {
       {Object.keys(grouped).length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
           <Users className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">No Bookings Found</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">{t('bookings.no_bookings_title')}</h3>
           <p className="text-gray-600 mb-4 max-w-md mx-auto">
-            No bookings available for the selected date. Try selecting a different date or check your route assignments.
+            {t('bookings.no_bookings_description')}
           </p>
           <div className="w-16 h-1 bg-gray-200 rounded-full mx-auto"></div>
         </div>
@@ -406,7 +406,7 @@ function BookingsContent() {
                   <div className="flex items-center">
                     <Users className="w-5 h-5 text-gray-400 mr-2" />
                     <span className="text-sm text-gray-600 font-medium">
-                      {list.length} booking{list.length !== 1 ? 's' : ''}
+                      {list.length} {list.length !== 1 ? t('bookings.booking_plural') : t('bookings.booking_singular')}
                     </span>
                   </div>
                 </div>
@@ -424,7 +424,7 @@ function BookingsContent() {
                         <div className="flex flex-wrap items-center gap-2 mb-3">
                           <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           <span className="text-base sm:text-lg font-semibold text-gray-900 truncate">
-                            {booking.students?.student_name || 'Student'}
+                            {booking.students?.student_name || t('bookings.student')}
                           </span>
                           <span className="text-gray-500 text-xs md:text-sm bg-gray-100 px-2 md:px-3 py-1 rounded-full whitespace-nowrap">
                             {t('bookings.roll')}: {booking.students?.roll_number || '—'}

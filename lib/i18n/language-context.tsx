@@ -1785,6 +1785,38 @@ const translations: Record<string, Record<Language, string>> = {
   'passengers.route': {
     en: 'Route',
     ta: 'பாதை'
+  },
+
+  // Dashboard - No Routes Message
+  'dashboard.no_routes_message': {
+    en: "You don't have any active routes assigned at the moment. Contact your administrator for route assignments.",
+    ta: 'தற்போது உங்களுக்கு எந்த செயலில் உள்ள பாதைகளும் ஒதுக்கப்படவில்லை. பாதை ஒதுக்கீட்டிற்கு உங்கள் நிர்வாகியைத் தொடர்பு கொள்ளவும்.'
+  },
+  'dashboard.loading_routes_text': {
+    en: 'Loading routes...',
+    ta: 'பாதைகள் ஏற்றப்படுகின்றன...'
+  },
+
+  // Bookings Page - Additional Text
+  'bookings.no_bookings_title': {
+    en: 'No Bookings Found',
+    ta: 'முன்பதிவுகள் எதுவும் கிடைக்கவில்லை'
+  },
+  'bookings.no_bookings_description': {
+    en: 'No bookings available for the selected date. Try selecting a different date or check your route assignments.',
+    ta: 'தேர்ந்தெடுக்கப்பட்ட தேதிக்கு முன்பதிவுகள் இல்லை. வேறு தேதியைத் தேர்ந்தெடுக்க முயற்சிக்கவும் அல்லது உங்கள் பாதை ஒதுக்கீடுகளைச் சரிபார்க்கவும்.'
+  },
+  'bookings.booking_singular': {
+    en: 'booking',
+    ta: 'முன்பதிவு'
+  },
+  'bookings.booking_plural': {
+    en: 'bookings',
+    ta: 'முன்பதிவுகள்'
+  },
+  'bookings.student': {
+    en: 'Student',
+    ta: 'மாணவர்'
   }
 };
 
