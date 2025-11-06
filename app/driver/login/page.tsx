@@ -148,7 +148,7 @@ function DriverLoginPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Language Switcher */}
         <div className="flex justify-end">
@@ -157,7 +157,7 @@ function DriverLoginPageInner() {
 
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-green-600 rounded-full flex items-center justify-center">
+          <div className="mx-auto h-16 w-16 bg-[#0b6d41] rounded-full flex items-center justify-center shadow-lg">
             <Car className="h-8 w-8 text-white" />
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
@@ -219,7 +219,7 @@ function DriverLoginPageInner() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:border-[#0b6d41]"
                   placeholder={t('login.enter_email')}
                 />
               </div>
@@ -242,7 +242,7 @@ function DriverLoginPageInner() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0b6d41] focus:border-[#0b6d41]"
                   placeholder={t('login.enter_password')}
                 />
                 <button
@@ -265,7 +265,7 @@ function DriverLoginPageInner() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#0b6d41] hover:bg-[#085032] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <div className="flex items-center">
@@ -283,7 +283,7 @@ function DriverLoginPageInner() {
             <button
               type="button"
               onClick={() => router.push('/login')}
-              className="text-sm text-green-600 hover:text-green-700 underline"
+              className="text-sm text-[#0b6d41] hover:text-[#085032] underline"
             >
               {t('login.back_to_main')}
             </button>

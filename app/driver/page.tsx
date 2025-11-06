@@ -90,7 +90,7 @@ export default function DriverHomePage() {
 
   if (isLoading || loading) return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mb-6"></div>
+      <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mb-6"></div>
       <p className="text-gray-600 text-lg font-medium">{t('dashboard.loading')}</p>
     </div>
   );
@@ -133,13 +133,13 @@ export default function DriverHomePage() {
   return (
     <div className="w-full overflow-hidden space-y-4 sm:space-y-6">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white">
+      <div className="bg-[#0b6d41] rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 text-white shadow-lg">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 break-words">
               {t('dashboard.welcome', { name: currentDriver?.email?.split('@')[0] || 'Driver' })}
             </h1>
-            <p className="text-yellow-100 text-sm sm:text-base md:text-lg break-words">
+            <p className="text-green-100 text-sm sm:text-base md:text-lg break-words">
               {t('driver.journey_start')}
             </p>
           </div>
@@ -152,13 +152,13 @@ export default function DriverHomePage() {
       </div>
 
       {/* Location Sharing Toggle - TOP PRIORITY */}
-      <div className="bg-white rounded-xl shadow-lg border-2 border-green-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-4 md:px-6 py-4 border-b border-green-200">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-green-50 px-4 md:px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3 min-w-0 flex-1">
               <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
                 locationSharingEnabled
-                  ? 'bg-green-500 shadow-lg shadow-green-200'
+                  ? 'bg-[#0b6d41] shadow-lg shadow-green-200'
                   : 'bg-gray-400'
               }`}>
                 <MapPinned className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -179,7 +179,7 @@ export default function DriverHomePage() {
               className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all transform hover:scale-105 flex-shrink-0 ${
                 locationSharingEnabled
                   ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-200'
-                  : 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-200'
+                  : 'bg-[#0b6d41] hover:bg-[#085032] text-white shadow-lg shadow-green-200'
               }`}
             >
               {locationSharingEnabled ? (
@@ -214,7 +214,7 @@ export default function DriverHomePage() {
       {/* Route Stops - Vertical Stepper Design */}
       {selectedRoute && currentStops.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-green-50 to-yellow-50 px-4 md:px-6 py-4 border-b border-gray-200">
+          <div className="bg-green-50 px-4 md:px-6 py-4 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{t('driver.route_stops')}</h2>
@@ -263,19 +263,19 @@ export default function DriverHomePage() {
                     {/* Vertical Line */}
                     {!isLast && (
                       <div className={`absolute left-[19px] top-10 bottom-0 w-1 ${
-                        isMajor ? 'bg-green-300' : 'bg-gray-300'
+                        isMajor ? 'bg-green-200' : 'bg-gray-300'
                       }`} style={{ height: 'calc(100% + 24px)' }} />
                     )}
-                    
+
                     {/* Stop Circle/Marker */}
                     <div className="relative z-10 flex-shrink-0">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-4 transition-all ${
                         isFirst
-                          ? 'bg-green-500 border-green-200 text-white shadow-lg shadow-green-200'
+                          ? 'bg-[#0b6d41] border-green-200 text-white shadow-lg shadow-green-200'
                           : isLast
                           ? 'bg-red-500 border-red-200 text-white shadow-lg shadow-red-200'
                           : isMajor
-                          ? 'bg-green-500 border-green-200 text-white shadow-lg shadow-green-200'
+                          ? 'bg-[#0b6d41] border-green-200 text-white shadow-lg shadow-green-200'
                           : 'bg-white border-gray-300 text-gray-700 shadow'
                       }`}>
                         {isFirst ? (
@@ -359,7 +359,7 @@ export default function DriverHomePage() {
             <p className="text-xs font-medium text-gray-600 mb-1">Active Routes</p>
             <p className="text-2xl font-bold text-gray-900">{activeRoutes.length}</p>
             <div className="mt-2">
-              <TrendingUp className="w-5 h-5 text-green-600" />
+              <TrendingUp className="w-5 h-5 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -369,7 +369,7 @@ export default function DriverHomePage() {
             <p className="text-xs font-medium text-gray-600 mb-1">Passengers</p>
             <p className="text-2xl font-bold text-gray-900">{totalPassengers}</p>
             <div className="mt-2">
-              <Users className="w-5 h-5 text-green-600" />
+              <Users className="w-5 h-5 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -379,7 +379,7 @@ export default function DriverHomePage() {
             <p className="text-xs font-medium text-gray-600 mb-1">Total Routes</p>
             <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
             <div className="mt-2">
-              <MapPin className="w-5 h-5 text-purple-600" />
+              <MapPin className="w-5 h-5 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -387,9 +387,9 @@ export default function DriverHomePage() {
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex flex-col">
             <p className="text-xs font-medium text-gray-600 mb-1">Status</p>
-            <p className="text-2xl font-bold text-green-600">Active</p>
+            <p className="text-2xl font-bold text-[#0b6d41]">Active</p>
             <div className="mt-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+              <CheckCircle className="w-5 h-5 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -400,28 +400,28 @@ export default function DriverHomePage() {
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link href="/driver/routes" className="block group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-purple-300 group-hover:bg-purple-50">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-green-200 group-hover:bg-green-50">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                  <MapPin className="w-6 h-6 text-purple-600" />
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                  <MapPin className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-purple-800 transition-colors">My Routes</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-purple-700">View all assigned routes</p>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">My Routes</h3>
+                  <p className="text-sm text-gray-600 group-hover:text-gray-700">View all assigned routes</p>
                 </div>
               </div>
             </div>
           </Link>
 
           <Link href="/driver/bookings" className="block group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300 group-hover:bg-blue-50">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 group-hover:border-green-200 group-hover:bg-green-50">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                  <Users className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                  <Users className="w-6 h-6 text-[#0b6d41]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">Bookings</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-blue-700">View passenger bookings</p>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-[#0b6d41] transition-colors">Bookings</h3>
+                  <p className="text-sm text-gray-600 group-hover:text-gray-700">View passenger bookings</p>
                 </div>
               </div>
             </div>
@@ -494,13 +494,13 @@ export default function DriverHomePage() {
                   </div>
                   
                   <div className="flex space-x-3">
-                    <Link 
+                    <Link
                       href={`/driver/bookings?routeId=${route.id}`}
-                      className="flex-1 text-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                      className="flex-1 text-center px-4 py-2 bg-[#0b6d41] text-white text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors shadow-md hover:shadow-lg"
                     >
                       View Bookings
                     </Link>
-                    <Link 
+                    <Link
                       href={`/driver/routes/${route.id}`}
                       className="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
                     >

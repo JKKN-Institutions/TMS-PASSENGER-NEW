@@ -128,7 +128,7 @@ function BookingsContent() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
           <p className="text-gray-600 text-lg font-medium">Loading bookings...</p>
         </div>
       </div>
@@ -155,7 +155,7 @@ function BookingsContent() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
+        return <CheckCircle className="w-4 h-4 text-[#0b6d41]" />;
       case 'pending':
         return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
       default:
@@ -166,7 +166,7 @@ function BookingsContent() {
   const getPaymentStatusIcon = (status: string) => {
     switch (status) {
       case 'paid':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
+        return <CheckCircle className="w-4 h-4 text-[#0b6d41]" />;
       case 'pending':
         return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
       default:
@@ -221,7 +221,7 @@ function BookingsContent() {
               <p className="text-xl md:text-2xl font-bold text-gray-900">{total}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Users className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+              <Users className="w-5 h-5 md:w-6 md:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -230,10 +230,10 @@ function BookingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600">{t('bookings.confirmed')}</p>
-              <p className="text-xl md:text-2xl font-bold text-green-600">{confirmedBookings}</p>
+              <p className="text-xl md:text-2xl font-bold text-[#0b6d41]">{confirmedBookings}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+              <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -254,10 +254,10 @@ function BookingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600">{t('bookings.paid')}</p>
-              <p className="text-xl md:text-2xl font-bold text-green-600">{paidBookings}</p>
+              <p className="text-xl md:text-2xl font-bold text-[#0b6d41]">{paidBookings}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+              <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -266,10 +266,10 @@ function BookingsContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600">{t('bookings.verified')}</p>
-              <p className="text-xl md:text-2xl font-bold text-purple-600">{verifiedBookings}</p>
+              <p className="text-xl md:text-2xl font-bold text-[#0b6d41]">{verifiedBookings}</p>
             </div>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <BadgeCheck className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
+              <BadgeCheck className="w-5 h-5 md:w-6 md:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -279,14 +279,14 @@ function BookingsContent() {
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div className="flex items-center">
-            <Calendar className="w-6 h-6 text-blue-600 mr-3" />
+            <Calendar className="w-6 h-6 text-[#0b6d41] mr-3" />
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Date Selection</h2>
               <p className="text-sm text-gray-600">Bookings automatically update when date changes</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-blue-600">{total}</div>
+            <div className="text-2xl font-bold text-[#0b6d41]">{total}</div>
             <div className="text-sm text-gray-600">Total Bookings</div>
           </div>
         </div>
@@ -307,7 +307,7 @@ function BookingsContent() {
             </button>
             <button
               onClick={() => setDate(new Date().toISOString().split('T')[0])}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-3 py-1.5 text-sm bg-[#0b6d41] text-white rounded-lg hover:bg-[#085032] transition-colors"
             >
               Today
             </button>
@@ -373,7 +373,7 @@ function BookingsContent() {
 
             <button
               onClick={() => load(selectedRouteId || routeId || undefined)}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#0b6d41] text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-[#085032] transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
               <TrendingUp className="w-4 h-4 mr-2" />
@@ -532,7 +532,7 @@ function BookingsFallback() {
   return (
     <div className="flex items-center justify-center py-20">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
         <p className="text-gray-600 text-lg font-medium">Loading bookings...</p>
       </div>
     </div>

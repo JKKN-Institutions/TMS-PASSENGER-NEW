@@ -67,7 +67,7 @@ export default function DriverRoutesPage() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
           <p className="text-gray-600 text-lg font-medium">{t('routes.loading')}</p>
         </div>
       </div>
@@ -123,10 +123,10 @@ export default function DriverRoutesPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm font-medium text-gray-600">{t('routes.active_routes')}</p>
-              <p className="text-xl sm:text-2xl font-bold text-green-600">{activeRoutes.length}</p>
+              <p className="text-xl sm:text-2xl font-bold text-[#0b6d41]">{activeRoutes.length}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function DriverRoutesPage() {
                     <div className="flex sm:flex-col items-center sm:items-end gap-3 flex-shrink-0">
                       <div className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${
                         route.status === 'active'
-                          ? 'bg-green-100 text-green-800 border border-green-200'
+                          ? 'bg-green-100 text-[#0b6d41] border border-green-200'
                           : 'bg-gray-100 text-gray-800 border border-gray-200'
                       }`}>
                         {route.status}
@@ -198,7 +198,7 @@ export default function DriverRoutesPage() {
 
                       <Link
                         href={`/driver/bookings?routeId=${route.id}`}
-                        className="flex items-center text-blue-600 text-xs sm:text-sm font-medium hover:text-blue-800 transition-colors whitespace-nowrap"
+                        className="flex items-center text-[#0b6d41] text-xs sm:text-sm font-medium hover:text-[#085032] transition-colors whitespace-nowrap"
                       >
                         <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                         {t('routes.view_bookings')}
@@ -236,7 +236,7 @@ export default function DriverRoutesPage() {
                             .sort((a: any, b: any) => a.sequence_order - b.sequence_order)
                             .map((stop: any, index: number) => (
                               <div key={stop.id} className="flex items-center text-xs sm:text-sm text-gray-600 gap-2 sm:gap-3">
-                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium text-blue-600 flex-shrink-0">
+                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-full flex items-center justify-center text-xs font-medium text-[#0b6d41] flex-shrink-0">
                                   {stop.sequence_order}
                                 </div>
                                 <span className="flex-1 font-medium min-w-0 truncate">{getStopName(stop)}</span>
@@ -254,7 +254,7 @@ export default function DriverRoutesPage() {
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 md:mt-6 sm:ml-14 md:ml-16">
                     <Link
                       href={`/driver/bookings?routeId=${route.id}`}
-                      className="px-4 sm:px-6 py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors text-center"
+                      className="px-4 sm:px-6 py-2 bg-[#0b6d41] text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors text-center shadow-md hover:shadow-lg"
                     >
                       {t('routes.view_bookings')}
                     </Link>
@@ -266,7 +266,7 @@ export default function DriverRoutesPage() {
                     </Link>
                     <Link
                       href="/driver/live-tracking"
-                      className="px-4 sm:px-6 py-2 bg-green-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-green-700 transition-colors text-center"
+                      className="px-4 sm:px-6 py-2 bg-[#0b6d41] text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-[#085032] transition-colors text-center shadow-md hover:shadow-lg"
                     >
                       {t('routes.start_tracking')}
                     </Link>

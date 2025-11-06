@@ -228,7 +228,7 @@ export default function DriverProfilePage() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
           <p className="text-gray-600 text-lg font-medium">{t('profile.loading')}</p>
         </div>
       </div>
@@ -302,7 +302,7 @@ export default function DriverProfilePage() {
       <DriverPageHeader
         titleKey="page.profile.title"
         icon={User}
-        iconColor="text-purple-600"
+        iconColor="text-[#0b6d41]"
         iconBgColor="bg-purple-50"
       />
 
@@ -319,7 +319,7 @@ export default function DriverProfilePage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center px-6 py-3 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
+                  className="flex items-center px-6 py-3 bg-[#0b6d41] text-white rounded-lg text-sm font-medium hover:bg-[#085032] disabled:opacity-50 transition-colors"
                 >
                   <Save className="w-4 h-4 mr-2" />
                   {saving ? t('profile.saving') : t('profile.save_changes')}
@@ -335,7 +335,7 @@ export default function DriverProfilePage() {
             ) : (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="flex items-center px-6 py-3 bg-[#0b6d41] text-white rounded-lg text-sm font-medium hover:bg-[#085032] transition-colors"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 {t('profile.edit')}
@@ -428,25 +428,25 @@ export default function DriverProfilePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center p-4 bg-blue-50 rounded-xl">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-6 h-6 text-blue-600" />
+                <Calendar className="w-6 h-6 text-[#0b6d41]" />
               </div>
-              <div className="text-2xl font-bold text-blue-600">{profile.experience_years}</div>
+              <div className="text-2xl font-bold text-[#0b6d41]">{profile.experience_years}</div>
               <div className="text-sm text-gray-600 font-medium">{t('profile.years_experience')}</div>
             </div>
 
             <div className="text-center p-4 bg-green-50 rounded-xl">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Star className="w-6 h-6 text-green-600" />
+                <Star className="w-6 h-6 text-[#0b6d41]" />
               </div>
-              <div className="text-2xl font-bold text-green-600">{profile.rating.toFixed(1)}</div>
+              <div className="text-2xl font-bold text-[#0b6d41]">{profile.rating.toFixed(1)}</div>
               <div className="text-sm text-gray-600 font-medium">{t('profile.rating')}</div>
             </div>
 
             <div className="text-center p-4 bg-purple-50 rounded-xl">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+                <TrendingUp className="w-6 h-6 text-[#0b6d41]" />
               </div>
-              <div className="text-2xl font-bold text-purple-600">{profile.total_trips}</div>
+              <div className="text-2xl font-bold text-[#0b6d41]">{profile.total_trips}</div>
               <div className="text-sm text-gray-600 font-medium">{t('profile.total_trips')}</div>
             </div>
 
@@ -455,7 +455,7 @@ export default function DriverProfilePage() {
                 <Award className="w-6 h-6 text-amber-600" />
               </div>
               <div className={`text-2xl font-bold ${
-                profile.status === 'active' ? 'text-green-600' : 'text-red-600'
+                profile.status === 'active' ? 'text-[#0b6d41]' : 'text-red-600'
               }`}>
                 {t(`status.${profile.status}`)}
               </div>

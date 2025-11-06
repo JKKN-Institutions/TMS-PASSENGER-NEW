@@ -98,7 +98,7 @@ const DriverLiveTrackingPage = () => {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600 mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-6"></div>
           <p className="text-gray-600 text-lg font-medium">{t('tracking.loading_live')}</p>
         </div>
       </div>
@@ -144,7 +144,7 @@ const DriverLiveTrackingPage = () => {
   return (
     <div className="space-y-4 sm:space-y-6 md:space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white">
+      <div className="bg-[#0b6d41] rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-lg">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words">{t('tracking.live_location_tracking_header')}</h1>
@@ -164,7 +164,7 @@ const DriverLiveTrackingPage = () => {
             <div className="flex-1 min-w-0">
               <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('tracking.tracking_status')}</p>
               <p className={`text-lg sm:text-xl md:text-2xl font-bold truncate ${
-                isTracking ? 'text-green-600' : 'text-gray-600'
+                isTracking ? 'text-[#0b6d41]' : 'text-gray-600'
               }`}>
                 {isTracking ? t('tracking.active_status') : t('tracking.inactive_status')}
               </p>
@@ -173,7 +173,7 @@ const DriverLiveTrackingPage = () => {
               isTracking ? 'bg-green-100' : 'bg-gray-100'
             }`}>
               {isTracking ? (
-                <Wifi className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                <Wifi className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
               ) : (
                 <WifiOff className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
               )}
@@ -186,7 +186,7 @@ const DriverLiveTrackingPage = () => {
             <div className="flex-1 min-w-0">
               <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('tracking.location_status')}</p>
               <p className={`text-lg sm:text-xl md:text-2xl font-bold truncate ${
-                currentLocation ? 'text-green-600' : 'text-gray-600'
+                currentLocation ? 'text-[#0b6d41]' : 'text-gray-600'
               }`}>
                 {currentLocation ? t('tracking.available') : t('tracking.not_available')}
               </p>
@@ -194,7 +194,7 @@ const DriverLiveTrackingPage = () => {
             <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
               currentLocation ? 'bg-green-100' : 'bg-gray-100'
             }`}>
-              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@ const DriverLiveTrackingPage = () => {
               <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">{driverName}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Target className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+              <Target className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -223,7 +223,7 @@ const DriverLiveTrackingPage = () => {
             className={`flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               isTracking
                 ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg hover:shadow-xl'
-                : 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
+                : 'bg-[#0b6d41] text-white hover:bg-[#085032] shadow-lg hover:shadow-xl'
             }`}
           >
             {isTracking ? (
@@ -246,7 +246,7 @@ const DriverLiveTrackingPage = () => {
             <div className="flex-1 min-w-0">
               <span className="text-xs sm:text-sm text-gray-600 block truncate">{t('tracking.status_label')}</span>
               <span className={`text-sm sm:text-base font-medium block truncate ${
-                isTracking ? 'text-green-600' : 'text-gray-500'
+                isTracking ? 'text-[#0b6d41]' : 'text-gray-500'
               }`}>
                 {isTracking ? t('tracking.active') : t('tracking.stopped')}
               </span>
@@ -269,14 +269,14 @@ const DriverLiveTrackingPage = () => {
       {currentLocation && (
         <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
           <div className="flex items-center mb-4 sm:mb-6 gap-2 sm:gap-3">
-            <Map className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0" />
+            <Map className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41] flex-shrink-0" />
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.current_location_header')}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
               <div className="flex items-center mb-2 gap-2">
-                <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-[#0b6d41] flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-medium text-blue-800 truncate">{t('tracking.coordinates')}</span>
               </div>
               <div className="space-y-2">
@@ -297,7 +297,7 @@ const DriverLiveTrackingPage = () => {
 
             <div className="bg-green-50 p-3 sm:p-4 rounded-lg">
               <div className="flex items-center mb-2 gap-2">
-                <Activity className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <Activity className="w-4 h-4 text-[#0b6d41] flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-medium text-green-800 truncate">{t('tracking.details')}</span>
               </div>
               <div className="space-y-2">

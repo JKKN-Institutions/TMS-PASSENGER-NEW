@@ -142,7 +142,7 @@ export default function DriverPassengersPage() {
   if (authLoading || loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="w-12 h-12 text-green-600 animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 text-[#0b6d41] animate-spin mb-4" />
         <p className="text-gray-600">{t('common.loading')}</p>
       </div>
     );
@@ -154,7 +154,7 @@ export default function DriverPassengersPage() {
       <DriverPageHeader
         titleKey="page.passengers.title"
         icon={Users}
-        iconColor="text-purple-600"
+        iconColor="text-[#0b6d41]"
         iconBgColor="bg-purple-50"
       />
 
@@ -177,7 +177,7 @@ export default function DriverPassengersPage() {
               <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.total || 0}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function DriverPassengersPage() {
               <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.active || 0}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function DriverPassengersPage() {
               <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mt-1 truncate">{stats.total_bookings || 0}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
             </div>
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function DriverPassengersPage() {
                           className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
                         />
                       ) : (
-                        <User className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                        <User className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41]" />
                       )}
                     </div>
 
@@ -288,7 +288,7 @@ export default function DriverPassengersPage() {
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                           {passenger.student_name}
                         </h3>
-                        <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                        <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0b6d41] flex-shrink-0" />
                       </div>
 
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-gray-600">
@@ -357,7 +357,7 @@ export default function DriverPassengersPage() {
                         {passenger.email && (
                           <div className="flex items-center gap-2 text-sm text-gray-600 min-w-0">
                             <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                            <a href={`mailto:${passenger.email}`} className="hover:text-green-600 truncate min-w-0">
+                            <a href={`mailto:${passenger.email}`} className="hover:text-[#0b6d41] truncate min-w-0">
                               {passenger.email}
                             </a>
                           </div>
@@ -365,7 +365,7 @@ export default function DriverPassengersPage() {
                         {passenger.phone && (
                           <div className="flex items-center gap-2 text-sm text-gray-600 min-w-0">
                             <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                            <a href={`tel:${passenger.phone}`} className="hover:text-green-600 truncate">
+                            <a href={`tel:${passenger.phone}`} className="hover:text-[#0b6d41] truncate">
                               {passenger.phone}
                             </a>
                           </div>
@@ -384,7 +384,7 @@ export default function DriverPassengersPage() {
                             key={route.route_id}
                             className="bg-gray-50 rounded-lg p-3 flex items-start gap-3"
                           >
-                            <RouteIcon className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <RouteIcon className="w-5 h-5 text-[#0b6d41] flex-shrink-0 mt-0.5" />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-gray-900 break-words">
                                 Route {route.route_number}: {route.route_name}

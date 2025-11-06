@@ -49,10 +49,10 @@ function DriverLayoutInner({
   // Show loading while checking auth
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
-        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-green-200 max-w-sm">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200 max-w-sm">
           <div className="relative mx-auto w-16 h-16 mb-6">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-600"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-[#0b6d41]"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <img
                 src="/app-logo.png"
@@ -126,7 +126,7 @@ function DriverLayoutInner({
             <div className="px-6 py-4 border-b border-gray-200">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-green-600" />
+                  <User className="w-5 h-5 text-[#0b6d41]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
@@ -147,13 +147,13 @@ function DriverLayoutInner({
                     href={item.href}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       item.current
-                        ? 'bg-green-50 text-green-700 border border-green-200'
+                        ? 'bg-green-50 text-[#0b6d41] border border-green-200'
                         : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                     onClick={() => setSidebarOpen(false)}
                   >
                     <Icon className={`w-5 h-5 ${
-                      item.current ? 'text-green-600' : 'text-gray-400'
+                      item.current ? 'text-[#0b6d41]' : 'text-gray-400'
                     }`} />
                     <span>{item.name}</span>
                   </Link>
