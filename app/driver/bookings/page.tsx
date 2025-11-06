@@ -281,7 +281,7 @@ function BookingsContent() {
           <div className="flex items-center">
             <Calendar className="w-6 h-6 text-[#0b6d41] mr-3" />
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t('bookings.date_selection')}</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-[#0b6d41]">{t('bookings.date_selection')}</h2>
               <p className="text-sm text-gray-600">{t('bookings.auto_update')}</p>
             </div>
           </div>

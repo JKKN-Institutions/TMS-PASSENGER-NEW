@@ -147,11 +147,11 @@ export default function DriverRoutesPage() {
       {/* Routes List */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t('routes.route_details')}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-[#0b6d41]">{t('routes.route_details')}</h2>
           <div className="text-sm text-gray-600">
-            {t('routes.routes_assigned', { 
-              count: routes.length, 
-              plural: routes.length !== 1 ? 's' : '' 
+            {t('routes.routes_assigned', {
+              count: routes.length,
+              plural: routes.length !== 1 ? 's' : ''
             })}
           </div>
         </div>

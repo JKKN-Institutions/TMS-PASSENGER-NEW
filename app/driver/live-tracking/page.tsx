@@ -216,7 +216,7 @@ const DriverLiveTrackingPage = () => {
       <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.controls')}</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-[#0b6d41] break-words">{t('tracking.controls')}</h2>
           </div>
           <button
             onClick={handleTrackingToggle}
@@ -270,7 +270,7 @@ const DriverLiveTrackingPage = () => {
         <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-200">
           <div className="flex items-center mb-4 sm:mb-6 gap-2 sm:gap-3">
             <Map className="w-5 h-5 sm:w-6 sm:h-6 text-[#0b6d41] flex-shrink-0" />
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.current_location_header')}</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-[#0b6d41] break-words">{t('tracking.current_location_header')}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
@@ -322,7 +322,7 @@ const DriverLiveTrackingPage = () => {
       {/* Location Tracker Component */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 sm:px-5 md:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{t('tracking.location_tracker_header')}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-[#0b6d41] break-words">{t('tracking.location_tracker_header')}</h2>
         </div>
         <div className="p-4 sm:p-5 md:p-6">
           <DriverLocationTracker
