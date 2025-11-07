@@ -105,22 +105,24 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
   };
 
   const getReceiptColorClass = (paymentType: string, semester: string) => {
+    // ⭐ UPDATED: Using brand color #0b6d41 for consistent styling
     if (paymentType === 'full_year') {
-      return 'border-green-300 text-green-800 bg-gradient-to-r from-green-50 to-yellow-50';
+      return 'border-[#0b6d41] text-[#0b6d41] bg-gradient-to-r from-green-50 to-green-100';
     }
-    
+
     switch (semester) {
-      case '1': return 'border-green-300 text-green-800 bg-gradient-to-r from-green-50 to-green-100';
-      case '2': return 'border-yellow-300 text-yellow-800 bg-gradient-to-r from-yellow-50 to-yellow-100';
-      case '3': return 'border-green-300 text-green-800 bg-gradient-to-r from-yellow-50 to-green-50';
-      default: return 'border-green-200 text-gray-800 bg-gradient-to-r from-gray-50 to-green-50';
+      case '1': return 'border-[#0b6d41] text-[#0b6d41] bg-gradient-to-r from-green-50 to-green-100';
+      case '2': return 'border-[#0b6d41] text-[#0b6d41] bg-gradient-to-r from-green-50 to-green-100';
+      case '3': return 'border-[#0b6d41] text-[#0b6d41] bg-gradient-to-r from-green-50 to-green-100';
+      default: return 'border-[#0b6d41] text-gray-800 bg-gradient-to-r from-gray-50 to-green-50';
     }
   };
 
   const getStatusIcon = (status: string) => {
+    // ⭐ UPDATED: Using brand color for confirmed status
     switch (status) {
       case 'confirmed':
-        return <CheckCircle className="w-5 h-5 text-green-600" />;
+        return <CheckCircle className="w-5 h-5 text-[#0b6d41]" />;
       case 'pending':
         return <Clock className="w-5 h-5 text-yellow-600" />;
       case 'failed':
@@ -157,8 +159,8 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mx-auto mb-4"></div>
-          <span className="text-green-700 font-medium">Loading payment history...</span>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-[#0b6d41] mx-auto mb-4"></div>
+          <span className="text-[#0b6d41] font-medium">Loading payment history...</span>
         </div>
       </div>
     );
@@ -166,33 +168,33 @@ const PaymentHistoryViewer: React.FC<PaymentHistoryViewerProps> = ({ studentId }
 
   return (
     <div className="space-y-6">
-      {/* Enhanced Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 bg-gradient-to-r from-green-50 to-yellow-50 rounded-2xl p-6 border border-green-200">
+      {/* Enhanced Header - ⭐ UPDATED: Brand color styling */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 bg-gradient-to-r from-green-50 to-green-100 rounded-2xl p-6 border border-[#0b6d41]/30">
         <div className="min-w-0 flex-1">
           <div className="flex items-center space-x-3 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-yellow-500 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#0b6d41] rounded-xl flex items-center justify-center shadow-md">
               <Receipt className="w-6 h-6 text-white" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Payment History</h2>
-              <p className="text-green-700 font-medium">Your transport fee payment records</p>
+              <p className="text-[#0b6d41] font-medium">Your transport fee payment records</p>
             </div>
           </div>
         </div>
         <button
           onClick={fetchPaymentHistory}
-          className="bg-gradient-to-r from-green-600 to-yellow-500 text-white px-4 sm:px-6 py-3 rounded-xl hover:from-green-700 hover:to-yellow-600 transition-all duration-300 flex items-center space-x-2 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
+          className="bg-[#0b6d41] text-white px-4 sm:px-6 py-3 rounded-xl hover:bg-[#0a5c37] transition-all duration-300 flex items-center space-x-2 font-bold shadow-lg hover:shadow-xl transform hover:scale-105"
         >
           <RefreshCw className="w-5 h-5" />
           <span>Refresh</span>
         </button>
       </div>
 
-      {/* Enhanced Payment Records */}
+      {/* Enhanced Payment Records - ⭐ UPDATED: Brand color styling */}
       {payments.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-r from-green-50 to-yellow-50 rounded-2xl border border-green-200">
-          <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Receipt className="h-10 w-10 text-gray-500" />
+        <div className="text-center py-16 bg-gradient-to-r from-green-50 to-green-100 rounded-2xl border border-[#0b6d41]/30">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Receipt className="h-10 w-10 text-[#0b6d41]" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-3">No Payment History</h3>
           <p className="text-gray-600 mb-2">You haven't made any payments yet.</p>

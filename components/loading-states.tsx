@@ -4,14 +4,14 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react';
 
-// Loading Spinner Variants
-export const LoadingSpinner = ({ 
-  size = 'md', 
-  color = 'blue',
-  className = '' 
+// Loading Spinner Variants - ⭐ UPDATED: Using brand color as default
+export const LoadingSpinner = ({
+  size = 'md',
+  color = 'brand',
+  className = ''
 }: {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  color?: 'blue' | 'green' | 'red' | 'orange' | 'purple' | 'white';
+  color?: 'brand' | 'blue' | 'green' | 'red' | 'orange' | 'purple' | 'white';
   className?: string;
 }) => {
   const sizeClasses = {
@@ -22,6 +22,7 @@ export const LoadingSpinner = ({
   };
 
   const colorClasses = {
+    brand: 'text-[#0b6d41]',
     blue: 'text-blue-600',
     green: 'text-green-600',
     red: 'text-red-600',
@@ -31,23 +32,24 @@ export const LoadingSpinner = ({
   };
 
   return (
-    <Loader2 
-      className={`animate-spin ${sizeClasses[size]} ${colorClasses[color]} ${className}`} 
+    <Loader2
+      className={`animate-spin ${sizeClasses[size]} ${colorClasses[color]} ${className}`}
     />
   );
 };
 
-// Pulse Loading Animation
-export const PulseLoader = ({ 
-  count = 3, 
-  color = 'blue',
-  className = '' 
+// Pulse Loading Animation - ⭐ UPDATED: Using brand color as default
+export const PulseLoader = ({
+  count = 3,
+  color = 'brand',
+  className = ''
 }: {
   count?: number;
-  color?: 'blue' | 'green' | 'red' | 'orange' | 'purple' | 'white';
+  color?: 'brand' | 'blue' | 'green' | 'red' | 'orange' | 'purple' | 'white';
   className?: string;
 }) => {
   const colorClasses = {
+    brand: 'bg-[#0b6d41]',
     blue: 'bg-blue-600',
     green: 'bg-green-600',
     red: 'bg-red-600',
@@ -77,19 +79,20 @@ export const PulseLoader = ({
   );
 };
 
-// Progress Bar with Animation
-export const AnimatedProgressBar = ({ 
-  progress, 
-  color = 'blue',
+// Progress Bar with Animation - ⭐ UPDATED: Using brand color as default
+export const AnimatedProgressBar = ({
+  progress,
+  color = 'brand',
   showPercentage = true,
-  className = '' 
+  className = ''
 }: {
   progress: number;
-  color?: 'blue' | 'green' | 'red' | 'orange' | 'purple';
+  color?: 'brand' | 'blue' | 'green' | 'red' | 'orange' | 'purple';
   showPercentage?: boolean;
   className?: string;
 }) => {
   const colorClasses = {
+    brand: 'from-[#0a5c37] to-[#0b6d41]',
     blue: 'from-blue-400 to-blue-600',
     green: 'from-green-400 to-green-600',
     red: 'from-red-400 to-red-600',
@@ -285,11 +288,11 @@ export const LoadingButton = ({
   );
 };
 
-// Status Animation
-export const StatusAnimation = ({ 
-  status, 
+// Status Animation - ⭐ UPDATED: Using brand color for loading state
+export const StatusAnimation = ({
+  status,
   size = 'md',
-  className = '' 
+  className = ''
 }: {
   status: 'loading' | 'success' | 'error' | 'idle';
   size?: 'sm' | 'md' | 'lg';
@@ -302,8 +305,8 @@ export const StatusAnimation = ({
   };
 
   const statusConfig = {
-    loading: { icon: Clock, color: 'text-blue-600', animation: 'animate-spin' },
-    success: { icon: CheckCircle, color: 'text-green-600', animation: 'animate-bounce' },
+    loading: { icon: Clock, color: 'text-[#0b6d41]', animation: 'animate-spin' },
+    success: { icon: CheckCircle, color: 'text-[#0b6d41]', animation: 'animate-bounce' },
     error: { icon: AlertCircle, color: 'text-red-600', animation: 'animate-pulse' },
     idle: { icon: Zap, color: 'text-gray-400', animation: '' }
   };
