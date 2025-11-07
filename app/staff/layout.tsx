@@ -20,7 +20,8 @@ import {
   MoreHorizontal,
   ChevronDown,
   ScanLine,
-  UserCheck
+  UserCheck,
+  Bug
 } from 'lucide-react';
 import TicketScanner from './components/TicketScanner';
 import './sidebar-styles.css';
@@ -73,6 +74,7 @@ function StaffLayoutInner({
     { name: 'Grievances', href: '/staff/grievances', icon: FileText, current: pathname === '/staff/grievances' },
     { name: 'Bookings', href: '/staff/bookings', icon: Calendar, current: pathname === '/staff/bookings' },
     { name: 'Reports', href: '/staff/reports', icon: TrendingUp, current: pathname === '/staff/reports' },
+    { name: 'My Bug Reports', href: '/staff/my-bug-reports', icon: Bug, current: pathname.startsWith('/staff/my-bug-reports') },
     { name: 'Profile', href: '/staff/profile', icon: User, current: pathname === '/staff/profile' },
   ];
 

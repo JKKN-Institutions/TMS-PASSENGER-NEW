@@ -5,19 +5,20 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  MapPin, 
-  Navigation, 
-  Users, 
-  Car, 
-  User, 
-  Menu, 
-  X, 
+import {
+  MapPin,
+  Navigation,
+  Users,
+  Car,
+  User,
+  Menu,
+  X,
   Home,
   Route,
   Calendar,
   Settings,
-  LogOut
+  LogOut,
+  Bug
 } from 'lucide-react';
 import DriverRouteGuard from '@/components/driver-route-guard';
 import { LanguageProvider, useLanguage } from '@/lib/i18n/language-context';
@@ -74,6 +75,7 @@ function DriverLayoutInner({
     { name: t('nav.routes'), href: '/driver/routes', icon: Route, current: pathname === '/driver/routes' },
     { name: t('nav.schedules'), href: '/driver/bookings', icon: Calendar, current: pathname === '/driver/bookings' },
     { name: t('nav.passengers'), href: '/driver/passengers', icon: Users, current: pathname === '/driver/passengers' },
+    { name: 'My Bug Reports', href: '/driver/my-bug-reports', icon: Bug, current: pathname.startsWith('/driver/my-bug-reports') },
     { name: t('nav.profile'), href: '/driver/profile', icon: User, current: pathname === '/driver/profile' },
   ];
 
