@@ -1765,3 +1765,48 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* ============================================ */
+/*      BUG REPORTER BUTTON POSITIONING        */
+/* ============================================ */
+
+/* Override Bug Reporter SDK button position to increase bottom spacing */
+/* Targets the floating bug report button from the SDK */
+[data-bug-reporter-button],
+.bug-reporter-button,
+button[aria-label*="bug" i],
+button[aria-label*="report" i] {
+  bottom: 100px !important; /* Increased from default ~20px to 100px */
+}
+
+/* Mobile-specific positioning */
+@media (max-width: 768px) {
+  [data-bug-reporter-button],
+  .bug-reporter-button,
+  button[aria-label*="bug" i],
+  button[aria-label*="report" i] {
+    bottom: 120px !important; /* Even higher on mobile to avoid bottom nav */
+  }
+}
+
+/* Alternative selector if the SDK uses a different class structure */
+div[style*="position: fixed"][style*="bottom"][style*="right"] button {
+  /* Don't use !important here to avoid conflicts */
+}
+
+/* Container positioning override */
+div[style*="position: fixed"][style*="bottom: 20px"],
+div[style*="position: fixed"][style*="bottom: 24px"],
+div[style*="position: fixed"][style*="bottom: 1rem"],
+div[style*="position: fixed"][style*="bottom: 1.5rem"] {
+  bottom: 100px !important;
+}
+
+@media (max-width: 768px) {
+  div[style*="position: fixed"][style*="bottom: 20px"],
+  div[style*="position: fixed"][style*="bottom: 24px"],
+  div[style*="position: fixed"][style*="bottom: 1rem"],
+  div[style*="position: fixed"][style*="bottom: 1.5rem"] {
+    bottom: 120px !important;
+  }
+}
