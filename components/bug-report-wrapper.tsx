@@ -17,6 +17,19 @@ const BugReportWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }
     return children ? <>{children}</> : null;
   }
 
+  // Get environment variables with fallbacks
+  const apiKey = process.env.NEXT_PUBLIC_BUG_REPORTER_API_KEY || '';
+  const apiUrl = process.env.NEXT_PUBLIC_BUG_REPORTER_API_URL || '';
+
+  // Only enable if both API key and URL are provided
+  const isEnabled = Boolean(apiKey && apiUrl);
+
+  // If not enabled, just render children without bug reporter
+  if (!isEnabled) {
+    console.warn('Bug Reporter SDK: Missing API key or URL. Bug reporting disabled.');
+    return children ? <>{children}</> : null;
+  }
+
   // Prepare user context
   const userContext = user ? {
     userId: user.id || user.sub || '',
@@ -26,8 +39,8 @@ const BugReportWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }
 
   return (
     <BugReporterProvider
-      apiKey={process.env.NEXT_PUBLIC_BUG_REPORTER_API_KEY!}
-      apiUrl={process.env.NEXT_PUBLIC_BUG_REPORTER_API_URL!}
+      apiKey={apiKey}
+      apiUrl={apiUrl}
       enabled={true}
       debug={process.env.NODE_ENV === 'development'}
       userContext={userContext}
