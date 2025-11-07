@@ -2,46 +2,38 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/auth-context';
-import BugButtonPortal from './bug-button-portal';
+import { BugReporterProvider } from '@boobalan_jkkn/bug-reporter-sdk';
 
-const BugReportWrapper: React.FC = () => {
+const BugReportWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Debug logging
-    console.log('🐛 Bug Report Wrapper mounted:', {
-      mounted: true,
-      isAuthenticated,
-      user: user,
-      hasUser: !!user
-    });
-  }, [isAuthenticated, user]);
+  }, []);
 
   // Don't render on server side
   if (!mounted) {
-    return null;
+    return children ? <>{children}</> : null;
   }
 
-  // Show button even if not authenticated for testing (with fallback data)
-  const fallbackUserId = user?.id || user?.sub || 'anonymous-user';
-  const fallbackEmail = user?.email || 'test@example.com';
-  const fallbackName = user?.student_name || user?.name || user?.full_name || 'Test User';
-
-  console.log('🐛 Rendering FloatingBugReportButton with:', {
-    userId: fallbackUserId,
-    userEmail: fallbackEmail,
-    userName: fallbackName,
-    isAuthenticated
-  });
+  // Prepare user context
+  const userContext = user ? {
+    userId: user.id || user.sub || '',
+    name: user.student_name || user.name || user.full_name || '',
+    email: user.email || ''
+  } : undefined;
 
   return (
-    <BugButtonPortal
-      userId={fallbackUserId}
-      userEmail={fallbackEmail}
-      userName={fallbackName}
-    />
+    <BugReporterProvider
+      apiKey={process.env.NEXT_PUBLIC_BUG_REPORTER_API_KEY!}
+      apiUrl={process.env.NEXT_PUBLIC_BUG_REPORTER_API_URL!}
+      enabled={true}
+      debug={process.env.NODE_ENV === 'development'}
+      userContext={userContext}
+    >
+      {children}
+    </BugReporterProvider>
   );
 };
 

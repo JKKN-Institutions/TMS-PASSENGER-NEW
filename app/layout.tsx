@@ -71,17 +71,18 @@ export default function RootLayout({
         >
           <ThemeProvider defaultTheme="light" storageKey="tms-passenger-theme">
             <AutoLoginWrapper>
-              <div id="root" className="h-full overflow-x-hidden">
-                {children}
-                {/* PWA Install Prompt */}
-                <PWAInstallPrompt />
-                {/* Auto push permission prompt */}
-                <AutoPushPermission delay={5000} oncePerSession={true} />
-                {/* Floating bug report button */}
-                <BugReportWrapper />
-                {/* Deployment version check (Ctrl+Shift+V) */}
-                <DeploymentVersionCheck />
-              </div>
+              {/* Bug Reporter SDK - Wraps entire app with centralized bug reporting */}
+              <BugReportWrapper>
+                <div id="root" className="h-full overflow-x-hidden">
+                  {children}
+                  {/* PWA Install Prompt */}
+                  <PWAInstallPrompt />
+                  {/* Auto push permission prompt */}
+                  <AutoPushPermission delay={5000} oncePerSession={true} />
+                  {/* Deployment version check (Ctrl+Shift+V) */}
+                  <DeploymentVersionCheck />
+                </div>
+              </BugReportWrapper>
             </AutoLoginWrapper>
             <Toaster
               position="top-right"
