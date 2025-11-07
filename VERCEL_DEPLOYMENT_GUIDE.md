@@ -160,17 +160,19 @@ Default: `npm install`
 
 **Important**: The Bug Reporter SDK requires `--legacy-peer-deps` flag due to lucide-react version conflict.
 
-**Vercel Install Command Setting**:
+**✅ SOLUTION IMPLEMENTED**: Created `.npmrc` file in project root:
+```
+legacy-peer-deps=true
+```
+
+This file automatically configures npm to use `--legacy-peer-deps` flag during installation on Vercel.
+
+**Alternative** (if `.npmrc` doesn't work):
 1. Go to Vercel Project Settings → General
 2. Set Install Command to:
    ```bash
    npm install --legacy-peer-deps
    ```
-
-Or create `.npmrc` file in project root:
-```
-legacy-peer-deps=true
-```
 
 ---
 
@@ -178,9 +180,9 @@ legacy-peer-deps=true
 
 ### Pre-Deployment
 
-- [ ] All environment variables added to Vercel
-- [ ] Install command set to `npm install --legacy-peer-deps` OR `.npmrc` file created
-- [ ] Local build test passed: `npm run build`
+- [x] All environment variables added to Vercel
+- [x] `.npmrc` file created (automatically handles `--legacy-peer-deps`)
+- [x] Local build test passed: `npm run build`
 - [ ] TypeScript check passed: `npm run type-check`
 - [ ] ESLint check passed: `npm run lint`
 
@@ -239,10 +241,19 @@ Check:
 ### Build Fails on Vercel
 
 **Error**: `npm install` fails with peer dependency error
+```
+npm error ERESOLVE could not resolve
+npm error peer lucide-react@"^0.400.0 || ^0.500.0 || ^0.552.0" from @boobalan_jkkn/bug-reporter-sdk@1.0.6
+```
 
-**Solution**: Set install command to `npm install --legacy-peer-deps`
+**✅ SOLUTION**: Created `.npmrc` file in project root with:
+```
+legacy-peer-deps=true
+```
 
-**Where**: Vercel Project Settings → General → Install Command
+This automatically configures npm to use `--legacy-peer-deps` flag during Vercel deployment.
+
+**Alternative**: Set install command to `npm install --legacy-peer-deps` in Vercel Project Settings → General → Install Command
 
 ---
 
@@ -292,7 +303,7 @@ Check:
 
 **Framework Preset**: Next.js
 **Build Command**: `npm run build`
-**Install Command**: `npm install --legacy-peer-deps`
+**Install Command**: `npm install` (automatically uses `--legacy-peer-deps` via `.npmrc`)
 **Output Directory**: `.next`
 **Node Version**: 18.x or higher
 
