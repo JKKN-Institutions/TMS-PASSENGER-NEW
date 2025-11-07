@@ -1790,7 +1790,7 @@ button[aria-label*="report" i] {
   .bug-reporter-button,
   button[aria-label*="bug" i],
   button[aria-label*="report" i] {
-    bottom: 120px !important; /* Much higher on mobile to clear bottom nav completely */
+    bottom: 105px !important; /* Much higher on mobile to clear bottom nav completely */
   }
 }
 
@@ -1802,7 +1802,7 @@ button[aria-label*="report" i] {
   .bug-reporter-button,
   button[aria-label*="bug" i],
   button[aria-label*="report" i] {
-    bottom: 120px !important;
+    bottom: 105px !important;
   }
 }
 
