@@ -27,14 +27,13 @@ npm install @boobalan_jkkn/bug-reporter-sdk --legacy-peer-deps
 ```env
 # JKKN Bug Reporter Configuration
 NEXT_PUBLIC_BUG_REPORTER_API_KEY=br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC
-NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-platform.com
+NEXT_PUBLIC_BUG_REPORTER_API_URL=https://jkkn-centralized-bug-reporter.vercel.app
 ```
 
 **IMPORTANT**:
-- Replace `https://your-platform.com` with your actual Bug Reporter platform URL
 - Use **base URL only** (SDK automatically appends `/api/v1/public/bug-reports`)
-- Incorrect: `https://bugs.jkkn.ai/api/v1/public` (will result in duplicate path)
-- Correct: `https://bugs.jkkn.ai` (SDK handles the rest)
+- Incorrect: `https://jkkn-centralized-bug-reporter.vercel.app/api/v1/public` (will result in duplicate path)
+- Correct: `https://jkkn-centralized-bug-reporter.vercel.app` (SDK handles the rest)
 
 **API Key Details**:
 - API Key: `br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC`
@@ -347,7 +346,7 @@ Route count: 144 total routes
 
 ### Endpoint
 
-**Base URL**: `https://your-platform.com` (configured in environment variable)
+**Base URL**: `https://jkkn-centralized-bug-reporter.vercel.app` (configured in environment variable)
 
 **Authentication**: API Key in headers
 
@@ -357,7 +356,7 @@ Authorization: Bearer br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC
 
 ### Bug Report Submission
 
-**Full URL**: `POST https://your-platform.com/api/v1/public/bug-reports`
+**Full URL**: `POST https://jkkn-centralized-bug-reporter.vercel.app/api/v1/public/bug-reports`
 
 **Note**: The SDK automatically constructs this URL by appending `/api/v1/public/bug-reports` to the base URL
 
@@ -519,7 +518,7 @@ export default function ProfilePage() {
 ```bash
 # In .env.local
 NEXT_PUBLIC_BUG_REPORTER_API_KEY=br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC
-NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-actual-platform.com
+NEXT_PUBLIC_BUG_REPORTER_API_URL=https://jkkn-centralized-bug-reporter.vercel.app
 ```
 
 **Important**: Use base URL only, without `/api/v1/public` path
