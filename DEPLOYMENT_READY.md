@@ -99,8 +99,10 @@ SUPABASE_SERVICE_ROLE_KEY=[your_service_role_key]
 **Bug Reporter** (Optional):
 ```env
 NEXT_PUBLIC_BUG_REPORTER_API_KEY=br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC
-NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-platform.com/api/v1/public
+NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-platform.com
 ```
+
+**IMPORTANT**: Replace `https://your-platform.com` with actual platform URL (base URL only, no path)
 
 **Push Notifications**:
 ```env

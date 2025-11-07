@@ -54,8 +54,13 @@ Add the following environment variables to Vercel:
 
 ```env
 NEXT_PUBLIC_BUG_REPORTER_API_KEY=br_eULnXFvh6QecerSYyD8beG1TNIu6E5HC
-NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-platform.com/api/v1/public
+NEXT_PUBLIC_BUG_REPORTER_API_URL=https://your-platform.com
 ```
+
+**IMPORTANT**:
+- Replace `https://your-platform.com` with your actual Bug Reporter platform URL
+- Use **only the base URL** without `/api/v1/public` path (SDK adds this automatically)
+- Example: If your platform is at `https://bugs.jkkn.ai`, use `https://bugs.jkkn.ai`
 
 #### Other Required Variables
 
@@ -319,8 +324,8 @@ This automatically configures npm to use `--legacy-peer-deps` flag during Vercel
 - `SUPABASE_SERVICE_ROLE_KEY`
 
 **Optional for Bug Reporter**:
-- `NEXT_PUBLIC_BUG_REPORTER_API_KEY`
-- `NEXT_PUBLIC_BUG_REPORTER_API_URL`
+- `NEXT_PUBLIC_BUG_REPORTER_API_KEY` - The API key from Bug Reporter platform
+- `NEXT_PUBLIC_BUG_REPORTER_API_URL` - Base URL only (e.g., `https://bugs.jkkn.ai`)
 
 **Optional for Features**:
 - `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
