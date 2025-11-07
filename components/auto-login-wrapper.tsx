@@ -127,10 +127,10 @@ export default function AutoLoginWrapper({ children }: AutoLoginWrapperProps) {
     performAutoLogin();
   }, [pathname, isAuthenticated, user, authLoading, router]);
 
-  // Show loading screen during auto-login attempt - ⭐ UPDATED: Brand color styling
+  // Show loading screen during auto-login attempt - ⭐ UPDATED: White background with brand colors
   if (autoLoginState.loading && !autoLoginState.attempted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center space-y-6 p-8">
           {/* Logo */}
           <div className="flex justify-center mb-8">
@@ -153,7 +153,7 @@ export default function AutoLoginWrapper({ children }: AutoLoginWrapperProps) {
           </div>
 
           {/* Progress indicators */}
-          <div className="space-y-2 text-sm text-gray-600 bg-white/70 backdrop-blur-sm rounded-lg p-4">
+          <div className="space-y-2 text-sm text-gray-600 bg-gray-50 rounded-lg p-4">
             <div className="flex items-center justify-center space-x-2">
               <div className="w-2 h-2 bg-[#0b6d41] rounded-full animate-bounce"></div>
               <span>Checking stored credentials</span>
@@ -164,10 +164,10 @@ export default function AutoLoginWrapper({ children }: AutoLoginWrapperProps) {
     );
   }
 
-  // Show success state briefly - ⭐ UPDATED: Brand color styling
+  // Show success state briefly - ⭐ UPDATED: White background with brand colors
   if (autoLoginState.result?.success && !autoLoginState.loading && !pathname.startsWith('/dashboard') && !pathname.startsWith('/driver')) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center space-y-6 p-8">
           <div className="flex justify-center mb-8">
             <div className="bg-[#0b6d41] p-4 rounded-full shadow-xl">
@@ -189,7 +189,7 @@ export default function AutoLoginWrapper({ children }: AutoLoginWrapperProps) {
             </div>
 
             {autoLoginState.result.user && (
-              <div className="text-sm text-gray-600 bg-white/70 backdrop-blur-sm rounded-lg p-4">
+              <div className="text-sm text-gray-600 bg-gray-50 rounded-lg p-4">
                 <p className="font-medium">Logged in as: {autoLoginState.result.user.email}</p>
                 {(autoLoginState.result.user as any).studentId && (
                   <p>Student ID: {(autoLoginState.result.user as any).studentId}</p>
@@ -198,7 +198,7 @@ export default function AutoLoginWrapper({ children }: AutoLoginWrapperProps) {
             )}
           </div>
 
-          <div className="text-sm text-gray-600 bg-white/50 backdrop-blur-sm rounded-lg p-3">
+          <div className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
             <p>🚀 Redirecting to dashboard...</p>
           </div>
         </div>

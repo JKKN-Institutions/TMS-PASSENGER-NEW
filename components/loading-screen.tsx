@@ -24,9 +24,9 @@ export default function LoadingScreen({
     lg: 'h-96'
   };
 
-  const containerClasses = fullScreen 
-    ? `fixed inset-0 ${THEME.gradients.background} flex items-center justify-center z-50`
-    : `flex items-center justify-center ${sizeClasses[size]} ${THEME.gradients.background} rounded-2xl`;
+  const containerClasses = fullScreen
+    ? `fixed inset-0 bg-white flex items-center justify-center z-50`
+    : `flex items-center justify-center ${sizeClasses[size]} bg-white rounded-2xl`;
 
   if (variant === 'minimal') {
     return (

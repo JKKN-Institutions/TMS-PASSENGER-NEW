@@ -103,23 +103,25 @@ This component displays loading screens during the authentication process when u
 - Generic green spinner and progress indicators
 - Inconsistent with rest of the application
 
-### After
-- Solid green gradient backgrounds (from-green-50 via-green-100 to-green-50)
+### After (Updated)
+- **Clean white backgrounds** (`bg-white`)
 - Brand color `#0b6d41` for logo backgrounds
 - Solid brand color text headings
 - Brand color spinner and progress indicators
-- **Matches the brand color scheme used throughout the passenger application**
+- Light gray backgrounds for info boxes (`bg-gray-50`)
+- **Clean, professional appearance with white background and brand color accents**
 
 ## Color Usage Reference
 
-| Element | Old Color | New Color |
-|---------|-----------|-----------|
-| Background gradient | `from-green-50 via-yellow-50 to-green-100` | `from-green-50 via-green-100 to-green-50` |
+| Element | Old Color | New Color (Updated) |
+|---------|-----------|---------------------|
+| Background gradient | `from-green-50 via-yellow-50 to-green-100` | `bg-white` |
 | Logo background | `from-green-600 to-yellow-500` | `bg-[#0b6d41]` |
 | Spinner | `text-green-600` | `text-[#0b6d41]` |
 | Heading text | `from-green-600 to-yellow-600` gradient | `text-[#0b6d41]` |
 | Progress dot | `bg-green-600` | `bg-[#0b6d41]` |
 | Success icon background | `from-green-600 to-yellow-500` | `bg-[#0b6d41]` |
+| Info boxes | `bg-white/70 backdrop-blur-sm` | `bg-gray-50` |
 
 ## Benefits
 
