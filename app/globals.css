@@ -1772,26 +1772,38 @@ body {
 
 /* Override Bug Reporter SDK button position to increase bottom spacing */
 /* Targets the floating bug report button from the SDK */
+/* Using the actual class name from the SDK: bug-reporter-floating-btn */
+.bug-reporter-floating-btn,
+.bug-reporter-sdk,
 [data-bug-reporter-button],
 .bug-reporter-button,
 button[aria-label*="bug" i],
 button[aria-label*="report" i] {
-  bottom: 100px !important; /* Increased from default ~20px to 100px */
+  bottom: 100px !important; /* Increased for desktop */
 }
 
-/* Mobile-specific positioning */
+/* Mobile-specific positioning - much higher to clear bottom nav */
 @media (max-width: 768px) {
+  .bug-reporter-floating-btn,
+  .bug-reporter-sdk,
   [data-bug-reporter-button],
   .bug-reporter-button,
   button[aria-label*="bug" i],
   button[aria-label*="report" i] {
-    bottom: 120px !important; /* Even higher on mobile to avoid bottom nav */
+    bottom: 160px !important; /* Much higher on mobile to clear bottom nav completely */
   }
 }
 
-/* Alternative selector if the SDK uses a different class structure */
-div[style*="position: fixed"][style*="bottom"][style*="right"] button {
-  /* Don't use !important here to avoid conflicts */
+/* Tablet positioning */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .bug-reporter-floating-btn,
+  .bug-reporter-sdk,
+  [data-bug-reporter-button],
+  .bug-reporter-button,
+  button[aria-label*="bug" i],
+  button[aria-label*="report" i] {
+    bottom: 120px !important;
+  }
 }
 
 /* Container positioning override */
@@ -1807,6 +1819,6 @@ div[style*="position: fixed"][style*="bottom: 1.5rem"] {
   div[style*="position: fixed"][style*="bottom: 24px"],
   div[style*="position: fixed"][style*="bottom: 1rem"],
   div[style*="position: fixed"][style*="bottom: 1.5rem"] {
-    bottom: 120px !important;
+    bottom: 160px !important; /* Match the button positioning */
   }
 }
