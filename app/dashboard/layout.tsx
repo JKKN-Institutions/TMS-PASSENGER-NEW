@@ -113,11 +113,11 @@ function DashboardContent({
         requiresEnrollment: true,
         disabled: true // Disabled as requested
       },
-      { 
-        name: 'Bug Reports', 
-        href: '/dashboard/bug-reports', 
-        icon: Bug, 
-        current: pathname === '/dashboard/bug-reports',
+      {
+        name: 'My Bug Reports',
+        href: '/dashboard/my-bug-reports',
+        icon: Bug,
+        current: pathname.startsWith('/dashboard/my-bug-reports'),
         requiresEnrollment: false // Always accessible
       },
       { 
