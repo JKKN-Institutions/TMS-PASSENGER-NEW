@@ -26,11 +26,11 @@ export async function GET(request: NextRequest) {
 
     // Fetch user's bug reports from Bug Reporter platform
     const response = await fetch(
-      `${apiUrl}/api/v1/public/bug-reports?userId=${userId}`,
+      `${apiUrl}/api/v1/public/bug-reports/me?userId=${userId}`,
       {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'X-API-Key': apiKey,
           'Content-Type': 'application/json',
         },
       }
@@ -44,12 +44,42 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await response.json();
+    const result = await response.json();
+
+    // The API returns: { success: true, data: { bug_reports: [...], pagination: {...} } }
+    const bugReports = result?.data?.bug_reports || [];
+    const pagination = result?.data?.pagination || {};
+
+    // Transform bug reports to match our interface
+    const reports = bugReports.map((report: any) => ({
+      id: report.id,
+      title: report.metadata?.title || report.display_id,
+      description: report.description,
+      status: report.status,
+      priority: report.metadata?.priority || 'medium',
+      category: report.category,
+      created_at: report.created_at,
+      updated_at: report.created_at,
+      page_url: report.page_url,
+      screenshot_url: report.screenshot_url,
+      console_logs: report.console_logs,
+      browser_info: {
+        userAgent: report.metadata?.browser_info,
+        platform: report.metadata?.system_info,
+        screenResolution: report.metadata?.screen_resolution,
+      },
+      user_context: {
+        userId: report.reporter_user_id || 'unknown',
+        name: report.metadata?.reporter_name || 'Unknown',
+        email: report.metadata?.reporter_email || '',
+      },
+      resolution: report.resolved_at ? 'Resolved' : undefined,
+    }));
 
     return NextResponse.json({
       success: true,
-      reports: data.reports || data || [],
-      total: data.total || (Array.isArray(data) ? data.length : 0),
+      reports,
+      total: pagination.total || reports.length,
     });
 
   } catch (error) {
